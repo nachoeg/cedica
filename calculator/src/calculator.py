@@ -9,8 +9,7 @@ def calculate(a, operator, b):
         # return operations.subtract(a, b)
         return "No esta implementada la resta"
     elif operator == "*":
-        # return operations.multiply(a, b)
-        return "No esta implementada la multiplicacion"
+        return operations.multiply(a, b)
     elif operator == "/":
         return operations.divide(a, b)
     else:
