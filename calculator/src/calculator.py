@@ -5,8 +5,7 @@ def calculate(a, operator, b):
     if operator == "+":
         return operations.add(a, b)
     elif operator == "-":
-        # return operations.subtract(a, b)
-        return "No esta implementada la resta"
+        return operations.subtract(a, b)
     elif operator == "*":
         return operations.multiply(a, b)
     elif operator == "/":
