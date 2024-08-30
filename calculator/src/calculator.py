@@ -11,7 +11,6 @@ def calculate(a, operator, b):
     elif operator == "*":
         return operations.multiply(a, b)
     elif operator == "/":
-        # return operations.divide(a, b)
-        return "No esta implementada la division"
+        return operations.divide(a, b)
     else:
         return ValueError(f"Operador no valido: {operator}")
