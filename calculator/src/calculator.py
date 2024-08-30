@@ -3,7 +3,7 @@ from src import operations
 
 def calculate(a, operator, b):
     if operator == "+":
-        # return operations.add(a, b)
+        return operations.add(a, b)
         return "No esta implementada la suma"
     elif operator == "-":
         # return operations.subtract(a, b)
