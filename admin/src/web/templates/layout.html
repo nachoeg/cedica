@@ -6,14 +6,15 @@
             rel="stylesheet"
             href="{{ url_for('static', filename='style.css')}}"
         />
-        <title>{% block title %}{%endblock%}</title>
+        <title>{% block title %}{% endblock %}</title>
+        {% endblock %}
     </head>
     <body>
-        <div>{% block navbar %} {%endblock%}</div>
+        <div>{% block navbar %} {% endblock %}</div>
         <div id="container">
             {% block content %}
-            {%endblock%}
+            {% endblock %}
         </div>
-        <div>{% block footer %} {%endblock%}</div>
+        <div>{% block footer %} {% endblock %}</div>
     </body>
 </html>
