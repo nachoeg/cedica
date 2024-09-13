@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error!</title>
+    {% block head %}
+    <link 
+        rel="stylesheet"
+        href="{{ url_for('static', filename='error.css') }}"
+    />
+    {% endblock %}
 </head>
 <body>
-    <div>
-        <div>{{ error.code }}</div>
-        <div>{{ error.name }}</div>
-        <div>{{ error.description }}</div>
-        <div>
-            <a href="{{ url_for('home') }}">Ir a la página de inicio</a>
+    <div class="error-container">
+        <div class="error-code">{{ error.code }}</div>
+        <div class="error-name">{{ error.name }}</div>
+        <div class="error-description">{{ error.description }}</div>
+        <div class="link-container">
+            <a href="{{ url_for('home') }}" class="more-link">Ir a la página de inicio</a>
         </div>
     </div>
 </body>
