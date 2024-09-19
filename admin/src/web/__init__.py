@@ -3,6 +3,7 @@ from flask import render_template
 from src.web.handlers import error
 from src.core import database
 from src.core.config import config
+from src.core import seeds
 
 
 def create_app(env="development", static_folder="../../static"):
@@ -14,11 +15,15 @@ def create_app(env="development", static_folder="../../static"):
     @app.route("/")
     def home():
         return render_template("home.html")
-    
+
     app.register_error_handler(404, error.error_not_found)
 
     @app.cli.command(name="reset-db")
     def reset_db():
         database.reset()
+
+    @app.cli.command(name="seeds-db")
+    def seeds_db():
+        seeds.run()
 
     return app
