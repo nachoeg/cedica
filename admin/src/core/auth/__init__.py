@@ -1,5 +1,5 @@
-from src import db
-from src.core.auth import User
+from src.core.database import db
+from src.core.auth.user import User
 
 
 def list_users():
