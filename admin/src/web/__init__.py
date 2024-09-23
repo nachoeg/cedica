@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, send_from_directory
 from src.web.handlers import error
 from src.core import database
 from src.core.config import config
@@ -15,6 +14,10 @@ def create_app(env="development", static_folder="../../static"):
     @app.route("/")
     def home():
         return render_template("home.html")
+
+    @app.route("/preline.js")
+    def serve_preline_js():
+        return send_from_directory("../../node_modules/preline/dist", "preline.js")
 
     app.register_error_handler(404, error.error_not_found)
 
