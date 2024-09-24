@@ -1,0 +1,38 @@
+<header
+  class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-transparent text-sm py-3 border-b dark:border-neutral-700">
+  <nav class="max-w-[90rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between gap-y-4">
+    <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
+      <img src="{{ url_for('static', filename='images/cedica-isotipo.webp')}}" alt="" class="max-h-7">
+      <img src="{{ url_for('static', filename='images/cedica-logotipo.webp')}}" alt=""
+        class="max-h-7 dark:brightness-200 dark:contrast-150">
+    </a>
+    <div class="sm:order-3 flex items-center gap-x-2">
+      <button type="button"
+        class="sm:hidden hs-collapse-toggle relative size-9 flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+        id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
+        aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
+
+        {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
+        {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
+        <span class="sr-only">Toggle</span>
+      </button>
+      <button type="button"
+        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+        {{user_icon('size-4')}}
+        Iniciar sesión
+      </button>
+    </div>
+    <div id="hs-navbar-alignment"
+      class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
+      aria-labelledby="hs-navbar-alignment-collapse">
+      <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
+        <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
+          href="jinetes-y-amazonas">J&A</a>
+        <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
+          href="escuestre">Ecuestre</a>
+        <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
+          href="equipo">Equipo</a>
+      </div>
+    </div>
+  </nav>
+</header>
