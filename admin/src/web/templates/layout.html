@@ -6,10 +6,20 @@
             rel="stylesheet"
             href="{{ url_for('static', filename='css/output.css')}}"
         />
+        <script>
+            const html = document.querySelector('html');
+            const isLightOrAuto = localStorage.getItem('hs_theme') === 'light' || (localStorage.getItem('hs_theme') === null && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+            const isDarkOrAuto = localStorage.getItem('hs_theme') === 'dark' || (localStorage.getItem('hs_theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+            if (isLightOrAuto && html.classList.contains('dark')) html.classList.remove('dark');
+            else if (isDarkOrAuto && html.classList.contains('light')) html.classList.remove('light');
+            else if (isDarkOrAuto && !html.classList.contains('dark')) html.classList.add('dark');
+            else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
+        </script>
         <title>{% block title %}{% endblock %}</title>
         {% endblock %}
     </head>
-    <body>
+    <body class="dark:bg-neutral-900">
         <div>{% block navbar %} {% endblock %}</div>
         <div class="container mx-auto pt-10">
             {% block content %}
