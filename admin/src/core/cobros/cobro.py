@@ -12,6 +12,8 @@ class Cobro(db.Model):
         debito = "Tarjeta de débito"
         otro = "Otro medio de pago"
 
+        def __str__(self):
+            return f'{self.value}'
 
     id = db.Column(db.Integer, primary_key=True)
     fecha_pago = db.Column(db.DateTime, default=datetime.now)
