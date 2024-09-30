@@ -13,7 +13,7 @@ def create_app(env="development", static_folder="../../static"):
 
     @app.route("/")
     def home():
-        return render_template("home.html")
+        return render_template("pages/home.html")
 
     @app.route("/preline.js")
     def serve_preline_js():

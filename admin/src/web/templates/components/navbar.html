@@ -1,4 +1,5 @@
-{% from 'iconos.html' import user_icon, hamburger_icon, close_icon, logout_icon, google_icon %}
+{% from 'components/iconos.html' import user_icon, hamburger_icon, close_icon, logout_icon, google_icon,
+avatar_placeholder_icon %}
 
 <header
   class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-transparent text-sm py-2 border-b dark:border-neutral-700">
@@ -17,6 +18,7 @@
         {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
         <span class="sr-only">Toggle</span>
       </button>
+      {% if true %} <!-- Cambiar por if is_authenticated(session) -->
       <div class="hs-dropdown [--auto-close:inside] relative inline-flex ">
         <button id="hs-dropdown-default" type="button"
           class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
@@ -54,21 +56,12 @@
           </form>
         </div>
       </div>
+      {% else %}
       <div class="hs-dropdown relative inline-flex">
         <button id="hs-dropdown-with-header" type="button"
           class="hs-dropdown-toggle inline-block size-9 bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden"
           aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-          <!-- Placeholder Avatar SVG -->
-          <svg class="size-full text-gray-300" width="16" height="16" viewBox="0 0 16 16" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <rect x="0.62854" y="0.359985" width="15" height="15" rx="7.5" fill="white"></rect>
-            <path
-              d="M8.12421 7.20374C9.21151 7.20374 10.093 6.32229 10.093 5.23499C10.093 4.14767 9.21151 3.26624 8.12421 3.26624C7.0369 3.26624 6.15546 4.14767 6.15546 5.23499C6.15546 6.32229 7.0369 7.20374 8.12421 7.20374Z"
-              fill="currentColor"></path>
-            <path
-              d="M11.818 10.5975C10.2992 12.6412 7.42106 13.0631 5.37731 11.5537C5.01171 11.2818 4.69296 10.9631 4.42107 10.5975C4.28982 10.4006 4.27107 10.1475 4.37419 9.94123L4.51482 9.65059C4.84296 8.95684 5.53671 8.51624 6.30546 8.51624H9.95231C10.7023 8.51624 11.3867 8.94749 11.7242 9.62249L11.8742 9.93184C11.968 10.1475 11.9586 10.4006 11.818 10.5975Z"
-              fill="currentColor"></path>
-          </svg>
+          {{avatar_placeholder_icon('')}}
         </button>
         <div
           class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-xl mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700"
@@ -91,6 +84,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
     <div id="hs-navbar-alignment"
       class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
@@ -101,10 +95,7 @@
         <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
           href="escuestre">Ecuestre</a>
         <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="equipo"><button type="button">
-            Equipo
-          </button>
-        </a>
+          href="equipo">Equipo</a>
       </div>
     </div>
   </nav>
