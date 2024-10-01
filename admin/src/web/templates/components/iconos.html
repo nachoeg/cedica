@@ -1,0 +1,92 @@
+{% macro user_icon(classes="") %}
+<svg xmlns="http://www.w3.org/2000/svg" class="{{ classes }}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
+  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+  <circle cx="12" cy="7" r="4" />
+</svg>
+{% endmacro %}
+
+{% macro hamburger_icon(classes="") %}
+<svg class="{{ classes }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="3" x2="21" y1="6" y2="6" />
+  <line x1="3" x2="21" y1="12" y2="12" />
+  <line x1="3" x2="21" y1="18" y2="18" />
+</svg>
+{% endmacro %}
+
+{% macro close_icon(classes="") %}
+<svg class="{{ classes }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M18 6 6 18" />
+  <path d="m6 6 12 12" />
+</svg>
+{% endmacro %}
+
+{% macro sun_icon(classes="") %}
+<svg class="{{ classes }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="4"></circle>
+  <path d="M12 2v2"></path>
+  <path d="M12 20v2"></path>
+  <path d="m4.93 4.93 1.41 1.41"></path>
+  <path d="m17.66 17.66 1.41 1.41"></path>
+  <path d="M2 12h2"></path>
+  <path d="M20 12h2"></path>
+  <path d="m6.34 17.66-1.41 1.41"></path>
+  <path d="m19.07 4.93-1.41 1.41"></path>
+</svg>
+{% endmacro %}
+
+{% macro moon_icon(classes="") %}
+<svg class="{{ classes }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+</svg>
+{% endmacro %}
+
+{% macro logout_icon(classes="") %}
+<svg class="{{ classes }}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+  <polyline points="16 17 21 12 16 7" />
+  <line x1="21" x2="9" y1="12" y2="12" />
+</svg>
+{% endmacro %}
+
+{% macro google_icon(classes="") %}
+<svg class="shrink-0 size-4" width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_4132_5805adfqfqdq121)">
+    <path
+      d="M32.2566 16.36C32.2566 15.04 32.1567 14.08 31.9171 13.08H16.9166V19.02H25.7251C25.5454 20.5 24.5866 22.72 22.4494 24.22L22.4294 24.42L27.1633 28.1L27.4828 28.14C30.5189 25.34 32.2566 21.22 32.2566 16.36Z"
+      fill="#4285F4"></path>
+    <path
+      d="M16.9166 32C21.231 32 24.8463 30.58 27.5028 28.12L22.4694 24.2C21.1111 25.14 19.3135 25.8 16.9366 25.8C12.7021 25.8 9.12677 23 7.84844 19.16L7.66867 19.18L2.71513 23L2.65521 23.18C5.2718 28.4 10.6648 32 16.9166 32Z"
+      fill="#34A853"></path>
+    <path
+      d="M7.82845 19.16C7.48889 18.16 7.28915 17.1 7.28915 16C7.28915 14.9 7.48889 13.84 7.80848 12.84V12.62L2.81499 8.73999L2.6552 8.81999C1.55663 10.98 0.937439 13.42 0.937439 16C0.937439 18.58 1.55663 21.02 2.63522 23.18L7.82845 19.16Z"
+      fill="#FBBC05"></path>
+    <path
+      d="M16.9166 6.18C19.9127 6.18 21.9501 7.48 23.0886 8.56L27.6027 4.16C24.8263 1.58 21.231 0 16.9166 0C10.6648 0 5.27181 3.6 2.63525 8.82L7.80851 12.84C9.10681 8.98 12.6821 6.18 16.9166 6.18Z"
+      fill="#EB4335"></path>
+  </g>
+  <defs>
+    <clipPath id="clip0_4132_5805adfqfqdq121">
+      <rect width="32" height="32" fill="white" transform="translate(0.937439)"></rect>
+    </clipPath>
+  </defs>
+</svg>
+{% endmacro %}
+
+{% macro avatar_placeholder_icon(classes="") %}
+<svg class="size-full text-gray-300 {{classes}}" width="16" height="16" viewBox="0 0 16 16" fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+  <rect x="0.62854" y="0.359985" width="15" height="15" rx="7.5" fill="white"></rect>
+  <path
+    d="M8.12421 7.20374C9.21151 7.20374 10.093 6.32229 10.093 5.23499C10.093 4.14767 9.21151 3.26624 8.12421 3.26624C7.0369 3.26624 6.15546 4.14767 6.15546 5.23499C6.15546 6.32229 7.0369 7.20374 8.12421 7.20374Z"
+    fill="currentColor"></path>
+  <path
+    d="M11.818 10.5975C10.2992 12.6412 7.42106 13.0631 5.37731 11.5537C5.01171 11.2818 4.69296 10.9631 4.42107 10.5975C4.28982 10.4006 4.27107 10.1475 4.37419 9.94123L4.51482 9.65059C4.84296 8.95684 5.53671 8.51624 6.30546 8.51624H9.95231C10.7023 8.51624 11.3867 8.94749 11.7242 9.62249L11.8742 9.93184C11.968 10.1475 11.9586 10.4006 11.818 10.5975Z"
+    fill="currentColor"></path>
+</svg>
+{% endmacro %}
