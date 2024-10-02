@@ -9,16 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
-    <script> /* Script para cambiar el tema de la pagina */
-        const html = document.querySelector('html');
-        const isLightOrAuto = localStorage.getItem('hs_theme') === 'light' || (localStorage.getItem('hs_theme') === null && !window.matchMedia('(prefers-color-scheme: dark)').matches);
-        const isDarkOrAuto = localStorage.getItem('hs_theme') === 'dark' || (localStorage.getItem('hs_theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-        if (isLightOrAuto && html.classList.contains('dark')) html.classList.remove('dark');
-        else if (isDarkOrAuto && html.classList.contains('light')) html.classList.remove('light');
-        else if (isDarkOrAuto && !html.classList.contains('dark')) html.classList.add('dark');
-        else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
-    </script>
+    <script src="{{ url_for('static', filename='js/tema.js')}}"></script>
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
@@ -27,13 +18,22 @@
 </head>
 
 <body class="dark:bg-neutral-900 h-screen flex flex-col">
+
+    <!-- Navbar -->
     {% include 'components/navbar.html' %}
+
+    <!-- Main -->
     <main class="max-w-[90rem] w-full mx-auto p-2 sm:p-8">{% block main %}{% endblock %}</main>
+
+    <!-- Footer -->
     <footer>{% block footer %}{% endblock %}</footer>
 
+    <!-- Scripts -->
     <script src="{{ url_for('serve_jquery_js') }}"></script>
     <script src="{{ url_for('serve_datatables_js') }}"></script>
     <script src="{{ url_for('serve_preline_js') }}"></script>
+    {% block scripts %}{% endblock %}
+
 </body>
 
 </html>
