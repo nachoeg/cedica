@@ -1,15 +1,15 @@
 from src.core.database import db
-from src.core.auth.user import User
+from core.usuarios.usuario import Usuario
 
 
 def list_users():
-    users = User.query.all()
+    users = Usuario.query.all()
 
     return users
 
 
 def create_user(**kwargs):
-    user = User(**kwargs)
+    user = Usuario(**kwargs)
     db.session.add(user)
     db.session.commit()
 

@@ -1,4 +1,4 @@
-from src.core import auth, jinetes_y_amazonas
+from src.core import usuarios, jinetes_y_amazonas
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
@@ -23,9 +23,9 @@ def cargar_diagnosticos():
     diagnostico19 = jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
 
 def run():
-    user1 = auth.create_user(email="juan@mail.com", alias="Juan", activo=True)
-    user2 = auth.create_user(email="jorge@mail.com", alias="Jorge", activo=False)
-    user3 = auth.create_user(email="maria@mail.com", alias="Maria", activo=True)
+    user1 = usuarios.create_user(email="juan@mail.com", alias="Juan", activo=True)
+    user2 = usuarios.create_user(email="jorge@mail.com", alias="Jorge", activo=False)
+    user3 = usuarios.create_user(email="maria@mail.com", alias="Maria", activo=True)
 
     cargar_diagnosticos()
 
