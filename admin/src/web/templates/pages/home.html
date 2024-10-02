@@ -1,4 +1,4 @@
-{% from 'components/iconos.html' import moon_icon, sun_icon %}
+{% from 'components/datatable.html' import datatable %}
 
 {% extends "layouts/base.html" %}
 
@@ -8,8 +8,39 @@
 {{ super() }}
 {% endblock %}
 
+{% set data = {
+'headers': ['Nombre', 'Edad', 'Correo', 'Actividad', 'Fecha', 'Hora', 'Estado', 'Telefono'],
+'data': [
+['Juan', 20, 'juan@mail.com', 'Correr', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Pedro', 25, 'pedro@mail.com', 'Nadar', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Maria', 30, 'maria@mail.com', 'Caminar', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Jose', 35, 'jose@mail.com', 'Correr', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Ana', 40, 'ana@mail.com', 'Nadar', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Carlos', 45, 'carlos@mail.com', 'Caminar', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Laura', 50, 'laura@mail.com', 'Correr', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Luis', 55, 'luis@mail.com', 'Nadar', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Sofia', 60, 'sofia@mail.com', 'Caminar', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Diego', 65, 'diego@mail.com', 'Correr', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Maria', 70, 'maria@mail.com', 'Caminar', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Andres', 75, 'andres@mail.com', 'Nadar', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Julia', 80, 'julia@mail.com', 'Correr', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Roberto', 85, 'roberto@mail.com', 'Caminar', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Isabel', 90, 'isabel@mail.com', 'Nadar', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Fernando', 95, 'fernando@mail.com', 'Correr', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Carolina', 100, 'carolina@mail.com', 'Caminar', '2021-10-10', '10:00', 'Activo', '1234567890'],
+['Ricardo', 105, 'ricardo@mail.com', 'Nadar', '2021-10-10', '10:00', 'Inactivo', '1234567890'],
+['Gabriela', 110, 'gabriela@mail.com', 'Correr', '2021-10-10', '10:00', 'Activo', '1234567890']],
+'actions': ['Borrar', 'Editar', 'Bloquear', 'Desbloquear', 'Ver', 'Descargar'],
+'filters': [{'nombre': 'Nombre', 'tipo': 'Texto' }, {'nombre': 'Estado', 'tipo': 'Select', 'opciones': ['Activo',
+'Inactivo']},{'nombre': 'Fecha', 'tipo': 'Fecha' }, {'nombre': 'Rango de Fecha', 'tipo': 'RangoFecha' }],
+} %}
+
 {% block main %}
-<h1 class="text-5xl dark:text-neutral-50">Inicio</h1>
-<p class="text-neutral-800 dark:text-neutral-300 pt-4">Página de inicio de la aplicacion</p>
-{% include 'components/theme_button.html' %}
+<div class="text-neutral-800 dark:text-neutral-300 flex items-center mb-4 gap-2">
+  <h1 class="text-xl dark:text-neutral-50">Página de inicio de la aplicacion</h1> {% include
+  'components/theme_button.html' %}
+</div>
+
+{{ datatable(data) }}
+
 {% endblock %}

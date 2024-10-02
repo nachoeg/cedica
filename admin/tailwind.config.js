@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./src/web/templates/**/*.html", "node_modules/preline/dist/*.js"],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        xs: "425px",
+      },
+    },
     container: {
       center: true,
     },

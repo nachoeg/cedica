@@ -19,6 +19,16 @@ def create_app(env="development", static_folder="../../static"):
     def serve_preline_js():
         return send_from_directory("../../node_modules/preline/dist", "preline.js")
 
+    @app.route("/jquery.js")
+    def serve_jquery_js():
+        return send_from_directory("../../node_modules/jquery/dist", "jquery.min.js")
+
+    @app.route("/datatables.js")
+    def serve_datatables_js():
+        return send_from_directory(
+            "../../node_modules/datatables.net/js", "dataTables.min.js"
+        )
+
     app.register_error_handler(404, error.error_not_found)
 
     @app.cli.command(name="reset-db")
