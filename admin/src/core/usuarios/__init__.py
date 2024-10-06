@@ -1,16 +1,49 @@
 from src.core.database import db
-from core.usuarios.usuario import Usuario
+from core.usuarios.usuario import Permiso, Rol, Usuario
 
 
-def list_users():
-    users = Usuario.query.all()
+# usuarios
+def listar_usuarios():
+    usuarios = Usuario.query.all()
 
-    return users
+    return usuarios
 
 
-def create_user(**kwargs):
-    user = Usuario(**kwargs)
-    db.session.add(user)
+def crear_usuario(**kwargs):
+    usuario = Usuario(**kwargs)
+    db.session.add(usuario)
     db.session.commit()
 
-    return user
+    return usuario
+
+
+def asignar_rol(usuario, rol):
+    usuario.roles.append(rol)
+    db.session.commit()
+
+    return usuario
+
+
+# roles
+def crear_rol(**kwargs):
+    rol = Rol(**kwargs)
+    db.session.add(rol)
+    db.session.commit()
+
+    return rol
+
+
+def asignar_permiso(rol, permiso):
+    rol.permisos.append(permiso)
+    db.session.commit()
+
+    return rol
+
+
+# permisos
+def crear_permiso(**kwargs):
+    permiso = Permiso(**kwargs)
+    db.session.add(permiso)
+    db.session.commit()
+
+    return permiso
