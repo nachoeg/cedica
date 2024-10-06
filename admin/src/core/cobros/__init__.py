@@ -1,10 +1,13 @@
 from src.core.database import db
 from src.core.cobros.cobro import Cobro
 
-# funcion que lista todos los cobros del sistema ordenados de manera ascendente
-def listar_cobros():
-    cobros = Cobro.query.all()
-    cobros_ordenados = sorted(cobros, key= lambda x: x.fecha_pago)
+''' 
+    Funcion que lista todos los cobros del sistema. Recibe un parámetro booleano llamado orden_asc
+    Si el parámetro es True, el orden es ascendente
+    Si el parámetro es False, el orden es descendente
+'''
+def listar_cobros(orden_asc=1, pagina_inicial=1, por_pag=20):
+    cobros_ordenados = Cobro.todos_paginados(orden_asc, pagina_inicial,por_pag)
     
     return cobros_ordenados
 

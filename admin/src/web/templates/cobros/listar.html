@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Listado de cobros {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block main %}
+<h1>Consultas</h1>
+<div id="tabla_cobros">
+<table id="tabla_cobros_a">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha de pago
+                {% if ascendente %}
+                    <a id="botonDescendente" type="button"
+                        class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                        aria-haspopup="menu" aria-expanded="false" href="{{ url_for('cobros.listar', asc='0', por_pag='2')}}">
+                        Descendente
+                    </a>
+                {% else %}
+                    <a id="botonAscendente" type="button"
+                        class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                        aria-haspopup="menu" aria-expanded="false" href="{{ url_for('cobros.listar',por_pag='2')}}">
+                        Ascendente
+                    </a>
+                {% endif %}
+
+            </th>
+            <th>Medio de pago</th>
+            <th>Monto</th>
+            <th>Observaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cobro in cobros_paginados.items %}
+        <tr>
+            <th>{{ cobro.id }}</th>
+            <th>{{ cobro.fecha_pago }}</th>
+            <th>{{ cobro.medio_de_pago }}</th>
+            <th>{{ cobro.monto }}</th>
+            <th>{{ cobro.observaciones }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class=pagination>
+    {% for page in cobros_paginados.iter_pages() %}
+        {% if page %}
+            {% if page != cobros_paginados.page %}
+                <a href="{{ url_for('cobros.listar', asc=ascendente, pagina=page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@ from src.core.database import db
 from datetime import datetime
 import enum
 from sqlalchemy.types import Enum
-
+from flask_sqlalchemy import SQLAlchemy
 class Cobro(db.Model):
     __tablename__ = "cobros"
 
@@ -22,6 +22,18 @@ class Cobro(db.Model):
     observaciones = db.Column(db.String(100))
     #recibio_el_dinero(referencia a tabla de miembros)
     #joa(referencia a tabla de jya)
+
+    '''
+        Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
+        El parámetro asc se utiliza para que, si se le pasa de manera explícita un 0 como parámetro, 
+        se devuelvan los resultados de manera descendente
+    '''
+    @staticmethod
+    def todos_paginados(asc=1, pagina=1, por_pagina=2):
+        if asc == 0:
+                return Cobro.query.order_by(Cobro.fecha_pago.desc()).paginate(page=pagina, per_page=por_pagina)
+        else:
+            return Cobro.query.order_by(Cobro.fecha_pago.asc()).paginate(page=pagina, per_page=por_pagina)
 
 
     def __repr__(self):
