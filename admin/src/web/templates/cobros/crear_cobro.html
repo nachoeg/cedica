@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+{% block title %} Nuevo cobro {% endblock %}
+{% block main %}
+    <form action="{{ url_for('cobros.nuevo_cobro') }}" method="post" novalidate>
+        {{ form.csrf_token }}
+        <div>
+            {{ form.fecha_pago.label }}
+            {{ form.fecha_pago }}<br>
+            {% for error in form.fecha_pago.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.medio_de_pago.label }}
+            {{ form.medio_de_pago }}<br>
+            {% for error in form.medio_de_pago.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.monto.label }}
+            {{ form.monto }}<br>
+            {% for error in form.monto.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.observaciones.label }}
+            {{ form.observaciones(size=64) }}<br>
+            {% for error in form.observaciones.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+{% endblock %}

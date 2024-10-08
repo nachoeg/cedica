@@ -8,6 +8,8 @@
 
 {% block main %}
 <h1>Consultas</h1>
+
+<a href="{{ url_for('cobros.nuevo_cobro') }}">Nuevo cobro</a>
 <div id="tabla_cobros">
 <table id="tabla_cobros_a">
     <thead>
@@ -18,13 +20,13 @@
                     <a id="botonDescendente" type="button"
                         class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                         aria-haspopup="menu" aria-expanded="false" href="{{ url_for('cobros.listar', asc='0', por_pag='2')}}">
-                        Descendente
+                        Ascendente
                     </a>
                 {% else %}
                     <a id="botonAscendente" type="button"
                         class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                         aria-haspopup="menu" aria-expanded="false" href="{{ url_for('cobros.listar',por_pag='2')}}">
-                        Ascendente
+                        Descendente
                     </a>
                 {% endif %}
 

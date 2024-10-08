@@ -13,10 +13,10 @@ def listar_cobros(orden_asc=1, pagina_inicial=1, por_pag=20):
 
 
 # función que crea un cobro
-def crear_cobro(**kwargs):
-    cobro = Cobro(**kwargs)
+def crear_cobro(fecha_pago, medio_de_pago, monto, observaciones):
+    cobro = Cobro(fecha_pago=fecha_pago, medio_de_pago=medio_de_pago, monto=monto, observaciones=observaciones)
     db.session.add(cobro)
     db.session.commit()
-
+    
     return cobro
 
