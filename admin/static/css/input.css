@@ -13,11 +13,6 @@
   }
   html {
     font-family: "Inter", system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
-}
-
-.dt-layout-row:has(.dt-search),
-.dt-layout-row:has(.dt-length),
-.dt-layout-row:has(.dt-paging) {
-  display: none !important;
 }
