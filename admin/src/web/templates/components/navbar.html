@@ -1,15 +1,15 @@
 {% from 'components/iconos.html' import user_icon, hamburger_icon, close_icon, logout_icon, google_icon,
-avatar_placeholder_icon %}
+avatar_placeholder_icon, show_password_icon %}
 
 <header
-  class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white dark:bg-neutral-900 text-sm py-2 border-b dark:border-neutral-700">
+  class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-900/65 text-sm py-2 border-b dark:border-neutral-700">
   <nav class="max-w-[90rem] w-full mx-auto px-2 sm:px-8 flex flex-wrap basis-full items-center justify-between gap-y-4">
 
     <!-- Logo -->
     <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
       <img src="{{ url_for('static', filename='images/cedica-isotipo.webp')}}" alt="" class="max-h-7">
       <img src="{{ url_for('static', filename='images/cedica-logotipo.webp')}}" alt=""
-        class="max-h-7 dark:brightness-200 dark:contrast-150 hidden xs:block">
+        class="max-h-7 dark:brightness-200 dark:contrast-150">
     </a>
 
     <div class="sm:order-3 flex items-center gap-x-2">
@@ -30,23 +30,31 @@ avatar_placeholder_icon %}
           class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
           aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
           {{user_icon('size-4')}}
-          Iniciar sesión
+          <span class="hidden xs:block">Iniciar sesión</span>
         </button>
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-xl mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-xl mt-2 dark:bg-neutral-900 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
           role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-default">
           <form class="p-4 space-y-4" action="login" method="POST">
             <div>
               <label for="email" class="block text-sm font-medium mb-1 dark:text-white">Email</label>
               <input type="email" id="email" autocomplete="email"
-                class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                placeholder="ejemplo@email.com">
+                class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 border"
+                placeholder="ejemplo@email.com" required>
             </div>
             <div>
               <label for="password" class="block text-sm font-medium mb-1 dark:text-white">Contraseña</label>
-              <input type="password" id="password" autocomplete="current-password"
-                class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                placeholder="********">
+              <div class="relative">
+                <input id="password" type="password"
+                  class="py-2 ps-4 pe-10 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                  placeholder="Contraseña" value="" required>
+                <button type="button" data-hs-toggle-password='{
+                    "target": "#password"
+                  }'
+                  class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
+                  {{show_password_icon()}}
+                </button>
+              </div>
             </div>
             <div class="space-y-2">
               <button type="button"
@@ -98,13 +106,16 @@ avatar_placeholder_icon %}
     <div id="hs-navbar-alignment"
       class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
       aria-labelledby="hs-navbar-alignment-collapse">
-      <div class="flex flex-col gap-4 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="jinetes-y-amazonas">J&A</a>
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="escuestre">Ecuestre</a>
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="equipo">Equipo</a>
+      <div class="flex flex-col gap-4 my-5 sm:flex-row sm:items-center sm:my-0 sm:ps-5">
+        {% set navbarLinksClases = 'py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg
+        text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50
+        disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-800 dark:focus:bg-neutral-800' %}
+        <a class="{{navbarLinksClases}}" href="jinete-y-amazonas">J&A</a>
+        <a class="{{navbarLinksClases}}" href="escuestre">Ecuestre</a>
+        <a class="{{navbarLinksClases}}" href="equipo">Equipo</a>
+        {% if true %} <!-- Cambiar por if is_authenticated(session) -->
+        <a class="{{navbarLinksClases}}" href="usuarios">Usuarios</a>
+        {% endif %}
       </div>
     </div>
   </nav>
