@@ -1,10 +1,10 @@
 {% from 'components/iconos.html' import dropdown_icon, search_icon,
-ordering_icon, chevron_left_icon, sliders_horizontal_icon %} {% macro
+ordering_icon, chevron_left_icon, sliders_horizontal_icon, spinner_icon %} {% macro
 tabla(data) %}
 
 <div
   id="tabla"
-  class="flex flex-col bg-white dark:bg-neutral-900 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden"
+  class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden"
 >
   <div class="flex items-center space-x-2 px-6 py-4">
     <!-- Busqueda -->
@@ -15,13 +15,13 @@ tabla(data) %}
           type="text"
           name="tabla-busqueda"
           id="tabla-busqueda"
-          class="py-2 px-3 ps-9 block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+          class="py-1.5 px-8 ps-10 block w-full border-transparent shadow-sm rounded-lg text-sm focus:z-10 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700  dark:text-neutral-300 dark:placeholder-neutral-400 dark:focus:border-transparent dark:focus:ring-blue-600"
           placeholder="Buscar"
         />
         <div
           class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
         >
-          {{search_icon("size-4 text-gray-400 dark:text-neutral-500")}}
+          {{search_icon("size-4 text-gray-500 dark:text-neutral-400")}}
         </div>
       </div>
     </div>
@@ -34,26 +34,26 @@ tabla(data) %}
         <button
           id="hs-dropdown-filtro"
           type="button"
-          class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+          class="hs-dropdown-toggle py-2 px-2.5 inline-flex items-center gap-x-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
         >
-          {{sliders_horizontal_icon('size-4')}} Filtrar {{dropdown_icon()}}
+          {{sliders_horizontal_icon('size-[14px] dark:text-neutral-300')}} Filtrar {{dropdown_icon()}}
         </button>
 
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden bg-white border border-gray-200 shadow-md rounded-xl p-4 mt-2 dark:bg-neutral-900 dark:border dark:border-neutral-700"
+          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden bg-white border border-gray-200 shadow-2xl rounded-xl p-4 mt-2 dark:bg-neutral-900  dark:border-neutral-800"
           aria-labelledby="hs-dropdown-filtro"
         >
           <div class="space-y-4">
-            {% set inputFiltrosClases = 'py-2 px-4 block w-full border
+            {% set inputFiltrosClases = 'py-2 px-4 block w-full border-0
             border-gray-200 rounded-lg text-sm focus:border-blue-500
             focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none
-            bg-transparent dark:bg-neutral-900 dark:border-neutral-700
-            dark:text-neutral-400 dark:placeholder-neutral-500
-            dark:focus:ring-neutral-600'%} {% for filtro in data.filtros %}
+            bg-gray-100 text-gray-500 dark:bg-neutral-800 dark:border-neutral-700
+            dark:text-neutral-400 dark:placeholder-neutral-400
+            dark:focus:ring-blue-600'%} {% for filtro in data.filtros %}
             <div>
               <label
                 for="tabla-filtro-{{ loop.index }}"
-                class="block text-sm font-medium mb-1 dark:text-white"
+                class="block text-sm  mb-1 dark:text-white"
               >
                 {{ filtro.nombre }}
               </label>
@@ -96,17 +96,17 @@ tabla(data) %}
           <!-- Headers -->
           <thead
             id="tabla-encabezado"
-            class="bg-gray-50 dark:bg-neutral-800 uppercase border-b border-gray-200 dark:border-neutral-700"
+            class="uppercase border-b border-gray-200 dark:border-neutral-700"
           >
             <tr>
               {% for encabezado in data.encabezados %}
               <th
                 scope="col"
-                class="py-1 px-4 group text-start text-xs font-semibold text-gray-800 dark:text-neutral-200 focus:outline-none"
+                class="py-1 px-4 group text-start text-xs font-semibold text-gray-500 dark:text-neutral-500 focus:outline-none"
               >
                 {% if encabezado in data.ordenar %}
                 <button
-                  class="group py-1.5 px-2 inline-flex items-center hover:text-gray-600 uppercase dark:hover:text-neutral-300 hover:outline outline-1 outline-gray-300 dark:outline-neutral-700 rounded"
+                  class="group py-1.5 px-2 inline-flex items-center hover:bg-gray-100 uppercase  dark:hover:bg-neutral-700/50 rounded-md"
                   onclick="ordenarTabla('{{ encabezado }}')"
                   id="tabla-ordenar-{{ encabezado|lower }}"
                 >
@@ -120,9 +120,7 @@ tabla(data) %}
               <th
                 scope="col"
                 class="py-1 px-6 text-start text-xs font-semibold text-gray-800 dark:text-neutral-200 focus:outline-none"
-              >
-                Acciones
-              </th>
+              ></th>
               {% endif %}
             </tr>
           </thead>
@@ -150,13 +148,13 @@ tabla(data) %}
       </p>
     </div>
 
-    <div class="flex gap-x-2">
+    <div class="flex gap-x-1">
       {% set botonPaginacionClases = 'size-9 justify-center inline-flex
-      items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200
-      bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none
-      focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none
-      dark:bg-neutral-900 dark:border-neutral-700 dark:text-white
-      dark:hover:bg-neutral-800'%}
+      items-center gap-x-2 text-sm font-medium rounded-lg border-gray-200
+      bg-white text-gray-800 hover:bg-gray-100 focus:outline-none
+      focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none
+      dark:bg-neutral-800 dark:border-neutral-700 dark:text-white
+      dark:hover:bg-neutral-700/50'%}
       <button
         type="button"
         id="tabla-anterior-pagina"
@@ -165,7 +163,7 @@ tabla(data) %}
       >
         {{ chevron_left_icon('size-3') }}
       </button>
-      <div id="tabla-paginacion" class="flex gap-x-2"></div>
+      <div id="tabla-paginacion" class="flex gap-x-1"></div>
       <button
         type="button"
         id="tabla-siguiente-pagina"
@@ -222,10 +220,24 @@ tabla(data) %}
   }
 
   const cargarTabla = async (pagina = 1) => {
+
+    // Pongo spinner en la tabla
+    const heightTablaBody = tablaBody.offsetHeight // Mantengo el alto de la tabla para que no haya un desplazamiento innecesario
+    tablaBody.innerHTML = '' // Limpio la tabla y pongo el spinner
+    tablaBody.innerHTML = `
+      <tr>
+        <td colspan="{{ data.encabezados|length + 1 }}" class="size-px whitespace-nowrap"> 
+          <div class="h-[${heightTablaBody}px] py-10 px-5 flex gap-1 justify-center items-start text-center text-gray-600 dark:text-neutral-500 max-w-sm mx-auto">
+              {{spinner_icon()}}
+          </div>
+        </td>
+      </tr>
+    `
+
     // Obtengo los datos teniendo en cuenta la busqueda, los filtros, la pagina y el orden
     const response = await fetch('{{ data.url }}'
       + '?busqueda=' + busqueda.value
-      + '&page=' + pagina
+      + '&pagina=' + pagina
       {% if (data.filtros) %}
         {% for filtro in data.filtros %}
         + '&{{ filtro.nombre|lower|replace(" ","-") }}=' +
@@ -233,97 +245,115 @@ tabla(data) %}
         {% endfor %}
       {% endif %}
       + '&ordenar-por=' + ordenarPor + '&orden=' + orden
-      )
-  const data = await response.json()
+    )
+    const data = await response.json()
+    
 
-  // Limpio y lleno la tabla
-  tablaBody.innerHTML = ''
+    // Limpio y lleno la tabla con los datos obtenidos
+    tablaBody.innerHTML = ''
 
-  data.resultados.forEach(row => {
-    const tr = document.createElement('tr')
-    tr.classList.add('hover:bg-gray-50', 'dark:hover:bg-neutral-800/50')
-    row.forEach(cell => {
-      const td = document.createElement('td')
-      td.classList.add('size-px', 'whitespace-nowrap')
-      td.innerHTML = `<div class="px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">${cell}</div>`
-      tr.appendChild(td)
-    })
-    {% if data.acciones %}
-    const td = document.createElement('td')
-    td.classList.add('size-px', 'whitespace-nowrap')
-    const div = document.createElement('div')
-    div.classList.add('flex', 'gap-2', 'px-6')
-    let button
-    {% for accion in data.acciones %}
-    button = document.createElement('button')
-    button.classList.add('py-1', 'px-2', 'inline-flex', 'items-center', 'justify-center', 'gap-x-2', 'text-sm', 'font-medium', 'rounded-lg', 'border', 'border-gray-200', 'text-gray-800', 'shadow-sm', 'focus:outline-none', 'hover:bg-gray-200', 'disabled:opacity-50', 'disabled:pointer-events-none', 'dark:border-neutral-700', 'dark:text-white', 'dark:hover:bg-neutral-700')
-    button.innerHTML = '{{ accion }}'
-    button.onclick = () => {{ accion | lower }}(row[0])
-    div.appendChild(button)
-    {% endfor %}
-    td.appendChild(div)
-    tr.appendChild(td)
-    {% endif %}
-    tablaBody.appendChild(tr)
-  })
-
-  // Actualizo la cantidad de resultados
-  cantidadResultados.innerHTML = data.cantidadResultados
-
-  // Actualizo la paginacion
-  botonAnteriorPagina.onclick = () => cargarTabla(pagina - 1)
-  botonSiguientePagina.onclick = () => cargarTabla(pagina + 1)
-
-  if (pagina == 1) {
-    botonAnteriorPagina.disabled = true
-  } else {
-    botonAnteriorPagina.disabled = false
-  }
-
-  if (pagina == data.cantidadPaginas) {
-    botonSiguientePagina.disabled = true
-  } else {
-    botonSiguientePagina.disabled = false
-  }
-
-  paginacion.innerHTML = ''
-
-  if (data.cantidadPaginas > 1) {
-
-    // Calculo el rango de paginas a mostrar (maximo 5)
-    let inicio = Math.max(1, pagina - 2)
-    let fin = Math.min(data.cantidadPaginas, pagina + 2)
-
-    if (fin - inicio < 4) {
-      if (inicio == 1) {
-        fin = Math.min(data.cantidadPaginas, inicio + 4)
-      } else {
-        inicio = Math.max(1, fin - 4)
-      }
+    // Si no hay resultados muestro un mensaje
+    if (data.resultados.length == 0) {
+      tablaBody.innerHTML = `
+        <tr>
+          <td class="size-px whitespace-nowrap" colspan="{{ data.encabezados|length + 1 }}">
+            <div class="py-10 px-5 flex flex-col justify-center items-center text-center text-gray-600 dark:text-neutral-500">
+              {{ search_icon("size-6") }}
+              <div class="max-w-sm mx-auto">
+                <p class="mt-2 text-sm">No se encontraron resultados</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+    } else { // Creo una fila por cada resultado
+      data.resultados.forEach(row => {
+        const tr = document.createElement('tr')
+        tr.classList.add('hover:bg-gray-100/70', 'dark:hover:bg-neutral-700/20')
+        row.forEach(cell => {
+          const td = document.createElement('td')
+          td.classList.add('size-px', 'whitespace-nowrap')
+          td.innerHTML = `<div class="px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">${cell}</div>`
+          tr.appendChild(td)
+        })
+        // Creo los botones de accion de cada fila
+        {% if data.acciones %}
+          const td = document.createElement('td')
+          td.classList.add('size-px', 'whitespace-nowrap')
+          const div = document.createElement('div')
+          div.classList.add('flex', 'gap-1', 'px-4', 'justify-end')
+          let button
+          {% for accion in data.acciones %}
+            button = document.createElement('button')
+            button.classList.add('py-1', 'px-2', 'inline-flex', 'items-center', 'justify-center', 'gap-x-2', 'text-sm', 'font-medium', 'rounded-lg', 'disabled:opacity-50', 'disabled:pointer-events-none', 'text-blue-600', 'hover:bg-blue-100', 'hover:text-blue-800', 'focus:outline-none', 'focus:bg-blue-100', 'focus:text-blue-800', 'dark:text-blue-500', 'dark:hover:bg-blue-800/30', 'dark:hover:text-blue-400', 'dark:focus:bg-blue-800/30', 'dark:focus:text-blue-400')
+            button.innerHTML = '{{ accion }}'
+            button.onclick = () => {{ accion | lower }}(row[0])
+            div.appendChild(button)
+          {% endfor %}
+          td.appendChild(div)
+          tr.appendChild(td)
+        {% endif %}
+        tablaBody.appendChild(tr)
+      })
     }
 
-    // Creo los botones de cada pagina
-    for (let i = inicio; i <= fin; i++) {
-      const li = document.createElement('button')
-      li.innerHTML = i
-      li.classList.add('size-9', 'inline-flex', 'items-center', 'justify-center', 'gap-x-2', 'text-sm', 'font-medium', 'rounded-lg', 'border', 'border-gray-200', 'text-gray-800', 'shadow-sm', 'focus:outline-none', 'focus:bg-gray-50', 'disabled:opacity-50', 'disabled:pointer-events-none', 'dark:border-neutral-700', 'dark:text-white', 'dark:focus:bg-neutral-700')
-      if (i == pagina) {
-        li.classList.add('bg-gray-100', 'dark:bg-neutral-700')
-      } else {
-        li.classList.add('bg-white', 'dark:bg-neutral-900', 'hover:bg-gray-50', 'dark:hover:bg-neutral-800')
-      }
-      li.addEventListener('click', () => cargarTabla(i))
-      paginacion.appendChild(li)
+    // Actualizo la cantidad de resultados
+    cantidadResultados.innerHTML = data.cantidadResultados
+
+    // Actualizo la paginacion
+    botonAnteriorPagina.onclick = () => cargarTabla(pagina - 1)
+    botonSiguientePagina.onclick = () => cargarTabla(pagina + 1)
+
+    if (pagina == 1) {
+      botonAnteriorPagina.disabled = true
+    } else {
+      botonAnteriorPagina.disabled = false
     }
-  }
+
+    if (pagina == data.cantidadPaginas) {
+      botonSiguientePagina.disabled = true
+    } else {
+      botonSiguientePagina.disabled = false
+    }
+
+    paginacion.innerHTML = ''
+
+    if (data.cantidadPaginas > 1) {
+
+      // Calculo el rango de paginas a mostrar (maximo 5)
+      let inicio = Math.max(1, pagina - 2)
+      let fin = Math.min(data.cantidadPaginas, pagina + 2)
+
+      if (fin - inicio < 4) {
+        if (inicio == 1) {
+          fin = Math.min(data.cantidadPaginas, inicio + 4)
+        } else {
+          inicio = Math.max(1, fin - 4)
+        }
+      }
+
+      // Creo los botones de cada pagina
+      for (let i = inicio; i <= fin; i++) {
+        const li = document.createElement('button')
+        li.innerHTML = i
+        li.classList.add('size-9', 'inline-flex', 'items-center', 'justify-center', 'gap-x-2', 'text-sm', 'font-medium', 'rounded-lg',  'border-gray-200', 'text-gray-800', 'focus:outline-none', 'focus:bg-gray-50', 'disabled:opacity-50', 'disabled:pointer-events-none', 'dark:border-neutral-700', 'dark:text-white', 'dark:focus:bg-neutral-700')
+        if (i == pagina) {
+          li.classList.add('bg-gray-200', 'dark:bg-neutral-700')
+        } else {
+          li.classList.add('bg-white', 'dark:bg-neutral-800', 'hover:bg-gray-100', 'dark:hover:bg-neutral-700/50')
+        }
+        li.addEventListener('click', () => cargarTabla(i))
+        paginacion.appendChild(li)
+      }
+    }
   }
 
   // Actualizo la tabla al modificar la busqueda y los filtros
   busqueda.addEventListener('input', () => cargarTabla())
   {% if data.filtros %}
-  filtros.forEach(filtro => {
-    filtro.addEventListener('input', () => cargarTabla())
-  })
+    filtros.forEach(filtro => {
+      filtro.addEventListener('input', () => cargarTabla())
+    })
   {% endif %}
 
   cargarTabla()
