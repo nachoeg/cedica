@@ -3,6 +3,7 @@ from src.web.handlers import error
 from src.core import database
 from src.core.config import config
 from src.core import seeds
+from .controllers.miembro import miembro_bp
 
 
 def create_app(env="development", static_folder="../../static"):
@@ -28,5 +29,7 @@ def create_app(env="development", static_folder="../../static"):
     @app.cli.command(name="seeds-db")
     def seeds_db():
         seeds.run()
+
+    app.register_blueprint(miembro_bp)
 
     return app

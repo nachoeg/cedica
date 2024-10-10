@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Detalles de Miembro</h1>
+    
+    <p><strong>Nombre:</strong> {{ miembro.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ miembro.apellido }}</p>
+    <p><strong>DNI:</strong> {{ miembro.dni }}</p>
+    <p><strong>Email:</strong> {{ miembro.email }}</p>
+    <p><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+    <p><strong>Contacto de Emergencia:</strong> {{ miembro.nombreContactoEmergencia }}</p>
+    <p><strong>Teléfono de Emergencia:</strong> {{ miembro.telefonoContactoEmergencia }}</p>
+    <p><strong>Obra Social:</strong> {{ miembro.obraSocial }}</p>
+    <p><strong>Número de Afiliado:</strong> {{ miembro.numeroAfiliado }}</p>
+    <p><strong>Profesión:</strong> {{ miembro.profesion.nombre }}</p>
+    <p><strong>Condición:</strong> {{ miembro.condicion.nombre }}</p>
+    <p><strong>Puesto Laboral:</strong> {{ miembro.puesto_laboral.nombre }}</p>
+    <p><strong>Activo:</strong> {{ 'Sí' if miembro.activo else 'No' }}</p>
+
+    <a href="{{ url_for('edit_miembro', id=miembro.id) }}">Editar</a>
+    <form action="{{ url_for('destroy_miembro', id=miembro.id) }}" method="POST" style="display:inline;">
+        <button type="submit">Eliminar</button>
+    </form>
+{% endblock %}

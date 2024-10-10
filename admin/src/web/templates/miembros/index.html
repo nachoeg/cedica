@@ -1,0 +1,54 @@
+<!-- templates/miembros/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Miembros</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Miembros</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>Profesión</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for miembro in miembros %}
+            <tr>
+                <td>{{ miembro.id }}</td>
+                <td>{{ miembro.nombre }}</td>
+                <td>{{ miembro.apellido }}</td>
+                <td>{{ miembro.dni }}</td>
+                <td>{{ miembro.email }}</td>
+                <td>{{ miembro.profesion.nombre }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No hay miembros registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

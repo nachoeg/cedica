@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Editar Miembro</h1>
+
+    <form method="POST" action="{{ url_for('edit_miembro', id=miembro.id) }}">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" value="{{ miembro.nombre }}" required>
+
+        <label for="apellido">Apellido</label>
+        <input type="text" name="apellido" value="{{ miembro.apellido }}" required>
+
+        <label for="dni">DNI</label>
+        <input type="text" name="dni" value="{{ miembro.dni }}" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" value="{{ miembro.email }}" required>
+
+        <label for="telefono">Teléfono</label>
+        <input type="text" name="telefono" value="{{ miembro.telefono }}" required>
+
+        <label for="nombreContactoEmergencia">Contacto de Emergencia</label>
+        <input type="text" name="nombreContactoEmergencia" value="{{ miembro.nombreContactoEmergencia }}" required>
+
+        <label for="telefonoContactoEmergencia">Teléfono de Emergencia</label>
+        <input type="text" name="telefonoContactoEmergencia" value="{{ miembro.telefonoContactoEmergencia }}" required>
+
+        <label for="obraSocial">Obra Social</label>
+        <input type="text" name="obraSocial" value="{{ miembro.obraSocial }}" required>
+
+        <label for="numeroAfiliado">Número de Afiliado</label>
+        <input type="text" name="numeroAfiliado" value="{{ miembro.numeroAfiliado }}" required>
+
+        <label for="profesion_id">Profesión</label>
+        <select name="profesion_id">
+            {% for profesion in profesiones %}
+                <option value="{{ profesion.id }}" {% if miembro.profesion_id == profesion.id %}selected{% endif %}>
+                    {{ profesion.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="condicion_id">Condición</label>
+        <select name="condicion_id">
+            {% for condicion in condiciones %}
+                <option value="{{ condicion.id }}" {% if miembro.condicion_id == condicion.id %}selected{% endif %}>
+                    {{ condicion.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="puesto_laboral_id">Puesto Laboral</label>
+        <select name="puesto_laboral_id">
+            {% for puesto in puestos %}
+                <option value="{{ puesto.id }}" {% if miembro.puesto_laboral_id == puesto.id %}selected{% endif %}>
+                    {{ puesto.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="activo">Activo</label>
+        <input type="checkbox" name="activo" {% if miembro.activo %}checked{% endif %}>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+{% endblock %}
