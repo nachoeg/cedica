@@ -21,8 +21,8 @@ def listar(asc: int = 1):
     
     return render_template("jinetes_y_amazonas/listar.html", jinetes_paginados=jinetes, ascendente=ascendente)
 
-''' @bp.route("/nuevo_joa", methods=["GET", "POST"])
-def nuevo_cobro():
+@bp.route("/nuevo_joa", methods=["GET", "POST"])
+def nuevo_j_y_a():
     form = CobroForm()
     form.joa.choices = [(joa.id, joa.nombre +" "+ joa.apellido) for joa in JineteOAmazona.query.order_by('nombre')]
     if form.validate_on_submit():
@@ -38,7 +38,7 @@ def nuevo_cobro():
     return render_template("cobros/crear_cobro.html", form=form)
 
 
-@bp.route("/editar_cobro/<string:id>", methods=["GET", "POST"])
+''' @bp.route("/editar_cobro/<string:id>", methods=["GET", "POST"])
 def editar_cobro(id: str):
     cobro = encontrar_cobro(id)
     print(cobro)
