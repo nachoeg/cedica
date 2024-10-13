@@ -21,7 +21,9 @@ class Cobro(db.Model):
     monto = db.Column(db.Double, nullable=False)
     observaciones = db.Column(db.String(100))
     #recibio_el_dinero(referencia a tabla de miembros)
-    #joa(referencia a tabla de jya)
+    joa_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
+
+    joa = db.relationship('JineteOAmazona')
 
     '''
         Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.

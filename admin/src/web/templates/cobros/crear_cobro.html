@@ -1,8 +1,9 @@
 {% extends "layouts/base.html" %}
 {% block title %} Nuevo cobro {% endblock %}
 {% block main %}
-    <form action="{{ url_for('cobros.nuevo_cobro') }}" method="post" novalidate>
+    <form method="post" novalidate>
         {{ form.csrf_token }}
+        {{ form.joa.label }}: {{ form.joa }}
         <div>
             {{ form.fecha_pago.label }}
             {{ form.fecha_pago }}<br>
@@ -26,7 +27,7 @@
         </div>
         <div>
             {{ form.observaciones.label }}
-            {{ form.observaciones(size=64) }}<br>
+            {{ form.observaciones }}<br>
             {% for error in form.observaciones.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}

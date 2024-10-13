@@ -13,10 +13,17 @@ def listar_cobros(orden_asc=1, pagina_inicial=1, por_pag=20):
 
 
 # función que crea un cobro
-def crear_cobro(fecha_pago, medio_de_pago, monto, observaciones):
-    cobro = Cobro(fecha_pago=fecha_pago, medio_de_pago=medio_de_pago, monto=monto, observaciones=observaciones)
+def crear_cobro(fecha_pago, medio_de_pago, monto, observaciones, joa_id):
+    cobro = Cobro(fecha_pago=fecha_pago, medio_de_pago=medio_de_pago, monto=monto, observaciones=observaciones, joa_id=joa_id)
     db.session.add(cobro)
     db.session.commit()
     
     return cobro
+
+def encontrar_cobro(id):
+    return db.get_or_404(Cobro, id)
+
+def guardar_cambios():
+    db.session.commit()
+
 
