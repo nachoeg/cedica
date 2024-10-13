@@ -1,9 +1,12 @@
 from flask import Flask, render_template, send_from_directory
+from flask_session import Session
 from src.web.handlers import error
 from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.core import database
 from src.core.config import config
 from src.core import seeds
+
+session = Session()
 
 
 def create_app(env="development", static_folder="../../static"):
@@ -11,6 +14,8 @@ def create_app(env="development", static_folder="../../static"):
 
     app.config.from_object(config[env])
     database.init_app(app)
+
+    session.init_app(app)
 
     @app.route("/")
     def home():

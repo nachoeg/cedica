@@ -22,3 +22,9 @@ def iniciar_sesion():
             return redirect(url_for('home'))
 
     return render_template('usuarios/iniciar_sesion.html')
+
+
+@bp.route('/cerrar_sesion')
+def cerrar_sesion():
+    session.clear()
+    return redirect(url_for('home'))
