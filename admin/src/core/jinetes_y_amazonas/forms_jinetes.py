@@ -59,6 +59,6 @@ class InfoInstitucionalJYAForm(FlaskForm):
     propuesta_trabajo = SelectField('Propuesta de trabajo', choices=[('hipoterapia','Hipoterapia'),('monta_terapeutica','Monta terapéutica'),('deporte_ecuestre', 'Deporte ecuestre adaptado'), ('actividades_recreativas', 'Actividades recreativas'), ('equitacion', 'Equitación')])
     condicion = SelectField('Condicion', choices=[('regular','Regular'), ('de_baja', 'De baja')])
     sede = SelectField('Sede', choices=[('CASJ', 'CASJ'),('HLP','HLP'), ('otro', 'Otro')])
-
+    dias = SelectMultipleField('Dias', choices=[('lun', 'Lunes'),('mar', 'Martes'),('mie', 'Miercoles'), ('jue', 'Jueves'),('vie', 'Viernes'),('sab', 'Sabado'), ('dom', 'Domingo') ])
 
 
