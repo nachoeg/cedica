@@ -68,3 +68,9 @@ def crear_permiso(**kwargs):
     db.session.commit()
 
     return permiso
+
+
+def get_permisos(usuario):
+    permisos = db.session.execute(db.select(Permiso).join(Permiso.roles).join(Rol.usuarios.and_(Usuario.id == usuario.id))).unique().scalars().all()
+
+    return permisos

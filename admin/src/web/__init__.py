@@ -6,7 +6,7 @@ from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from web.handlers.autenticacion_handler import esta_autenticado
+from web.handlers.autenticacion import esta_autenticado
 
 session = Session()
 
@@ -26,7 +26,9 @@ def create_app(env="development", static_folder="../../static"):
 
     @app.route("/preline.js")
     def serve_preline_js():
-        return send_from_directory("../../node_modules/preline/dist", "preline.js")
+        return send_from_directory("../../node_modules/preline/dist",
+                                   "preline.js",
+                                   )
 
     app.register_blueprint(bp_autenticacion)
 

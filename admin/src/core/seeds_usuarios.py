@@ -26,7 +26,15 @@ def cargar_roles():
     roles["rol_administracion"] = usuarios.crear_rol(nombre="Administración")
 
     permisos = cargar_permisos()
+
+    # rol ADMINISTRACIÓN
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_miembro_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_miembro_crear"])
+
+    # rol ECUESTRE
+    usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_miembro_crear"])
+    usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_usuario_listar"])
+    usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_usuario_actualizar"])
 
     return roles
 
@@ -38,3 +46,5 @@ def cargar_usuarios():
 
     roles = cargar_roles()
     usuarios.asignar_rol(usuario1, roles["rol_administracion"])
+    usuarios.asignar_rol(usuario1, roles["rol_ecuestre"])
+    usuarios.asignar_rol(usuario3, roles["rol_ecuestre"])
