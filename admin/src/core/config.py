@@ -2,6 +2,7 @@ from os import environ
 
 class Config(object):
 	TESTING = False
+	SECRET_KEY = "algo"
 	
 class ProductionConfig(Config):
 	SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URL")

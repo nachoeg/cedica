@@ -24,6 +24,16 @@ def asignar_rol(usuario, rol):
     return usuario
 
 
+# agregar filtro por contraseña
+def usuario_por_email_y_contraseña(email, contraseña):
+    usuario = db.session.execute(db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
+    
+    # # first() y one() devuelven una tupla, para que sea sólo el objeto tendría que usar scalars
+    # usuario = db.session.scalars(db.select(Usuario).where(Usuario.email == email)).first()
+
+    return usuario
+
+
 # roles
 def crear_rol(**kwargs):
     rol = Rol(**kwargs)
