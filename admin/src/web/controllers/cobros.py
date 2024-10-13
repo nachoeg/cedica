@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
 from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios
-from forms import CobroForm
+from src.core.cobros.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
