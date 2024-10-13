@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, render_template, send_from_directory
 from flask_session import Session
 from src.core.bcrypt import bcrypt
@@ -9,6 +10,9 @@ from src.core import seeds
 from web.handlers.autenticacion import esta_autenticado
 
 session = Session()
+
+logging.basicConfig()
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 def create_app(env="development", static_folder="../../static"):
