@@ -7,7 +7,7 @@ class Usuario(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    # contraseña = 
+    contraseña = db.Column(db.String(100), nullable=False)
     alias = db.Column(db.String(100), nullable=False, unique=True)
     activo = db.Column(db.Boolean, nullable=False)
     admin_sistema = db.Column(db.Boolean, default=False, nullable=False)

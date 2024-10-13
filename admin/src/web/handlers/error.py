@@ -16,3 +16,9 @@ def error_not_found(e):
     error = Error(404, "Not found", "The requested URL was not found on the server.")
 
     return render_template("error.html", error=error), error.code
+
+
+def no_autorizado(e):
+    error = Error(401, "No autorizado", "No tiene autorización para acceder")
+
+    return render_template("pages/error.html", error=error), error.code

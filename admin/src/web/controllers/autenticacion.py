@@ -17,7 +17,7 @@ def iniciar_sesion():
 
         else:
             session.clear()
-            session['user'] = usuario.email
+            session['usuario'] = usuario.email
             flash('Ha iniciado sesión', 'exito')
             return redirect(url_for('home'))
 
@@ -26,5 +26,8 @@ def iniciar_sesion():
 
 @bp.route('/cerrar_sesion')
 def cerrar_sesion():
+    # raise Exception(f'{session.get('usuario')}')
+    del session['usuario']
     session.clear()
+    flash('Se ha cerrado la sesión', 'exito')
     return redirect(url_for('home'))

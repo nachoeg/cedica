@@ -18,7 +18,7 @@ avatar_placeholder_icon %}
         {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
         <span class="sr-only">Toggle</span>
       </button>
-      {% if true %} <!-- Cambiar por if is_authenticated(session) -->
+      {% if not esta_autenticado(session) %} <!-- Cambiar por if is_authenticated(session) -->
       <div class="hs-dropdown [--auto-close:inside] relative inline-flex ">
         <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
           href="{{ url_for('autenticacion.iniciar_sesion') }}">
@@ -82,7 +82,7 @@ avatar_placeholder_icon %}
               Perfil
             </a>
             <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-              href="/logout">
+            href="{{ url_for('autenticacion.cerrar_sesion') }}">
               {{logout_icon('size-4')}}
               Cerrar sesión
             </a>

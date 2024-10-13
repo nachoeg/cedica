@@ -32,9 +32,9 @@ def cargar_roles():
 
 
 def cargar_usuarios():
-    usuario1 = usuarios.crear_usuario(email="juan@mail.com", alias="Juan", activo=True)
-    usuario2 = usuarios.crear_usuario(email="jorge@mail.com", alias="Jorge", activo=False)
-    usuario3 = usuarios.crear_usuario(email="maria@mail.com", alias="Maria", activo=True)
+    usuario1 = usuarios.crear_usuario(email="juan@mail.com", contraseña="123", alias="Juan", activo=True)
+    usuario2 = usuarios.crear_usuario(email="jorge@mail.com", contraseña="hola", alias="Jorge", activo=False)
+    usuario3 = usuarios.crear_usuario(email="maria@mail.com", contraseña="U.2", alias="Maria", activo=True)
 
     roles = cargar_roles()
     usuarios.asignar_rol(usuario1, roles["rol_administracion"])
