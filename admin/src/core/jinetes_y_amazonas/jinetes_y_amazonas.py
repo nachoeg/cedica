@@ -81,7 +81,7 @@ class JineteOAmazona(db.Model):
     nombre_escuela = db.Column(db.String(40))
     direccion_escuela = db.Column(db.String(50))
     telefono_escuela = db.Column(db.Integer)
-    grado_escuela = db.Column(db.Integer)
+    grado_escuela = db.Column(db.String(4))
     observaciones_escuela = db.Column(db.String(100))
 
     #informacion sobre profesionales
