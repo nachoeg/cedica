@@ -129,5 +129,18 @@ class JineteOAmazona(db.Model):
     #dias
     #acá voy a tener que tener una tabla de dias? es muchos a muchos
     
+    '''
+        Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
+        El parámetro asc se utiliza para que, si se le pasa de manera explícita un 0 como parámetro, 
+        se devuelvan los resultados de manera descendente
+    '''
+    @staticmethod
+    def todos_paginados(asc=1, pagina=1, por_pagina=2):
+        if asc == 0:
+                return JineteOAmazona.query.order_by(JineteOAmazona.nombre.desc()).paginate(page=pagina, per_page=por_pagina)
+        else:
+            return JineteOAmazona.query.order_by(JineteOAmazona.nombre.asc()).paginate(page=pagina, per_page=por_pagina)
+
+
     def __repr__(self):
         return f'<Jinete-Amazona #{self.id} nombre:{self.nombre}, apellido: {self.apellido}>'

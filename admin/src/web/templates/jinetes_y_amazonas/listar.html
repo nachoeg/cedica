@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Listado de jinetes y amazonas {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block main %}
+<h1>Consultas</h1>
+
+<a href="{{ url_for('jinetes_y_amazonas.listar') }}">Nuevo jinete/amazona</a>
+<div id="tabla_j_y_a">
+<table id="tabla_j_y_a">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for jinete in jinetes_paginados.items %}
+        <tr>
+            <th>{{ jinete.id }}</th>
+            <th>{{ jinete.nombre }}</th>
+            <th>{{ jinete.apellido }}</th>
+            <th>{{ jinete.dni }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class=pagination>
+    {% for page in jinetes_paginados.iter_pages() %}
+        {% if page %}
+            {% if page != jinetes_paginados.page %}
+                <a href="{{ url_for('jinetes_y_amazonas.listar', asc=ascendente, pagina=page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

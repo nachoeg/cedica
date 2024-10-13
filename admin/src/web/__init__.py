@@ -3,7 +3,7 @@ from src.web.handlers import error
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-
+from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
@@ -28,5 +28,7 @@ def create_app(env="development", static_folder="../../static"):
     @app.cli.command(name="seeds-db")
     def seeds_db():
         seeds.run()
+
+    app.register_blueprint(jinetes_y_amazonas_bp)
 
     return app

@@ -10,10 +10,10 @@ def crear_diagnostico(**kwargs):
     return diagnostico
 
 # funcion que lista todos los jinetes o amazonas del sistema
-def listar_j_y_a():
-    j_y_a = JineteOAmazona.query.all()
+def listar_j_y_a(orden_asc=1, pagina_inicial=1, por_pag=20):
+    j_y_a = JineteOAmazona.todos_paginados(orden_asc, pagina_inicial,por_pag)
     
-    returnj_y_a
+    return j_y_a
 
 
 # función que crea un registro de jinete o amazona
