@@ -1,9 +1,14 @@
+import logging
 from flask import Flask, render_template, send_from_directory
 from src.web.handlers import error
 from src.core import database
 from src.core.config import config
 from src.core import seeds
 from src.web.controllers.cobros import bp as cobros_bp
+
+logging.basicConfig()
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
