@@ -7,7 +7,8 @@ from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bpfrom src.web.controllers.cobros import bp as cobros_bp
+from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
+from src.web.controllers.cobros import bp as cobros_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
 
 session = Session()
