@@ -7,7 +7,8 @@ from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from web.handlers.autenticacion import esta_autenticado, tiene_permiso
+from src.web.controllers.cobros import bp as cobros_bp
+from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
 
 session = Session()
 
@@ -17,6 +18,8 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
+    
+    app.config['SECRET_KEY'] = 'SecretKey'
 
     app.config.from_object(config[env])
     database.init_app(app)
@@ -50,5 +53,7 @@ def create_app(env="development", static_folder="../../static"):
     @app.cli.command(name="seeds-db")
     def seeds_db():
         seeds.run()
+
+    app.register_blueprint(cobros_bp)
 
     return app
