@@ -17,8 +17,10 @@ def listar_j_y_a(orden_asc=1, pagina_inicial=1, por_pag=20):
 
 
 # función que crea un registro de jinete o amazona
-def crear_j_o_a(**kwargs):
-    j_o_a = JineteOAmazona(**kwargs)
+def crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono):
+    j_o_a = JineteOAmazona(nombre=nombre, apellido=apellido, dni=dni, edad=edad, fecha_nacimiento=fecha_nacimiento, provincia_nacimiento=provincia_nacimiento, localidad_nacimiento=localidad_nacimiento, domicilio_actual=domicilio_actual, telefono_actual=telefono_actual, contacto_emer_nombre=contacto_emer_nombre, contacto_emer_telefono=contacto_emer_telefono)
+    db.session.add(j_o_a)
+    db.session.commit()
     db.session.add(j_o_a)
     db.session.commit()
 
