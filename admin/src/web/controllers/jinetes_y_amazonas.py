@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
-from src.core.jinetes_y_amazonas import listar_j_y_a
-from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
+from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
+from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 
@@ -23,20 +24,79 @@ def listar(asc: int = 1):
 
 @bp.route("/nuevo_joa", methods=["GET", "POST"])
 def nuevo_j_y_a():
-    form = CobroForm()
-    form.joa.choices = [(joa.id, joa.nombre +" "+ joa.apellido) for joa in JineteOAmazona.query.order_by('nombre')]
+    form = NuevoJYAForm()
     if form.validate_on_submit():
-        fecha_pago = form.fecha_pago.data
-        medio_de_pago = form.medio_de_pago.data
-        monto = form.monto.data
-        observaciones = form.observaciones.data
-        joa_id = form.joa.data
-        crear_cobro(fecha_pago, medio_de_pago, monto, observaciones,joa_id)
+        nombre = form.nombre.data
+        apellido = form.apellido.data
+        dni = form.dni.data
+        edad = form.edad.data
+        fecha_nacimiento = form.fecha_nacimiento.data
+        provincia_nacimiento = form.provincia_nacimiento.data
+        localidad_nacimiento = form.localidad_nacimiento.data
+        domicilio_actual = form.domicilio_actual.data
+        telefono_actual = form.telefono_actual.data
+        contacto_emer_nombre = form.contacto_emer_nombre.data
+        contacto_emer_telefono = form.contacto_emer_telefono.data
+        crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono)
 
-        return redirect(url_for('cobros.listar'))
+        return redirect(url_for('jinetes_y_amazonas.cargar_info_salud'))
 
-    return render_template("cobros/crear_cobro.html", form=form)
+    return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
 
+@bp.route("/cargar_info_salud", methods=["GET", "POST"])
+def cargar_info_salud():
+    form = InfoSaludJYAForm()
+    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in Diagnostico.query.all()]
+    if form.validate_on_submit():
+        certificado_discapacidad = form.certificado_discapacidad.data
+        diagnostico_id = form.diagnostico_id.data
+        diagnostico_otro = form.diagnostico_otro.data
+        tipo_discapacidad = form.tipo_discapacidad.data
+        cargar_informacion_salud(certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad)
+        return redirect(url_for('jinetes_y_amazonas.cargar_info_econ'))
+
+    return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
+
+@bp.route("/cargar_info_econ", methods=["GET", "POST"])
+def cargar_info_econ():
+    form = InfoEconomicaJYAForm()
+
+    if form.validate_on_submit():
+        asignacion_familiar = form.asignacion_familiar.data
+        tipo_asignacion_familiar = form.tipo_asignacion_familiar.data
+        beneficiario_pension = form.beneficiario_pension.data
+        tipo_pension = form.tipo_pension.data
+        obra_social = form.obra_social.data
+        num_afiliado = form.num_afiliado.data
+        posee_curatela = form.posee_curatela.data
+        observaciones_obra_social = form.observaciones_obra_social.data
+        cargar_informacion_economica(asignacion_familiar, tipo_asignacion_familiar, beneficiario_pension,tipo_pension, obra_social, num_afiliado, posee_curatela, observaciones_obra_social)
+        return redirect(url_for('jinetes_y_amazonas.cargar_info_esc'))
+    return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
+
+@bp.route("/cargar_info_esc", methods=["GET", "POST"])
+def cargar_info_esc():
+    form = InfoEscolaridadJYAForm()
+    if form.validate_on_submit():
+        nombre_escuela = form.nombre_escuela.data
+        direccion_escuela = form.direccion_escuela.data
+        telefono_escuela = form.telefono_escuela.data
+        grado_escuela = form.grado_escuela.data
+        observaciones_escuela = form.observaciones_escuela.data
+        profesionales_a_cargo = form.profesionales_a_cargo.data
+        cargar_informacion_escuela(nombre_escuela, direccion_escuela, telefono_escuela, grado_escuela, observaciones_escuela, profesionales_a_cargo)
+    return redirect(url_for('jinetes_y_amazonas.cargar_info_inst'))
+
+@bp.route("/cargar_info_inst", methods=["GET", "POST"])
+def cargar_info_inst():
+    form = InfoInstitucionalJYAForm()
+    if form.validate_on_submit():
+        propuesta_de_trabajo = form.propuesta_trabajo.data
+        condicion = form.condicion.data
+        sede = form.sede.data
+        dias = form.dias.data
+        cargar_informacion_institucional(propuesta_de_trabajo, condicion, sede, dias)
+    return redirect(url_for('jinetes_y_amazonas.listar'))
 
 ''' @bp.route("/editar_cobro/<string:id>", methods=["GET", "POST"])
 def editar_cobro(id: str):

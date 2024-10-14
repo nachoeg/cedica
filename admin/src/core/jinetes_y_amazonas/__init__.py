@@ -23,3 +23,14 @@ def crear_j_o_a(**kwargs):
     db.session.commit()
 
     return j_o_a
+
+def cargar_informacion_salud(**kwargs):
+
+
+def cargar_informacion_economica(**kwargs):
+
+
+def cargar_informacion_escuela(**kwargs):
+
+
+def cargar_informacion_institucional(**kwargs):
