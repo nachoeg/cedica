@@ -22,15 +22,22 @@ def crear_j_o_a(**kwargs):
     db.session.add(j_o_a)
     db.session.commit()
 
-    return j_o_a
+    return j_o_a.id
 
-def cargar_informacion_salud(**kwargs):
+def cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad):
+    jya = JineteOAmazona.query.get_or_404(id)
+    jya.certificado_discapacidad = certificado_discapacidad
+    jya.diagnostico_id = diagnostico_id
+    jya.diagnostico_otro = diagnostico_otro
+    jya.tipo_discapacidad = tipo_discapacidad
 
+    db.session.commit()
 
 def cargar_informacion_economica(**kwargs):
-
+    return ""
 
 def cargar_informacion_escuela(**kwargs):
-
+    return ""
 
 def cargar_informacion_institucional(**kwargs):
+    return ""

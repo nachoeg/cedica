@@ -3,32 +3,80 @@
 {% block main %}
     <form method="post" novalidate>
         {{ form.csrf_token }}
-        {{ form.joa.label }}: {{ form.joa }}
         <div>
-            {{ form.fecha_pago.label }}
-            {{ form.fecha_pago }}<br>
-            {% for error in form.fecha_pago.errors %}
+            {{ form.nombre.label }}
+            {{ form.nombre }}<br>
+            {% for error in form.nombre.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.medio_de_pago.label }}
-            {{ form.medio_de_pago }}<br>
-            {% for error in form.medio_de_pago.errors %}
+            {{ form.apellido.label }}
+            {{ form.apellido }}<br>
+            {% for error in form.apellido.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.monto.label }}
-            {{ form.monto }}<br>
-            {% for error in form.monto.errors %}
+            {{ form.dni.label }}
+            {{ form.dni }}<br>
+            {% for error in form.dni.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.observaciones.label }}
-            {{ form.observaciones }}<br>
-            {% for error in form.observaciones.errors %}
+            {{ form.edad.label }}
+            {{ form.edad }}<br>
+            {% for error in form.edad.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.fecha_nacimiento.label }}
+            {{ form.fecha_nacimiento }}<br>
+            {% for error in form.fecha_nacimiento.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.provincia_nacimiento.label }}
+            {{ form.provincia_nacimiento }}<br>
+            {% for error in form.provincia_nacimiento.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.localidad_nacimiento.label }}
+            {{ form.localidad_nacimiento }}<br>
+            {% for error in form.localidad_nacimiento.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.domicilio_actual.label }}
+            {{ form.domicilio_actual }}<br>
+            {% for error in form.domicilio_actual.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.telefono_actual.label }}
+            {{ form.telefono_actual }}<br>
+            {% for error in form.telefono_actual.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.contacto_emer_nombre.label }}
+            {{ form.contacto_emer_nombre }}<br>
+            {% for error in form.contacto_emer_nombre.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.contacto_emer_telefono.label }}
+            {{ form.contacto_emer_telefono }}<br>
+            {% for error in form.contacto_emer_telefono.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
