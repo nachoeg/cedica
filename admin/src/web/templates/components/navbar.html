@@ -18,8 +18,13 @@ avatar_placeholder_icon %}
         {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
         <span class="sr-only">Toggle</span>
       </button>
-      {% if true %} <!-- Cambiar por if is_authenticated(session) -->
+      {% if not esta_autenticado(session) %} <!-- Cambiar por if is_authenticated(session) -->
       <div class="hs-dropdown [--auto-close:inside] relative inline-flex ">
+        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+          href="{{ url_for('autenticacion.iniciar_sesion') }}">
+          {{user_icon('size-4')}}
+          Iniciar sesión
+        </a>
         <button id="hs-dropdown-default" type="button"
           class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
           aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
@@ -77,7 +82,7 @@ avatar_placeholder_icon %}
               Perfil
             </a>
             <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-              href="/logout">
+            href="{{ url_for('autenticacion.cerrar_sesion') }}">
               {{logout_icon('size-4')}}
               Cerrar sesión
             </a>
@@ -96,6 +101,8 @@ avatar_placeholder_icon %}
           href="escuestre">Ecuestre</a>
         <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
           href="equipo">Equipo</a>
+        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+          href="{{ url_for('cobros.listar') }}">Cobro</a>
       </div>
     </div>
   </nav>

@@ -1,4 +1,5 @@
-from src.core import auth, jinetes_y_amazonas
+from src.core import cobros, jinetes_y_amazonas
+from src.core.seeds_usuarios import cargar_usuarios
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
@@ -23,12 +24,14 @@ def cargar_diagnosticos():
     diagnostico19 = jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
 
 def run():
-    user1 = auth.create_user(email="juan@mail.com", alias="Juan", activo=True)
-    user2 = auth.create_user(email="jorge@mail.com", alias="Jorge", activo=False)
-    user3 = auth.create_user(email="maria@mail.com", alias="Maria", activo=True)
+
+    cargar_usuarios()
 
     cargar_diagnosticos()
 
-    j_y_a1= jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 34567543)
+    j_y_a1= jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela")
     j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 14234221)
-    j_y_a3= jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim", dni=29456321)
+    j_y_a3= jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim")    
+    cobro1 = cobros.crear_cobro(medio_de_pago='efectivo', fecha_pago = '2024/09/10 13:19:38',monto=400, observaciones="Nada para agregar", joa_id=j_y_a1.id)
+    cobro2 = cobros.crear_cobro(medio_de_pago='credito', fecha_pago = '2024/09/12 13:19:38', monto=500, observaciones="Queda al día",joa_id=j_y_a1.id)
+    cobro3 = cobros.crear_cobro(medio_de_pago='debito', fecha_pago = '2024/09/11 13:19:38', monto=600, observaciones="-",joa_id=j_y_a3.id)
