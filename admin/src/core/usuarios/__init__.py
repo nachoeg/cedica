@@ -41,7 +41,7 @@ def usuario_por_email_y_contraseña(email, contraseña):
 
     if usuario and bcrypt.check_password_hash(usuario.contraseña, contraseña):
         return usuario
-    
+
     return None
 
 
@@ -71,6 +71,9 @@ def crear_permiso(**kwargs):
 
 
 def get_permisos(usuario):
-    permisos = db.session.execute(db.select(Permiso).join(Permiso.roles).join(Rol.usuarios.and_(Usuario.id == usuario.id))).unique().scalars().all()
+    """Devuelve una lista con los nombres de los permisos del usuario que
+    recibe por parámetro.
+    """
+    permisos = db.session.execute(db.select(Permiso.nombre).join(Permiso.roles).join(Rol.usuarios.and_(Usuario.id == usuario.id))).unique().scalars().all()
 
     return permisos

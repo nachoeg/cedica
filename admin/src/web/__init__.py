@@ -7,7 +7,7 @@ from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from web.handlers.autenticacion import esta_autenticado
+from web.handlers.autenticacion import esta_autenticado, tiene_permiso
 
 session = Session()
 
@@ -38,8 +38,10 @@ def create_app(env="development", static_folder="../../static"):
 
     app.register_error_handler(404, error.error_not_found)
     app.register_error_handler(401, error.no_autorizado)
+    app.register_error_handler(403, error.prohibido)
 
     app.jinja_env.globals.update(esta_autenticado=esta_autenticado)
+    app.jinja_env.globals.update(tiene_permiso=tiene_permiso)
 
     @app.cli.command(name="reset-db")
     def reset_db():

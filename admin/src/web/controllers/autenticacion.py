@@ -1,8 +1,7 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
-from core.usuarios import get_permisos, usuario_por_email_y_contraseña
+from core.usuarios import usuario_por_email_y_contraseña
 
-# definir nombre y sección de url para esta parte
 bp = Blueprint("autenticacion", __name__, url_prefix="/")
 
 
@@ -20,7 +19,7 @@ def iniciar_sesion():
             session.clear()
             session['usuario'] = usuario.email
             flash('Ha iniciado sesión', 'exito')
-            raise Exception(f'{get_permisos(session.get('usuario'))}')
+            # raise Exception(f'{get_permisos(usuario_por_email(session.get('usuario')))}')
             return redirect(url_for('home'))
 
     return render_template('usuarios/iniciar_sesion.html')
