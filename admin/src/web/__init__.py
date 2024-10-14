@@ -18,8 +18,6 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
-    
-    app.config['SECRET_KEY'] = 'SecretKey'
 
     app.config.from_object(config[env])
     database.init_app(app)
