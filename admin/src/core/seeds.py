@@ -29,6 +29,6 @@ def run():
 
     cargar_diagnosticos()
 
-    j_y_a1= jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela")
-    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez")
-    j_y_a3= jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim")
+    j_y_a1= jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 34567543)
+    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 14234221)
+    j_y_a3= jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim", dni=29456321)

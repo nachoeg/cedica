@@ -49,7 +49,6 @@ class JineteOAmazona(db.Model):
     tipo_discapacidad = db.Column(Enum(TipoDeDiscapacidad))
 
 
-
     #informacion economica
     class TipoDeAsignacionFamiliar(enum.Enum):
         auhijo = "Asignación Universal por hijo"
