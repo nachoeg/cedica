@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block title %}Ecuestre{% endblock %}
+
+{% block content %}
+<h1>Ecuestre</h1>
+{% for ecuestre in ecuestres %}
+<h2>{{ ecuestre.nombre }}</h2>
+{% endfor %}
+{% endblock %}

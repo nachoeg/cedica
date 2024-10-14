@@ -3,6 +3,7 @@ from src.web.handlers import error
 from src.core import database
 from src.core.config import config
 from src.core import seeds
+from src.web.controllers.ecuestre import bp as ecuestre_bp
 
 
 def create_app(env="development", static_folder="../../static"):
@@ -14,6 +15,8 @@ def create_app(env="development", static_folder="../../static"):
     @app.route("/")
     def home():
         return render_template("pages/home.html")
+
+    app.register_blueprint(ecuestre_bp)
 
     @app.route("/preline.js")
     def serve_preline_js():
