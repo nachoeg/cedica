@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <script> /* Script para cambiar el tema de la pagina */
+        const html = document.querySelector('html');
+        const isLightOrAuto = localStorage.getItem('hs_theme') === 'light' || (localStorage.getItem('hs_theme') === null && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+        const isDarkOrAuto = localStorage.getItem('hs_theme') === 'dark' || (localStorage.getItem('hs_theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+        if (isLightOrAuto && html.classList.contains('dark')) html.classList.remove('dark');
+        else if (isDarkOrAuto && html.classList.contains('light')) html.classList.remove('light');
+        else if (isDarkOrAuto && !html.classList.contains('dark')) html.classList.add('dark');
+        else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
+    </script>
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
+    {% endblock %}
+</head>
+
+<body class="dark:bg-neutral-900">
+    {% include 'components/navbar.html' %}
+    <main class="max-w-[90rem] w-full mx-auto p-8 pt-4">
+        {% include 'components/mensajes_flash.html' %}
+        {% block main %}{% endblock %}
+    </main>
+    <footer>{% block footer %}{% endblock %}</footer>
+    <script src="{{ url_for('serve_preline_js') }}"></script>
+</body>
+
+</html>

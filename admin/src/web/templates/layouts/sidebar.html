@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block head %}
+{{ super() }}
+{{ head }}
+{% endblock %}
+
+{% block main %}
+<div class="flex gap-2">
+  <aside class="w-1/4 p-4">
+    {% block sidebar %}
+    {% endblock %}
+  </aside>
+  <section class="w-3/4 p-4">
+    {% block content %}
+    {% endblock %}
+  </section>
+</div>
+{% endblock %}
