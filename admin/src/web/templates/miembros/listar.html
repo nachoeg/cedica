@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Listado de Miembros {% endblock %}
+
+{% block main %}
+<h1>Lista de Miembros</h1>
+
+<form method="GET">
+    <input type="text" name="nombre" value="{{ nombre }}" placeholder="Nombre">
+    <input type="text" name="apellido" value="{{ apellido }}" placeholder="Apellido">
+    <input type="text" name="dni" value="{{ dni }}" placeholder="DNI">
+    <input type="text" name="email" value="{{ email }}" placeholder="Email">
+    <input type="text" name="profesion" value="{{ profesion }}" placeholder="Profesión">
+    <button type="submit">Buscar</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+            <a href="{{ url_for('miembro.miembro_listar', orden='nombre', asc=1 if not ascendente else 0, pagina=page) }}">
+                Nombre
+                {% if orden_campo == 'nombre' %}
+                    {% if ascendente %}
+                        ↑
+                    {% else %}
+                        ↓
+                    {% endif %}
+                {% endif %}
+            </a>
+            </th>
+            <th>
+            <a href="{{ url_for('miembro.miembro_listar', orden='apellido', asc=1 if not ascendente else 0, pagina=page) }}">
+                Apellido
+                {% if orden_campo == 'apellido' %}
+                    {% if ascendente %}
+                        ↑
+                    {% else %}
+                        ↓
+                    {% endif %}
+                {% endif %}
+            </a>
+            </th>
+            <th>DNI</th>
+            <th>Email</th>
+            <th>Profesión</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for miembro in miembros_paginados.items %}
+        <tr>
+            <td>{{ miembro.nombre }}</td>
+            <td>{{ miembro.apellido }}</td>
+            <td>{{ miembro.dni }}</td>
+            <td>{{ miembro.email }}</td>
+            <td>{{ miembro.profesion.nombre }}</td>
+            <td>
+                <a href="{{ url_for('miembro.miembro_mostrar', id=miembro.id) }}">Ver</a>
+                <a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Modificar</a>
+                <a href="{{ url_for('miembro.miembro_eliminar', id=miembro.id) }}" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7">No se encontraron resultados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Paginación -->
+<div class="pagination">
+    {% for page in miembros_paginados.iter_pages() %}
+        {% if page %}
+            <a href="{{ url_for('miembro.miembro_listar', orden=orden_campo, asc=ascendente, pagina=page) }}">{{ page }}</a>
+        {% else %}
+            <span>…</span>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,17 +1,54 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, listar_miembros, crear_miembro
+from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, crear_miembro
 from sqlalchemy import asc, desc
 from src.core.database import db
 
 miembro_bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
 @miembro_bp.route('/', methods=['GET'])
-def index_miembros():
-    miembros = listar_miembros()
-    return render_template('miembros/index.html', miembros=miembros)
+def miembro_listar():
+    search_nombre = request.args.get('nombre', '')
+    search_apellido = request.args.get('apellido', '')
+    search_dni = request.args.get('dni', '')
+    search_email = request.args.get('email', '')
+    search_profesion = request.args.get('profesion', '')
+    orden_campo = request.args.get('orden', 'nombre') 
+    ascendente = request.args.get('asc', '1') == '1'
+    pagina = int(request.args.get('page', 1))
+
+    query = Miembro.query.join(Profesion).filter(
+        Miembro.nombre.ilike(f"%{search_nombre}%"),
+        Miembro.apellido.ilike(f"%{search_apellido}%"),
+        Miembro.dni.ilike(f"%{search_dni}%"),
+        Miembro.email.ilike(f"%{search_email}%"),
+        Profesion.nombre.ilike(f"%{search_profesion}%")
+    )
+
+    if orden_campo in ['nombre', 'apellido', 'created_on']:  
+        if ascendente:
+            query = query.order_by(getattr(Miembro, orden_campo).asc())
+        else:
+            query = query.order_by(getattr(Miembro, orden_campo).desc())
+    else:
+        query = query.order_by(Miembro.nombre.asc())  
+
+    miembros_paginados = query.paginate(page=pagina, per_page=10, error_out=False)
+
+    return render_template(
+        'miembros/listar.html',
+        miembros_paginados=miembros_paginados, 
+        ascendente=ascendente, 
+        nombre=search_nombre,
+        apellido=search_apellido,
+        dni=search_dni,
+        email=search_email,
+        profesion=search_profesion,
+        orden_campo=orden_campo
+    )
+
 
 @miembro_bp.route('/create', methods=['GET', 'POST'])
-def create_miembro():
+def miembro_crear():
     profesiones = Profesion.query.all()
     condiciones = CondicionDeTrabajo.query.all()
     puestos = PuestoLaboral.query.all()
@@ -41,13 +78,13 @@ def create_miembro():
     return render_template('miembros/create.html', profesiones=profesiones, condiciones=condiciones, puestos=puestos)
 
 
-@miembro_bp.route('//<int:id>', methods=['GET'])
-def show_miembro(id):
+@miembro_bp.route('/<int:id>/mostrar', methods=['GET'])
+def miembro_mostrar(id):
     miembro = Miembro.query.get_or_404(id)
     return render_template('miembros/show.html', miembro=miembro)
 
 @miembro_bp.route('/<int:id>/edit', methods=['GET', 'POST'])
-def edit_miembro(id):
+def miembro_editar(id):
     miembro = Miembro.query.get_or_404(id)
     profesiones = Profesion.query.all()
     condiciones = CondicionDeTrabajo.query.all()
@@ -74,7 +111,7 @@ def edit_miembro(id):
     return render_template('miembros/edit.html', miembro=miembro, profesiones=profesiones, condiciones=condiciones, puestos=puestos)
 
 @miembro_bp.route('/<int:id>/eliminar', methods=['POST'])
-def destroy_miembro(id):
+def miembro_eliminar(id):
     miembro = Miembro.query.get_or_404(id)
     db.session.delete(miembro)
     db.session.commit()

@@ -123,6 +123,16 @@ dnspython = ">=2.0.0"
 idna = ">=2.0.0"
 
 [[package]]
+name = "flash"
+version = "1.0.3"
+description = "Fast tool"
+optional = false
+python-versions = "*"
+files = [
+    {file = "flash-1.0.3-py3-none-any.whl", hash = "sha256:69f448811abc97d4f0857fc577e14398b322ceddad074430350a5012a61302b2"},
+]
+
+[[package]]
 name = "flask"
 version = "3.0.3"
 description = "A simple framework for building complex web applications."
@@ -740,4 +750,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.3"
-content-hash = "ea636ecffff2c2e0dbdcee81090ac3dd11f873eefa36076af633874e7b06bd11"
+content-hash = "6e807666fcf14d54ce625ab84103bd4d5c52768449585e9b9b2e31a4ac33c87f"
