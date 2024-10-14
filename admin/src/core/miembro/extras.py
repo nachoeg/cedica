@@ -13,7 +13,7 @@ class PuestoLaboral(db.Model):
     nombre = db.Column(db.String(100), nullable=False, unique=True) 
 
     
-class Condicion(db.Model):
-    __tablename__ = "condicion"
+class CondicionDeTrabajo(db.Model):
+    __tablename__ = "condicion_trabajo"
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False, unique=True)

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from src.core.miembro import Miembro, Profesion, Condicion, PuestoLaboral, listar_miembros, crear_miembro
+from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, listar_miembros, crear_miembro
 from sqlalchemy import asc, desc
 from src.core.database import db
 
@@ -13,7 +13,7 @@ def index_miembros():
 @miembro_bp.route('/create', methods=['GET', 'POST'])
 def create_miembro():
     profesiones = Profesion.query.all()
-    condiciones = Condicion.query.all()
+    condiciones = CondicionDeTrabajo.query.all()
     puestos = PuestoLaboral.query.all()
     
     if request.method == 'POST':
@@ -50,7 +50,7 @@ def show_miembro(id):
 def edit_miembro(id):
     miembro = Miembro.query.get_or_404(id)
     profesiones = Profesion.query.all()
-    condiciones = Condicion.query.all()
+    condiciones = CondicionDeTrabajo.query.all()
     puestos = PuestoLaboral.query.all()
 
     if request.method == 'POST':

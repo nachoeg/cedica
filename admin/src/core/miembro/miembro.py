@@ -14,8 +14,8 @@ class Miembro(db.Model):
     numeroAfiliado = db.Column(db.String(100), nullable=False)
 
     # relacion con condicion
-    condicion_id = db.Column(db.Integer, db.ForeignKey('condicion.id'), nullable=False)
-    condicion = db.relationship('Condicion', backref='miembros')
+    condicion_id = db.Column(db.Integer, db.ForeignKey('condicion_trabajo.id'), nullable=False)
+    condicion_trabajo = db.relationship('CondicionDeTrabajo', backref='miembros')
     
     # relacion con domicilio
     domicilio_id = db.Column(db.Integer, db.ForeignKey('domicilio.id'), nullable=False)
@@ -32,8 +32,8 @@ class Miembro(db.Model):
     puesto_laboral = db.relationship('PuestoLaboral', backref='miembros')  
 
     # relacion con usuairo
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    user = db.relationship('User', backref='miembro', uselist=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)
+    usuario = db.relationship('Usuario', backref='miembro', uselist=False)
 
     activo = db.Column(db.Boolean, nullable=False)
 

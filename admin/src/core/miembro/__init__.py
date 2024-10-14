@@ -1,6 +1,6 @@
 from src.core.database import db
 from src.core.miembro.miembro import Miembro
-from src.core.miembro.extras import Condicion, Profesion, PuestoLaboral
+from src.core.miembro.extras import CondicionDeTrabajo, Profesion, PuestoLaboral
 from src.core.miembro.domicilio import Domicilio
 
 
@@ -25,7 +25,7 @@ def listar_puestos_laborales():
     return puestos
 
 def listar_condiciones():
-    condiciones = Condicion.query.all()
+    condiciones = CondicionDeTrabajo.query.all()
     return condiciones
 
 def crear_profesion(nombre):
@@ -41,7 +41,7 @@ def crear_puesto_laboral(nombre):
     return puesto
 
 def crear_condicion(nombre):
-    condicion = Condicion(nombre=nombre)
+    condicion = CondicionDeTrabajo(nombre=nombre)
     db.session.add(condicion)
     db.session.commit()
     return condicion

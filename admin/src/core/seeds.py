@@ -39,6 +39,8 @@ def run():
         localidad="Ciudad B"
     )
 
+    cargar_usuarios()
+
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
         apellido="Maria",
@@ -53,7 +55,7 @@ def run():
         telefono="111222333",
         profesion_id=1,
         puesto_laboral_id=1,
-        user_id=user1.id,
+        usuario_id=1,
         activo=True
     )
 
@@ -71,12 +73,9 @@ def run():
         telefono="222333444",
         profesion_id=1,
         puesto_laboral_id=1,
-        user_id=user2.id,
+        usuario_id=2,
         activo=False
     )
-
-    
-    cargar_usuarios()
 
     cargar_diagnosticos()
 
