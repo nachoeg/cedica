@@ -14,7 +14,7 @@ class NuevoJYAForm(FlaskForm):
     provincia_nacimiento = StringField('Provincia de nacimiento', validators=[Length(max=64)])
     localidad_nacimiento = StringField('Localidad de nacimiento', validators=[Length(max=64)])
     domicilio_actual = StringField('Domicilio actual', validators=[Length(max=64)])
-    telefono_actual = edad = IntegerField('Telefono')
+    telefono_actual = IntegerField('Telefono actual')
     contacto_emer_nombre = StringField('Nombre de contacto de emergencia', validators=[Length(max=64)])
     contacto_emer_telefono = IntegerField('Telefono de contacto de emergencia')
     becado = BooleanField('¿Tiene beca?')
