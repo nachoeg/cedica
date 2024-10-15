@@ -95,7 +95,7 @@ def miembro_crear():
             obraSocial=obraSocial, numeroAfiliado=numeroAfiliado, profesion_id=profesion_id,
             condicion_id=condicion_id, puesto_laboral_id=puesto_laboral_id, domicilio_id=domicilio_id, activo=activo)
 
-        flash("Miembro creado con exito", 'success')
+        flash("Miembro creado con exito.", 'success')
         return redirect(url_for('miembro.miembro_listar'))
 
     return render_template('miembros/crear.html', profesiones=profesiones, condiciones=condiciones, puestos=puestos)
@@ -138,4 +138,5 @@ def miembro_eliminar(id):
     miembro = Miembro.query.get_or_404(id)
     db.session.delete(miembro)
     db.session.commit()
-    return redirect(url_for('index_miembros'))
+    flash("Miembro eliminado con exito.", 'success')
+    return redirect(url_for('miembro.miembro_listar'))

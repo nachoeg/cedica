@@ -19,7 +19,7 @@
     <p><strong>Puesto Laboral:</strong> {{ miembro.puesto_laboral.nombre }}</p>
     <a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Editar</a>
     <form action="{{ url_for('miembro.miembro_eliminar', id=miembro.id) }}" method="POST" style="display:inline;">
-        <button type="submit">Eliminar</button>
+        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este miembro?');">Eliminar</button>
     </form>
     <a href="{{ url_for('miembro.miembro_listar')}}"> Volver </a>
 {% endblock %}
