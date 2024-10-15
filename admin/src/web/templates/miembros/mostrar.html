@@ -16,7 +16,12 @@
     <p><strong>Número de Afiliado:</strong> {{ miembro.numeroAfiliado }}</p>
     <p><strong>Profesión:</strong> {{ miembro.profesion.nombre }}</p>
     <p><strong>Condición:</strong> {{ miembro.condicion_trabajo.nombre }}</p>
-    <p><strong>Puesto Laboral:</strong> {{ miembro.puesto_laboral.nombre }}</p>
+    <p><strong>Calle:</strong> {{ miembro.domicilio.calle }}</p>
+    <p><strong>Numero:</strong> {{ miembro.domicilio.numero}}</p>
+    <p><strong>Piso:</strong> {{ miembro.domicilio.piso }}</p>
+    <p><strong>Departamento:</strong> {{ miembro.domicilio.dpto }}</p>
+    <p><strong>Localidad:</strong> {{ miembro.domicilio.localidad }}</p>
+    <p><strong>Usuario:</strong> {{ miembro.usuario.alias }}</p>
     <a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Editar</a>
     <form action="{{ url_for('miembro.miembro_eliminar', id=miembro.id) }}" method="POST" style="display:inline;">
         <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este miembro?');">Eliminar</button>

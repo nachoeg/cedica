@@ -131,8 +131,6 @@
             {% endfor %}
         </select>
 
-        <h2>Información de Domicilio</h2>
-
         <div class="form-group">
             <label for="calle">Calle</label>
             <input type="text" name="calle" required>
@@ -158,6 +156,13 @@
             <input type="text" name="localidad" required>
         </div>
 
+        <div class="form-group">
+            <label for="usuario">Usuario (Opcional)</label>
+            <input type="text" name="usuario" placeholder="Ingresa el nombre de usuario (opcional)">
+        </div>
+        <p class="info-text">
+            No es necesario asignar un usuario en este momento. Puedes agregar o modificar el usuario más tarde.
+        </p>
 
         <button type="submit">Crear</button>
     </form>

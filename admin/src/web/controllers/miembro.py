@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, crear_domicilio, crear_miembro, Domicilio
+from src.core.usuarios import Usuario
 from sqlalchemy import asc, desc
 from src.core.database import db
 
@@ -66,6 +67,7 @@ def miembro_crear():
         profesion_id = request.form['profesion_id']
         condicion_id = request.form['condicion_id']
         puesto_laboral_id = request.form['puesto_laboral_id']
+        alias_usuario = request.form['usuario']
         activo = True
 
         # Captura los datos del formulario del domicilio
@@ -90,10 +92,32 @@ def miembro_crear():
             nuevo_domicilio = crear_domicilio(calle=calle, numero=numero, piso=piso, dpto=dpto, localidad=localidad)
             domicilio_id = nuevo_domicilio.id
 
-        crear_miembro(nombre=nombre, apellido=apellido, dni=dni, email=email, telefono=telefono,
-            nombreContactoEmergencia=nombreContactoEmergencia, telefonoContactoEmergencia=telefonoContactoEmergencia,
-            obraSocial=obraSocial, numeroAfiliado=numeroAfiliado, profesion_id=profesion_id,
-            condicion_id=condicion_id, puesto_laboral_id=puesto_laboral_id, domicilio_id=domicilio_id, activo=activo)
+        nuevo_miembro_data = {
+            "nombre": nombre,
+            "apellido": apellido,
+            "dni": dni,
+            "email": email,
+            "telefono": telefono,
+            "nombreContactoEmergencia": nombreContactoEmergencia,
+            "telefonoContactoEmergencia": telefonoContactoEmergencia,
+            "obraSocial": obraSocial,
+            "numeroAfiliado": numeroAfiliado,
+            "profesion_id": profesion_id,
+            "condicion_id": condicion_id,
+            "puesto_laboral_id": puesto_laboral_id,
+            "domicilio_id": domicilio_id,
+            "activo": True
+        }
+
+        if alias_usuario:
+            usuario = Usuario.query.filter_by(alias=alias_usuario).first()
+            if usuario:
+                usuario_id = usuario.id
+                nuevo_miembro_data["usuario_id"] = usuario_id
+
+
+        # Crear el miembro con los datos recopilados
+        crear_miembro(**nuevo_miembro_data)
 
         flash("Miembro creado con exito.", 'success')
         return redirect(url_for('miembro.miembro_listar'))
@@ -106,7 +130,7 @@ def miembro_mostrar(id):
     miembro = Miembro.query.get_or_404(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
-@miembro_bp.route('/<int:id>/edit', methods=['GET', 'POST'])
+@miembro_bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 def miembro_editar(id):
     miembro = Miembro.query.get_or_404(id)
     profesiones = Profesion.query.all()
@@ -129,9 +153,9 @@ def miembro_editar(id):
         miembro.activo = request.form.get('activo') == 'on'
         
         db.session.commit()
-        return redirect(url_for('index_miembros'))
+        return redirect(url_for('miembro.miembro_listar'))
 
-    return render_template('miembros/edit.html', miembro=miembro, profesiones=profesiones, condiciones=condiciones, puestos=puestos)
+    return render_template('miembros/editar.html', miembro=miembro, profesiones=profesiones, condiciones=condiciones, puestos=puestos)
 
 @miembro_bp.route('/<int:id>/eliminar', methods=['POST'])
 def miembro_eliminar(id):
