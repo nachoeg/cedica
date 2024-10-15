@@ -24,7 +24,7 @@ def crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimie
     db.session.add(j_o_a)
     db.session.commit()
 
-    return j_o_a.id
+    return j_o_a
 
 def cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad):
     jya = JineteOAmazona.query.get_or_404(id)
@@ -35,11 +35,32 @@ def cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagn
 
     db.session.commit()
 
-def cargar_informacion_economica(**kwargs):
-    return ""
+def cargar_informacion_economica(id, asignacion_familiar, tipo_asignacion_familiar, beneficiario_pension,tipo_pension, obra_social, num_afiliado, posee_curatela, observaciones_obra_social):
+    jya = JineteOAmazona.query.get_or_404(id)
+    jya.asignacion_familiar = asignacion_familiar
+    jya.tipo_asignacion_familiar = tipo_asignacion_familiar
+    jya.beneficiario_pension = beneficiario_pension
+    jya.tipo_pension = tipo_pension
+    jya.obra_social = obra_social
+    jya.num_afiliado = num_afiliado
+    jya.posee_curatela = posee_curatela
+    jya.observaciones_obra_social = observaciones_obra_social
+    db.session.commit()
 
-def cargar_informacion_escuela(**kwargs):
-    return ""
+def cargar_informacion_escuela(id, nombre_escuela, direccion_escuela, telefono_escuela, grado_escuela, observaciones_escuela, profesionales_a_cargo):
+    jya = JineteOAmazona.query.get_or_404(id)
+    jya.nombre_escuela = nombre_escuela
+    jya.direccion_escuela = direccion_escuela
+    jya.telefono_escuela = telefono_escuela
+    jya.grado_escuela = grado_escuela
+    jya.observaciones_escuela = observaciones_escuela
+    jya.profesionales_a_cargo = profesionales_a_cargo
+    db.session.commit()
 
-def cargar_informacion_institucional(**kwargs):
-    return ""
+def cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias):
+    jya = JineteOAmazona.query.get_or_404(id)
+    jya.propuesta_de_trabajo = propuesta_de_trabajo
+    jya.condicion = condicion
+    jya.sede = sede
+    #jya.dias = dias
+    db.session.commit()

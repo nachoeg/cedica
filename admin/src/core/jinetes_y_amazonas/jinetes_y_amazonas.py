@@ -26,9 +26,9 @@ class JineteOAmazona(db.Model):
     provincia_nacimiento = db.Column(db.String(50))
     localidad_nacimiento = db.Column(db.String(50))
     domicilio_actual = db.Column(db.String(50))
-    telefono_actual = db.Column(db.Integer)
+    telefono_actual = db.Column(db.BigInteger)
     contacto_emer_nombre = db.Column(db.String(100))
-    contacto_emer_telefono = db.Column(db.Integer)
+    contacto_emer_telefono = db.Column(db.BigInteger)
     becado = db.Column(db.Boolean)
     porcentaje_beca = db.Column(db.String(100))
 
@@ -72,14 +72,14 @@ class JineteOAmazona(db.Model):
     beneficiario_pension = db.Column(db.Boolean)
     tipo_pension = db.Column(Enum(TipoPension))
     obra_social = db.Column(db.String(30))
-    num_afiliado = db.Column(db.Integer)
+    num_afiliado = db.Column(db.BigInteger)
     posee_curatela = db.Column(db.Boolean)
     observaciones_obra_social = db.Column(db.String(100))
 
     #informacion sobre escolaridad
     nombre_escuela = db.Column(db.String(40))
     direccion_escuela = db.Column(db.String(50))
-    telefono_escuela = db.Column(db.Integer)
+    telefono_escuela = db.Column(db.BigInteger)
     grado_escuela = db.Column(db.String(4))
     observaciones_escuela = db.Column(db.String(100))
 

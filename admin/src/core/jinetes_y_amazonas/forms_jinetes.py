@@ -60,5 +60,5 @@ class InfoInstitucionalJYAForm(FlaskForm):
     condicion = SelectField('Condicion', choices=[('regular','Regular'), ('de_baja', 'De baja')])
     sede = SelectField('Sede', choices=[('CASJ', 'CASJ'),('HLP','HLP'), ('otro', 'Otro')])
     dias = SelectMultipleField('Dias', choices=[('lun', 'Lunes'),('mar', 'Martes'),('mie', 'Miercoles'), ('jue', 'Jueves'),('vie', 'Viernes'),('sab', 'Sabado'), ('dom', 'Domingo') ])
-
+    submit = SubmitField('Finalizar carga')
 

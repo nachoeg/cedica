@@ -38,9 +38,9 @@ def nuevo_j_y_a():
         telefono_actual = form.telefono_actual.data
         contacto_emer_nombre = form.contacto_emer_nombre.data
         contacto_emer_telefono = form.contacto_emer_telefono.data
-        id = crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono)
+        jya_nuevo = crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono)
 
-        return redirect(url_for('jinetes_y_amazonas.cargar_info_salud', id=id))
+        return redirect(url_for('jinetes_y_amazonas.cargar_info_salud', id=jya_nuevo.id))
 
     return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
 
@@ -74,7 +74,7 @@ def cargar_info_econ(id : string):
 
         cargar_informacion_economica(id, asignacion_familiar, tipo_asignacion_familiar, beneficiario_pension,tipo_pension, obra_social, num_afiliado, posee_curatela, observaciones_obra_social)
         return redirect(url_for('jinetes_y_amazonas.cargar_info_esc', id= id))
-    return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
+    return render_template("jinetes_y_amazonas/nuevo_j_y_a_econ.html", form=form)
 
 @bp.route("/cargar_info_esc/<string:id>", methods=["GET", "POST"])
 def cargar_info_esc(id : string):
@@ -88,7 +88,7 @@ def cargar_info_esc(id : string):
         profesionales_a_cargo = form.profesionales_a_cargo.data
         cargar_informacion_escuela(id, nombre_escuela, direccion_escuela, telefono_escuela, grado_escuela, observaciones_escuela, profesionales_a_cargo)
         return redirect(url_for('jinetes_y_amazonas.cargar_info_inst', id = id))
-    return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
+    return render_template("jinetes_y_amazonas/nuevo_j_y_a_esc.html", form=form)
 
 
 @bp.route("/cargar_info_inst/<string:id>", methods=["GET", "POST"])
@@ -101,7 +101,7 @@ def cargar_info_inst(id : string):
         dias = form.dias.data
         cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias)
         return redirect(url_for('jinetes_y_amazonas.listar'))
-    return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
+    return render_template("jinetes_y_amazonas/nuevo_j_y_a_inst.html", form=form)
  
 
 ''' @bp.route("/editar_cobro/<string:id>", methods=["GET", "POST"])
