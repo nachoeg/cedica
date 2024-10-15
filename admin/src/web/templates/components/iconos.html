@@ -107,15 +107,14 @@
 </svg>
 {% endmacro %}
 
-{% macro ordering_icon(column="") %}
-<svg id="ordering-icon-{{column}}" class="group size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500 "
+{% macro ordering_icon(classes) %}
+<svg class=" {{classes}}  group size-3.5 ms-1 -me-0.5 text-gray-400 dark:text-neutral-500 "
   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path class="group-[.tabla-ordering-desc]:text-blue-600 dark:group-[.tabla-ordering-desc]:text-blue-500"
+  <path class="group-[.orden-activo-desc]:text-blue-600 dark:group-[.orden-activo-desc]:text-blue-500"
     d="m7 15 5 5 5-5">
   </path>
-  <path class="group-[.tabla-ordering-asc]:text-blue-600 dark:group-[.tabla-ordering-asc]:text-blue-500"
-    d="m7 9 5-5 5 5">
+  <path class="group-[.orden-activo-asc]:text-blue-600 dark:group-[.orden-activo-asc]:text-blue-500" d="m7 9 5-5 5 5">
   </path>
 </svg>
 {% endmacro %}

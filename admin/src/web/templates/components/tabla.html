@@ -1,88 +1,69 @@
 {% from 'components/iconos.html' import dropdown_icon, search_icon,
-ordering_icon, chevron_left_icon, sliders_horizontal_icon, spinner_icon %} {% macro
-tabla(data) %}
+ordering_icon, chevron_left_icon, sliders_horizontal_icon, spinner_icon %} {%
+macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, orden, ordenar_por) %}
 
-<div
-  id="tabla"
-  class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden"
->
+<div id="tabla"
+  class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden">
   <div class="flex items-center space-x-2 px-6 py-4">
     <!-- Busqueda -->
     <div class="flex-0">
       <div class="relative max-w-xs">
         <label for="tabla-busqueda" class="sr-only">Search</label>
-        <input
-          type="text"
-          name="tabla-busqueda"
-          id="tabla-busqueda"
-          class="py-1.5 px-8 ps-10 block w-full border-transparent shadow-sm rounded-lg text-sm focus:z-10 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700  dark:text-neutral-300 dark:placeholder-neutral-400 dark:focus:border-transparent dark:focus:ring-blue-600"
-          placeholder="Buscar"
-        />
-        <div
-          class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
-        >
+        <input type="text" name="tabla-busqueda" id="tabla-busqueda"
+          class="py-1.5 px-8 ps-10 block w-full border-transparent shadow-sm rounded-lg text-sm focus:z-10 bg-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:text-neutral-300 dark:placeholder-neutral-400 dark:focus:border-transparent dark:focus:ring-blue-600"
+          placeholder="Buscar" />
+        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
           {{search_icon("size-4 text-gray-500 dark:text-neutral-400")}}
         </div>
       </div>
     </div>
     <!-- Filtros -->
     <div class="flex-1 flex items-center justify-end space-x-2">
-      {% if data.filtros %}
-      <div
-        class="hs-dropdown [--auto-close:inside] [--placement:bottom-right] relative sm:inline-flex z-20"
-      >
-        <button
-          id="hs-dropdown-filtro"
-          type="button"
-          class="hs-dropdown-toggle py-2 px-2.5 inline-flex items-center gap-x-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-        >
-          {{sliders_horizontal_icon('size-[14px] dark:text-neutral-300')}} Filtrar {{dropdown_icon()}}
+      {% if configuracion.filtros %}
+      <div class="hs-dropdown [--auto-close:inside] [--placement:bottom-right] relative sm:inline-flex z-20">
+        <button id="hs-dropdown-filtro" type="button"
+          class="hs-dropdown-toggle py-2 px-2.5 inline-flex items-center gap-x-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+          {{sliders_horizontal_icon('size-[14px] dark:text-neutral-300')}}
+          Filtrar {{dropdown_icon()}}
         </button>
 
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden bg-white border border-gray-200 shadow-2xl rounded-xl p-4 mt-2 dark:bg-neutral-900  dark:border-neutral-800"
-          aria-labelledby="hs-dropdown-filtro"
-        >
+          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden bg-white border border-gray-200 shadow-2xl rounded-xl p-4 mt-2 dark:bg-neutral-900 dark:border-neutral-800"
+          aria-labelledby="hs-dropdown-filtro">
           <div class="space-y-4">
             {% set inputFiltrosClases = 'py-2 px-4 block w-full border-0
             border-gray-200 rounded-lg text-sm focus:border-blue-500
             focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none
-            bg-gray-100 text-gray-500 dark:bg-neutral-800 dark:border-neutral-700
-            dark:text-neutral-400 dark:placeholder-neutral-400
-            dark:focus:ring-blue-600'%} {% for filtro in data.filtros %}
+            bg-gray-100 text-gray-500 dark:bg-neutral-800
+            dark:border-neutral-700 dark:text-neutral-400
+            dark:placeholder-neutral-400 dark:focus:ring-blue-600'%} {% for
+            filtro in configuracion.filtros %}
             <div>
-              <label
-                for="tabla-filtro-{{ loop.index }}"
-                class="block text-sm  mb-1 dark:text-white"
-              >
+              <label for="tabla-filtro-{{ loop.index }}" class="block text-sm mb-1 dark:text-white">
                 {{ filtro.nombre }}
               </label>
               {% if filtro.tipo == 'texto' %}
-              <input
-                type="text"
-                id="tabla-filtro-{{ loop.index }}"
-                class="{{ inputFiltrosClases }}"
-                placeholder="Escriba un valor"
-              />
+              <input type="text" id="tabla-filtro-{{ loop.index }}" class="{{ inputFiltrosClases }}"
+                placeholder="Escriba un valor" value="{{filtro.valor}}" />
               {% elif filtro.tipo == 'seleccion' %}
-              <select
-                id="tabla-filtro-{{ loop.index }}"
-                class="{{ inputFiltrosClases }}"
-              >
+              <select id="tabla-filtro-{{ loop.index }}" class="{{ inputFiltrosClases }}">
                 <option value="">Seleccione una opción</option>
                 {% for opcion in filtro.opciones %}
-                <option value="{{ opcion }}">{{ opcion }}</option>
+                <option value="{{ opcion }}" {% if ( opcion|trim|lower==filtro.valor|trim|lower ) %} selected {% endif
+                  %}>
+                  {{ opcion }}
+                </option>
                 {% endfor %}
               </select>
               {% elif filtro.tipo == 'fecha' %}
-              <input
-                type="date"
-                id="tabla-filtro-{{ loop.index }}"
-                class="{{ inputFiltrosClases }}"
-              />
+              <input type="date" id="tabla-filtro-{{ loop.index }}" class="{{ inputFiltrosClases }}"
+                value="{{filtro.valor}}" />
               {% endif %}
             </div>
             {% endfor %}
+            <button type="button"
+              class="w-full text-center py-2 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              onclick="filtrarTabla()"> Filtrar </button>
           </div>
           {% endif %}
         </div>
@@ -94,82 +75,117 @@ tabla(data) %}
       <div class="overflow-hidden">
         <table class="min-w-full">
           <!-- Headers -->
-          <thead
-            id="tabla-encabezado"
-            class="uppercase border-b border-gray-200 dark:border-neutral-700"
-          >
+          <thead id="tabla-encabezado" class="uppercase border-b border-gray-200 dark:border-neutral-700">
             <tr>
-              {% for encabezado in data.encabezados %}
-              <th
-                scope="col"
-                class="py-1 px-4 group text-start text-xs font-semibold text-gray-500 dark:text-neutral-500 focus:outline-none"
-              >
-                {% if encabezado in data.ordenar %}
+              {% for encabezado in configuracion.encabezados %}
+              <th scope="col"
+                class="py-1 px-4 group text-start text-xs font-semibold text-gray-500 dark:text-neutral-500 focus:outline-none">
+                {% if encabezado.ordenar %}
                 <button
-                  class="group py-1.5 px-2 inline-flex items-center hover:bg-gray-100 uppercase  dark:hover:bg-neutral-700/50 rounded-md"
-                  onclick="ordenarTabla('{{ encabezado }}')"
-                  id="tabla-ordenar-{{ encabezado|lower }}"
-                >
-                  {{ encabezado }} {{ ordering_icon(encabezado|lower) }}
+                  class="group py-1.5 px-2 inline-flex items-start hover:bg-gray-100 uppercase dark:hover:bg-neutral-700/50 rounded-md w-max"
+                  onclick="ordenarTabla('{{ encabezado.id }}')">
+                  {{ encabezado.nombre }}
+                  {% if encabezado.id == ordenar_por %}
+                  {{ ordering_icon('orden-activo-' + orden) }}
+                  {% else %}
+                  {{ ordering_icon() }}
+                  {% endif %}
                 </button>
                 {% else %}
-                <div class="px-2 uppercase">{{ encabezado }}</div>
+                <div class="px-2 uppercase">{{ encabezado.nombre }}</div>
                 {% endif %}
               </th>
-              {% endfor %} {% if data.acciones %}
-              <th
-                scope="col"
-                class="py-1 px-6 text-start text-xs font-semibold text-gray-800 dark:text-neutral-200 focus:outline-none"
-              ></th>
+              {% endfor %} {% if configuracion.acciones %}
+              <th scope="col"
+                class="py-1 px-6 text-start text-xs font-semibold text-gray-800 dark:text-neutral-200 focus:outline-none">
+              </th>
               {% endif %}
             </tr>
           </thead>
 
-          <!-- Data -->
-          <tbody
-            id="tabla-body"
-            class="divide-y divide-gray-200 dark:divide-neutral-700"
-          ></tbody>
+          <!-- Resultados -->
+          <tbody id="tabla-body" class="divide-y divide-gray-200 dark:divide-neutral-700">
+            {% for fila in resultados %}
+            <tr class="hover:bg-gray-100/70 dark:hover:bg-neutral-700/20">
+              {% set fila_dict = fila.to_dict() %}
+              {% for key, value in fila_dict.items() %}
+              <td class="size-px whitespace-nowrap">
+                <div class="px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">
+                  {{ value }}
+                </div>
+              </td>
+              {% endfor %}
+              {% if configuracion.acciones %}
+              <td class="size-px whitespace-nowrap">
+                <div class="flex gap-1 px-4 justify-end">
+                  {% for accion in configuracion.acciones %}
+                  <button type="button"
+                    class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+                    onclick="{{ accion.funcion }}('{{ fila.id }}')">
+                    {{ accion.icono }} {{ accion.nombre }}
+                  </button>
+                  {% endfor %}
+                </div>
+              </td>
+              {% endif %}
+            </tr>
+            {% else %}
+            <tr>
+              <td class="size-px whitespace-nowrap" colspan="{{ configuracion.encabezados|length + 1 }}">
+                <div
+                  class="py-10 px-5 flex flex-col justify-center items-center text-center text-gray-600 dark:text-neutral-500">
+                  {{ search_icon("size-6") }}
+                  <div class="max-w-sm mx-auto">
+                    <p class="mt-2 text-sm">No se encontraron resultados</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
         </table>
       </div>
     </div>
   </div>
   <div
-    class="px-6 py-4 grid gap-3 sm:flex sm:justify-between sm:items-center border-t border-gray-200 dark:border-neutral-700"
-  >
+    class="px-6 py-4 grid gap-3 sm:flex sm:justify-between sm:items-center border-t border-gray-200 dark:border-neutral-700">
     <div>
       <p class="text-sm text-gray-600 dark:text-neutral-400">
-        <span
-          id="cantidad-resultados"
-          class="font-semibold text-gray-800 dark:text-neutral-200"
-          >{{ data.data|length }}
+        <span id="cantidad-resultados" class="font-semibold text-gray-800 dark:text-neutral-200">{{ cant_resultados }}
         </span>
         resultados
       </p>
     </div>
 
     <div class="flex gap-x-1">
-      {% set botonPaginacionClases = 'size-9 justify-center inline-flex
-      items-center gap-x-2 text-sm font-medium rounded-lg border-gray-200
-      bg-white text-gray-800 hover:bg-gray-100 focus:outline-none
-      focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none
-      dark:bg-neutral-800 dark:border-neutral-700 dark:text-white
-      dark:hover:bg-neutral-700/50'%}
-      <button
-        type="button"
-        id="tabla-anterior-pagina"
-        disabled
-        class="{{ botonPaginacionClases }}"
-      >
+      {% set botonPaginacionClases = 'size-9 justify-center inline-flex items-center gap-x-2 text-sm font-medium
+      rounded-lg border-gray-200 text-gray-800 focus:outline-none focus:bg-gray-100 disabled:opacity-50
+      disabled:pointer-events-none dark:border-neutral-700 dark:text-white'%}
+      {% set botonPaginacionActivo = 'bg-gray-200 dark:bg-neutral-700' %}
+      {% set botonPaginacionInactivo = 'bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700/50' %}
+      <button type="button" id="tabla-anterior-pagina" {% if pagina==1 %} disabled {% endif %}
+        onclick="cambiarPaginaTabla('{{ pagina - 1 }}')"
+        class="{{ botonPaginacionClases }} {{ botonPaginacionInactivo }}">
         {{ chevron_left_icon('size-3') }}
       </button>
-      <div id="tabla-paginacion" class="flex gap-x-1"></div>
-      <button
-        type="button"
-        id="tabla-siguiente-pagina"
-        disabled
-        class="{{ botonPaginacionClases }}"
-      >
+      <div id="tabla-paginacion" class="flex gap-x-1">
+        {% for i in range(1, cant_paginas + 1) %}
+        <button type="button" class="
+        {{ botonPaginacionClases }} 
+        {% if (i == pagina) %} 
+          {{ botonPaginacionActivo }}
+        {% else %} 
+          {{ botonPaginacionInactivo }} 
+        {% endif %} 
+        " onclick="cambiarPaginaTabla('{{ i }}')">
+          {{ i }}
+        </button>
+        {% endfor %}
+      </div>
+      <button type="button" id="tabla-siguiente-pagina" {% if pagina==cant_paginas %} disabled {% endif %}
+        onclick="cambiarPaginaTabla('{{ pagina + 1 }}')"
+        class="{{ botonPaginacionClases }} {{ botonPaginacionInactivo }}">
         {{ chevron_left_icon('size-3 rotate-180') }}
       </button>
     </div>
@@ -177,186 +193,43 @@ tabla(data) %}
 </div>
 
 <script>
-  const tablaBody = document.getElementById('tabla-body')
-  const cantidadResultados = document.getElementById('cantidad-resultados')
-  const busqueda = document.getElementById('tabla-busqueda')
-  const paginacion = document.getElementById('tabla-paginacion')
-  const botonAnteriorPagina = document.getElementById('tabla-anterior-pagina')
-  const botonSiguientePagina = document.getElementById('tabla-siguiente-pagina')
-  let orden = ''
-  let ordenarPor = ''
-  {% if data.filtros %}
-  const filtros = [
-    {% for filtro in data.filtros %}
-  document.getElementById('tabla-filtro-{{ loop.index }}'),
-    {% endfor %}
-    ]
-  {% endif %}
-
-
-  const ordenarTabla = columna => {
-    columna = columna.toLowerCase()
-    let actual = document.getElementById('ordering-icon-' + columna)
-    let anterior = document.getElementById('ordering-icon-' + ordenarPor)
-    if (ordenarPor != columna) {
-      if (anterior) {
-        anterior.classList.remove('tabla-ordering-asc')
-        anterior.classList.remove('tabla-ordering-desc')
-      }
-      ordenarPor = columna
-      orden = 'desc'
-      let actual = document.getElementById('ordering-icon-' + columna)
-      actual.classList.add('tabla-ordering-desc')
-    } else if (ordenarPor == columna && orden == 'desc') {
-      orden = 'asc'
-      actual.classList.remove('tabla-ordering-desc')
-      actual.classList.add('tabla-ordering-asc')
-    } else {
-      orden = ''
-      ordenarPor = ''
-      actual.classList.remove('tabla-ordering-asc')
-    }
-    cargarTabla()
+  function cambiarPaginaTabla(pagina) {
+    let url = new URL(window.location.href);
+    url.searchParams.set('pagina', pagina);
+    window.location.href = url.toString();
   }
 
-  const cargarTabla = async (pagina = 1) => {
-
-    // Pongo spinner en la tabla
-    const heightTablaBody = tablaBody.offsetHeight // Mantengo el alto de la tabla para que no haya un desplazamiento innecesario
-    tablaBody.innerHTML = '' // Limpio la tabla y pongo el spinner
-    tablaBody.innerHTML = `
-      <tr>
-        <td colspan="{{ data.encabezados|length + 1 }}" class="size-px whitespace-nowrap"> 
-          <div class="h-[${heightTablaBody}px] py-10 px-5 flex gap-1 justify-center items-start text-center text-gray-600 dark:text-neutral-500 max-w-sm mx-auto">
-              {{spinner_icon()}}
-          </div>
-        </td>
-      </tr>
-    `
-
-    // Obtengo los datos teniendo en cuenta la busqueda, los filtros, la pagina y el orden
-    const response = await fetch('{{ data.url }}'
-      + '?busqueda=' + busqueda.value
-      + '&pagina=' + pagina
-      {% if (data.filtros) %}
-        {% for filtro in data.filtros %}
-        + '&{{ filtro.nombre|lower|replace(" ","-") }}=' +
-          filtros[{{ loop.index - 1 }}].value
-        {% endfor %}
-      {% endif %}
-      + '&ordenar-por=' + ordenarPor + '&orden=' + orden
-    )
-    const data = await response.json()
-    
-
-    // Limpio y lleno la tabla con los datos obtenidos
-    tablaBody.innerHTML = ''
-
-    // Si no hay resultados muestro un mensaje
-    if (data.resultados.length == 0) {
-      tablaBody.innerHTML = `
-        <tr>
-          <td class="size-px whitespace-nowrap" colspan="{{ data.encabezados|length + 1 }}">
-            <div class="py-10 px-5 flex flex-col justify-center items-center text-center text-gray-600 dark:text-neutral-500">
-              {{ search_icon("size-6") }}
-              <div class="max-w-sm mx-auto">
-                <p class="mt-2 text-sm">No se encontraron resultados</p>
-              </div>
-            </div>
-          </td>
-        </tr>
-      `;
-    } else { // Creo una fila por cada resultado
-      data.resultados.forEach(row => {
-        const tr = document.createElement('tr')
-        tr.classList.add('hover:bg-gray-100/70', 'dark:hover:bg-neutral-700/20')
-        row.forEach(cell => {
-          const td = document.createElement('td')
-          td.classList.add('size-px', 'whitespace-nowrap')
-          td.innerHTML = `<div class="px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">${cell}</div>`
-          tr.appendChild(td)
-        })
-        // Creo los botones de accion de cada fila
-        {% if data.acciones %}
-          const td = document.createElement('td')
-          td.classList.add('size-px', 'whitespace-nowrap')
-          const div = document.createElement('div')
-          div.classList.add('flex', 'gap-1', 'px-4', 'justify-end')
-          let button
-          {% for accion in data.acciones %}
-            button = document.createElement('button')
-            button.classList.add('py-1', 'px-2', 'inline-flex', 'items-center', 'justify-center', 'gap-x-2', 'text-sm', 'font-medium', 'rounded-lg', 'disabled:opacity-50', 'disabled:pointer-events-none', 'text-blue-600', 'hover:bg-blue-100', 'hover:text-blue-800', 'focus:outline-none', 'focus:bg-blue-100', 'focus:text-blue-800', 'dark:text-blue-500', 'dark:hover:bg-blue-800/30', 'dark:hover:text-blue-400', 'dark:focus:bg-blue-800/30', 'dark:focus:text-blue-400')
-            button.innerHTML = '{{ accion }}'
-            button.onclick = () => {{ accion | lower }}(row[0])
-            div.appendChild(button)
-          {% endfor %}
-          td.appendChild(div)
-          tr.appendChild(td)
-        {% endif %}
-        tablaBody.appendChild(tr)
-      })
-    }
-
-    // Actualizo la cantidad de resultados
-    cantidadResultados.innerHTML = data.cantidadResultados
-
-    // Actualizo la paginacion
-    botonAnteriorPagina.onclick = () => cargarTabla(pagina - 1)
-    botonSiguientePagina.onclick = () => cargarTabla(pagina + 1)
-
-    if (pagina == 1) {
-      botonAnteriorPagina.disabled = true
+  function ordenarTabla(columna) {
+    let url = new URL(window.location.href);
+    let ordenar_por = url.searchParams.get('ordenar_por');
+    let orden = url.searchParams.get('orden');
+    if (ordenar_por == columna && orden == 'asc') {
+      url.searchParams.set('orden', 'desc');
+    } else if (ordenar_por == columna && orden == 'desc') {
+      url.searchParams.delete('orden');
+      url.searchParams.delete('ordenar_por');
     } else {
-      botonAnteriorPagina.disabled = false
+      url.searchParams.set('orden', 'asc');
+      url.searchParams.set('ordenar_por', columna);
     }
-
-    if (pagina == data.cantidadPaginas) {
-      botonSiguientePagina.disabled = true
-    } else {
-      botonSiguientePagina.disabled = false
-    }
-
-    paginacion.innerHTML = ''
-
-    if (data.cantidadPaginas > 1) {
-
-      // Calculo el rango de paginas a mostrar (maximo 5)
-      let inicio = Math.max(1, pagina - 2)
-      let fin = Math.min(data.cantidadPaginas, pagina + 2)
-
-      if (fin - inicio < 4) {
-        if (inicio == 1) {
-          fin = Math.min(data.cantidadPaginas, inicio + 4)
-        } else {
-          inicio = Math.max(1, fin - 4)
-        }
-      }
-
-      // Creo los botones de cada pagina
-      for (let i = inicio; i <= fin; i++) {
-        const li = document.createElement('button')
-        li.innerHTML = i
-        li.classList.add('size-9', 'inline-flex', 'items-center', 'justify-center', 'gap-x-2', 'text-sm', 'font-medium', 'rounded-lg',  'border-gray-200', 'text-gray-800', 'focus:outline-none', 'focus:bg-gray-50', 'disabled:opacity-50', 'disabled:pointer-events-none', 'dark:border-neutral-700', 'dark:text-white', 'dark:focus:bg-neutral-700')
-        if (i == pagina) {
-          li.classList.add('bg-gray-200', 'dark:bg-neutral-700')
-        } else {
-          li.classList.add('bg-white', 'dark:bg-neutral-800', 'hover:bg-gray-100', 'dark:hover:bg-neutral-700/50')
-        }
-        li.addEventListener('click', () => cargarTabla(i))
-        paginacion.appendChild(li)
-      }
-    }
+    window.location.href = url.toString();
   }
 
-  // Actualizo la tabla al modificar la busqueda y los filtros
-  busqueda.addEventListener('input', () => cargarTabla())
-  {% if data.filtros %}
-    filtros.forEach(filtro => {
-      filtro.addEventListener('input', () => cargarTabla())
-    })
-  {% endif %}
-
-  cargarTabla()
+  function filtrarTabla() {
+    let url = new URL(window.location.href);
+    // {% if configuracion.filtros %}
+    let valor;
+    // {% for filtro in configuracion.filtros %}
+    valor = document.getElementById('tabla-filtro-{{ loop.index }}').value;
+    if (valor) {
+      url.searchParams.set('{{ filtro.id }}', valor);
+    } else {
+      url.searchParams.delete('{{ filtro.id }}');
+    }
+    // {% endfor %}
+    // {% endif %}
+    window.location.href = url.toString();
+  }
 </script>
 
 {% endmacro %}

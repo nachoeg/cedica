@@ -6,7 +6,7 @@ avatar_placeholder_icon, show_password_icon %}
   <nav class="max-w-[90rem] w-full mx-auto px-2 sm:px-5 lg:px-8 flex flex-wrap basis-full items-center justify-between">
 
     <!-- Logo -->
-    <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
+    <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="/">
       <img src="{{ url_for('static', filename='images/cedica-isotipo.webp')}}" alt="" class="max-h-7">
       <img src="{{ url_for('static', filename='images/cedica-logotipo.webp')}}" alt=""
         class="max-h-7 dark:brightness-200 dark:contrast-150">
@@ -122,11 +122,11 @@ avatar_placeholder_icon, show_password_icon %}
         {% set navbarLinksClases = 'p-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg
         text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50
         disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700/50 dark:focus:bg-neutral-700/50' %}
-        <a class="{{navbarLinksClases}}" href="jinete-y-amazonas">J&A</a>
-        <a class="{{navbarLinksClases}}" href="escuestre">Ecuestre</a>
-        <a class="{{navbarLinksClases}}" href="equipo">Equipo</a>
+        <a class="{{navbarLinksClases}}" href="/jinete-y-amazonas">J&A</a>
+        <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
+        <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
         {% if true %} <!-- Cambiar por if is_authenticated(session) -->
-        <a class="{{navbarLinksClases}}" href="usuarios">Usuarios</a>
+        <a class="{{navbarLinksClases}}" href="/usuarios">Usuarios</a>
         {% endif %}
       </div>
       <div class="sm:hidden">

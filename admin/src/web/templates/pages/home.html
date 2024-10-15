@@ -1,47 +1,7 @@
-{% from 'components/tabla.html' import tabla %}
-
 {% extends "layouts/base.html" %}
 
 {% block title %} Inicio {% endblock %}
 
-{% block head %}
-{{ super() }}
-{% endblock %}
-
-{% set configuracion = {
-'url': 'static/api/tablaPrueba.json',
-'encabezados': ['Nombre', 'Edad', 'Correo', 'Actividad', 'Fecha', 'Hora', 'Estado', 'Telefono'],
-'ordenar': ['Nombre', 'Edad', 'Correo', 'Estado', 'Telefono'],
-'acciones': ['Ver', 'Editar', 'Borrar'],
-'filtros': [
-{'nombre': 'Nombre', 'tipo': 'texto' },
-{'nombre': 'Estado', 'tipo': 'seleccion', 'opciones': ['Activo', 'Inactivo']},
-{'nombre': 'Fecha inicio', 'tipo': 'fecha'},
-{'nombre': 'Fecha fin', 'tipo': 'fecha'},
-]}
-%}
-
 {% block main %}
-{{ tabla(configuracion) }}
-{% endblock %}
-
-{% block footer %}
-{{ super() }}
-{% endblock %}
-
-{% block scripts %}
-<script>
-  function borrar(id) {
-    console.log('Borrar', id);
-  }
-  function editar(id) {
-    console.log('Editar', id);
-  }
-  function ver(id) {
-    console.log('Ver', id);
-  }
-  function descargar(id) {
-    console.log('Descargar', id);
-  }
-</script>
+<h1 class="text-5xl text-gray-800 dark:text-neutral-100">Inicio</h1>
 {% endblock %}
