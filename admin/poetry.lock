@@ -270,6 +270,16 @@ dnspython = ">=2.0.0"
 idna = ">=2.0.0"
 
 [[package]]
+name = "flash"
+version = "1.0.3"
+description = "Fast tool"
+optional = false
+python-versions = "*"
+files = [
+    {file = "flash-1.0.3-py3-none-any.whl", hash = "sha256:69f448811abc97d4f0857fc577e14398b322ceddad074430350a5012a61302b2"},
+]
+
+[[package]]
 name = "flask"
 version = "3.0.3"
 description = "A simple framework for building complex web applications."
@@ -571,17 +581,6 @@ files = [
     {file = "MarkupSafe-3.0.1-cp39-cp39-win32.whl", hash = "sha256:242d6860f1fd9191aef5fae22b51c5c19767f93fb9ead4d21924e0bcb17619d8"},
     {file = "MarkupSafe-3.0.1-cp39-cp39-win_amd64.whl", hash = "sha256:93e8248d650e7e9d49e8251f883eed60ecbc0e8ffd6349e18550925e31bd029b"},
     {file = "markupsafe-3.0.1.tar.gz", hash = "sha256:3e683ee4f5d0fa2dde4db77ed8dd8a876686e3fc417655c2ece9a90576905344"},
-]
-
-[[package]]
-name = "minio"
-version = "7.2.9"
-description = "MinIO Python SDK for Amazon S3 Compatible Cloud Storage"
-optional = false
-python-versions = ">3.8"
-files = [
-    {file = "minio-7.2.9-py3-none-any.whl", hash = "sha256:fe5523d9c4a4d6cfc07e96905852841bccdb22b22770e1efca4bf5ae8b65774b"},
-    {file = "minio-7.2.9.tar.gz", hash = "sha256:a83c2fcd981944602a8dc11e8e07543ed9cda0a9462264e3f46a13171c56bccb"},
 ]
 
 [package.dependencies]
@@ -974,4 +973,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.3"
-content-hash = "9a6b95545416d4b3b8288907084d19df28a1952be28afa48703fc728a2e5070e"
+content-hash = "6e807666fcf14d54ce625ab84103bd4d5c52768449585e9b9b2e31a4ac33c87f"

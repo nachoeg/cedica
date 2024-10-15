@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Listado de Miembros {% endblock %}
+
+{% block main %}
+    <h1>Detalles de Miembro</h1>
+    
+    <p><strong>Nombre:</strong> {{ miembro.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ miembro.apellido }}</p>
+    <p><strong>DNI:</strong> {{ miembro.dni }}</p>
+    <p><strong>Email:</strong> {{ miembro.email }}</p>
+    <p><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+    <p><strong>Contacto de Emergencia:</strong> {{ miembro.nombreContactoEmergencia }}</p>
+    <p><strong>Teléfono de Emergencia:</strong> {{ miembro.telefonoContactoEmergencia }}</p>
+    <p><strong>Obra Social:</strong> {{ miembro.obraSocial }}</p>
+    <p><strong>Número de Afiliado:</strong> {{ miembro.numeroAfiliado }}</p>
+    <p><strong>Profesión:</strong> {{ miembro.profesion.nombre }}</p>
+    <p><strong>Condición:</strong> {{ miembro.condicion_trabajo.nombre }}</p>
+    <p><strong>Calle:</strong> {{ miembro.domicilio.calle }}</p>
+    <p><strong>Numero:</strong> {{ miembro.domicilio.numero}}</p>
+    <p><strong>Piso:</strong> {{ miembro.domicilio.piso }}</p>
+    <p><strong>Departamento:</strong> {{ miembro.domicilio.dpto }}</p>
+    <p><strong>Localidad:</strong> {{ miembro.domicilio.localidad }}</p>
+    <p><strong>Usuario:</strong> {{ miembro.usuario.alias }}</p>
+    <a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Editar</a>
+    <form action="{{ url_for('miembro.miembro_eliminar', id=miembro.id) }}" method="POST" style="display:inline;">
+        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este miembro?');">Eliminar</button>
+    </form>
+    <a href="{{ url_for('miembro.miembro_listar')}}"> Volver </a>
+{% endblock %}

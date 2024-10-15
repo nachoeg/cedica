@@ -1,0 +1,143 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Modificar miembro {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        /* Estilos generales para el formulario */
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Estilos para las etiquetas y entradas del formulario */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        /* Estilos para el botón de envío */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Agregar un espaciado entre los elementos */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Estilo adicional para mejorar el aspecto del formulario en dispositivos móviles */
+        @media (max-width: 768px) {
+            form {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <h1>Editar Miembro</h1>
+
+    <form method="POST" action="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" value="{{ miembro.nombre }}" required>
+
+        <label for="apellido">Apellido</label>
+        <input type="text" name="apellido" value="{{ miembro.apellido }}" required>
+
+        <label for="dni">DNI</label>
+        <input type="text" name="dni" value="{{ miembro.dni }}" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" value="{{ miembro.email }}" required>
+
+        <label for="telefono">Teléfono</label>
+        <input type="text" name="telefono" value="{{ miembro.telefono }}" required>
+
+        <label for="nombreContactoEmergencia">Contacto de Emergencia</label>
+        <input type="text" name="nombreContactoEmergencia" value="{{ miembro.nombreContactoEmergencia }}" required>
+
+        <label for="telefonoContactoEmergencia">Teléfono de Emergencia</label>
+        <input type="text" name="telefonoContactoEmergencia" value="{{ miembro.telefonoContactoEmergencia }}" required>
+
+        <label for="obraSocial">Obra Social</label>
+        <input type="text" name="obraSocial" value="{{ miembro.obraSocial }}" required>
+
+        <label for="numeroAfiliado">Número de Afiliado</label>
+        <input type="text" name="numeroAfiliado" value="{{ miembro.numeroAfiliado }}" required>
+
+        <label for="profesion_id">Profesión</label>
+        <select name="profesion_id">
+            {% for profesion in profesiones %}
+                <option value="{{ profesion.id }}" {% if miembro.profesion_id == profesion.id %}selected{% endif %}>
+                    {{ profesion.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="condicion_id">Condición</label>
+        <select name="condicion_id">
+            {% for condicion in condiciones %}
+                <option value="{{ condicion.id }}" {% if miembro.condicion_id == condicion.id %}selected{% endif %}>
+                    {{ condicion.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="puesto_laboral_id">Puesto Laboral</label>
+        <select name="puesto_laboral_id">
+            {% for puesto in puestos %}
+                <option value="{{ puesto.id }}" {% if miembro.puesto_laboral_id == puesto.id %}selected{% endif %}>
+                    {{ puesto.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    <a href="{{ url_for('miembro.miembro_listar')}}"> Volver </a>
+{% endblock %}
