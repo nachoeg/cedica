@@ -82,9 +82,19 @@ def run():
         activo=False
     )
 
-    cobro1 = cobros.crear_cobro(medio_de_pago='efectivo', fecha_pago = '2024/09/10 13:19:38',monto=400, observaciones="Nada para agregar", joa_id=j_y_a1.id)
-    cobro2 = cobros.crear_cobro(medio_de_pago='credito', fecha_pago = '2024/09/12 13:19:38', monto=500, observaciones="Queda al día",joa_id=j_y_a1.id)
-    cobro3 = cobros.crear_cobro(medio_de_pago='debito', fecha_pago = '2024/09/11 13:19:38', monto=600, observaciones="-",joa_id=j_y_a3.id)
+    tipos_de_jya = [
+        "Hipoterapia",
+        "Monta Terapéutica",
+        "Deporte Ecuestre Adaptado",
+        "Actividades Recreativas",
+        "Equitación",
+    ]
+
+    for tipo in tipos_de_jya:
+        ecuestre.crear_tipo_de_jya(tipo=tipo)
+
+    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela")
+    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim")
 
     cobro1 = cobros.crear_cobro(
         medio_de_pago="efectivo",
@@ -107,20 +117,6 @@ def run():
         observaciones="-",
         joa_id=j_y_a3.id,
     )
-
-    tipos_de_jya = [
-        "Hipoterapia",
-        "Monta Terapéutica",
-        "Deporte Ecuestre Adaptado",
-        "Actividades Recreativas",
-        "Equitación",
-    ]
-
-    for tipo in tipos_de_jya:
-        ecuestre.crear_tipo_de_jya(tipo=tipo)
-
-    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela")
-    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim")
 
     ecuestre1 = ecuestre.crear_ecuestre(
         nombre="Caballo1",
