@@ -6,7 +6,6 @@ from src.core.miembro.domicilio import Domicilio
 
 def listar_miembros():
     miembros = Miembro.query.all()
-
     return miembros
 
 def crear_miembro(**kwargs):

@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, crear_miembro
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, crear_domicilio, crear_miembro, Domicilio
 from sqlalchemy import asc, desc
 from src.core.database import db
 
@@ -47,7 +47,7 @@ def miembro_listar():
     )
 
 
-@miembro_bp.route('/create', methods=['GET', 'POST'])
+@miembro_bp.route('/crear', methods=['GET', 'POST'])
 def miembro_crear():
     profesiones = Profesion.query.all()
     condiciones = CondicionDeTrabajo.query.all()
@@ -66,16 +66,39 @@ def miembro_crear():
         profesion_id = request.form['profesion_id']
         condicion_id = request.form['condicion_id']
         puesto_laboral_id = request.form['puesto_laboral_id']
-        activo = request.form.get('activo') == 'on'
+        activo = True
+
+        # Captura los datos del formulario del domicilio
+        calle = request.form['calle']
+        numero = request.form['numero']
+        piso = request.form.get('piso')  # opcional
+        dpto = request.form.get('dpto')  # opcional
+        localidad = request.form['localidad']
+
+        # Buscar si existe un domicilio con los mismos datos
+        domicilio_existente = Domicilio.query.filter_by(
+            calle=calle,
+            numero=numero,
+            piso=piso,
+            dpto=dpto,
+            localidad=localidad
+        ).first()
         
+        if domicilio_existente:
+            domicilio_id = domicilio_existente.id
+        else:
+            nuevo_domicilio = crear_domicilio(calle=calle, numero=numero, piso=piso, dpto=dpto, localidad=localidad)
+            domicilio_id = nuevo_domicilio.id
+
         crear_miembro(nombre=nombre, apellido=apellido, dni=dni, email=email, telefono=telefono,
             nombreContactoEmergencia=nombreContactoEmergencia, telefonoContactoEmergencia=telefonoContactoEmergencia,
             obraSocial=obraSocial, numeroAfiliado=numeroAfiliado, profesion_id=profesion_id,
-            condicion_id=condicion_id, puesto_laboral_id=puesto_laboral_id, activo=activo)
+            condicion_id=condicion_id, puesto_laboral_id=puesto_laboral_id, domicilio_id=domicilio_id, activo=activo)
 
-        return redirect(url_for('index_miembros'))
+        flash("Miembro creado con exito", 'success')
+        return redirect(url_for('miembro.miembro_listar'))
 
-    return render_template('miembros/create.html', profesiones=profesiones, condiciones=condiciones, puestos=puestos)
+    return render_template('miembros/crear.html', profesiones=profesiones, condiciones=condiciones, puestos=puestos)
 
 
 @miembro_bp.route('/<int:id>/mostrar', methods=['GET'])

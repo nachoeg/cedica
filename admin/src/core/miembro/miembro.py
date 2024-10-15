@@ -31,7 +31,7 @@ class Miembro(db.Model):
     puesto_laboral_id = db.Column(db.Integer, db.ForeignKey('puesto_laboral.id'), nullable=False)
     puesto_laboral = db.relationship('PuestoLaboral', backref='miembros')  
 
-    # relacion con usuairo
+    # relacion con usuario
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)
     usuario = db.relationship('Usuario', backref='miembro', uselist=False)
 
