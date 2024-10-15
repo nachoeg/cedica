@@ -8,6 +8,7 @@ from src.core import database
 from src.core.config import config
 from src.core import seeds
 from .controllers.miembro import miembro_bp
+from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.cobros import bp as cobros_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
 
@@ -19,8 +20,6 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
-    
-    app.config['SECRET_KEY'] = 'SecretKey'
 
     app.config.from_object(config[env])
     database.init_app(app)
@@ -32,11 +31,14 @@ def create_app(env="development", static_folder="../../static"):
     def home():
         return render_template("pages/home.html")
 
+    app.register_blueprint(ecuestre_bp)
+
     @app.route("/preline.js")
     def serve_preline_js():
-        return send_from_directory("../../node_modules/preline/dist",
-                                   "preline.js",
-                                   )
+        return send_from_directory(
+            "../../node_modules/preline/dist",
+            "preline.js",
+        )
 
     app.register_blueprint(bp_autenticacion)
 

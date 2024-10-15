@@ -1,0 +1,15 @@
+{% from 'components/iconos.html' import moon_icon, sun_icon %}
+
+{% set botonTemaClases = 'hs-dark-mode font-medium text-gray-800 rounded-lg hover:bg-gray-50 focus:outline-none
+border focus:bg-gray-200 dark:text-neutral-200 dark:border-neutral-700 dark:hover:bg-neutral-700
+dark:focus:bg-neutral-800' %}
+<button type="button" class="hs-dark-mode-active:hidden block {{ botonTemaClases }}" data-hs-theme-click-value="dark">
+  <span class="group inline-flex shrink-0 justify-center items-center size-9">
+    {{ moon_icon('shrink-0 size-4') }}
+  </span>
+</button>
+<button type="button" class="hs-dark-mode-active:block hidden {{ botonTemaClases }}" data-hs-theme-click-value="light">
+  <span class="group inline-flex shrink-0 justify-center items-center size-9">
+    {{ sun_icon('shrink-0 size-4') }}
+  </span>
+</button>
