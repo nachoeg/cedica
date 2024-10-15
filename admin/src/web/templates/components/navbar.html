@@ -27,10 +27,15 @@ avatar_placeholder_icon, show_password_icon %}
         {% include 'components/botonTema.html' %}
       </span>
 
-      {% if true %} <!-- Cambiar por if is_authenticated(session) -->
+      {% if not esta_autenticado(session) %}
       <!-- Dropdown iniciar sesión -->
       <div class="hs-dropdown [--auto-close:inside] [--offset:16] relative inline-flex gap-1">
 
+        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+          href="{{ url_for('autenticacion.iniciar_sesion') }}">
+          {{user_icon('size-4')}}
+          Iniciar sesión
+        </a>
         <button id="hs-dropdown-default" type="button"
           class="hs-dropdown-toggle size-9 xs:size-fit xs:py-2 xs:px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none bg-transparent border border-gray-200 text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50  dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 "
           aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
@@ -104,7 +109,7 @@ avatar_placeholder_icon, show_password_icon %}
               {{user_icon('size-4')}}
               Perfil
             </a>
-            <a class="{{userLinksClases}}" href="/logout">
+            <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cerrar_sesion') }}">
               {{logout_icon('size-4')}}
               Cerrar sesión
             </a>
@@ -125,6 +130,7 @@ avatar_placeholder_icon, show_password_icon %}
         <a class="{{navbarLinksClases}}" href="/jinete-y-amazonas">J&A</a>
         <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
         <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>
         {% if true %} <!-- Cambiar por if is_authenticated(session) -->
         <a class="{{navbarLinksClases}}" href="/usuarios">Usuarios</a>
         {% endif %}
