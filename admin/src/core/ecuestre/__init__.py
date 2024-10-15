@@ -7,9 +7,9 @@ def listar_ecuestres():
     return ecuestres
 
 
-def listar_tipo_de_jya():
-    tipo_de_jya = TipoDeJyA.query.all()
-    return tipo_de_jya
+def listar_tipos_de_jya():
+    tipos_de_jya = TipoDeJyA.query.all()
+    return tipos_de_jya
 
 
 def crear_ecuestre(**kwargs):

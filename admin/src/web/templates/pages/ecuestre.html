@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+
+{% block title %}Ecuestre{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'encabezados': [
+{'id': 'id', 'nombre': 'Id'},
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'fecha_nacimiento', 'nombre': 'Nacimiento', 'ordenar': True},
+{'id': 'sexo', 'nombre': 'Sexo'},
+{'id': 'raza', 'nombre': 'Raza'},
+{'id': 'pelaje', 'nombre': 'Pelaje'},
+{'id': 'compra_donacion', 'nombre': 'Compra/donación'},
+{'id': 'fecha_ingreso', 'nombre': 'Ingreso', 'ordenar': True},
+{'id': 'sede', 'nombre': 'Sede'},
+{'id': 'tipo_jya', 'nombre': 'Tipo de J&A'}
+],
+'acciones': [{'nombre': 'Ver', 'funcion': 'ver'},{'nombre': 'Editar', 'funcion': 'editar'},{'nombre': 'Borrar',
+'funcion': 'borrar'}],
+'filtros': [
+{'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'tipo_jya', 'nombre': 'Tipo de J&A', 'tipo': 'seleccion',
+'opciones': tipos_jya, 'valor': tipo_jya_filtro}]
+}
+%}
+
+{{ tabla(configuracion, ecuestres, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function ver(id) {
+    window.location.href = `/ecuestre/${id}`;
+  }
+
+  function editar(id) {
+    window.location.href = `/ecuestre/${id}/editar`;
+  }
+
+  function borrar(id) {
+    if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
+      window.location.href = `/ecuestre/${id}/borrar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

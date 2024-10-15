@@ -7,6 +7,9 @@ class TipoDeJyA(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tipo = db.Column(db.String(100), nullable=False)
 
+    def __repr__(self):
+        return self.tipo
+
 
 class Ecuestre(db.Model):
     __tablename__ = "ecuestre"
@@ -26,6 +29,22 @@ class Ecuestre(db.Model):
         db.Integer, db.ForeignKey("tipo_de_jya.id"), nullable=False
     )
     tipo_de_jya = db.relationship("TipoDeJyA", backref="ecuestre")
+
+    # TODO: Agregar relacion entrenadores (miembros del equipo). Y jinetes?
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "fecha_nacimiento": self.fecha_nacimiento,
+            "sexo": self.sexo,
+            "raza": self.raza,
+            "pelaje": self.pelaje,
+            "es_compra": self.es_compra,
+            "fecha_ingreso": self.fecha_ingreso,
+            "sede": self.sede,
+            "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
+        }
 
     def __repr__(self):
         return f'<Ecuestre #{self.id} nombre="{self.nombre}" fecha_nacimiento="{self.fecha_nacimiento}" sexo="{self.sexo}" raza="{self.raza}" pelaje="{self.pelaje}" es_compra="{self.es_compra}" fecha_ingreso="{self.fecha_ingreso}" sede="{self.sede}" tipo_de_jya="{self.tipo_de_jya}"'
