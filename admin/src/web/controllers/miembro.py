@@ -104,7 +104,7 @@ def miembro_crear():
 @miembro_bp.route('/<int:id>/mostrar', methods=['GET'])
 def miembro_mostrar(id):
     miembro = Miembro.query.get_or_404(id)
-    return render_template('miembros/show.html', miembro=miembro)
+    return render_template('miembros/mostrar.html', miembro=miembro)
 
 @miembro_bp.route('/<int:id>/edit', methods=['GET', 'POST'])
 def miembro_editar(id):
