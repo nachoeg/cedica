@@ -10,6 +10,7 @@ from src.core import seeds
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.cobros import bp as cobros_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
+from src.web.storage import storage
 
 session = Session()
 
@@ -25,6 +26,8 @@ def create_app(env="development", static_folder="../../static"):
 
     session.init_app(app)
     bcrypt.init_app(app)
+
+    storage.init_app(app)
 
     @app.route("/")
     def home():
