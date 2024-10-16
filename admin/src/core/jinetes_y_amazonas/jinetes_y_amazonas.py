@@ -26,9 +26,9 @@ class JineteOAmazona(db.Model):
     provincia_nacimiento = db.Column(db.String(50))
     localidad_nacimiento = db.Column(db.String(50))
     domicilio_actual = db.Column(db.String(50))
-    telefono_actual = db.Column(db.Integer)
+    telefono_actual = db.Column(db.BigInteger)
     contacto_emer_nombre = db.Column(db.String(100))
-    contacto_emer_telefono = db.Column(db.Integer)
+    contacto_emer_telefono = db.Column(db.BigInteger)
     becado = db.Column(db.Boolean)
     porcentaje_beca = db.Column(db.String(100))
 
@@ -47,7 +47,6 @@ class JineteOAmazona(db.Model):
     diagnostico_id = db.Column(db.Integer, db.ForeignKey("diagnosticos.id"))
     diagnostico_otro = db.Column(db.String(30))
     tipo_discapacidad = db.Column(Enum(TipoDeDiscapacidad))
-
 
 
     #informacion economica
@@ -73,15 +72,15 @@ class JineteOAmazona(db.Model):
     beneficiario_pension = db.Column(db.Boolean)
     tipo_pension = db.Column(Enum(TipoPension))
     obra_social = db.Column(db.String(30))
-    num_afiliado = db.Column(db.Integer)
+    num_afiliado = db.Column(db.BigInteger)
     posee_curatela = db.Column(db.Boolean)
     observaciones_obra_social = db.Column(db.String(100))
 
     #informacion sobre escolaridad
     nombre_escuela = db.Column(db.String(40))
     direccion_escuela = db.Column(db.String(50))
-    telefono_escuela = db.Column(db.Integer)
-    grado_escuela = db.Column(db.Integer)
+    telefono_escuela = db.Column(db.BigInteger)
+    grado_escuela = db.Column(db.String(4))
     observaciones_escuela = db.Column(db.String(100))
 
     #informacion sobre profesionales
@@ -129,5 +128,18 @@ class JineteOAmazona(db.Model):
     #dias
     #acá voy a tener que tener una tabla de dias? es muchos a muchos
     
+    '''
+        Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
+        El parámetro asc se utiliza para que, si se le pasa de manera explícita un 0 como parámetro, 
+        se devuelvan los resultados de manera descendente
+    '''
+    @staticmethod
+    def todos_paginados(asc=1, pagina=1, por_pagina=2):
+        if asc == 0:
+                return JineteOAmazona.query.order_by(JineteOAmazona.nombre.desc()).paginate(page=pagina, per_page=por_pagina)
+        else:
+            return JineteOAmazona.query.order_by(JineteOAmazona.nombre.asc()).paginate(page=pagina, per_page=por_pagina)
+
+
     def __repr__(self):
         return f'<Jinete-Amazona #{self.id} nombre:{self.nombre}, apellido: {self.apellido}>'

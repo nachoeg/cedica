@@ -1,54 +1,78 @@
-{% from 'components/iconos.html' import user_icon, hamburger_icon, close_icon, logout_icon, google_icon,
-avatar_placeholder_icon %}
+{% from 'components/iconos.html' import user_icon, login_icon, hamburger_icon, close_icon, logout_icon, google_icon,
+avatar_placeholder_icon, show_password_icon %}
 
 <header
-  class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-transparent text-sm py-2 border-b dark:border-neutral-700">
-  <nav class="max-w-[90rem] w-full mx-auto px-8 flex flex-wrap basis-full items-center justify-between gap-y-4">
-    <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
+  class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-800/65 text-sm py-2.5 border-b dark:border-neutral-700">
+  <nav class="max-w-[90rem] w-full mx-auto px-2 sm:px-5 lg:px-8 flex flex-wrap basis-full items-center justify-between">
+
+    <!-- Logo -->
+    <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="/">
       <img src="{{ url_for('static', filename='images/cedica-isotipo.webp')}}" alt="" class="max-h-7">
       <img src="{{ url_for('static', filename='images/cedica-logotipo.webp')}}" alt=""
         class="max-h-7 dark:brightness-200 dark:contrast-150">
     </a>
+
     <div class="sm:order-3 flex items-center gap-x-2">
+      <!-- Hamburger button -->
       <button type="button"
-        class="sm:hidden hs-collapse-toggle relative size-9 flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+        class="sm:hidden hs-collapse-toggle relative size-9 flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 "
         id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
         aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
         {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
         {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
         <span class="sr-only">Toggle</span>
       </button>
-      {% if true %} <!-- Cambiar por if is_authenticated(session) -->
-      <div class="hs-dropdown [--auto-close:inside] relative inline-flex ">
-        <button id="hs-dropdown-default" type="button"
-          class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+
+      <span class="hidden sm:block">
+        {% include 'components/botonTema.html' %}
+      </span>
+
+      {% if not esta_autenticado(session) %}
+      <!-- Dropdown iniciar sesión -->
+      <div class="hs-dropdown [--auto-close:inside] [--offset:16] relative inline-flex gap-1">
+
+        <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+          href="{{ url_for('autenticacion.iniciar_sesion') }}">
           {{user_icon('size-4')}}
           Iniciar sesión
+        </a>
+        <button id="hs-dropdown-default" type="button"
+          class="hs-dropdown-toggle size-9 xs:size-fit xs:py-2 xs:px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none bg-transparent border border-gray-200 text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50  dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 "
+          aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+          {{login_icon('size-4')}}
+          <span class="hidden xs:inline">Iniciar sesión</span>
         </button>
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-xl mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white border border-gray-200 shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full "
           role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-default">
           <form class="p-4 space-y-4" action="login" method="POST">
             <div>
-              <label for="input-label" class="block text-sm font-medium mb-1 dark:text-white">Email</label>
-              <input type="email" id="input-label"
-                class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                placeholder="ejemplo@email.com">
+              <label for="email" class="block text-sm font-medium mb-1 dark:text-white">Email</label>
+              <input type="email" id="email" autocomplete="email"
+                class="py-2 px-4 block w-full border-0 bg-gray-100 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-blue-600 "
+                placeholder="ejemplo@email.com" required>
             </div>
             <div>
-              <label for="input-label" class="block text-sm font-medium mb-1 dark:text-white">Contraseña</label>
-              <input type="password" id="input-label"
-                class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                placeholder="********">
+              <label for="password" class="block text-sm font-medium mb-1 dark:text-white">Contraseña</label>
+              <div class="relative">
+                <input id="password" type="password"
+                  class="py-2 ps-4 pe-10 block w-full border-0 bg-gray-100 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-blue-600"
+                  placeholder="Contraseña" value="" required>
+                <button type="button" data-hs-toggle-password='{
+                    "target": "#password"
+                  }'
+                  class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
+                  {{show_password_icon()}}
+                </button>
+              </div>
             </div>
-            <div class="space-y-2">
+            <div class="space-y-3">
               <button type="button"
                 class="w-full text-center py-2.5 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                 Iniciar sesión
               </button>
               <button type="button"
-                class="py-2.5 px-3 w-full inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                class="py-2.5 px-3 w-full inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-800">
                 {{google_icon()}}
                 Iniciar sesión con Google
               </button>
@@ -57,27 +81,35 @@ avatar_placeholder_icon %}
         </div>
       </div>
       {% else %}
-      <div class="hs-dropdown relative inline-flex">
+
+      <div class="hidden sm:block border-s h-6 mx-1.5 border-gray-200 dark:border-neutral-700"> </div>
+
+      <!-- Opciones de usuario -->
+      <div class="hs-dropdown [--offset:16] relative inline-flex">
         <button id="hs-dropdown-with-header" type="button"
           class="hs-dropdown-toggle inline-block size-9 bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden"
           aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
           {{avatar_placeholder_icon('')}}
         </button>
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-xl mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700"
+          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white border border-gray-200 shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800 dark:divide-neutral-800"
           role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-header">
-          <div class="py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+          <div class="py-3 px-4 border-b border-gray-200 dark:border-neutral-800">
             <p class="text-sm text-gray-500 dark:text-neutral-400">Administrador</p>
             <p class="text-sm font-medium text-gray-800 dark:text-neutral-300">james@site.com</p>
           </div>
           <div class="p-1 space-y-0.5">
-            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-              href="/perfil">
+            {% set userLinksClases = 'flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800
+            hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700
+            dark:hover:text-neutral-300 dark:focus:bg-neutral-700
+            flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none
+            focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-300
+            dark:focus:bg-neutral-700' %}
+            <a class="{{userLinksClases}}" href="/perfil">
               {{user_icon('size-4')}}
               Perfil
             </a>
-            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-              href="/logout">
+            <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cerrar_sesion') }}">
               {{logout_icon('size-4')}}
               Cerrar sesión
             </a>
@@ -86,19 +118,45 @@ avatar_placeholder_icon %}
       </div>
       {% endif %}
     </div>
+
+    <!-- Menu de navegación -->
     <div id="hs-navbar-alignment"
       class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
       aria-labelledby="hs-navbar-alignment-collapse">
-      <div class="flex flex-col gap-4 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="jinetes-y-amazonas">J&A</a>
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="escuestre">Ecuestre</a>
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="equipo">Equipo</a>
-        <a class="py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-gray-800 sm:hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:sm:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-          href="{{ url_for('cobros.listar') }}">Cobro</a>
+      <div class="flex flex-col gap-x-1 gap-y-0.5 my-2 sm:flex-row sm:items-center sm:my-0">
+        {% set navbarLinksClases = 'p-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg
+        text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50
+        disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700/50 dark:focus:bg-neutral-700/50' %}
+        <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
+        <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
+        <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>
+        {% if true %} <!-- Cambiar por if is_authenticated(session) -->
+        <a class="{{navbarLinksClases}}" href="/usuarios">Usuarios</a>
+        {% endif %}
+      </div>
+      <div class="sm:hidden">
+        <hr class="border-t border-gray-200 dark:border-neutral-700 my-2">
+        <div class="flex justify-between items-center dark:text-white px-2 py-2">Cambiar tema {% include
+          'components/botonTema.html' %}
+        </div>
       </div>
     </div>
   </nav>
 </header>
+
+<!-- Relleno para evitar que el contenido se oculte detrás del navbar -->
+<div id="navbarFill" class="shrink-0"></div>
+
+<!-- Script para ajustar el tamaño del relleno del navbar -->
+<script>
+  function setNavbarFillHeight() {
+    const navbarFill = document.getElementById('navbarFill');
+    const navbar = document.querySelector('header');
+    navbarFill.style.height = `${navbar.offsetHeight}px`;
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    setNavbarFillHeight();
+  });
+  window.onresize = setNavbarFillHeight;
+</script>

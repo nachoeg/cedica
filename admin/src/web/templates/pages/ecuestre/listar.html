@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+
+{% block title %}Ecuestre{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'encabezados': [
+{'id': 'id', 'nombre': 'Id'},
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'fecha_nacimiento', 'nombre': 'Nacimiento', 'ordenar': True},
+{'id': 'sexo', 'nombre': 'Sexo'},
+{'id': 'raza', 'nombre': 'Raza'},
+{'id': 'pelaje', 'nombre': 'Pelaje'},
+{'id': 'compra_donacion', 'nombre': 'Compra/donación'},
+{'id': 'fecha_ingreso', 'nombre': 'Ingreso', 'ordenar': True},
+{'id': 'sede', 'nombre': 'Sede'},
+{'id': 'tipo_jya', 'nombre': 'Tipo de J&A'},
+{'id': 'entrenadores', 'nombre': 'Entrenadores'},
+{'id': 'conductores', 'nombre': 'Conductores'}
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'verEcuestre'},
+{'nombre': 'Editar', 'funcion': 'editarEcuestre'},
+{'nombre': 'Borrar','funcion': 'borrarEcuestre'}
+],
+'filtros': [
+{'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'tipo_jya', 'nombre': 'Tipo de J&A', 'tipo': 'seleccion', 'opciones': tipos_jya, 'valor': tipo_jya_filtro}
+]
+}
+%}
+
+<a href="{{ url_for('ecuestre.crear') }}">Crear Ecuestre</a>
+
+{{ tabla(configuracion, ecuestres, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verEcuestre(id) {
+    window.location.href = `/ecuestre/${id}`;
+  }
+
+  function editarEcuestre(id) {
+    window.location.href = `/ecuestre/${id}/editar`;
+  }
+
+  function borrarEcuestre(id) {
+    if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
+      window.location.href = `/ecuestre/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

@@ -1,13 +1,14 @@
 from src.core.database import db
-from src.core.miembro.miembro import CondicionDeTrabajo, Miembro, Profesion, PuestoLaboral
+from src.core.miembro.miembro import Miembro
+from src.core.miembro.extras import CondicionDeTrabajo, Profesion, PuestoLaboral
+from src.core.miembro.domicilio import Domicilio
 
 
 def listar_miembros():
     miembros = Miembro.query.all()
-
     return miembros
 
-def crear_miembros(**kwargs):
+def crear_miembro(**kwargs):
     miembro = Miembro(**kwargs)
     db.session.add(miembro)
     db.session.commit()
@@ -43,3 +44,10 @@ def crear_condicion(nombre):
     db.session.add(condicion)
     db.session.commit()
     return condicion
+
+def crear_domicilio(**kwargs):
+    domicilio = Domicilio(**kwargs)
+    db.session.add(domicilio)
+    db.session.commit()
+
+    return domicilio
