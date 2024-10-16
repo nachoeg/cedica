@@ -5,7 +5,15 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
 <div id="tabla"
   class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden">
   <div class="flex items-center space-x-2 px-6 py-4">
+    <!-- Boton crear -->
+    {% if configuracion.crear %}
+    <a href="{{ configuracion.crear.url }}"
+      class="py-1.5 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-700">
+      {{ configuracion.crear.icono }} {{ configuracion.crear.nombre }}
+    </a>
+    {% endif %}
     <!-- Busqueda -->
+    {% if configuracion.busqueda %}
     <div class="flex-0">
       <div class="relative max-w-xs">
         <label for="tabla-busqueda" class="sr-only">Search</label>
@@ -17,6 +25,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
         </div>
       </div>
     </div>
+    {% endif %}
     <!-- Filtros -->
     <div class="flex-1 flex items-center justify-end space-x-2">
       {% if configuracion.filtros %}

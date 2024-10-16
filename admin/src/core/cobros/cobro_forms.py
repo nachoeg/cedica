@@ -10,4 +10,5 @@ class CobroForm(FlaskForm):
     monto = DecimalField('Monto', validators=[DataRequired('Ingrese el monto que se cobró')])
     observaciones = StringField('Observaciones', validators=[Length(max=64)])
     joa = SelectField(u'Jinete o Amazona', coerce=int)
+    recibio_el_dinero = SelectField(u'Recibio el dinero', coerce = int)
     submit = SubmitField('Aceptar')

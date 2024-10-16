@@ -127,7 +127,7 @@ avatar_placeholder_icon, show_password_icon %}
         {% set navbarLinksClases = 'p-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg
         text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50
         disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700/50 dark:focus:bg-neutral-700/50' %}
-        <a class="{{navbarLinksClases}}" href="/jinete-y-amazonas">J&A</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
         <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
         <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
         <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>

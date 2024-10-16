@@ -20,10 +20,24 @@ class Cobro(db.Model):
     medio_de_pago = db.Column(Enum(MedioDePago))
     monto = db.Column(db.Double, nullable=False)
     observaciones = db.Column(db.String(100))
-    #recibio_el_dinero(referencia a tabla de miembros)
+    recibio_el_dinero_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    recibio_el_dinero = db.relationship('Miembro')
+
     joa_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
 
     joa = db.relationship('JineteOAmazona')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "fecha_pago": self.fecha_pago,
+            "medio_de_pago": self.medio_de_pago,
+            "monto": self.monto,
+            "observaciones": self.observaciones,
+            "joa": self.joa.nombre if self.joa else None,
+            "recibio_el_dinero": self.recibio_el_dinero.nombre if self.recibio_el_dinero else None
+        }
+
 
     '''
         Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
