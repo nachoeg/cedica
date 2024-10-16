@@ -11,6 +11,7 @@ from .controllers.miembro import miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 from src.web.controllers.cobros import bp as cobros_bp
+from src.web.controllers.pagos import pago_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
 from src.web.storage import storage
 
@@ -66,5 +67,7 @@ def create_app(env="development", static_folder="../../static"):
     app.register_blueprint(miembro_bp)
     
     app.register_blueprint(cobros_bp)
+
+    app.register_blueprint(pago_bp)
 
     return app

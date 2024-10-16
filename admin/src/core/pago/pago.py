@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.core.database import db
 
 class TipoDePago(db.Model):
@@ -11,12 +12,12 @@ class Pago(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     monto = db.Column(db.Double, nullable=False)
     descripcion = db.Column(db.String(), nullable=False)
-    fechaDePago = db.Column(db.String(), nullable=False)
+    fechaDePago = db.Column(db.DateTime, default=datetime.now)
 
     tipo_id = db.Column(db.Integer, db.ForeignKey('tipo_pago.id'), nullable=False)
     tipo_pago = db.relationship('TipoDePago', backref='pago')
 
-    miembro_id = db.Column(db.Integer, db.ForeignKey('miembro.id'), nullable=False)
+    miembro_id = db.Column(db.Integer, db.ForeignKey('miembro.id'), nullable=True)
     miembro = db.relationship('Miembro', backref='pago')
 
     def __repr__(self):
