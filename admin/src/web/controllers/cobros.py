@@ -3,6 +3,7 @@ from flask import Blueprint
 from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios
 from src.core.cobros.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
+from src.core.miembro.miembro import Miembro
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
@@ -38,13 +39,15 @@ def listar():
 def nuevo_cobro():
     form = CobroForm()
     form.joa.choices = [(joa.id, joa.nombre +" "+ joa.apellido) for joa in JineteOAmazona.query.order_by('nombre')]
+    form.recibio_el_dinero.choices = [(miembro.id, miembro.nombre + " " + miembro.apellido) for miembro in Miembro.query.order_by('nombre')]
     if form.validate_on_submit():
         fecha_pago = form.fecha_pago.data
         medio_de_pago = form.medio_de_pago.data
         monto = form.monto.data
         observaciones = form.observaciones.data
         joa_id = form.joa.data
-        crear_cobro(fecha_pago, medio_de_pago, monto, observaciones,joa_id)
+        recibio_el_dinero_id = form.recibio_el_dinero.data
+        crear_cobro(fecha_pago, medio_de_pago, monto, observaciones,joa_id, recibio_el_dinero_id)
 
         return redirect(url_for('cobros.listar'))
 
