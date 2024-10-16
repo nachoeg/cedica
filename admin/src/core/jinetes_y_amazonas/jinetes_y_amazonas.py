@@ -116,10 +116,14 @@ class JineteOAmazona(db.Model):
     propuesta_trabajo = db.Column(Enum(PropuestaTrabajo))
     condicion = db.Column(Enum(Condicion))
     sede = db.Column(Enum(Sede))
-    #profesor -> relacion con la tabla de miembros del equipo
-    #conductor_caballo -> relacion con la tabla de miembros del equipo 
-    #caballo -> relacion con la tabla de caballos
-    #auxiliar de pista -> relacion con la tabla de miembros de equipo
+    profesor_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    profesor = db.relationship('Miembro')
+    conductor_caballo_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    conductor_caballo = db.relationship('Miembro')
+    caballo_id = db.Column(db.Integer, db.ForeignKey('ecuestre.id'))
+    caballo = db.relationship('Ecuestre')
+    auxiliar_pista_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    auxiliar_pista = db.relationship('Miembro')
 
     #TODO armar tabla de familiares a cargo
     #familiares a cargo

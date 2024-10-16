@@ -57,10 +57,14 @@ def cargar_informacion_escuela(id, nombre_escuela, direccion_escuela, telefono_e
     jya.profesionales_a_cargo = profesionales_a_cargo
     db.session.commit()
 
-def cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias):
+def cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias, profesor_id, conductor_caballo_id, caballo_id, auxiliar_pista_id):
     jya = JineteOAmazona.query.get_or_404(id)
     jya.propuesta_de_trabajo = propuesta_de_trabajo
     jya.condicion = condicion
     jya.sede = sede
     #jya.dias = dias
+    jya.profesor_id = profesor_id
+    jya.conductor_caballo_id =conductor_caballo_id
+    jya.caballo_id = caballo_id
+    jya.auxiliar_pista_id = auxiliar_pista_id
     db.session.commit()

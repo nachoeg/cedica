@@ -4,6 +4,8 @@ from flask import Blueprint
 from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
+from src.core.miembro.miembro import Miembro
+from src.core.ecuestre.ecuestre import Ecuestre
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 
@@ -94,12 +96,20 @@ def cargar_info_esc(id : string):
 @bp.route("/cargar_info_inst/<string:id>", methods=["GET", "POST"])
 def cargar_info_inst(id : string):
     form = InfoInstitucionalJYAForm()
+    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in Miembro.query.all()]
+    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in Miembro.query.all()]
+    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in Ecuestre.query.all()]
+    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in Miembro.query.all()]
     if form.validate_on_submit():
         propuesta_de_trabajo = form.propuesta_trabajo.data
         condicion = form.condicion.data
         sede = form.sede.data
+        profesor_id = form.profesor_id.data
+        conductor_caballo_id = form.profesor_id.data
+        caballo_id = form.caballo_id.data
+        auxiliar_pista_id = form.auxiliar_pista_id.data
         dias = form.dias.data
-        cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias)
+        cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias, profesor_id, conductor_caballo_id, caballo_id, auxiliar_pista_id)
         return redirect(url_for('jinetes_y_amazonas.listar'))
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_inst.html", form=form)
  
