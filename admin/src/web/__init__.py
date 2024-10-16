@@ -9,8 +9,10 @@ from src.core.config import config
 from src.core import seeds
 from .controllers.miembro import miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
+from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 from src.web.controllers.cobros import bp as cobros_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
+from src.web.storage import storage
 
 session = Session()
 
@@ -20,12 +22,14 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
-
+    app.config['SECRET_KEY'] = 'SecretKey'
     app.config.from_object(config[env])
     database.init_app(app)
 
     session.init_app(app)
     bcrypt.init_app(app)
+
+    storage.init_app(app)
 
     @app.route("/")
     def home():
@@ -57,7 +61,10 @@ def create_app(env="development", static_folder="../../static"):
     def seeds_db():
         seeds.run()
 
+    app.register_blueprint(jinetes_y_amazonas_bp)
+
     app.register_blueprint(miembro_bp)
+    
     app.register_blueprint(cobros_bp)
 
     return app

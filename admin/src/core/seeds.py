@@ -91,8 +91,9 @@ def run():
     for tipo in tipos_de_jya:
         ecuestre.crear_tipo_de_jya(tipo=tipo)
 
-    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela")
-    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim")
+    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214428864)
+    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='La Pampa', localidad_nacimiento='Santa Rosa', domicilio_actual='62 n312',telefono_actual=2214569794, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214678864)
+    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='Buenos Aires', localidad_nacimiento='La Plata', domicilio_actual='20 n67',telefono_actual=2214569784, contacto_emer_nombre='Jimena',contacto_emer_telefono=2214671264)
 
     cobro1 = cobros.crear_cobro(
         medio_de_pago="efectivo",
