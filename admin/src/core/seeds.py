@@ -1,8 +1,6 @@
-from src.core import auth
 from src.core import miembro
 from src.core import cobros, jinetes_y_amazonas
 from src.core.seeds_usuarios import cargar_usuarios
-from src.core import auth
 from src.core import ecuestre
 
 
@@ -140,6 +138,12 @@ def run():
         sede="Sede2",
         tipo_de_jya_id=2,
     )
+    
+    ecuestre.asignar_conductor(ecuestre1, miembro1)
+    ecuestre.asignar_conductor(ecuestre1, miembro2)
+    ecuestre.asignar_entrenador(ecuestre1, miembro2)
+    ecuestre.asignar_conductor(ecuestre2, miembro2)
+    ecuestre.asignar_entrenador(ecuestre2, miembro2)
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
