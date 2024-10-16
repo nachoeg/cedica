@@ -16,3 +16,31 @@
     scroll-behavior: smooth;
   }
 }
+
+.formulario {
+  @apply flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700  overflow-hidden p-4 gap-4 w-fit mx-auto;
+}
+
+.formulario label {
+  @apply text-gray-700 dark:text-neutral-300;
+}
+
+.formulario input,
+.formulario select,
+.formulario input[type="submit"],
+.formulario button {
+  @apply w-full px-3 py-2 border-0 rounded-md;
+}
+
+.formulario input,
+.formulario select {
+  @apply bg-gray-100 focus:ring-2 focus:ring-blue-600    dark:focus:ring-blue-600 dark:bg-neutral-700 dark:placeholder:text-neutral-400;
+}
+
+.formulario select {
+  @apply pe-10;
+}
+.formulario input[type="submit"],
+.formulario button {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-700 cursor-pointer;
+}
