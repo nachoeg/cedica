@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Ecuestre {{ecuestre.id}}{% endblock %}
+
+{% block main %}
+
+<h1>Detalles de Ecuestre</h1>
+
+<p><strong>Nombre:</strong> {{ ecuestre.nombre }}</p>
+<p><strong>Fecha de Nacimiento:</strong> {{ ecuestre.fecha_nacimiento }}</strong>
+<p><strong>Sexo:</strong> {{ ecuestre.sexo }}
+</p>
+<p><strong>Raza:</strong> {{ ecuestre.raza }}</p>
+<p><strong>Pelaje:</strong> {{ ecuestre.pelaje }}</p>
+<p><strong>Compra/Donación:</strong> {{ ecuestre.es_compra }}</p>
+<p><strong>Fecha de Ingreso:</strong> {{ ecuestre.fecha_ingreso }}</p>
+<p><strong>Sede:</strong> {{ ecuestre.sede }}</p>
+<p><strong>Tipo de J&A:</strong> {{ ecuestre.tipo_de_jya }}</p>
+<a href="{{ url_for('ecuestre.editar', id=ecuestre.id) }}">Editar</a>
+<form action="{{ url_for('ecuestre.eliminar', id=ecuestre.id) }}" method="POST" style="display:inline;">
+  <button type="submit"
+    onclick="return confirm('¿Estás seguro de que deseas eliminar este ecuestre?');">Eliminar</button>
+</form>
+
+{% endblock %}
