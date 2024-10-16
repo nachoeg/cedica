@@ -50,6 +50,10 @@ def nuevo_cobro():
 
     return render_template("cobros/crear_cobro.html", form=form)
 
+@bp.get("/<int:id>/")
+def ver(id: int):
+    cobro = encontrar_cobro(id)
+    return render_template("cobros/ver_cobro.html", cobro=cobro)
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 def editar_cobro(id: int):

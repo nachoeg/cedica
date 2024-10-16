@@ -25,7 +25,7 @@
 }
 %}
 
-<a href="{{ url_for('cobros.nuevo_cobro') }}">Crear Ecuestre</a>
+<a href="{{ url_for('cobros.nuevo_cobro') }}">Crear Cobro</a>
 
 {{ tabla(configuracion, cobros, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
@@ -40,7 +40,6 @@
   }
 
   function editarCobro(id) {
-    console.log("Hola")
     window.location.href = `/cobros/${id}/editar`;
   }
 
