@@ -9,18 +9,30 @@ bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 '''
     Retorna los cobros listados de manera ascendente según la fecha de pago
 '''
-@bp.get("/consultas")
-def listar(asc: int = 1):
-    try:
-        ascendente = int(request.args.get('asc',1))
-        pagina = int(request.args.get('pagina', 1))
-        cant_por_pag = int(request.args.get('por_pag',2))
-        cobros = listar_cobros(ascendente, pagina, cant_por_pag)
-        ascendente = 0 if ascendente == 0 else 1
-    except:
-        cobros = listar_cobros()
+@bp.get("/")
+def listar():
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "id")
+    pagina = int(request.args.get('pagina', 1))
+    cant_por_pag = int(request.args.get('por_pag',10))
+    nombre_filtro = request.args.get("nombre", "")
+
+    cobros = listar_cobros()
+    cant_resultados = len(cobros.items)
+    cant_paginas = cant_resultados // cant_por_pag
+    if cant_resultados % cant_por_pag != 0:
+        cant_paginas += 1
     
-    return render_template("cobros/listar.html", cobros_paginados=cobros, ascendente=ascendente)
+        return render_template(
+        "cobros/listar.html",
+        cobros=cobros,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
+        nombre_filtro=nombre_filtro,
+    )
 
 @bp.route("/nuevo_cobro", methods=["GET", "POST"])
 def nuevo_cobro():
@@ -39,8 +51,8 @@ def nuevo_cobro():
     return render_template("cobros/crear_cobro.html", form=form)
 
 
-@bp.route("/editar_cobro/<string:id>", methods=["GET", "POST"])
-def editar_cobro(id: str):
+@bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+def editar_cobro(id: int):
     cobro = encontrar_cobro(id)
     print(cobro)
     form = CobroForm(obj=cobro)

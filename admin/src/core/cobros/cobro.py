@@ -25,6 +25,17 @@ class Cobro(db.Model):
 
     joa = db.relationship('JineteOAmazona')
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "fecha_pago": self.fecha_pago,
+            "medio_de_pago": self.medio_de_pago,
+            "monto": self.monto,
+            "observaciones": self.observaciones,
+            "joa": self.joa.nombre if self.joa else None,
+        }
+
+
     '''
         Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
         El parámetro asc se utiliza para que, si se le pasa de manera explícita un 0 como parámetro, 
