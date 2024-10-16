@@ -32,3 +32,8 @@ def cerrar_sesion():
     session.clear()
     flash('Se ha cerrado la sesión', 'exito')
     return redirect(url_for('home'))
+
+
+def registrar_usuario():
+    if request.method == 'POST':
+        pass
