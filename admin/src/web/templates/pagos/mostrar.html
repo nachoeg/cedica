@@ -14,9 +14,9 @@
     {% endif %}
 
     <a href="{{ url_for('pago.pago_listar')}}"> Volver </a>
+    <form action="{{ url_for('pago.pago_eliminar', id=pago.id) }}" method="POST" style="display:inline;">
+        <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este pago?');">Eliminar</button>
+    </form>
 {% endblock %}
 
 <a href="{{ url_for('pago.pago_editar', id=pago.id) }}">Editar</a>
-<form action="{{ url_for('pago.pago_eliminar', id=pago.id) }}" method="POST" style="display:inline;">
-    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este pago?');">Eliminar</button>
-</form>

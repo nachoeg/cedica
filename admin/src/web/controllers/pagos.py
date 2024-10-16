@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.core.pago import TipoDePago, Pago, crear_pago
 from src.core.miembro import Miembro
+from src.core.database import db
 
 
 pago_bp = Blueprint('pago', __name__, url_prefix='/pagos')
@@ -85,3 +86,11 @@ def pago_mostrar(id):
     else:
         beneficiario = ''
     return render_template('pagos/mostrar.html', pago=pago, beneficiario=beneficiario)
+
+@pago_bp.route('/<int:id>/eliminar', methods=['POST'])
+def pago_eliminar(id):
+    pago = Pago.query.get_or_404(id)
+    db.session.delete(pago)
+    db.session.commit()
+    flash("Pago eliminado con exito.", 'success')
+    return redirect(url_for('pago.pago_listar'))
