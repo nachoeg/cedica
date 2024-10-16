@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Listado de Pagos {% endblock %}
+
+{% block main %}
+    <h1>Detalles de Pago</h1>
+    
+    <p><strong>Tipo:</strong> {{ pago.tipo_pago.nombre }}</p>
+    <p><strong>Monto:</strong> {{ pago.monto }}</p>
+    <p><strong>Descripción:</strong> {{ pago.descripcion }}</p>
+    <p><strong>Fecha de pago:</strong> {{ pago.fechaDePago }}</p>
+    {% if beneficiario %}
+        <p><strong>Beneficiario:</strong> {{ beneficiario }}</p>
+    {% endif %}
+
+    <a href="{{ url_for('pago.pago_listar')}}"> Volver </a>
+{% endblock %}
+
+<a href="{{ url_for('pago.pago_editar', id=pago.id) }}">Editar</a>
+<form action="{{ url_for('pago.pago_eliminar', id=pago.id) }}" method="POST" style="display:inline;">
+    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este pago?');">Eliminar</button>
+</form>

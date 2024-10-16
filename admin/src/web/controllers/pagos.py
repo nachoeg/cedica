@@ -75,3 +75,13 @@ def pago_listar():
         fecha_inicio=search_fecha_inicio,
         fecha_fin=search_fecha_fin,
         tipo_pago_id=tipo_pago_id)
+
+@pago_bp.route('/<int:id>/mostrar', methods=['GET'])
+def pago_mostrar(id):
+    pago = Pago.query.get_or_404(id)
+    if pago.miembro_id:
+        miembro = Miembro.query.filter_by(id=pago.miembro_id).first()
+        beneficiario= miembro.dni
+    else:
+        beneficiario = ''
+    return render_template('pagos/mostrar.html', pago=pago, beneficiario=beneficiario)

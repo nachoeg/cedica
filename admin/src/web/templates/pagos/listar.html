@@ -49,6 +49,9 @@
             <td>{{ pago.monto }}</td>
             <td>{{ pago.descripcion }}</td>
             <td>{{ pago.fechaDePago.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <a href="{{ url_for('pago.pago_mostrar', id=pago.id) }}">Ver</a>
+            </td>
         </tr>
         {% else %}
         <tr>
@@ -70,3 +73,9 @@
 </div>
 
 {% endblock %}
+
+
+<a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Modificar</a>
+<form action="{{ url_for('miembro.miembro_eliminar', id=miembro.id) }}" method="POST" style="display:inline;">
+    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este miembro?');">Eliminar</button>
+</form>
