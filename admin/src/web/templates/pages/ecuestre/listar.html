@@ -28,11 +28,13 @@
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
 {'id': 'tipo_jya', 'nombre': 'Tipo de J&A', 'tipo': 'seleccion', 'opciones': tipos_jya, 'valor': tipo_jya_filtro}
-]
+],
+'crear': {
+'url': url_for('ecuestre.crear'),
+'nombre': 'Crear ecuestre'
+}
 }
 %}
-
-<a href="{{ url_for('ecuestre.crear') }}">Crear Ecuestre</a>
 
 {{ tabla(configuracion, ecuestres, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 

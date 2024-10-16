@@ -6,60 +6,60 @@
 
 <h1>{{titulo}}</h1>
 
-<form novalidate method="POST">
+<form novalidate method="POST" class="formulario">
   {{ form.csrf_token }}
   <div>
-    {{ form.nombre.label }}: {{ form.nombre }}
+    {{ form.nombre.label }} {{ form.nombre }}
     {% for error in form.nombre.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.fecha_nacimiento.label }}: {{ form.fecha_nacimiento }}
+    {{ form.fecha_nacimiento.label }} {{ form.fecha_nacimiento }}
     {% for error in form.fecha_nacimiento.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.sexo.label }}: {{ form.sexo }}
+    {{ form.sexo.label }} {{ form.sexo }}
     {% for error in form.sexo.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.raza.label }}: {{ form.raza }}
+    {{ form.raza.label }} {{ form.raza }}
     {% for error in form.raza.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.pelaje.label }}: {{ form.pelaje }}
+    {{ form.pelaje.label }} {{ form.pelaje }}
     {% for error in form.pelaje.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.es_compra.label }}: {{ form.es_compra }}
+    {{ form.es_compra.label }} {{ form.es_compra }}
     {% for error in form.es_compra.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.fecha_ingreso.label }}: {{ form.fecha_ingreso }}
+    {{ form.fecha_ingreso.label }} {{ form.fecha_ingreso }}
     {% for error in form.fecha_ingreso.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.sede.label }}: {{ form.sede }}
+    {{ form.sede.label }} {{ form.sede }}
     {% for error in form.sede.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
-    {{ form.tipo_de_jya_id.label }}: {{ form.tipo_de_jya_id }}
+    {{ form.tipo_de_jya_id.label }} {{ form.tipo_de_jya_id }}
     {% for error in form.tipo_de_jya_id.errors %}
-    <span style="color: red;">{{ error }}</span>
+    <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
   <div>
