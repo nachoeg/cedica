@@ -19,7 +19,6 @@ def iniciar_sesion():
             session.clear()
             session['usuario'] = usuario.email
             flash('Ha iniciado sesión', 'exito')
-            # raise Exception(f'{get_permisos(usuario_por_email(session.get('usuario')))}')
             return redirect(url_for('home'))
 
     return render_template('usuarios/iniciar_sesion.html')
@@ -33,7 +32,3 @@ def cerrar_sesion():
     flash('Se ha cerrado la sesión', 'exito')
     return redirect(url_for('home'))
 
-
-def registrar_usuario():
-    if request.method == 'POST':
-        pass

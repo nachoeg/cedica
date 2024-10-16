@@ -3,21 +3,30 @@ from src.core.database import db
 from core.usuarios.usuario import Permiso, Rol, Usuario
 
 
-# usuarios
+# USUARIOS
 def listar_usuarios():
     usuarios = Usuario.query.all()
 
     return usuarios
 
 
-def crear_usuario(**kwargs):
-    hash = bcrypt.generate_password_hash(kwargs['contraseña']).decode('utf-8')
-    kwargs['contraseña'] = hash
-    usuario = Usuario(**kwargs)
+def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[]):
+    contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
+    usuario = Usuario(email=email, contraseña=contraseña_hash, 
+                      alias=alias, admin_sistema=admin_sistema)
+
+    roles = roles_por_id(id_roles)
+    # raise Exception(f'{roles}')
+    asignar_roles(usuario, roles)
     db.session.add(usuario)
     db.session.commit()
 
     return usuario
+
+
+def asignar_roles(usuario, roles):
+    for rol in roles:
+        usuario.roles.append(rol)
 
 
 def asignar_rol(usuario, rol):
@@ -45,7 +54,7 @@ def usuario_por_email_y_contraseña(email, contraseña):
     return None
 
 
-# roles
+# ROLES
 def crear_rol(**kwargs):
     rol = Rol(**kwargs)
     db.session.add(rol)
@@ -61,7 +70,13 @@ def asignar_permiso(rol, permiso):
     return rol
 
 
-# permisos
+def roles_por_id(ids):
+    roles = db.session.execute(db.select(Rol, Rol.id.in_(ids))).unique().scalars().all()
+
+    return roles
+
+
+# PERMISOS
 def crear_permiso(**kwargs):
     permiso = Permiso(**kwargs)
     db.session.add(permiso)

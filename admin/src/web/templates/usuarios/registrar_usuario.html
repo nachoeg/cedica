@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Registrar usuario {% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block main %}
+  <h1>Registrar usuario</h1>
+  {% from "pages/_form_base.html" import render_field %}
+  <form method=post>
+    {{ form.csrf_token }}
+    <dl>
+      {{ render_field(form.email) }}
+      {{ render_field(form.contraseña) }}
+      {{ render_field(form.alias) }}
+      {{ render_field(form.admin_sistema) }}
+      {{ render_field(form.roles) }}
+    </dl>
+    <p><input type=submit value=Register>
+  </form>
+{% endblock %}
+
+
+
