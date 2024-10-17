@@ -5,6 +5,8 @@
 
 {% block main %}
 
+{% set rolEcuestre = True %} {# Cambiarlo por la lógica que corresponda #}
+
 {% set configuracion = {
 'encabezados': [
 {'id': 'id', 'nombre': 'Id'},
@@ -22,8 +24,8 @@
 ],
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verEcuestre'},
-{'nombre': 'Editar', 'funcion': 'editarEcuestre'},
-{'nombre': 'Borrar','funcion': 'borrarEcuestre'}
+{'nombre': 'Editar', 'funcion': 'editarEcuestre'} if rolEcuestre else None,
+{'nombre': 'Borrar','funcion': 'borrarEcuestre'} if rolEcuestre else None
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -32,7 +34,7 @@
 'crear': {
 'url': url_for('ecuestre.crear'),
 'nombre': 'Crear ecuestre'
-}
+} if rolEcuestre else False
 }
 %}
 
