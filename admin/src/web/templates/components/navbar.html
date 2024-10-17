@@ -118,8 +118,9 @@ avatar_placeholder_icon, show_password_icon %}
         {% set navbarLinksClases = 'btn btn-ghost px-2 py-1.5' %}
         <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
         <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
-        <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('miembro.miembro_listar')}}">Equipo</a>
         <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('pago.pago_listar')}}">Pagos</a>
         {% if true %} <!-- Cambiar por if is_authenticated(session) -->
         <a class="{{navbarLinksClases}}" href="/usuarios">Usuarios</a>
         {% endif %}

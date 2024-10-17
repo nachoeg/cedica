@@ -22,3 +22,12 @@ class Pago(db.Model):
 
     def __repr__(self):
         return f'<Pago #{self.id} monto="{self.monto}" fecha="{self.fechaDePago}" descripcion={self.descripcion}'
+    
+    def to_dict(self):
+        return {
+            'fechaDePago': self.fechaDePago.strftime('%Y-%m-%d') if self.fechaDePago else None,
+            'tipo_pago_nombre': self.tipo_pago.nombre if self.tipo_pago else None,
+            'monto': self.monto,
+            'descripcion': self.descripcion,  
+            'beneficiario': self.miembro.dni if self.miembro and self.miembro.dni else '',
+        }
