@@ -18,6 +18,27 @@ class Usuario(db.Model):
     roles = db.relationship('Rol', secondary='roles_usuario', lazy=True, 
                             backref=db.backref('usuarios', lazy=False))
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "activo": self.activo,
+            "email": self.email,
+            "alias": self.alias,
+            # "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
+            # "entrenadores": " / ".join(
+            #     [
+            #         entrenador.nombre + " " + entrenador.apellido
+            #         for entrenador in self.entrenadores
+            #     ]
+            # ),
+            # "conductores": " / ".join(
+            #     [
+            #         conductor.nombre + " " + conductor.apellido
+            #         for conductor in self.conductores
+            #     ]
+            # ),
+        }
+
     def __repr__(self):
         return f'<Usuario #{self.id} email={self.email} alias={self.alias} \
                   activo={self.activo}>'

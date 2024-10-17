@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'encabezados': [
+{'id': 'id', 'nombre': 'Id'},
+{'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
+{'id': 'email', 'nombre': 'Email', 'ordenar': True},
+{'id': 'alias', 'nombre': 'Alias', 'ordenar': True},
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'verEcuestre'},
+{'nombre': 'Editar', 'funcion': 'editarEcuestre'},
+{'nombre': 'Borrar','funcion': 'borrarEcuestre'}
+],
+'filtros': [
+{'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': nombre_filtro },
+
+],
+'crear': {
+'url': url_for('usuarios.registrar_usuario'),
+'nombre': 'Registrar usuario'
+}
+}
+%}
+
+{{ tabla(configuracion, usuarios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verEcuestre(id) {
+    window.location.href = `/ecuestre/${id}`;
+  }
+
+  function editarEcuestre(id) {
+    window.location.href = `/ecuestre/${id}/editar`;
+  }
+
+  function borrarEcuestre(id) {
+    if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
+      window.location.href = `/ecuestre/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}
