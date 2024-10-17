@@ -4,8 +4,8 @@ from core.usuarios.usuario import Permiso, Rol, Usuario
 
 
 # USUARIOS
-def listar_usuarios(nombre_filtro, orden, ordenar_por, pagina, cant_por_pagina):
-    query = Usuario.query.filter(Usuario.email.ilike(f"%{nombre_filtro}%"),)
+def listar_usuarios(email_filtro, orden, ordenar_por, pagina, cant_por_pagina):
+    query = Usuario.query.filter(Usuario.email.ilike(f"%{email_filtro}%"),)
 
     cant_resultados = query.count()
 

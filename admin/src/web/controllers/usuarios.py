@@ -20,16 +20,16 @@ def registrar_usuario():
     return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
 
-@bp.get("/")
-def index():
+@bp.route('/', methods=['GET'])
+def listado_usuarios():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
-    nombre_filtro = request.args.get("nombre", "")
+    email_filtro = request.args.get("email", "")
 
     cant_resultados, usuarios = listar_usuarios(
-        nombre_filtro, orden, ordenar_por, pagina, cant_por_pagina
+        email_filtro, orden, ordenar_por, pagina, cant_por_pagina
         )
 
     cant_paginas = math.ceil(cant_resultados / cant_por_pagina)
@@ -42,5 +42,5 @@ def index():
         pagina=pagina,
         orden=orden,
         ordenar_por=ordenar_por,
-        nombre_filtro=nombre_filtro,
+        email_filtro=email_filtro,
     )

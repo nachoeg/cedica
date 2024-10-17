@@ -21,7 +21,7 @@ def iniciar_sesion():
             flash('Ha iniciado sesión', 'exito')
             return redirect(url_for('home'))
 
-    return render_template('usuarios/iniciar_sesion.html')
+    return render_template('pages/usuarios/iniciar_sesion.html')
 
 
 @bp.route('/cerrar_sesion')
@@ -31,4 +31,3 @@ def cerrar_sesion():
     session.clear()
     flash('Se ha cerrado la sesión', 'exito')
     return redirect(url_for('home'))
-
