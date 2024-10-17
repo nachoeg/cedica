@@ -7,8 +7,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
   <div class="flex items-center space-x-2 px-6 py-4">
     <!-- Boton crear -->
     {% if configuracion.crear %}
-    <a href="{{ configuracion.crear.url }}"
-      class="py-1.5 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-700">
+    <a href="{{ configuracion.crear.url }}" class="btn btn-primary py-1.5 px-3">
       {{ configuracion.crear.icono }} {{ configuracion.crear.nombre }}
     </a>
     {% endif %}
@@ -31,31 +30,25 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
       {% if configuracion.filtros %}
       <div class="hs-dropdown [--auto-close:inside] [--placement:bottom-right] relative sm:inline-flex z-20">
         <button id="hs-dropdown-filtro" type="button"
-          class="hs-dropdown-toggle py-2 px-2.5 inline-flex items-center gap-x-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+          class="hs-dropdown-toggle btn btn-outline text-xs py-2 px-2.5 gap-x-1.5">
           {{sliders_horizontal_icon('size-[14px] dark:text-neutral-300')}}
           Filtrar {{dropdown_icon()}}
         </button>
 
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden bg-white border border-gray-200 shadow-2xl rounded-xl p-4 mt-2 dark:bg-neutral-900 dark:border-neutral-800"
+          class="dropdown hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden"
           aria-labelledby="hs-dropdown-filtro">
           <div class="space-y-4">
-            {% set inputFiltrosClases = 'py-2 px-4 block w-full border-0
-            border-gray-200 rounded-lg text-sm focus:border-blue-500
-            focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none
-            bg-gray-100 text-gray-500 dark:bg-neutral-800
-            dark:border-neutral-700 dark:text-neutral-400
-            dark:placeholder-neutral-400 dark:focus:ring-blue-600'%} {% for
-            filtro in configuracion.filtros %}
+            {% for filtro in configuracion.filtros %}
             <div>
               <label for="tabla-filtro-{{ loop.index }}" class="block text-sm mb-1 dark:text-white">
                 {{ filtro.nombre }}
               </label>
               {% if filtro.tipo == 'texto' %}
-              <input type="text" id="tabla-filtro-{{ loop.index }}" class="{{ inputFiltrosClases }}"
-                placeholder="Escriba un valor" value="{{filtro.valor}}" />
+              <input type="text" id="tabla-filtro-{{ loop.index }}" placeholder="Escriba un valor"
+                value="{{filtro.valor}}" />
               {% elif filtro.tipo == 'seleccion' %}
-              <select id="tabla-filtro-{{ loop.index }}" class="{{ inputFiltrosClases }}">
+              <select id="tabla-filtro-{{ loop.index }}">
                 <option value="">Seleccione una opción</option>
                 {% for opcion in filtro.opciones %}
                 <option value="{{ opcion }}" {% if ( opcion|trim|lower==filtro.valor|trim|lower ) %} selected {% endif
@@ -65,8 +58,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
                 {% endfor %}
               </select>
               {% elif filtro.tipo == 'fecha' %}
-              <input type="date" id="tabla-filtro-{{ loop.index }}" class="{{ inputFiltrosClases }}"
-                value="{{filtro.valor}}" />
+              <input type="date" id="tabla-filtro-{{ loop.index }}" value="{{filtro.valor}}" />
               {% endif %}
             </div>
             {% endfor %}
