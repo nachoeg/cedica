@@ -1,4 +1,5 @@
 from datetime import datetime
+from src.core.pago.pago_forms import PagoForm
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.core.pago import TipoDePago, Pago, crear_pago, listar_pagos
 from src.core.miembro import Miembro
@@ -9,17 +10,17 @@ bp = Blueprint('pago', __name__, url_prefix='/pagos')
 
 @bp.route('/crear', methods=['GET', 'POST'])
 def pago_crear():
-    tipos_pagos = TipoDePago.query.all()
-    fecha_hoy = datetime.today().strftime('%Y-%m-%d')
+    form = PagoForm()
+    form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in TipoDePago.query.all()]
     
-    if request.method == 'POST':
-        monto = request.form['monto']
-        descripcion = request.form['descripcion']
-        fechaDePago = request.form['fechaDePago']
-        tipo_id = request.form['tipo_id']
+    if form.validate_on_submit():
+        monto = form.monto.data
+        descripcion = form.descripcion.data
+        fechaDePago = form.fechaDePago.data
+        tipo_id = form.tipo_id.data
 
         tipo_pago = TipoDePago.query.get(tipo_id)
-        miembro_dni = request.form.get('dni') if tipo_pago.nombre == 'Honorario' else None
+        miembro_dni = form.dni.data if tipo_pago.nombre == 'Honorario' else None
 
         miembro_id = None
         if miembro_dni:
@@ -35,7 +36,7 @@ def pago_crear():
         flash("Pago registrado con éxito.", 'success')
         return redirect(url_for('pago.pago_crear'))
 
-    return render_template('pagos/crear.html', tipos_pagos=tipos_pagos, fecha_hoy=fecha_hoy)
+    return render_template('pagos/crear.html', form=form)
 
 @bp.get("/listar_pagos")
 def pago_listar():
