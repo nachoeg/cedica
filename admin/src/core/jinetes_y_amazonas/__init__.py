@@ -68,3 +68,13 @@ def cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, 
     jya.caballo_id = caballo_id
     jya.auxiliar_pista_id = auxiliar_pista_id
     db.session.commit()
+
+def eliminar_jya(id):
+    jya = JineteOAmazona.query.get_or_404(id)
+    db.session.delete(jya)
+    db.session.commit()
+    return jya
+
+def encontrar_jya(id):
+    jya = JineteOAmazona.query.get_or_404(id)
+    return jya
