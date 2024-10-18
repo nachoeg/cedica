@@ -9,6 +9,9 @@
 <p><strong>Nombre:</strong> {{ jya.nombre }}</p>
 <p><strong>Apellido:</strong> {{ jya.apellido }}</strong></p>
 <p><strong>DNI:</strong> {{ jya.dni }}</p>
+{% if jya.tiene_deuda %}
+  <p><strong>Tiene deuda</strong></p>
+{% endif %}
 <p><strong>Edad:</strong> {{ jya.edad }}</p>
 <p><strong>Fecha de nacimiento:</strong> {{ jya.fecha_nacimiento }}</p>
 <p><strong>Provincia de nacimiento:</strong> {{ jya.provincia_nacimiento }}</p>

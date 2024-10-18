@@ -99,7 +99,7 @@ class JineteOAmazona(db.Model):
         def __str__(self):
             return f'{self.value}'
 
-    
+    tiene_deuda = db.Column(db.Boolean)
     asignacion_familiar = db.Column(db.Boolean)
     tipo_asignacion_familiar = db.Column(Enum(TipoDeAsignacionFamiliar))
     beneficiario_pension = db.Column(db.Boolean)
@@ -188,6 +188,7 @@ class JineteOAmazona(db.Model):
             "nombre": self.nombre,
             "apellido": self.apellido,
             "dni": self.dni,
+            "tiene_deuda": self.tiene_deuda,
             "edad": self.edad,
             "fecha_nacimiento": self.fecha_nacimiento,
             "provincia_nacimiento": self.provincia_nacimiento,
