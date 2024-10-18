@@ -36,8 +36,6 @@ def create_app(env="development", static_folder="../../static"):
     def home():
         return render_template("pages/home.html")
 
-    app.register_blueprint(ecuestre_bp)
-
     @app.route("/preline.js")
     def serve_preline_js():
         return send_from_directory(
@@ -64,8 +62,10 @@ def create_app(env="development", static_folder="../../static"):
 
     app.register_blueprint(jinetes_y_amazonas_bp)
 
+    app.register_blueprint(ecuestre_bp)
+
     app.register_blueprint(miembro_bp)
-    
+
     app.register_blueprint(cobros_bp)
 
     app.register_blueprint(pago_bp)

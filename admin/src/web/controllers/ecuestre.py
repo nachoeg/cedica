@@ -110,3 +110,8 @@ def eliminar(id: int):
     eliminar_ecuestre(id)
     flash("Miembro eliminado con exito.", "success")
     return redirect(url_for("ecuestre.index"))
+
+
+@bp.get("/documentos/")
+def documentos():
+    return render_template("pages/ecuestre/documentos.html")
