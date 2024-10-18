@@ -80,7 +80,9 @@ def crear():
         )
         return redirect(url_for("ecuestre.index"))
 
-    return render_template("pages/ecuestre/formulario.html", form=form)
+    return render_template(
+        "pages/ecuestre/formulario.html", form=form, titulo="Crear ecuestre"
+    )
 
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
@@ -102,7 +104,11 @@ def editar(id: int):
         guardar_cambios()
         return redirect(url_for("ecuestre.index"))
 
-    return render_template("pages/ecuestre/formulario.html", form=form)
+    return render_template(
+        "pages/ecuestre/formulario.html",
+        form=form,
+        titulo="Editar ecuestre #" + str(id),
+    )
 
 
 @bp.get("/<int:id>/eliminar/")

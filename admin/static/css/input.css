@@ -77,7 +77,21 @@
 
 .contenedor,
 .formulario {
-  @apply flex flex-col p-4 gap-4 w-fit mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
+  @apply w-fit mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
+}
+
+.formulario:has(.formulario-body) {
+  @apply flex flex-col;
+}
+
+.contenedor,
+.formulario:not(:has(.formulario-body)),
+.formulario-body {
+  @apply flex flex-col p-4 gap-4;
+}
+
+.formulario-header {
+  @apply flex items-center justify-between py-3 px-4 border-b font-semibold border-gray-200 dark:border-neutral-700;
 }
 
 .dropdown {
