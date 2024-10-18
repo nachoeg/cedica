@@ -1,5 +1,6 @@
 from src.core.database import db
 from src.core.cobros.cobro import Cobro
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
 ''' 
     Funcion que lista todos los cobros del sistema. Recibe un parámetro booleano llamado orden_asc
@@ -24,6 +25,11 @@ def encontrar_cobro(id):
     return db.get_or_404(Cobro, id)
 
 def guardar_cambios():
+    db.session.commit()
+
+def marcar_deuda(joa_id):
+    jya = db.get_or_404(JineteOAmazona, joa_id)
+    jya.tiene_deuda = True
     db.session.commit()
 
 
