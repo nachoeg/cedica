@@ -15,7 +15,8 @@
 ],
 'acciones': [
     {'nombre': 'Ver', 'funcion': 'verPago'},
-    {'nombre': 'Borrar', 'funcion': 'borrarPago'}
+    {'nombre': 'Editar', 'funcion': 'editarPago'},
+    {'nombre': 'Borrar', 'funcion': 'borrarPago'},
 ],
 'filtros': [
     {'id': 'fecha_inicio', 'nombre': 'Fecha Inicio', 'tipo': 'fecha', 'valor': fecha_inicio},
@@ -29,7 +30,7 @@
 }
 } %}
 
-{{ tabla(configuracion, pagos.items, pagostotal, pagos.pages, pagos.page, orden_campo, ascendente) }}
+{{ tabla(configuracion, pagos, cant_resultados, cant_paginas, pagina, orden_campo, ascendente) }}
 
 {% endblock %}
 
@@ -43,6 +44,10 @@
         if (confirm('¿Estás seguro de que deseas eliminar este pago?')) {
             window.location.href = `/pagos/${id}/eliminar`;
         }
+    }
+
+    function editarPago(id) {
+        window.location.href = `/pagos/${id}/editar`;
     }
 </script>
 {% endblock %}

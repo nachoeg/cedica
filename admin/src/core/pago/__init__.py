@@ -23,7 +23,7 @@ def listar_pagos(
         pago_tipo = TipoDePago.query.filter_by(nombre=tipo_pago_id).first()
         query = query.filter(Pago.tipo_id == pago_tipo.id)
     if beneficiario:
-        query = query.filter(Miembro.dni.ilike(f'%{beneficiario}%'))
+        query = query.filter(Miembro.dni == int(beneficiario))
 
     cant_resultados = query.count()
 
@@ -50,4 +50,11 @@ def cargar_tipo_pago(nombre):
     pago = TipoDePago(nombre=nombre)
     db.session.add(pago)
     db.session.commit()
+    return pago
+
+def guardar_cambios():
+    db.session.commit()
+
+def obtener_pago(id):
+    pago = Pago.query.get(id)
     return pago

@@ -7,7 +7,7 @@ class Miembro(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellido = db.Column(db.String(100), nullable=False)
-    dni = db.Column(db.String(10), nullable=False)
+    dni = db.Column(db.Integer, nullable=False)
     nombreContactoEmergencia = db.Column(db.String(100), nullable=False)
     telefonoContactoEmergencia = db.Column(db.String(25), nullable=False)
     obraSocial = db.Column(db.String(100), nullable=False)

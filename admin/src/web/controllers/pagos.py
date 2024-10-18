@@ -1,7 +1,7 @@
 from datetime import datetime
 from src.core.pago.pago_forms import PagoForm
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from src.core.pago import TipoDePago, Pago, crear_pago, listar_pagos
+from src.core.pago import TipoDePago, Pago, crear_pago, listar_pagos, obtener_pago, guardar_cambios
 from src.core.miembro import Miembro
 from src.core.database import db
 
@@ -38,7 +38,7 @@ def pago_crear():
 
     return render_template('pagos/crear.html', form=form)
 
-@bp.get("/listar_pagos")
+@bp.get("/")
 def pago_listar():
     # Obtener parámetros de búsqueda y orden
     orden = request.args.get("orden", "asc")
@@ -75,7 +75,7 @@ def pago_listar():
         beneficiario=search_beneficiario,
     )
 
-@bp.route('/<int:id>/mostrar', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET'])
 def pago_mostrar(id):
     pago = Pago.query.get_or_404(id)
     if pago.miembro_id:
@@ -85,10 +85,42 @@ def pago_mostrar(id):
         beneficiario = ''
     return render_template('pagos/mostrar.html', pago=pago, beneficiario=beneficiario)
 
-@bp.route('/<int:id>/eliminar', methods=['POST'])
+@bp.route('/<int:id>/eliminar', methods=['GET'])
 def pago_eliminar(id):
     pago = Pago.query.get_or_404(id)
     db.session.delete(pago)
     db.session.commit()
     flash("Pago eliminado con exito.", 'success')
     return redirect(url_for('pago.pago_listar'))
+
+@bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+def pago_editar(id: int):
+    pago = obtener_pago(id)
+    form = PagoForm(obj=pago)
+    if (pago.miembro_id != None):
+        form.dni.data = pago.miembro.dni
+    form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in TipoDePago.query.all()]
+
+    if form.validate_on_submit():
+        pago.tipo_id = form.tipo_id.data
+        pago.monto = form.monto.data
+        pago.descripcion = form.descripcion.data
+        pago.fechaDePago = form.fechaDePago.data
+        
+
+        tipo_pago = TipoDePago.query.get(form.tipo_id.data)
+        miembro_dni = form.dni.data if tipo_pago.nombre == 'Honorario' else None
+        miembro_id = None
+        if miembro_dni:
+            miembro = Miembro.query.filter_by(dni=miembro_dni).first()
+            if miembro:
+                miembro_id = miembro.id
+            else:
+                flash(f"No se encontró ningún miembro con el DNI {miembro_dni}.", 'danger')
+                return render_template("pagos/crear.html", form=form)
+        pago.miembro_id = miembro_id    
+
+        guardar_cambios()
+        return redirect(url_for("pago.pago_listar"))
+
+    return render_template("pagos/crear.html", form=form)

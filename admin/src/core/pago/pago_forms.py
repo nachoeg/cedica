@@ -13,7 +13,7 @@ class PagoForm(FlaskForm):
     monto = DecimalField('Monto', validators=[DataRequired(), NumberRange(min=0.01, message="El monto debe ser mayor a 0")])
     descripcion = StringField('Descripción', validators=[Optional()])
     fechaDePago = DateField('Fecha de Pago', validators=[DataRequired()])
-    dni = IntegerField('DNI')  
+    dni = IntegerField('DNI', validators=[Optional()])  
     submit = SubmitField('Guardar')
 
     def validate_dni(self, dni):

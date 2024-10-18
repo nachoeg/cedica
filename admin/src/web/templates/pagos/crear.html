@@ -2,131 +2,54 @@
 
 {% block title %} {{titulo}} {% endblock %}
 
-{% block head %}
-    {{ super() }}
-    <style>
-        /* Estilos generales para el formulario */
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Estilos para las etiquetas y entradas del formulario */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        /* Estilos para el botón de envío */
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Agregar un espaciado entre los elementos */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        /* Estilo adicional para mejorar el aspecto del formulario en dispositivos móviles */
-        @media (max-width: 768px) {
-            form {
-                padding: 15px;
-            }
-
-            button {
-                font-size: 14px;
-            }
-        }
-    </style>
-{% endblock %}
-
 {% block main %}
 <h1>{{titulo}}</h1>
 
-<form method="POST" action="">
+<form method="POST" class="formulario">
     {{ form.hidden_tag() }}
 
-    <div class="form-group">
+    <div class="text-red-600">
         {{ form.tipo_id.label }}
-        {{ form.tipo_id(class="form-control", id="tipo_id") }}  <!-- Añadir id="tipo_id" aquí -->
+        {{ form.tipo_id }}
         {% for error in form.tipo_id.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
 
-    <div class="form-group">
+    <div class="text-red-600">
         {{ form.monto.label }}
-        {{ form.monto(class="form-control") }}
+        {{ form.monto }}
         {% for error in form.monto.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
 
-    <div class="form-group">
+    <div class="text-red-600">
         {{ form.descripcion.label }}
-        {{ form.descripcion(class="form-control") }}
+        {{ form.descripcion }}
         {% for error in form.descripcion.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
 
-    <div class="form-group">
+    <div class="text-red-600">
         {{ form.fechaDePago.label }}
-        {{ form.fechaDePago(class="form-control") }}
+        {{ form.fechaDePago }}
         {% for error in form.fechaDePago.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
 
-    <div class="form-group" id="dni_group">
+    <div class="text-red-600" id="dni_group">
         {{ form.dni.label }}
-        {{ form.dni(class="form-control") }}
+        {{ form.dni }}
         {% for error in form.dni.errors %}
             <div class="text-danger">{{ error }}</div>
         {% endfor %}
     </div>
 
-    <div class="form-group">
-        {{ form.submit(class="btn btn-primary") }}
+    <div>
+        {{ form.submit() }}
     </div>
 </form>
 
