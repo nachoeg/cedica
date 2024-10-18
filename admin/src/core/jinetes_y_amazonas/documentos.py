@@ -21,3 +21,15 @@ class Archivo_JYA(db.Model):
     titulo = db.Column(db.String(50))
     fecha_subida = db.Column(db.DateTime)
     tipo_archivo = db.Column(Enum(TipoArchivo))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "titulo": self.titulo,
+            "fecha_subida": self.fecha_subida,
+            "tipo_archivo": self.diagnostico.nombre if self.diagnostico else None,
+        }
+
+    def __repr__(self):
+        return f'<Archivo #{self.id} titulo: {self.titulo} tipo de archivo_ {self.tipo_archivo}'
+
