@@ -114,16 +114,18 @@ avatar_placeholder_icon, show_password_icon %}
     <div id="hs-navbar-alignment"
       class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
       aria-labelledby="hs-navbar-alignment-collapse">
+      {% if esta_autenticado(session) %}
       <div class="flex flex-col my-2 sm:flex-row sm:items-center sm:my-0">
         {% set navbarLinksClases = 'btn btn-ghost px-2 py-1.5' %}
         <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
         <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
         <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
         <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>
-        {% if true %} <!-- Cambiar por if is_authenticated(session) -->
-        <a class="{{navbarLinksClases}}" href="/usuarios">Usuarios</a>
+        {% if tiene_permiso(session, "usuario_listar") %} <!-- Cambiar por if is_authenticated(session) -->
+          <a class="{{navbarLinksClases}}" href="{{ url_for('usuarios.listado_usuarios') }}">Usuarios</a>
         {% endif %}
       </div>
+      {% endif %}
       <div class="sm:hidden">
         <hr class="border-t border-gray-200 dark:border-neutral-700 my-2">
         <div class="flex justify-between items-center dark:text-white px-2 py-2">Cambiar tema {% include

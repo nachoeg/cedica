@@ -19,7 +19,7 @@ from src.web.storage import storage
 session = Session()
 
 logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 
 def create_app(env="development", static_folder="../../static"):
