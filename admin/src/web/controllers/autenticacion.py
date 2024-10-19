@@ -17,7 +17,10 @@ def iniciar_sesion():
 
         else:
             session.clear()
-            session['usuario'] = usuario.email
+            session['usuario'] = usuario.email # cambiar por session['mail']?
+            session['id'] = usuario.id
+            session['alias'] = usuario.alias
+            session['roles'] = [rol.nombre for rol in usuario.roles]
             flash('Ha iniciado sesión', 'exito')
             return redirect(url_for('home'))
 
