@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, Domicilio
-from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, listar_puestos_laborales, listar_miembros
+from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios
 from src.core.miembro.forms_miembro import InfoMiembroForm
 from src.core.usuarios import Usuario
 from src.core.database import db
 
+
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
+
 
 @bp.route('/', methods=['GET'])
 def miembro_listar():
@@ -87,7 +89,7 @@ def miembro_crear():
             piso=piso,
             dpto=dpto,
             localidad=localidad
-        ).first
+        ).first()
 
         if domicilio_existente:
             domicilio_id = domicilio_existente.id
@@ -128,12 +130,73 @@ def miembro_crear():
 
     return render_template('miembros/crear.html', form=form)
 
-@bp.route('/<int:id>/mostrar', methods=['GET'])
+@bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+def miembro_editar(id: int):
+    miembro = obtener_miembro(id)
+    form = InfoMiembroForm(obj=miembro)
+    form.calle.data = miembro.domicilio.calle
+    form.numero.data = miembro.domicilio.numero
+    form.piso.data = miembro.domicilio.piso
+    form.dpto.data = miembro.domicilio.dpto
+    form.localidad.data = miembro.domicilio.localidad
+    if miembro.usuario != None:
+        form.alias.data = miembro.usuario.alias 
+    
+    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in CondicionDeTrabajo.query.all()]
+    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in Profesion.query.all()]
+    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in PuestoLaboral.query.all()]
+    
+    if form.validate_on_submit():
+        miembro.nombre = form.nombre.data
+        miembro.apellido = form.apellido.data
+        miembro.dni = form.dni.data
+        miembro.email = form.email.data
+        miembro.telefono = form.telefono.data
+        miembro.nombre_contacto_emergencia = form.nombreContactoEmergencia.data
+        miembro.telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
+        miembro.obra_social = form.obraSocial.data
+        miembro.numero_afiliado = form.numeroAfiliado.data
+        miembro.condicion_id = form.condicion_id.data
+        miembro.profesion_id = form.profesion_id.data
+        miembro.puesto_laboral_id = form.puesto_laboral_id.data
+
+        domicilio_existente = Domicilio.query.filter_by(
+            calle=form.calle.data,
+            numero=form.numero.data,
+            piso=form.piso.data,
+            dpto=form.dpto.data,
+            localidad=form.localidad.data
+        ).first()
+
+        if domicilio_existente:
+            miembro.domicilio_id = domicilio_existente.id
+        else:
+            nuevo_domicilio = crear_domicilio(calle=form.calle.data, numero=form.numero.data, piso=form.piso.data, dpto=form.dpto.data, localidad=form.localidad.data)
+            miembro.domicilio_id = nuevo_domicilio.id
+
+        alias_usuario = form.alias.data
+        if alias_usuario:
+            usuario = Usuario.query.filter_by(alias=alias_usuario).first()
+            if usuario:
+                usuario_id = usuario.id
+                alias_usuario = usuario_id
+            else:
+                flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
+                return redirect(url_for('miembro.miembro_crear'))
+        else:
+            miembro.usuario_id = None      
+
+        guardar_cambios()
+        return redirect(url_for("miembro.miembro_listar")) 
+
+    return render_template("miembros/crear.html", form=form)    
+
+@bp.route('/<int:id>', methods=['GET'])
 def miembro_mostrar(id):
     miembro = Miembro.query.get_or_404(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
-@bp.route('/<int:id>/eliminar', methods=['POST'])
+@bp.route('/<int:id>/eliminar', methods=['GET'])
 def miembro_eliminar(id):
     miembro = Miembro.query.get_or_404(id)
     db.session.delete(miembro)

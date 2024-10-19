@@ -86,3 +86,10 @@ def crear_domicilio(**kwargs):
     db.session.commit()
 
     return domicilio
+
+def guardar_cambios():
+    db.session.commit()
+
+def obtener_miembro(id):
+    miembro = Miembro.query.get(id)
+    return miembro
