@@ -1,5 +1,6 @@
 from datetime import datetime
 from src.core.database import db
+from src.web.handlers.funciones_auxiliares import booleano_a_palabra
 
 
 class Usuario(db.Model):
@@ -21,9 +22,10 @@ class Usuario(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "activo": self.activo,
+            "activo": booleano_a_palabra(self.activo),
             "email": self.email,
             "alias": self.alias,
+            "roles": "".join(("" + rol.nombre + ". ") for rol in self.roles)
             # "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
             # "entrenadores": " / ".join(
             #     [

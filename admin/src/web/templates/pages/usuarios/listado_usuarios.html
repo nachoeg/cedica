@@ -6,27 +6,28 @@
 {% block main %}
 
 {% set configuracion = {
-'encabezados': [
-{'id': 'id', 'nombre': 'Id'},
-{'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
-{'id': 'email', 'nombre': 'Email', 'ordenar': True},
-{'id': 'alias', 'nombre': 'Alias', 'ordenar': True},
-],
-'acciones': [
-{'nombre': 'Ver', 'funcion': 'verUsuario'},
-{'nombre': 'Editar', 'funcion': 'editarUsuario'},
-{'nombre': 'Bloquear','funcion': 'bloquearUsuario'},
-{'nombre': 'Eliminar','funcion': 'eliminarUsuario'},
-],
-'filtros': [
-{'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
+    'encabezados': [
+      {'id': 'id', 'nombre': 'Id'},
+      {'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
+      {'id': 'email', 'nombre': 'Email', 'ordenar': True},
+      {'id': 'alias', 'nombre': 'Alias', 'ordenar': True},
+      {'id': 'roles', 'nombre': 'Roles'},
+    ],
+    'acciones': [
+      {'nombre': 'Ver', 'funcion': 'verUsuario'},
+      {'nombre': 'Editar', 'funcion': 'editarUsuario'},
+      {'nombre': 'Bloquear','funcion': 'bloquearUsuario'},
+      {'nombre': 'Eliminar','funcion': 'eliminarUsuario'},
+    ],
+    'filtros': [
+      {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
 
-],
-'crear': {
-'url': url_for('usuarios.registrar_usuario'),
-'nombre': 'Registrar usuario'
-}
-}
+    ],
+    'crear': {
+      'url': url_for('usuarios.registrar_usuario'),
+      'nombre': 'Registrar usuario'
+    }
+  }
 %}
 
 {{ tabla(configuracion, usuarios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}

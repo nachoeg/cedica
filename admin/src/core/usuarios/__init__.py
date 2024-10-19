@@ -5,18 +5,17 @@ from core.usuarios.usuario import Permiso, Rol, Usuario
 
 # USUARIOS
 def listar_usuarios(email_filtro, orden, ordenar_por, pagina, cant_por_pagina):
-    query = Usuario.query.filter(Usuario.email.ilike(f"%{email_filtro}%"),)
+    usuarios = db.paginate(
+        db.select(
+            Usuario
+            ).order_by(getattr(getattr(Usuario, ordenar_por), orden)()),
+        page=pagina,
+        per_page=cant_por_pagina,
+        error_out=False)
+    total = usuarios.total
+    # usuarios = [usuario.to_dict() for usuario in usuarios.items]
 
-    cant_resultados = query.count()
-
-    if orden == "asc":
-        query = query.order_by(getattr(Usuario, ordenar_por).asc())
-    else:
-        query = query.order_by(getattr(Usuario, ordenar_por).desc())
-
-    usuarios = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
-
-    return (cant_resultados, usuarios)
+    return (total, usuarios)
 
 
 def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[]):
