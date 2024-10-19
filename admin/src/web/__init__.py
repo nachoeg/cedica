@@ -8,6 +8,7 @@ from src.web.controllers.usuarios import bp as bp_usuarios
 from src.core import database
 from src.core.config import config
 from src.core import seeds
+from web.handlers.funciones_auxiliares import booleano_a_palabra, fechahora_a_fecha
 from .controllers.miembro import miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
@@ -55,6 +56,8 @@ def create_app(env="development", static_folder="../../static"):
 
     app.jinja_env.globals.update(esta_autenticado=esta_autenticado)
     app.jinja_env.globals.update(tiene_permiso=tiene_permiso)
+    app.jinja_env.globals.update(booleano_a_palabra=booleano_a_palabra)
+    app.jinja_env.globals.update(fechahora_a_fecha=fechahora_a_fecha)
 
     @app.cli.command(name="reset-db")
     def reset_db():

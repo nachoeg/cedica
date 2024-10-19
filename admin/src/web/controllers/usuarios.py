@@ -1,6 +1,6 @@
 import math
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from core.usuarios import crear_usuario, listar_usuarios
+from core.usuarios import crear_usuario, listar_usuarios, usuario_por_id
 from core.usuarios.usuario_forms import UsuarioForm
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
@@ -14,8 +14,8 @@ def registrar_usuario():
         usuario = crear_usuario(form.email.data, form.contraseña.data, 
                                 form.alias.data, form.admin_sistema.data, 
                                 form.roles.data)
-        flash(f'Se ha registrado correctamente al \
-              usuario {usuario.alias}')
+        flash(f'Registro exitoso. \
+              Alias: {usuario.alias}, email: {usuario.alias}')
         return redirect(url_for('usuarios.registrar_usuario'))
     return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
@@ -44,3 +44,19 @@ def listado_usuarios():
         ordenar_por=ordenar_por,
         email_filtro=email_filtro,
     )
+
+
+@bp.route('<int:id>/', methods=['GET'])
+def ver_usuario(id):
+    usuario = usuario_por_id(id)
+    return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
+
+
+@bp.route('<int:id>/', methods=['GET'])
+def editar_usuario(id):
+    pass
+
+
+@bp.route('<int:id>/', methods=['GET'])
+def eliminar_usuario(id):
+    pass

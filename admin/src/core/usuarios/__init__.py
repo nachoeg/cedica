@@ -45,6 +45,12 @@ def asignar_rol(usuario, rol):
     return usuario
 
 
+def usuario_por_id(id):
+    usuario = db.get_or_404(Usuario, id)
+
+    return usuario
+
+
 def usuario_por_email(email):
     usuario = db.session.execute(db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
 
