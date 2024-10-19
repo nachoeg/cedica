@@ -14,8 +14,9 @@
 ],
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verUsuario'},
-{'nombre': 'Editar', 'funcion': 'editarEcuestre'},
-{'nombre': 'Borrar','funcion': 'borrarEcuestre'}
+{'nombre': 'Editar', 'funcion': 'editarUsuario'},
+{'nombre': 'Bloquear','funcion': 'bloquearUsuario'},
+{'nombre': 'Eliminar','funcion': 'eliminarUsuario'},
 ],
 'filtros': [
 {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
@@ -32,24 +33,4 @@
 
 {% endblock %}
 
-{% block scripts %}
-
-<script>
-
-  function verUsuario(id) {
-    window.location.href = `/usuarios/${id}`;
-  }
-
-  function editarEcuestre(id) {
-    window.location.href = `/ecuestre/${id}/editar`;
-  }
-
-  function borrarEcuestre(id) {
-    if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
-      window.location.href = `/ecuestre/${id}/eliminar`;
-    }
-  }
-
-</script>
-
-{% endblock %}
+{% include 'pages/usuarios/_acciones_usuario.html' %}

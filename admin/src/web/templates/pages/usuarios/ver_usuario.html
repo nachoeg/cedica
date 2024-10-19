@@ -28,13 +28,26 @@
     <p><strong>Última actualización:</strong> {{ fechahora_a_fecha(usuario.ultima_actualizacion) }}</p>
 
     <div class="flex gap-3">
-      <a class="btn btn-secondary w-full" href="{{ url_for('usuarios.editar_usuario', id=usuario.id) }}">Editar</a>
-      <button class="btn btn-danger w-full" type="submit" onclick="
-        if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
-          window.location.href = `/usuarios/${id}/eliminar`;}">
+      <a class="btn btn-secondary w-full" href="{{ url_for('usuarios.editar_usuario', id=usuario.id) }}">
+        Editar
+      </a>
+      <button style="background-color:darkslategrey; border-color: darkslategrey;" class="btn btn-danger w-full" type="submit" 
+      onclick="bloquearUsuario('{{ usuario.id }}')">
+        Bloquear
+      </button>
+      <button class="btn btn-danger w-full" type="submit" onclick="eliminarUsuario('{{ usuario.id }}')">
         Eliminar
       </button>
     </div>
   </div>
 
 {% endblock %}
+
+{% include 'pages/usuarios/_acciones_usuario.html' %}
+
+
+<button style="background-color:darkslategrey; border-color: darkslategrey;" class="btn btn-danger w-full" type="submit" onclick="
+        if (confirm('¿Está seguro que desea bloquear este usuario?', {id})) {
+          window.location.href = `/usuarios/{{ usuario.id }}/bloquear`;}">
+        Bloquear
+      </button>

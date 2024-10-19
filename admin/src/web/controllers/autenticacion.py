@@ -15,6 +15,10 @@ def iniciar_sesion():
         if usuario is None:
             flash('Usuario y/o contraseña incorrectos', 'error')
 
+        # es necesario un mensaje distinto al de un usuario que no existe?
+        elif not usuario.activo:
+            flash('Usuario bloqueado', 'error')
+
         else:
             session.clear()
             session['usuario'] = usuario.email  # cambiar por session['mail']?

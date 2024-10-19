@@ -1,23 +1,10 @@
 import math
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from core.usuarios import crear_usuario, listar_usuarios, usuario_por_id
-from core.usuarios.usuario_forms import UsuarioForm
+from src.core.usuarios import crear_usuario, listar_usuarios, usuario_por_id
+from src.core.usuarios.usuario_forms import UsuarioForm
+from src.core.database import db
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
-
-
-@bp.route('/registrar_usuario', methods=['GET', 'POST'])
-def registrar_usuario():
-    form = UsuarioForm(request.form)
-    if form.validate_on_submit():
-        # raise Exception(f'{form.roles.data}')
-        usuario = crear_usuario(form.email.data, form.contraseña.data, 
-                                form.alias.data, form.admin_sistema.data, 
-                                form.roles.data)
-        flash(f'Registro exitoso. \
-              Alias: {usuario.alias}, email: {usuario.alias}')
-        return redirect(url_for('usuarios.registrar_usuario'))
-    return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
 
 @bp.route('/', methods=['GET'])
@@ -46,6 +33,20 @@ def listado_usuarios():
     )
 
 
+@bp.route('/registrar_usuario', methods=['GET', 'POST'])
+def registrar_usuario():
+    form = UsuarioForm(request.form)
+    if form.validate_on_submit():
+        # raise Exception(f'{form.roles.data}')
+        usuario = crear_usuario(form.email.data, form.contraseña.data, 
+                                form.alias.data, form.admin_sistema.data, 
+                                form.roles.data)
+        flash(f'Registro exitoso. \
+              Alias: {usuario.alias}, email: {usuario.alias}')
+        return redirect(url_for('usuarios.registrar_usuario'))
+    return render_template('pages/usuarios/listado_usuarios.html', form=form)
+
+
 @bp.route('/<int:id>', methods=['GET'])
 def ver_usuario(id):
     usuario = usuario_por_id(id)
@@ -57,6 +58,17 @@ def editar_usuario(id):
     pass
 
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route('/<int:id>/bloquear', methods=['GET'])
+def bloquear_usuario(id):
+    usuario = usuario_por_id(id)
+    usuario.activo = False
+    db.session.commit()
+    return redirect(request.referrer)
+
+
+@bp.route('/<int:id>/eliminar', methods=['GET'])
 def eliminar_usuario(id):
-    pass
+    usuario = usuario_por_id(id)
+    db.session.delete(usuario)
+    db.session.commit()
+    return redirect(url_for('usuarios.listado_usuarios'))
