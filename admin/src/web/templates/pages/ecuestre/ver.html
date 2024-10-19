@@ -17,25 +17,24 @@
   </div>
   <div class="contenedor-body">
     <p><strong>Nombre:</strong> {{ ecuestre.nombre }}</p>
-    <p><strong>Fecha de Nacimiento:</strong> {{ ecuestre.fecha_nacimiento }}</strong>
-    <p><strong>Sexo:</strong> {{ ecuestre.sexo }}
-    </p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ ecuestre.fecha_nacimiento }}</p>
+    <p><strong>Sexo:</strong> {{ ecuestre.sexo }}</p>
     <p><strong>Raza:</strong> {{ ecuestre.raza }}</p>
     <p><strong>Pelaje:</strong> {{ ecuestre.pelaje }}</p>
     <p><strong>Compra/Donación:</strong> {{ ecuestre.es_compra }}</p>
     <p><strong>Fecha de Ingreso:</strong> {{ ecuestre.fecha_ingreso }}</p>
     <p><strong>Sede:</strong> {{ ecuestre.sede }}</p>
     <p><strong>Tipo de J&A:</strong> {{ ecuestre.tipo_de_jya }}</p>
-    <div class="flex gap-3">
-      <a class="btn btn-secondary w-full" href="{{ url_for('ecuestre.editar', id=ecuestre.id) }}">Editar</a>
-      <button class="btn btn-danger w-full" type="submit" onclick="
+  </div>
+  <div class="contenedor-footer">
+    <a class="btn btn-secondary w-full" href="{{ url_for('ecuestre.editar', id=ecuestre.id) }}">Editar</a>
+    <button class="btn btn-danger w-full" type="submit" onclick="
       if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
         window.location.href = `/ecuestre/${id}/eliminar`;
       }">
-        Eliminar
-      </button>
-      </form>
-    </div>
+      Eliminar
+    </button>
+    </form>
   </div>
 </div>
 

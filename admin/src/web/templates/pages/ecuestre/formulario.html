@@ -42,7 +42,9 @@
       {% endfor %}
     </div>
     <div>
-      {{ form.es_compra.label }} {{ form.es_compra }}
+      <span class="input-checkbox">
+        {{ form.es_compra.label }} {{ form.es_compra }}
+      </span>
       {% for error in form.es_compra.errors %}
       <span class="text-red-600">{{ error }}</span>
       {% endfor %}
