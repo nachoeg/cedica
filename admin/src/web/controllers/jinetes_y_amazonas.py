@@ -1,7 +1,9 @@
 import string
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
-from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya
+from flask import current_app
+from os import fstat
+from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
 from src.core.miembro.miembro import Miembro
@@ -161,4 +163,26 @@ def editar_jya(id:int):
 @bp.get("/<int:id>/eliminar/")
 def eliminar(id: int):
     eliminar_jya(id)
+    return redirect(url_for("jinetes_y_amazonas.listar"))
+
+@bp.get("/<int:id>/subir_archivo/")
+def subir_archivo(id: int):
+    jya = encontrar_jya(id)
+    return render_template("jinetes_y_amazonas/documentos.html", jya=jya)
+
+@bp.post("/<int:id>/aceptar_archivo/")
+def aceptar_archivo(id):
+    params = request.form.copy()
+    titulo = request.form["titulo"]
+    jya_id = id
+    tipo_archivo = request.form["tipo_archivo"]
+    print(request.form["tipo_archivo"])
+    if "archivo" in request.files:
+        archivo = request.files["archivo"]
+        cliente = current_app.storage.client
+        tamaño = fstat(archivo.fileno()).st_size
+
+        cliente.put_object("grupo17", archivo.filename, archivo, tamaño, content_type = archivo.content_type)
+        # params["avatar"] = archivo.filename
+        cargar_archivo(jya_id, titulo,tipo_archivo)
     return redirect(url_for("jinetes_y_amazonas.listar"))

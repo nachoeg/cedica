@@ -1,5 +1,6 @@
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
+from src.core.jinetes_y_amazonas.documentos import Archivo_JYA
 
 # funcion que crea un diagnóstico médico
 def crear_diagnostico(**kwargs):
@@ -19,8 +20,6 @@ def listar_j_y_a(orden_asc=1, pagina_inicial=1, por_pag=20):
 # función que crea un registro de jinete o amazona
 def crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono):
     j_o_a = JineteOAmazona(nombre=nombre, apellido=apellido, dni=dni, edad=edad, fecha_nacimiento=fecha_nacimiento, provincia_nacimiento=provincia_nacimiento, localidad_nacimiento=localidad_nacimiento, domicilio_actual=domicilio_actual, telefono_actual=telefono_actual, contacto_emer_nombre=contacto_emer_nombre, contacto_emer_telefono=contacto_emer_telefono)
-    db.session.add(j_o_a)
-    db.session.commit()
     db.session.add(j_o_a)
     db.session.commit()
 
@@ -78,3 +77,8 @@ def eliminar_jya(id):
 def encontrar_jya(id):
     jya = JineteOAmazona.query.get_or_404(id)
     return jya
+
+def cargar_archivo(jya_id, titulo,tipo_archivo):
+    archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo)
+    db.session.add(archivo)
+    db.session.commit()

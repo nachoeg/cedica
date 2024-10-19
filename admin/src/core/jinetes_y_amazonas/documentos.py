@@ -19,9 +19,11 @@ class Archivo_JYA(db.Model):
         
     id = db.Column(db.Integer, primary_key = True)
     titulo = db.Column(db.String(50))
-    fecha_subida = db.Column(db.DateTime)
+    fecha_subida = db.Column(db.DateTime,default=datetime.now)
     tipo_archivo = db.Column(Enum(TipoArchivo))
-
+    jya_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
+    jya = db.relationship('JineteOAmazona')
+    
     def to_dict(self):
         return {
             "id": self.id,
