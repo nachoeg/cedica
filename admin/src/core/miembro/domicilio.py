@@ -9,4 +9,3 @@ class Domicilio(db.Model):
     piso = db.Column(db.String(10), nullable=True)
     dpto = db.Column(db.String(10), nullable=True)
     localidad = db.Column(db.String(100), nullable=False)
-    miembros = db.relationship('Miembro', backref='domicilio', lazy=True)

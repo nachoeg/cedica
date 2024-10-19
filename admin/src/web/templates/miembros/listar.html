@@ -1,85 +1,57 @@
 {% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
 
 {% block title %} Listado de Miembros {% endblock %}
 
 {% block main %}
 
-<h1>Lista de Miembros</h1>
+{% set configuracion= {
+'encabezados': [
+    {'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+    {'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
+    {'id': 'dni', 'nombre': 'DNI'},
+    {'id': 'email', 'nombre': 'Email'},
+    {'id': 'telefono', 'nombre': 'Teléfono'},
+    {'id': 'profesion', 'nombre': 'Profesión'},
+    {'id': 'puesto_laboral', 'nombre': 'Puesto Laboral'},
+    {'id': 'fecha_creacion', 'nombre': 'Fecha de registro', 'ordenar': True}
+],
+'acciones': [
+    {'nombre': 'Ver', 'funcion': 'verMiembro'},
+    {'nombre': 'Editar', 'funcion': 'editarMiembro'},
+    {'nombre': 'Borrar', 'funcion': 'borrarMiembro'},
+],
+'filtros': [
+    {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro},
+    {'id': 'apellido', 'nombre': 'Apellido', 'tipo': 'texto', 'valor': apellido_filtro},
+    {'id': 'dni', 'nombre': 'DNI', 'tipo': 'texto', 'valor': dni_filtro},
+    {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro},
+    {'id': 'profesion', 'nombre': 'Profesión', 'tipo': 'seleccion', 'opciones': profesiones | map(attribute='nombre'), 'valor': profesion_filtro}
+],
+'crear': {
+    'url': url_for('miembro.miembro_crear'),
+    'nombre': 'Crear miembro'
+}
+} %}
 
-<form method="GET">
-    <input type="text" name="nombre" value="{{ nombre }}" placeholder="Nombre">
-    <input type="text" name="apellido" value="{{ apellido }}" placeholder="Apellido">
-    <input type="text" name="dni" value="{{ dni }}" placeholder="DNI">
-    <input type="text" name="email" value="{{ email }}" placeholder="Email">
-    <input type="text" name="profesion" value="{{ profesion }}" placeholder="Profesión">
-    <button type="submit">Buscar</button>
-</form>
+{{ tabla(configuracion, miembros, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
-<table>
-    <thead>
-        <tr>
-            <th>
-            <a href="{{ url_for('miembro.miembro_listar', orden='nombre', asc=1 if not ascendente else 0, pagina=page) }}">
-                Nombre
-                {% if orden_campo == 'nombre' %}
-                    {% if ascendente %}
-                        ↑
-                    {% else %}
-                        ↓
-                    {% endif %}
-                {% endif %}
-            </a>
-            </th>
-            <th>
-            <a href="{{ url_for('miembro.miembro_listar', orden='apellido', asc=1 if not ascendente else 0, pagina=page) }}">
-                Apellido
-                {% if orden_campo == 'apellido' %}
-                    {% if ascendente %}
-                        ↑
-                    {% else %}
-                        ↓
-                    {% endif %}
-                {% endif %}
-            </a>
-            </th>
-            <th>DNI</th>
-            <th>Email</th>
-            <th>Profesión</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for miembro in miembros_paginados.items %}
-        <tr>
-            <td>{{ miembro.nombre }}</td>
-            <td>{{ miembro.apellido }}</td>
-            <td>{{ miembro.dni }}</td>
-            <td>{{ miembro.email }}</td>
-            <td>{{ miembro.profesion.nombre }}</td>
-            <td>
-                <a href="{{ url_for('miembro.miembro_mostrar', id=miembro.id) }}">Ver</a>
-                <a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Modificar</a>
-                <form action="{{ url_for('miembro.miembro_eliminar', id=miembro.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este miembro?');">Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="7">No se encontraron resultados.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% endblock %}
 
-<!-- Paginación -->
-<div class="pagination">
-    {% for page in miembros_paginados.iter_pages() %}
-        {% if page %}
-            <a href="{{ url_for('miembro.miembro_listar', orden=orden_campo, asc=ascendente, pagina=page) }}">{{ page }}</a>
-        {% else %}
-            <span>…</span>
-        {% endif %}
-    {% endfor %}
-</div>
+{% block scripts %}
+<script>
+    function verMiembro(id) {
+        window.location.href = `/miembros/${id}`;
+    }
+
+    function borrarMiembro(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar este miembro?')) {
+            window.location.href = `/miembros/${id}/eliminar`;
+        }
+    }
+
+    function editarMiembro(id) {
+        window.location.href = `/miembros/${id}/editar`;
+    }
+</script>
 {% endblock %}

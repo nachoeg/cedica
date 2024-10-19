@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.core.database import db
 
 
@@ -19,7 +20,9 @@ class Miembro(db.Model):
     
     # relacion con domicilio
     domicilio_id = db.Column(db.Integer, db.ForeignKey('domicilio.id'), nullable=False)
-    
+    domicilio = db.relationship('Domicilio', backref='miembros')
+
+
     email = db.Column(db.String(100), nullable=False)
     telefono = db.Column(db.String(25), nullable=False)
     
@@ -35,7 +38,20 @@ class Miembro(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)
     usuario = db.relationship('Usuario', backref='miembro', uselist=False)
 
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     activo = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return f'<Miembro #{self.id} email="{self.email}" alias="{self.alias}" activo={self.activo}'
+
+    def to_dict(self):
+        return {
+            'nombre': self.nombre,
+            'apellido': self.apellido,
+            'dni': self.dni,
+            'email': self.email,
+            'telefono': self.telefono,
+            'profesion': self.profesion.nombre if self.profesion else None,
+            'puesto_laboral': self.puesto_laboral.nombre if self.puesto_laboral else None,
+            'fecha_creacion': self.fecha_creacion.strftime('%d-%m-%Y') if self.fecha_creacion else None
+        }

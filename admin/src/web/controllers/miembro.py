@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, crear_domicilio, crear_miembro, Domicilio
+from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, Domicilio
+from src.core.miembro import listar_condiciones, listar_profesiones, listar_puestos_laborales, listar_miembros
 from src.core.usuarios import Usuario
 from sqlalchemy import asc, desc
 from src.core.database import db
@@ -8,45 +9,49 @@ bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
 @bp.route('/', methods=['GET'])
 def miembro_listar():
-    search_nombre = request.args.get('nombre', '')
-    search_apellido = request.args.get('apellido', '')
-    search_dni = request.args.get('dni', '')
-    search_email = request.args.get('email', '')
-    search_profesion = request.args.get('profesion', '')
-    orden_campo = request.args.get('orden', 'nombre') 
-    ascendente = request.args.get('asc', '1') == '1'
-    pagina = int(request.args.get('page', 1))
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "nombre")
+    pagina = int(request.args.get("pagina", 1))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    nombre_filtro = request.args.get("nombre", "")
+    apellido_filtro = request.args.get("apellido", "")
+    dni_filtro = request.args.get("dni", "")
+    email_filtro = request.args.get("email", "")
+    profesion_filtro = request.args.get("profesion", "")
 
-    query = Miembro.query.join(Profesion).filter(
-        Miembro.nombre.ilike(f"%{search_nombre}%"),
-        Miembro.apellido.ilike(f"%{search_apellido}%"),
-        Miembro.dni.ilike(f"%{search_dni}%"),
-        Miembro.email.ilike(f"%{search_email}%"),
-        Profesion.nombre.ilike(f"%{search_profesion}%")
+    miembros, cant_resultados = listar_miembros(
+        nombre_filtro, apellido_filtro, dni_filtro, email_filtro, profesion_filtro,
+        ordenar_por, orden, pagina, cant_por_pagina
     )
 
-    if orden_campo in ['nombre', 'apellido', 'created_on']:  
-        if ascendente:
-            query = query.order_by(getattr(Miembro, orden_campo).asc())
-        else:
-            query = query.order_by(getattr(Miembro, orden_campo).desc())
-    else:
-        query = query.order_by(Miembro.nombre.asc())  
+    profesiones = listar_profesiones()
+    puestos = listar_puestos_laborales()
+    condiciones = listar_condiciones()
 
-    miembros_paginados = query.paginate(page=pagina, per_page=10, error_out=False)
+    if cant_resultados == 0:
+        cant_paginas = 1
+    else:
+        cant_paginas = cant_resultados // cant_por_pagina
+        if cant_resultados % cant_por_pagina != 0:
+            cant_paginas += 1
 
     return render_template(
-        'miembros/listar.html',
-        miembros_paginados=miembros_paginados, 
-        ascendente=ascendente, 
-        nombre=search_nombre,
-        apellido=search_apellido,
-        dni=search_dni,
-        email=search_email,
-        profesion=search_profesion,
-        orden_campo=orden_campo
+        "miembros/listar.html",
+        miembros=miembros,
+        profesiones=profesiones,
+        puestos=puestos,
+        condiciones=condiciones,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
+        nombre_filtro=nombre_filtro,
+        apellido_filtro=apellido_filtro,
+        dni_filtro=dni_filtro,
+        email_filtro=email_filtro,
+        profesion_filtro=profesion_filtro
     )
-
 
 @bp.route('/crear', methods=['GET', 'POST'])
 def miembro_crear():
