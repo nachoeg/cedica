@@ -196,7 +196,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
         </button>
         {% endfor %}
       </div>
-      <button type="button" id="tabla-siguiente-pagina" {% if pagina==cant_paginas %} disabled {% endif %}
+      <button type="button" id="tabla-siguiente-pagina" {% if pagina>=cant_paginas %} disabled {% endif %}
         onclick="cambiarPaginaTabla('{{ pagina + 1 }}')"
         class="{{ botonPaginacionClases }} {{ botonPaginacionInactivo }}">
         {{ chevron_left_icon('size-3 rotate-180') }}
