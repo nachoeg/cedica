@@ -71,7 +71,7 @@
   }
 
   .alert-neutral {
-    @apply bg-gray-100 border-gray-200 text-gray-800 dark:bg-white/10 dark:border-white/20 dark:text-white;
+    @apply bg-gray-100 border-gray-200 text-gray-800 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white;
   }
 }
 
@@ -80,16 +80,19 @@
   @apply w-fit mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
 }
 
+.contenedor:has(.contenedor-body),
 .formulario:has(.formulario-body) {
   @apply flex flex-col;
 }
 
-.contenedor,
+.contenedor:not(:has(.contenedor-body)),
 .formulario:not(:has(.formulario-body)),
+.contenedor-body,
 .formulario-body {
   @apply flex flex-col p-4 gap-4;
 }
 
+.contenedor-header,
 .formulario-header {
   @apply flex items-center justify-between py-3 px-4 border-b font-semibold border-gray-200 dark:border-neutral-700;
 }
