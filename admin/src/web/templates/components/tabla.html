@@ -1,5 +1,5 @@
 {% from 'components/iconos.html' import dropdown_icon, search_icon,
-ordering_icon, chevron_left_icon, sliders_horizontal_icon, spinner_icon %} {%
+ordering_icon, chevron_left_icon, sliders_horizontal_icon, plus_icon %} {%
 macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, orden, ordenar_por) %}
 
 <div id="tabla"
@@ -7,8 +7,8 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
   <div class="flex items-center space-x-2 px-6 py-4">
     <!-- Boton crear -->
     {% if configuracion.crear %}
-    <a href="{{ configuracion.crear.url }}" class="btn btn-primary py-1.5 px-3">
-      {{ configuracion.crear.icono }} {{ configuracion.crear.nombre }}
+    <a href="{{ configuracion.crear.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
+      {{ plus_icon('size-4') }} {{ configuracion.crear.nombre }}
     </a>
     {% endif %}
     <!-- Busqueda -->
