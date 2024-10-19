@@ -1,4 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    current_app,
+)
 from src.core.ecuestre import (
     crear_ecuestre,
     eliminar_ecuestre,
@@ -11,7 +19,8 @@ from src.core.ecuestre import (
     guardar_cambios,
 )
 from src.core.ecuestre.ecuestre_form import EcuestreForm
-from src.core.ecuestre.documento_form import DocumentoForm
+from src.core.ecuestre.documento_form import SubirArchivoForm, SubirEnlaceForm
+from os import fstat
 
 
 bp = Blueprint("ecuestre", __name__, url_prefix="/ecuestre")
@@ -68,7 +77,7 @@ def crear():
             sexo = form.sexo.data
             raza = form.raza.data
             pelaje = form.pelaje.data
-            es_compra = form.es_compra.data == "True"
+            es_compra = form.es_compra.data
             fecha_ingreso = form.fecha_ingreso.data
             sede = form.sede.data
             tipo_de_jya_id = form.tipo_de_jya_id.data
@@ -106,7 +115,7 @@ def editar(id: int):
             ecuestre.sexo = form.sexo.data
             ecuestre.raza = form.raza.data
             ecuestre.pelaje = form.pelaje.data
-            ecuestre.es_compra = form.es_compra.data == "True"
+            ecuestre.es_compra = form.es_compra.data
             ecuestre.fecha_ingreso = form.fecha_ingreso.data
             ecuestre.sede = form.sede.data
             ecuestre.tipo_de_jya_id = form.tipo_de_jya_id.data
@@ -171,19 +180,33 @@ def documentos(id: int):
     )
 
 
-@bp.route("/<int:id>/documentos/subir/", methods=["GET", "POST"])
-def subir_documento(id: int):
+@bp.route("/<int:id>/documentos/subir_archivo/", methods=["GET", "POST"])
+def subir_archivo(id: int):
     ecuestre = obtener_ecuestre(id)
-    form = DocumentoForm()
-    form.tipo.choices = [(t.value, t.name) for t in listar_tipos_de_documentos()]
+    form = SubirArchivoForm()
+    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
             tipo = form.tipo.data
-            url = form.url.data
             ecuestre_id = id
+            archivo = request.files["archivo"]
+            client = current_app.storage.client
+            size = fstat(archivo.fileno()).st_size
+            ulid = "123456789"  # cambiar por ulid = ulid.new()
+            url = f"ecuestre/{ulid}-{archivo.filename}"
+
+            client.put_object(
+                "grupo17",
+                url,
+                archivo,
+                size,
+                content_type=archivo.content_type,
+            )
+
             crear_documento(nombre, tipo, url, ecuestre_id)
+
             flash("Documento subido con exito", "exito")
             return redirect(url_for("ecuestre.documentos", id=id))
         else:
@@ -192,3 +215,35 @@ def subir_documento(id: int):
     return render_template(
         "pages/ecuestre/subir_documento.html", form=form, ecuestre=ecuestre
     )
+
+
+@bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
+def subir_enlace(id: int):
+    ecuestre = obtener_ecuestre(id)
+    form = SubirEnlaceForm()
+    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            nombre = form.nombre.data
+            tipo = form.tipo.data
+            ecuestre_id = id
+            url = form.url.data
+
+            crear_documento(nombre, tipo, url, ecuestre_id)
+
+            flash("Documento subido con exito", "exito")
+            return redirect(url_for("ecuestre.documentos", id=id))
+        else:
+            flash("Error al subir el documento", "error")
+
+    return render_template(
+        "pages/ecuestre/subir_enlace.html", form=form, ecuestre=ecuestre
+    )
+
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/eliminar/")
+def eliminar_documento(id: int, documento_id: int):
+    eliminar_documento(documento_id)
+    flash("Documento eliminado con exito", "exito")
+    return redirect(url_for("ecuestre.documentos", id=id))
