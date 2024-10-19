@@ -1,9 +1,9 @@
 import string
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, send_file
 from flask import Blueprint
 from flask import current_app
 from os import fstat
-from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo
+from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
 from src.core.miembro.miembro import Miembro
@@ -126,6 +126,7 @@ def cargar_info_inst(id : string):
         dias = form.dias.data
         cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias, profesor_id, conductor_caballo_id, caballo_id, auxiliar_pista_id)
         return redirect(url_for('jinetes_y_amazonas.listar'))
+    
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_inst.html", form=form)
  
 
@@ -153,21 +154,25 @@ def editar_cobro(id: str):
 @bp.get("/<int:id>/")
 def ver(id: int):
     jya = encontrar_jya(id)
+
     return render_template("jinetes_y_amazonas/ver_jya.html", jya=jya)
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 def editar_jya(id:int):
     jya = encontrar_jya(id)
+
     return redirect(url_for('jinetes_y_amazonas.listar'))
 
 @bp.get("/<int:id>/eliminar/")
 def eliminar(id: int):
     eliminar_jya(id)
+
     return redirect(url_for("jinetes_y_amazonas.listar"))
 
 @bp.get("/<int:id>/subir_archivo/")
 def subir_archivo(id: int):
     jya = encontrar_jya(id)
+
     return render_template("jinetes_y_amazonas/documentos.html", jya=jya)
 
 @bp.post("/<int:id>/aceptar_archivo/")
@@ -183,6 +188,30 @@ def aceptar_archivo(id):
         tamaño = fstat(archivo.fileno()).st_size
 
         cliente.put_object("grupo17", archivo.filename, archivo, tamaño, content_type = archivo.content_type)
-        # params["avatar"] = archivo.filename
+        
         cargar_archivo(jya_id, titulo,tipo_archivo)
+
     return redirect(url_for("jinetes_y_amazonas.listar"))
+
+@bp.get("/<int:id>/archivos")
+def ver_archivos(id: int):
+    archivos = encontrar_archivos_de_jya(id)
+
+    return render_template("jinetes_y_amazonas/ver_documentos.html", archivos=archivos)
+
+@bp.get("/<int:jya_id>/archivos/<int:archivo_id>/editar/")
+def editar_archivo(jya_id: int, archivo_id:int):
+    archivo = encontrar_archivo(archivo_id)
+
+    return render_template("jinetes_y_amazonas/documentos.html", jya = archivo.jya)
+
+@bp.get("/archivo/<int:archivo_id>")
+def descargar_archivo(archivo_id:int):
+    cliente = current_app.storage.client
+    b_name = "grupo17"
+    o_name = "WP_Effects-AI-Developers.pdf"
+    f_name = "archivo_generado_prueba1"
+    result = cliente.fget_object(b_name, o_name, f_name)
+    
+    #return redirect(url_for("jinetes_y_amazonas.listar"))
+    return send_file(result, as_attachment=True, download_name=f_name, mimetype="application/pdf")

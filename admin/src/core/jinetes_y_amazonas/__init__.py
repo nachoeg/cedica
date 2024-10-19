@@ -82,3 +82,13 @@ def cargar_archivo(jya_id, titulo,tipo_archivo):
     archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo)
     db.session.add(archivo)
     db.session.commit()
+
+def encontrar_archivos_de_jya(jya_id):
+    jya = JineteOAmazona.query.get_or_404(jya_id)
+    
+    return jya.documentos
+
+def encontrar_archivo(archivo_id):
+    archivo = Archivo_JYA.query.get_or_404(archivo_id)
+    
+    return archivo
