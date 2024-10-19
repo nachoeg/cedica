@@ -46,17 +46,17 @@ def listado_usuarios():
     )
 
 
-@bp.route('<int:id>/', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET'])
 def ver_usuario(id):
     usuario = usuario_por_id(id)
     return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
 
 
-@bp.route('<int:id>/', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET'])
 def editar_usuario(id):
     pass
 
 
-@bp.route('<int:id>/', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET'])
 def eliminar_usuario(id):
     pass

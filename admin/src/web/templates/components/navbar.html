@@ -47,9 +47,13 @@ avatar_placeholder_icon, show_password_icon %}
               class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white border border-gray-200 shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800 dark:divide-neutral-800"
               role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-header">
               <div class="py-3 px-4 border-b border-gray-200 dark:border-neutral-800">
-                {% for rol in session.get('roles') %}
-                <p class="text-sm text-gray-500 dark:text-neutral-400">{{ rol }}</p>
-                {% endfor %}
+                {% if session.get('es_admin') %}
+                  <p class="text-sm text-gray-500 dark:text-neutral-400">Admin sistema</p>
+                {% else %}
+                  {% for rol in session.get('roles') %}
+                  <p class="text-sm text-gray-500 dark:text-neutral-400">{{ rol }}</p>
+                  {% endfor %}
+                {% endif %}
                 <p class="text-sm font-medium text-gray-800 dark:text-neutral-300">{{ session.get('alias') }}</p>
               </div>
               <div class="p-1 space-y-0.5">
