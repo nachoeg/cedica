@@ -162,6 +162,7 @@ class JineteOAmazona(db.Model):
     auxiliar_pista_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
     auxiliar_pista = db.relationship('Miembro', foreign_keys=[auxiliar_pista_id])
 
+    documentos = db.relationship("Archivo_JYA", back_populates="jya")
     #TODO armar tabla de familiares a cargo
     #familiares a cargo
     #acá voy a tener que tener una tabla de familiares? es muchos a muchos
