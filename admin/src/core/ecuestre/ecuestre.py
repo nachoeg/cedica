@@ -1,4 +1,5 @@
 from src.core.database import db
+import enum
 
 
 class TipoDeJyA(db.Model):
@@ -9,6 +10,38 @@ class TipoDeJyA(db.Model):
 
     def __repr__(self):
         return self.tipo
+
+
+class TipoDeDocumento(db.Model):
+    __tablename__ = "tipo_de_documento"
+
+    id = db.Column(db.Integer, primary_key=True)
+    tipo = db.Column(db.String(100), nullable=False)
+
+    def __str__(self):
+        return self.tipo
+
+
+class Documento(db.Model):
+    __tablename__ = "documento"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+    url = db.Column(db.String(100), nullable=False)
+
+    # Relacion con tipo de documento
+    tipo_de_documento_id = db.Column(
+        db.Integer, db.ForeignKey("tipo_de_documento.id"), nullable=False
+    )
+    tipo_de_documento = db.relationship("TipoDeDocumento", backref="documentos")
+
+    # Relacion con ecuestre
+    ecuestre_id = db.Column(db.Integer, db.ForeignKey("ecuestre.id"), nullable=False)
+    ecuestre = db.relationship("Ecuestre", backref="documentos")
+
+    def __repr__(self):
+        return f'<Documento #{self.id} nombre="{self.nombre}" fecha="{self.fecha}" tipo="{self.tipo}" url="{self.url}" ecuestre="{self.ecuestre}">'
 
 
 class Ecuestre(db.Model):

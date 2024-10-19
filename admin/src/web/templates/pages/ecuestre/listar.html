@@ -1,6 +1,5 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
-{% from "components/pilled_nav.html" import pilled_nav %}
 
 {% block title %}Ecuestre{% endblock %}
 
@@ -38,11 +37,6 @@
 } if rolEcuestre else False
 }
 %}
-
-{{ pilled_nav([
-{'nombre': 'Información general', 'url': url_for('ecuestre.index')},
-{'nombre': 'Documentos', 'url': url_for('ecuestre.documentos')},
-])}}
 
 {{ tabla(configuracion, ecuestres, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 

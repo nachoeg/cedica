@@ -5,9 +5,60 @@
 {% block title %}Ecuestre documentos{% endblock %}
 
 {% block main %}
+
 {{ pilled_nav([
-{'nombre': 'Información general', 'url': url_for('ecuestre.index')},
-{'nombre': 'Documentos', 'url': url_for('ecuestre.documentos')},
+{'nombre': 'Información general', 'url': url_for('ecuestre.ver', id=ecuestre.id)},
+{'nombre': 'Documentos', 'url': url_for('ecuestre.documentos', id=ecuestre.id)}
 ])}}
 
+{% set configuracion = {
+
+'encabezados': [
+{'id': 'id', 'nombre': 'Id'},
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'fecha', 'nombre': 'Fecha', 'ordenar': True},
+{'id': 'tipo', 'nombre': 'Tipo'},
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'irAlDocumento'},
+{'nombre': 'Editar', 'funcion': 'editarDocumento'},
+{'nombre': 'Borrar','funcion': 'borrarDocumento'}
+],
+'filtros': [
+{'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'tipo', 'nombre': 'Tipo', 'tipo': 'seleccion', 'opciones': tipos_documento, 'valor': tipo_filtro}
+],
+'subir': {
+'url': url_for('ecuestre.subir_documento', id=ecuestre.id),
+'nombre': 'Subir'
+},
+'enlace': {
+'url': url_for('ecuestre.subir_documento', id=ecuestre.id),
+'nombre': 'Enlace'
+},
+}
+%}
+
+{{ tabla(configuracion, documentos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+  function irAlDocumento(id) {
+    window.location.href = `/ecuestre/{{ ecuestre.id }}/documentos/${id}`;
+  }
+
+  function editarDocumento(id) {
+    window.location.href = `/ecuestre/{{ ecuestre.id }}/documentos/${id}/editar`;
+  }
+
+  function borrarDocumento(id) {
+    if (confirm('¿Está seguro que desea borrar este documento?')) {
+      window.location.href = `/ecuestre/{{ ecuestre.id }}/documentos/${id}/borrar`;
+    }
+  }
+
+</script>
 {% endblock %}
