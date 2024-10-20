@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
-from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios
+from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda
 from src.core.cobros.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 from src.core.miembro.miembro import Miembro
@@ -47,6 +47,8 @@ def nuevo_cobro():
         observaciones = form.observaciones.data
         joa_id = form.joa.data
         recibio_el_dinero_id = form.recibio_el_dinero.data
+        if form.tiene_deuda:
+            marcar_deuda(joa_id)
         crear_cobro(fecha_pago, medio_de_pago, monto, observaciones,joa_id, recibio_el_dinero_id)
 
         return redirect(url_for('cobros.listar'))

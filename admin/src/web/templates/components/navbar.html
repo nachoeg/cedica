@@ -14,8 +14,7 @@ avatar_placeholder_icon, show_password_icon %}
 
     <div class="sm:order-3 flex items-center gap-x-2">
       <!-- Hamburger button -->
-      <button type="button"
-        class="sm:hidden hs-collapse-toggle relative size-9 flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10 "
+      <button type="button" class="sm:hidden hs-collapse-toggle btn btn-outline relative size-9"
         id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
         aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
         {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
@@ -37,27 +36,24 @@ avatar_placeholder_icon, show_password_icon %}
           Iniciar sesión
         </a>
         <button id="hs-dropdown-default" type="button"
-          class="hs-dropdown-toggle size-9 xs:size-fit xs:py-2 xs:px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none bg-transparent border border-gray-200 text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50  dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 "
-          aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+          class="hs-dropdown-toggle btn btn-outline size-9 p-0 xs:size-fit xs:py-2 xs:px-3  " aria-haspopup="menu"
+          aria-expanded="false" aria-label="Dropdown">
           {{login_icon('size-4')}}
           <span class="hidden xs:inline">Iniciar sesión</span>
         </button>
         <div
-          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white border border-gray-200 shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full "
+          class="dropdown hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full "
           role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-default">
-          <form class="p-4 space-y-4" action="login" method="POST">
+          <form class="space-y-4" action="login" method="POST">
             <div>
-              <label for="email" class="block text-sm font-medium mb-1 dark:text-white">Email</label>
-              <input type="email" id="email" autocomplete="email"
-                class="py-2 px-4 block w-full border-0 bg-gray-100 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-blue-600 "
-                placeholder="ejemplo@email.com" required>
+              <label for="email">Email</label>
+              <input type="email" id="email" autocomplete="email" class="input" placeholder="ejemplo@email.com"
+                required>
             </div>
             <div>
-              <label for="password" class="block text-sm font-medium mb-1 dark:text-white">Contraseña</label>
+              <label for="password">Contraseña</label>
               <div class="relative">
-                <input id="password" type="password"
-                  class="py-2 ps-4 pe-10 block w-full border-0 bg-gray-100 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-blue-600"
-                  placeholder="Contraseña" value="" required>
+                <input id="password" type="password" class="input pe-10" placeholder="Contraseña" value="" required>
                 <button type="button" data-hs-toggle-password='{
                     "target": "#password"
                   }'
@@ -67,12 +63,10 @@ avatar_placeholder_icon, show_password_icon %}
               </div>
             </div>
             <div class="space-y-3">
-              <button type="button"
-                class="w-full text-center py-2.5 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+              <button type="button" class="btn btn-primary w-full">
                 Iniciar sesión
               </button>
-              <button type="button"
-                class="py-2.5 px-3 w-full inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-800">
+              <button type="button" class="btn btn-secondary w-full">
                 {{google_icon()}}
                 Iniciar sesión con Google
               </button>
@@ -100,11 +94,8 @@ avatar_placeholder_icon, show_password_icon %}
           </div>
           <div class="p-1 space-y-0.5">
             {% set userLinksClases = 'flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800
-            hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700
-            dark:hover:text-neutral-300 dark:focus:bg-neutral-700
-            flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none
-            focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-300
-            dark:focus:bg-neutral-700' %}
+            hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800
+            dark:hover:text-neutral-300 dark:focus:bg-neutral-700' %}
             <a class="{{userLinksClases}}" href="/perfil">
               {{user_icon('size-4')}}
               Perfil
@@ -123,14 +114,13 @@ avatar_placeholder_icon, show_password_icon %}
     <div id="hs-navbar-alignment"
       class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
       aria-labelledby="hs-navbar-alignment-collapse">
-      <div class="flex flex-col gap-x-1 gap-y-0.5 my-2 sm:flex-row sm:items-center sm:my-0">
-        {% set navbarLinksClases = 'p-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg
-        text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50
-        disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700/50 dark:focus:bg-neutral-700/50' %}
+      <div class="flex flex-col my-2 sm:flex-row sm:items-center sm:my-0">
+        {% set navbarLinksClases = 'btn btn-ghost px-2 py-1.5' %}
         <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
         <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
-        <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('miembro.miembro_listar')}}">Equipo</a>
         <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('pago.pago_listar')}}">Pagos</a>
         {% if true %} <!-- Cambiar por if is_authenticated(session) -->
         <a class="{{navbarLinksClases}}" href="/usuarios">Usuarios</a>
         {% endif %}

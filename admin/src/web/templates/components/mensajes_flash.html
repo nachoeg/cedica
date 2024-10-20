@@ -1,7 +1,37 @@
+{% from "components/iconos.html" import close_icon, alert_icon, success_icon, info_icon, error_icon %}
+
 {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <p>{{ message }}</p>
-    {% endfor %}
-  {% endif %}
+{% if messages %}
+<div class="flex flex-col gap-2 w-fit absolute z-50 bottom-4 right-4">
+  {% for category, message in messages %}
+  <div class="flash-message" id="flash-message-{{loop.index}}">
+    {% if category == 'error' or category == 'danger' %}
+      <div class="alert alert-error" role="alert" tabindex="-1" >
+        {{error_icon('size-4')}} {{message}}
+    {% elif category == 'success' or category == 'exito' %}
+      <div class="alert alert-success" role="alert" tabindex="-1" >
+        {{success_icon('size-4')}} {{message}}
+    {% elif category == 'info' %}
+      <div class="alert alert-info" role="alert" tabindex="-1" >
+        {{info_icon('size-4')}} {{message}}
+    {% elif category == 'warning' %}
+      <div class="alert alert-warning" role="alert" tabindex="-1" >
+        {{alert_icon('size-4')}} {{message}}
+    {% else %}
+      <div class="alert alert-neutral" role="alert" tabindex="-1" >
+        {{ message }}
+    {% endif %}
+      <span class="ps-3 ms-auto">
+        <button type="button"
+          class="inline-flex rounded-lg p-1.5 hover:bg-black/10 dark:hover:bg-white/10 focus:outline-none focus:bg-white/10"
+          data-hs-remove-element="#flash-message-{{loop.index}}">
+          <span class="sr-only">Cerrar</span>
+          {{ close_icon(classes="size-4 shrink-0") }}
+        </button>
+      </span>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
 {% endwith %}
