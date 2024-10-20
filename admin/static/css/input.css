@@ -43,7 +43,7 @@
   }
 
   .input {
-    @apply w-full px-3 py-2 border text-gray-800 placeholder:text-gray-500 bg-gray-100 dark:text-neutral-50 dark:bg-neutral-800 border-gray-100 dark:border-neutral-700 dark:placeholder:text-neutral-500  rounded-lg focus:ring-1 focus:ring-blue-600 focus:border-blue-600 dark:focus:border-blue-600 text-sm;
+    @apply w-full px-3 py-2 border text-gray-800 placeholder:text-gray-500 bg-white dark:text-neutral-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 dark:placeholder:text-neutral-500  rounded-lg focus:ring-1 focus:ring-blue-600 focus:border-blue-600 dark:focus:border-blue-600 text-sm;
   }
 
   .label {
@@ -71,13 +71,40 @@
   }
 
   .alert-neutral {
-    @apply bg-gray-100 border-gray-200 text-gray-800 dark:bg-white/10 dark:border-white/20 dark:text-white;
+    @apply bg-gray-100 border-gray-200 text-gray-800 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white;
   }
 }
 
 .contenedor,
 .formulario {
-  @apply flex flex-col p-4 gap-4 w-fit mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
+  @apply w-fit mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
+}
+
+.contenedor:has(.contenedor-body),
+.formulario:has(.formulario-body) {
+  @apply flex flex-col;
+}
+
+.contenedor:not(:has(.contenedor-body)),
+.formulario:not(:has(.formulario-body)),
+.contenedor-body,
+.formulario-body {
+  @apply flex flex-col p-4 gap-4;
+}
+
+.contenedor-footer,
+.contenedor-header,
+.formulario-header {
+  @apply flex items-center justify-between py-3 px-4 gap-3 font-semibold border-gray-200 dark:border-neutral-700;
+}
+
+.contenedor-header,
+.formulario-header {
+  @apply border-b;
+}
+
+.contenedor-footer {
+  @apply border-t;
 }
 
 .dropdown {
@@ -96,14 +123,14 @@
   @apply input;
 }
 
-.formulario input,
-.formulario select {
-  @apply dark:border-neutral-700;
+.dropdown input[type="file"],
+.formulario input[type="file"] {
+  @apply p-0 pe-3 file:bg-gray-100 file:border-0 file:me-4 file:py-2 file:px-4 dark:file:bg-neutral-700 dark:file:text-neutral-200;
 }
 
 .dropdown input,
 .dropdown select {
-  @apply dark:border-neutral-800;
+  @apply bg-gray-100 border-gray-100 dark:border-neutral-800;
 }
 
 .dropdown select,
@@ -118,4 +145,16 @@
 
 .dropdown .btn-secondary {
   @apply dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:border-neutral-800 dark:hover:border-neutral-700 dark:focus:border-neutral-700;
+}
+
+.formulario input[type="checkbox"] {
+  @apply w-fit p-2 shrink-0 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800;
+}
+
+.input-checkbox {
+  @apply input py-0 items-center flex justify-between gap-2;
+}
+
+.input-checkbox label {
+  @apply flex-1 mb-0 py-2.5;
 }

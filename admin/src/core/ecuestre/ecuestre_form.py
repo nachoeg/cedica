@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 from wtforms.fields import (
-    DateTimeField,
+    BooleanField,
     SelectField,
     DateField,
     StringField,
@@ -27,7 +27,7 @@ class EcuestreForm(FlaskForm):
     pelaje = StringField(
         "Pelaje", validators=[DataRequired("Ingrese el pelaje del ecuestre")]
     )
-    es_compra = SelectField("Es compra", choices=[("True", "Sí"), ("False", "No")])
+    es_compra = BooleanField("Es compra")
     fecha_ingreso = DateField(
         "Fecha de ingreso",
         validators=[DataRequired("Ingrese una fecha de ingreso")],
