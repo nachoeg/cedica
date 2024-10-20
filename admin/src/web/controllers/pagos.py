@@ -8,6 +8,46 @@ from src.core.database import db
 
 bp = Blueprint('pago', __name__, url_prefix='/pagos')
 
+
+@bp.get("/")
+def pago_listar():
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "fechaDePago")
+    pagina = int(request.args.get("pagina", 1))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    search_fecha_inicio = request.args.get("fecha_inicio", "")
+    search_fecha_fin = request.args.get("fecha_fin", "")
+    tipo_pago_id = request.args.get("tipo_pago_id", "")
+    search_beneficiario = request.args.get("beneficiario", "")
+
+    pagos, cant_resultados = listar_pagos(
+        search_fecha_inicio, search_fecha_fin, tipo_pago_id, search_beneficiario, ordenar_por, orden, pagina, cant_por_pagina
+    )
+
+    tipos_pago = TipoDePago.query.all()
+
+    if cant_resultados == 0:
+        cant_paginas = 1
+    else:
+        cant_paginas = cant_resultados // cant_por_pagina
+        if cant_resultados % cant_por_pagina != 0:
+            cant_paginas += 1
+
+    return render_template(
+        "pagos/listar.html",
+        pagos=pagos,
+        tipos_pago=tipos_pago,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
+        fecha_inicio=search_fecha_inicio,
+        fecha_fin=search_fecha_fin,
+        tipo_pago_id=tipo_pago_id,
+        beneficiario=search_beneficiario,
+    )
+
 @bp.route('/crear', methods=['GET', 'POST'])
 def pago_crear():
     form = PagoForm()
@@ -38,42 +78,6 @@ def pago_crear():
 
     return render_template('pagos/crear.html', form=form)
 
-@bp.get("/")
-def pago_listar():
-    # Obtener parámetros de búsqueda y orden
-    orden = request.args.get("orden", "asc")
-    ordenar_por = request.args.get("ordenar_por", "fechaDePago")
-    pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
-    search_fecha_inicio = request.args.get("fecha_inicio", "")
-    search_fecha_fin = request.args.get("fecha_fin", "")
-    tipo_pago_id = request.args.get("tipo_pago_id", "")
-    search_beneficiario = request.args.get("beneficiario", "")
-
-    pagos, cant_resultados = listar_pagos(
-        search_fecha_inicio, search_fecha_fin, tipo_pago_id, search_beneficiario, ordenar_por, orden, pagina, cant_por_pagina
-    )
-
-    tipos_pago = TipoDePago.query.all()
-
-    cant_paginas = cant_resultados // cant_por_pagina
-    if cant_resultados % cant_por_pagina != 0:
-        cant_paginas += 1
-
-    return render_template(
-        "pagos/listar.html",
-        pagos=pagos,
-        tipos_pago=tipos_pago,
-        cant_resultados=cant_resultados,
-        cant_paginas=cant_paginas,
-        pagina=pagina,
-        orden=orden,
-        ordenar_por=ordenar_por,
-        fecha_inicio=search_fecha_inicio,
-        fecha_fin=search_fecha_fin,
-        tipo_pago_id=tipo_pago_id,
-        beneficiario=search_beneficiario,
-    )
 
 @bp.route('/<int:id>', methods=['GET'])
 def pago_mostrar(id):

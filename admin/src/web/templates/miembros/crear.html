@@ -1,169 +1,158 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Crear miembro {% endblock %}
-
-{% block head %}
-    {{ super() }}
-    <style>
-        /* Estilos generales para el formulario */
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Estilos para las etiquetas y entradas del formulario */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        /* Estilos para el botón de envío */
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Agregar un espaciado entre los elementos */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        /* Estilo adicional para mejorar el aspecto del formulario en dispositivos móviles */
-        @media (max-width: 768px) {
-            form {
-                padding: 15px;
-            }
-
-            button {
-                font-size: 14px;
-            }
-        }
-    </style>
-{% endblock %}
+{% block title %} Datos del Miembro {% endblock %}
 
 {% block main %}
-    <h1>Crear Miembro</h1>
-    
-    <form method="POST" action="{{ url_for('miembro.miembro_crear') }}">
-        <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" required>
-        
-        <label for="apellido">Apellido</label>
-        <input type="text" name="apellido" required>
 
-        <label for="dni">DNI</label>
-        <input type="text" name="dni" required>
+<form method="POST" class="formulario">
+    {{ form.hidden_tag() }}
 
-        <label for="email">Email</label>
-        <input type="email" name="email" required>
+    <div class="text-red-600">
+        {{ form.nombre.label }}
+        {{ form.nombre }}
+        {% for error in form.nombre.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="telefono">Teléfono</label>
-        <input type="text" name="telefono" required>
+    <div class="text-red-600">
+        {{ form.apellido.label }}
+        {{ form.apellido }}
+        {% for error in form.apellido.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="nombreContactoEmergencia">Contacto de Emergencia</label>
-        <input type="text" name="nombreContactoEmergencia" required>
+    <div class="text-red-600">
+        {{ form.dni.label }}
+        {{ form.dni }}
+        {% for error in form.dni.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="telefonoContactoEmergencia">Teléfono de Emergencia</label>
-        <input type="text" name="telefonoContactoEmergencia" required>
+    <div class="text-red-600">
+        {{ form.email.label }}
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="obraSocial">Obra Social</label>
-        <input type="text" name="obraSocial" required>
+    <div class="text-red-600">
+        {{ form.telefono.label }}
+        {{ form.telefono }}
+        {% for error in form.telefono.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="numeroAfiliado">Número de Afiliado</label>
-        <input type="text" name="numeroAfiliado" required>
+    <div class="text-red-600">
+        {{ form.nombreContactoEmergencia.label }}
+        {{ form.nombreContactoEmergencia }}
+        {% for error in form.nombreContactoEmergencia.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="profesion_id">Profesión</label>
-        <select name="profesion_id">
-            {% for profesion in profesiones %}
-                <option value="{{ profesion.id }}">{{ profesion.nombre }}</option>
-            {% endfor %}
-        </select>
+    <div class="text-red-600">
+        {{ form.telefonoContactoEmergencia.label }}
+        {{ form.telefonoContactoEmergencia }}
+        {% for error in form.telefonoContactoEmergencia.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="condicion_id">Condición</label>
-        <select name="condicion_id">
-            {% for condicion in condiciones %}
-                <option value="{{ condicion.id }}">{{ condicion.nombre }}</option>
-            {% endfor %}
-        </select>
+    <div class="text-red-600">
+        {{ form.obraSocial.label }}
+        {{ form.obraSocial }}
+        {% for error in form.obraSocial.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <label for="puesto_laboral_id">Puesto Laboral</label>
-        <select name="puesto_laboral_id">
-            {% for puesto in puestos %}
-                <option value="{{ puesto.id }}">{{ puesto.nombre }}</option>
-            {% endfor %}
-        </select>
+    <div class="text-red-600">
+        {{ form.numeroAfiliado.label }}
+        {{ form.numeroAfiliado }}
+        {% for error in form.numeroAfiliado.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div class="form-group">
-            <label for="calle">Calle</label>
-            <input type="text" name="calle" required>
-        </div>
+    <div class="text-red-600">
+        {{ form.condicion_id.label }}
+        {{ form.condicion_id }}
+        {% for error in form.condicion_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div class="form-group">
-            <label for="numero">Número</label>
-            <input type="text" name="numero" required>
-        </div>
+    <div class="text-red-600">
+        {{ form.profesion_id.label }}
+        {{ form.profesion_id }}
+        {% for error in form.profesion_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div class="form-group">
-            <label for="piso">Piso</label>
-            <input type="text" name="piso">
-        </div>
+    <div class="text-red-600">
+        {{ form.puesto_laboral_id.label }}
+        {{ form.puesto_laboral_id }}
+        {% for error in form.puesto_laboral_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div class="form-group">
-            <label for="dpto">Departamento</label>
-            <input type="text" name="dpto">
-        </div>
+    <div class="text-red-600">
+        {{ form.calle.label }}
+        {{ form.calle }}
+        {% for error in form.calle.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div class="form-group">
-            <label for="localidad">Localidad</label>
-            <input type="text" name="localidad" required>
-        </div>
+    <div class="text-red-600">
+        {{ form.numero.label }}
+        {{ form.numero }}
+        {% for error in form.numero.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div class="form-group">
-            <label for="usuario">Usuario (Opcional)</label>
-            <input type="text" name="usuario" placeholder="Ingresa el nombre de usuario (opcional)">
-        </div>
-        <p class="info-text">
-            No es necesario asignar un usuario en este momento. Puedes agregar o modificar el usuario más tarde.
-        </p>
+    <div class="text-red-600">
+        {{ form.piso.label }}
+        {{ form.piso }}
+        {% for error in form.piso.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <button type="submit">Crear</button>
-    </form>
+    <div class="text-red-600">
+        {{ form.dpto.label }}
+        {{ form.dpto }}
+        {% for error in form.dpto.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.localidad.label }}
+        {{ form.localidad }}
+        {% for error in form.localidad.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.alias.label }}
+        {{ form.alias }}
+        {% for error in form.alias.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
 {% endblock %}

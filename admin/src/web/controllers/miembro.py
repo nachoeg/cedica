@@ -1,83 +1,88 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, crear_domicilio, crear_miembro, Domicilio
+from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, Domicilio
+from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios
+from src.core.miembro.forms_miembro import InfoMiembroForm
 from src.core.usuarios import Usuario
-from sqlalchemy import asc, desc
 from src.core.database import db
+
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
+
 @bp.route('/', methods=['GET'])
 def miembro_listar():
-    search_nombre = request.args.get('nombre', '')
-    search_apellido = request.args.get('apellido', '')
-    search_dni = request.args.get('dni', '')
-    search_email = request.args.get('email', '')
-    search_profesion = request.args.get('profesion', '')
-    orden_campo = request.args.get('orden', 'nombre') 
-    ascendente = request.args.get('asc', '1') == '1'
-    pagina = int(request.args.get('page', 1))
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "nombre")
+    pagina = int(request.args.get("pagina", 1))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    nombre_filtro = request.args.get("nombre", "")
+    apellido_filtro = request.args.get("apellido", "")
+    dni_filtro = request.args.get("dni", "")
+    email_filtro = request.args.get("email", "")
+    profesion_filtro = request.args.get("profesion", "")
 
-    query = Miembro.query.join(Profesion).filter(
-        Miembro.nombre.ilike(f"%{search_nombre}%"),
-        Miembro.apellido.ilike(f"%{search_apellido}%"),
-        Miembro.dni.ilike(f"%{search_dni}%"),
-        Miembro.email.ilike(f"%{search_email}%"),
-        Profesion.nombre.ilike(f"%{search_profesion}%")
+    miembros, cant_resultados = listar_miembros(
+        nombre_filtro, apellido_filtro, dni_filtro, email_filtro, profesion_filtro,
+        ordenar_por, orden, pagina, cant_por_pagina
     )
 
-    if orden_campo in ['nombre', 'apellido', 'created_on']:  
-        if ascendente:
-            query = query.order_by(getattr(Miembro, orden_campo).asc())
-        else:
-            query = query.order_by(getattr(Miembro, orden_campo).desc())
-    else:
-        query = query.order_by(Miembro.nombre.asc())  
+    profesiones = listar_profesiones()
+    puestos = listar_puestos_laborales()
+    condiciones = listar_condiciones()
 
-    miembros_paginados = query.paginate(page=pagina, per_page=10, error_out=False)
+    if cant_resultados == 0:
+        cant_paginas = 1
+    else:
+        cant_paginas = cant_resultados // cant_por_pagina
+        if cant_resultados % cant_por_pagina != 0:
+            cant_paginas += 1
 
     return render_template(
-        'miembros/listar.html',
-        miembros_paginados=miembros_paginados, 
-        ascendente=ascendente, 
-        nombre=search_nombre,
-        apellido=search_apellido,
-        dni=search_dni,
-        email=search_email,
-        profesion=search_profesion,
-        orden_campo=orden_campo
+        "miembros/listar.html",
+        miembros=miembros,
+        profesiones=profesiones,
+        puestos=puestos,
+        condiciones=condiciones,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
+        nombre_filtro=nombre_filtro,
+        apellido_filtro=apellido_filtro,
+        dni_filtro=dni_filtro,
+        email_filtro=email_filtro,
+        profesion_filtro=profesion_filtro
     )
-
 
 @bp.route('/crear', methods=['GET', 'POST'])
 def miembro_crear():
-    profesiones = Profesion.query.all()
-    condiciones = CondicionDeTrabajo.query.all()
-    puestos = PuestoLaboral.query.all()
+    form = InfoMiembroForm()
     
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        dni = request.form['dni']
-        email = request.form['email']
-        telefono = request.form['telefono']
-        nombreContactoEmergencia = request.form['nombreContactoEmergencia']
-        telefonoContactoEmergencia = request.form['telefonoContactoEmergencia']
-        obraSocial = request.form['obraSocial']
-        numeroAfiliado = request.form['numeroAfiliado']
-        profesion_id = request.form['profesion_id']
-        condicion_id = request.form['condicion_id']
-        puesto_laboral_id = request.form['puesto_laboral_id']
-        alias_usuario = request.form['usuario']
-        activo = True
+    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in CondicionDeTrabajo.query.all()]
+    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in Profesion.query.all()]
+    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in PuestoLaboral.query.all()]
 
-        # Captura los datos del formulario del domicilio
-        calle = request.form['calle']
-        numero = request.form['numero']
-        piso = request.form.get('piso')  # opcional
-        dpto = request.form.get('dpto')  # opcional
-        localidad = request.form['localidad']
+    if form.validate_on_submit():
+        nombre = form.nombre.data
+        apellido = form.apellido.data
+        dni = form.dni.data
+        email = form.email.data
+        telefono = form.telefono.data
+        nombre_contacto_emergencia = form.nombreContactoEmergencia.data
+        telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
+        obra_social = form.obraSocial.data
+        numero_afiliado = form.numeroAfiliado.data
+        condicion_id = form.condicion_id.data
+        profesion_id = form.profesion_id.data
+        puesto_laboral_id = form.puesto_laboral_id.data
+        calle = form.calle.data
+        numero = form.numero.data
+        piso = form.piso.data
+        dpto = form.dpto.data
+        localidad = form.localidad.data
+        alias = form.alias.data
 
-        # Buscar si existe un domicilio con los mismos datos
         domicilio_existente = Domicilio.query.filter_by(
             calle=calle,
             numero=numero,
@@ -85,79 +90,113 @@ def miembro_crear():
             dpto=dpto,
             localidad=localidad
         ).first()
-        
+
         if domicilio_existente:
             domicilio_id = domicilio_existente.id
         else:
             nuevo_domicilio = crear_domicilio(calle=calle, numero=numero, piso=piso, dpto=dpto, localidad=localidad)
             domicilio_id = nuevo_domicilio.id
 
-        nuevo_miembro_data = {
-            "nombre": nombre,
-            "apellido": apellido,
-            "dni": dni,
-            "email": email,
-            "telefono": telefono,
-            "nombreContactoEmergencia": nombreContactoEmergencia,
-            "telefonoContactoEmergencia": telefonoContactoEmergencia,
-            "obraSocial": obraSocial,
-            "numeroAfiliado": numeroAfiliado,
-            "profesion_id": profesion_id,
-            "condicion_id": condicion_id,
-            "puesto_laboral_id": puesto_laboral_id,
-            "domicilio_id": domicilio_id,
-            "activo": True
-        }
+        if alias:
+            usuario = Usuario.query.filter_by(alias=alias_usuario).first()
+            if usuario:
+                usuario_id = usuario.id
+                alias_usuario = usuario_id
+            else:
+                flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
+                return redirect(url_for('miembro.miembro_crear'))
+        else:
+            usuario_id = None
 
+        crear_miembro(
+            nombre=nombre,
+            apellido=apellido,
+            dni=dni,
+            email=email,
+            telefono=telefono,
+            nombre_contacto_emergencia=nombre_contacto_emergencia,
+            telefono_contacto_emergencia=telefono_contacto_emergencia,
+            obra_social=obra_social,
+            numero_afiliado=numero_afiliado,
+            condicion_id=condicion_id,
+            profesion_id=profesion_id,
+            puesto_laboral_id=puesto_laboral_id,
+            domicilio_id=domicilio_id,
+            usuario_id=usuario_id
+        )
+
+        flash("Miembro registrado con éxito.", 'success')
+        return redirect(url_for('miembro.miembro_listar'))
+
+    return render_template('miembros/crear.html', form=form)
+
+@bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+def miembro_editar(id: int):
+    miembro = obtener_miembro(id)
+    form = InfoMiembroForm(obj=miembro)
+    form.calle.data = miembro.domicilio.calle
+    form.numero.data = miembro.domicilio.numero
+    form.piso.data = miembro.domicilio.piso
+    form.dpto.data = miembro.domicilio.dpto
+    form.localidad.data = miembro.domicilio.localidad
+    if miembro.usuario != None:
+        form.alias.data = miembro.usuario.alias 
+    
+    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in CondicionDeTrabajo.query.all()]
+    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in Profesion.query.all()]
+    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in PuestoLaboral.query.all()]
+    
+    if form.validate_on_submit():
+        miembro.nombre = form.nombre.data
+        miembro.apellido = form.apellido.data
+        miembro.dni = form.dni.data
+        miembro.email = form.email.data
+        miembro.telefono = form.telefono.data
+        miembro.nombre_contacto_emergencia = form.nombreContactoEmergencia.data
+        miembro.telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
+        miembro.obra_social = form.obraSocial.data
+        miembro.numero_afiliado = form.numeroAfiliado.data
+        miembro.condicion_id = form.condicion_id.data
+        miembro.profesion_id = form.profesion_id.data
+        miembro.puesto_laboral_id = form.puesto_laboral_id.data
+
+        domicilio_existente = Domicilio.query.filter_by(
+            calle=form.calle.data,
+            numero=form.numero.data,
+            piso=form.piso.data,
+            dpto=form.dpto.data,
+            localidad=form.localidad.data
+        ).first()
+
+        if domicilio_existente:
+            miembro.domicilio_id = domicilio_existente.id
+        else:
+            nuevo_domicilio = crear_domicilio(calle=form.calle.data, numero=form.numero.data, piso=form.piso.data, dpto=form.dpto.data, localidad=form.localidad.data)
+            miembro.domicilio_id = nuevo_domicilio.id
+
+        alias_usuario = form.alias.data
         if alias_usuario:
             usuario = Usuario.query.filter_by(alias=alias_usuario).first()
             if usuario:
                 usuario_id = usuario.id
-                nuevo_miembro_data["usuario_id"] = usuario_id
+                alias_usuario = usuario_id
+            else:
+                flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
+                return redirect(url_for('miembro.miembro_crear'))
+        else:
+            miembro.usuario_id = None      
 
+        guardar_cambios()
+        return redirect(url_for("miembro.miembro_listar")) 
 
-        # Crear el miembro con los datos recopilados
-        crear_miembro(**nuevo_miembro_data)
+    return render_template("miembros/crear.html", form=form)    
 
-        flash("Miembro creado con exito.", 'success')
-        return redirect(url_for('miembro.miembro_listar'))
-
-    return render_template('miembros/crear.html', profesiones=profesiones, condiciones=condiciones, puestos=puestos)
-
-
-@bp.route('/<int:id>/mostrar', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET'])
 def miembro_mostrar(id):
     miembro = Miembro.query.get_or_404(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
-@bp.route('/<int:id>/editar', methods=['GET', 'POST'])
-def miembro_editar(id):
-    miembro = Miembro.query.get_or_404(id)
-    profesiones = Profesion.query.all()
-    condiciones = CondicionDeTrabajo.query.all()
-    puestos = PuestoLaboral.query.all()
-
-    if request.method == 'POST':
-        miembro.nombre = request.form['nombre'] or miembro.nombre
-        miembro.apellido = request.form['apellido'] or miembro.apellido
-        miembro.dni = request.form['dni'] or miembro.dni
-        miembro.email = request.form['email'] or miembro.email
-        miembro.telefono = request.form['telefono'] or miembro.telefono
-        miembro.nombreContactoEmergencia = request.form['nombreContactoEmergencia'] or miembro.nombreContactoEmergencia
-        miembro.telefonoContactoEmergencia = request.form['telefonoContactoEmergencia'] or miembro.telefonoContactoEmergencia
-        miembro.obraSocial = request.form['obraSocial'] or miembro.obraSocial
-        miembro.numeroAfiliado = request.form['numeroAfiliado'] or miembro.numeroAfiliado
-        miembro.profesion_id = request.form['profesion_id'] or miembro.profesion_id
-        miembro.condicion_id = request.form['condicion_id'] or miembro.condicion_id
-        miembro.puesto_laboral_id = request.form['puesto_laboral_id'] or miembro.puesto_laboral_id
-        miembro.activo = request.form.get('activo') == 'on'
-        
-        db.session.commit()
-        return redirect(url_for('miembro.miembro_listar'))
-
-    return render_template('miembros/editar.html', miembro=miembro, profesiones=profesiones, condiciones=condiciones, puestos=puestos)
-
-@bp.route('/<int:id>/eliminar', methods=['POST'])
+@bp.route('/<int:id>/eliminar', methods=['GET'])
 def miembro_eliminar(id):
     miembro = Miembro.query.get_or_404(id)
     db.session.delete(miembro)
