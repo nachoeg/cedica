@@ -88,10 +88,7 @@ def pago_mostrar(id):
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 def pago_eliminar(id):
-    pago = obtener_pago(id)
     eliminar_pago(id)
-    db.session.delete(pago)
-    db.session.commit()
     flash("Pago eliminado con exito.", 'success')
     return redirect(url_for('pago.pago_listar'))
 
