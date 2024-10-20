@@ -212,6 +212,7 @@ def descargar_archivo(archivo_id:int):
     o_name = "WP_Effects-AI-Developers.pdf"
     f_name = "archivo_generado_prueba1"
     result = cliente.fget_object(b_name, o_name, f_name)
-    
+    print("IMPRIMIENDO")
+    print(result)
     #return redirect(url_for("jinetes_y_amazonas.listar"))
     return send_file(result, as_attachment=True, download_name=f_name, mimetype="application/pdf")
