@@ -89,10 +89,13 @@ avatar_placeholder_icon, show_password_icon %}
         <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
         {% endif %}
         {% if tiene_permiso(session, "miembro_listar") %}
-        <a class="{{navbarLinksClases}}" href="/equipo">Equipo</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('miembro.miembro_listar')}}">Equipo</a>
         {% endif %}
         {% if tiene_permiso(session, "cobro_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobro</a>
+        <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobros</a>
+        {% endif %}
+        {% if tiene_permiso(session, "pago_listar") %}
+        <a class="{{navbarLinksClases}}" href="{{ url_for('pago.pago_listar')}}">Pagos</a>
         {% endif %}
         {% if tiene_permiso(session, "usuario_listar") %}
           <a class="{{navbarLinksClases}}" href="{{ url_for('usuarios.listado_usuarios') }}">Usuarios</a>
