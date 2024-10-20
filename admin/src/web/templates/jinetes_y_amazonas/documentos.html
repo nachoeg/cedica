@@ -1,0 +1,49 @@
+
+{% extends "layouts/base.html" %}
+{% block title %} Cargar documento {% endblock %}
+{% block main %}
+
+<article>
+    <form method="POST" action="{{ url_for('jinetes_y_amazonas.aceptar_archivo', id=jya.id) }}" enctype = "multipart/form-data">
+        <fieldset>
+            <legend>Tipo de archivo</legend>
+                <label>
+                    <input type="radio" name="tipo_archivo" id="entrevista" value="entrevista">
+                    Entrevista
+                </label>
+                <label>
+                    <input type="radio" name="tipo_archivo" id="evaluacion" value="evaluacion">
+                    Evaluación
+                </label>
+                <label>
+                    <input type="radio" name="tipo_archivo" id="planificacion" value="planificacion">
+                    Planificación
+                </label>
+                <label>
+                    <input type="radio" name="tipo_archivo" id="evolucion" value="evolucion">
+                    Evolución
+                </label>
+                <label>
+                    <input type="radio" name="tipo_archivo" id="cronica" value="cronica">
+                    Crónica
+                </label>
+                <label>
+                    <input type="radio" name="tipo_archivo" id="documental" value="documental">
+                    Documental
+                </label>
+                <br>
+                <label>
+                    Titulo
+                    <input type="text" name="titulo" id="titulo">
+                </label>
+                <br>
+                <label>
+                    Archivo
+                    <input type="file" name="archivo">
+                </label>
+                <br>
+                <input type="submit" value="Guardar">
+        </fieldset>
+    </form>
+</article>
+{% endblock %}

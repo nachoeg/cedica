@@ -14,6 +14,7 @@ from src.web.controllers.cobros import bp as cobros_bp
 from src.web.controllers.pagos import bp as pagos_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
 from src.web.storage import storage
+from src.web import helpers_jya
 
 session = Session()
 
@@ -53,6 +54,7 @@ def create_app(env="development", static_folder="../../static"):
 
     app.jinja_env.globals.update(esta_autenticado=esta_autenticado)
     app.jinja_env.globals.update(tiene_permiso=tiene_permiso)
+    app.jinja_env.globals.update(documento_url=helpers_jya.archivo_url)
 
     @app.cli.command(name="reset-db")
     def reset_db():
