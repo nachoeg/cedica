@@ -3,11 +3,15 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from src.core.usuarios import crear_usuario, listar_usuarios, usuario_por_id
 from src.core.usuarios.usuario_forms import UsuarioForm
 from src.core.database import db
+from src.web.handlers.autenticacion import (chequear_permiso,
+                                            sesion_iniciada_requerida)
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
 
 @bp.route('/', methods=['GET'])
+@chequear_permiso('usuario_listar')
+@sesion_iniciada_requerida
 def listado_usuarios():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
@@ -34,41 +38,67 @@ def listado_usuarios():
 
 
 @bp.route('/registrar_usuario', methods=['GET', 'POST'])
+@chequear_permiso('usuario_crear')
+@sesion_iniciada_requerida
 def registrar_usuario():
     form = UsuarioForm(request.form)
     if form.validate_on_submit():
         # raise Exception(f'{form.roles.data}')
-        usuario = crear_usuario(form.email.data, form.contraseña.data, 
-                                form.alias.data, form.admin_sistema.data, 
+        usuario = crear_usuario(form.email.data, form.contraseña.data,
+                                form.alias.data, form.admin_sistema.data,
                                 form.roles.data)
         flash(f'Registro exitoso. \
-              Alias: {usuario.alias}, email: {usuario.alias}')
+              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
         return redirect(url_for('usuarios.registrar_usuario'))
-    return render_template('pages/usuarios/listado_usuarios.html', form=form)
+    return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
 
 @bp.route('/<int:id>', methods=['GET'])
+@chequear_permiso('usuario_mostrar')
+@sesion_iniciada_requerida
 def ver_usuario(id):
     usuario = usuario_por_id(id)
     return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
 
 
 @bp.route('/<int:id>', methods=['GET'])
+@chequear_permiso('usuario_editar')
+@sesion_iniciada_requerida
 def editar_usuario(id):
     pass
 
 
 @bp.route('/<int:id>/bloquear', methods=['GET'])
+@chequear_permiso('usuario_bloquear')
+@sesion_iniciada_requerida
 def bloquear_usuario(id):
     usuario = usuario_por_id(id)
     usuario.activo = False
     db.session.commit()
+    flash(f'Se ha bloqueado al usuario \
+              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
+    return redirect(request.referrer)
+
+
+@bp.route('/<int:id>/activar', methods=['GET'])
+@chequear_permiso('usuario_activar')
+@sesion_iniciada_requerida
+def activar_usuario(id):
+    usuario = usuario_por_id(id)
+    usuario.activo = True
+    db.session.commit()
+    flash(f'Se ha activado al usuario \
+              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
     return redirect(request.referrer)
 
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
+@chequear_permiso('usuario_eliminar')
+@sesion_iniciada_requerida
 def eliminar_usuario(id):
     usuario = usuario_por_id(id)
     db.session.delete(usuario)
     db.session.commit()
+    flash(f'Se ha eliminado al usuario \
+              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
     return redirect(url_for('usuarios.listado_usuarios'))

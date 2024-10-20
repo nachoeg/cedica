@@ -7,6 +7,8 @@ def cargar_permisos():
     permisos["permiso_usuario_mostrar"] = usuarios.crear_permiso(nombre="usuario_mostrar")
     permisos["permiso_usuario_crear"] = usuarios.crear_permiso(nombre="usuario_crear")
     permisos["permiso_usuario_actualizar"] = usuarios.crear_permiso(nombre="usuario_actualizar")
+    permisos["permiso_usuario_bloquear"] = usuarios.crear_permiso(nombre="usuario_bloquear")
+    permisos["permiso_usuario_activar"] = usuarios.crear_permiso(nombre="usuario_activar")
     permisos["permiso_usuario_eliminar"] = usuarios.crear_permiso(nombre="usuario_eliminar")
 
     permisos["permiso_miembro_listar"] = usuarios.crear_permiso(nombre="miembro_listar")

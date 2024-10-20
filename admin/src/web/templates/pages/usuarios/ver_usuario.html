@@ -28,16 +28,37 @@
     <p><strong>Última actualización:</strong> {{ fechahora_a_fecha(usuario.ultima_actualizacion) }}</p>
 
     <div class="flex gap-3">
+
+      {% if tiene_permiso(session, 'usuario_editar') or session.get('id') == usuario.id %}
       <a class="btn btn-secondary w-full" href="{{ url_for('usuarios.editar_usuario', id=usuario.id) }}">
         Editar
       </a>
+      {% endif %}
+
+      {% if session.get('id') != usuario.id and not usuario.admin_sistema %}
+
+      {% if tiene_permiso(session, 'usuario_bloquear') and usuario.activo %}
       <button style="background-color:darkslategrey; border-color: darkslategrey;" class="btn btn-danger w-full" type="submit" 
       onclick="bloquearUsuario('{{ usuario.id }}')">
         Bloquear
       </button>
+      {% endif %}
+
+      {% if tiene_permiso(session, 'usuario_activar') and not usuario.activo %}
+      <button style="background-color:forestgreen; border-color: forestgreen;" class="btn btn-danger w-full" type="submit" 
+      onclick="activarUsuario('{{ usuario.id }}')">
+        Activar
+      </button>
+      {% endif %}
+      
+      {% if tiene_permiso(session, 'usuario_eliminar') %}
       <button class="btn btn-danger w-full" type="submit" onclick="eliminarUsuario('{{ usuario.id }}')">
         Eliminar
       </button>
+      {% endif %}
+
+      {% endif %}
+
     </div>
   </div>
 

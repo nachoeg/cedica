@@ -16,6 +16,12 @@
     }
   }
 
+  function activarUsuario(id) {
+    if (confirm('¿Está seguro que desea bloquear este usuario?')) {
+      window.location.href = `/usuarios/${id}/activar`;
+    }
+  }
+
   function eliminarUsuario(id) {
     if (confirm('¿Está seguro que desea eliminar este usuario?')) {
       window.location.href = `/usuarios/${id}/eliminar`;
