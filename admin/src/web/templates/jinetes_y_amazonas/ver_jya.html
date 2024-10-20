@@ -10,7 +10,7 @@
 <p><strong>Apellido:</strong> {{ jya.apellido }}</strong></p>
 <p><strong>DNI:</strong> {{ jya.dni }}</p>
 {% if jya.tiene_deuda %}
-  <p><strong>Tiene deuda</strong></p>
+  <p style="color: red;"><strong>Tiene deuda</strong></p>
 {% endif %}
 <p><strong>Edad:</strong> {{ jya.edad }}</p>
 <p><strong>Fecha de nacimiento:</strong> {{ jya.fecha_nacimiento }}</p>
@@ -57,7 +57,7 @@
 <p><strong>Profesor:</strong> {{ jya.profesor.nombre }}</p>
 <p><strong>Conductor de caballo:</strong> {{ jya.conductor_caballo.nombre }}</p>
 <p><strong>Caballo:</strong> {{ jya.caballo.nombre }}</p>
-<p><strong>Auxiliar de pista:</strong> {{ jya.auxiliar_pista }}</p>
+<p><strong>Auxiliar de pista:</strong> {{ jya.auxiliar_pista.nombre }}</p>
 
 <a href="{{ url_for('jinetes_y_amazonas.editar_jya', id=jya.id) }}">Editar</a>
 <form action="#" method="POST" style="display:inline;">
