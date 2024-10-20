@@ -21,11 +21,11 @@ class Pago(db.Model):
     miembro = db.relationship('Miembro', backref='pago')
 
     def __repr__(self):
-        return f'<Pago #{self.id} monto="{self.monto}" fecha="{self.fechaDePago}" descripcion={self.descripcion}'
+        return f'<Pago #{self.id} monto="{self.monto}" fecha="{self.fecha_pago}" descripcion={self.descripcion}'
     
     def to_dict(self):
         return {
-            'fechaDePago': self.fechaDePago.strftime('%d-%m-%Y') if self.fechaDePago else None,
+            'fecha_pago': self.fecha_pago.strftime('%d-%m-%Y') if self.fecha_pago else None,
             'tipo_pago_nombre': self.tipo_pago.nombre if self.tipo_pago else None,
             'monto': self.monto,
             'descripcion': self.descripcion,  
