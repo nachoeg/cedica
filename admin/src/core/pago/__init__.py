@@ -39,7 +39,6 @@ def crear_pago(**kwargs):
     pago = Pago(**kwargs)
     db.session.add(pago)
     db.session.commit()
-
     return pago
 
 def listar_tipos_pagos():
@@ -58,3 +57,12 @@ def guardar_cambios():
 def obtener_pago(id):
     pago = Pago.query.get(id)
     return pago
+
+def obtener_tipo_pago(id):
+    tipo_pago = TipoDePago.query.get(id)
+    return tipo_pago
+
+def eliminar_pago(id):
+    pago = Pago.query.get(id)
+    db.session.delete(pago)
+    db.session.commit()

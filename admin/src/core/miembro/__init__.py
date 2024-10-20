@@ -14,7 +14,7 @@ def listar_miembros(
     pagina=1,
     cant_por_pagina=10
 ):
-    query = Miembro.query.join(Profesion)
+    query = Miembro.query.join(Profesion).filter(Miembro.activo.is_(True))
 
     if nombre_filtro:
         query = query.filter(Miembro.nombre.ilike(f'%{nombre_filtro}%'))
@@ -93,3 +93,21 @@ def guardar_cambios():
 def obtener_miembro(id):
     miembro = Miembro.query.get(id)
     return miembro
+
+def obtener_miembro_dni(dni):
+    miembro = Miembro.query.filter_by(dni=dni).first()
+    return miembro
+
+def buscar_domicilio(calle, numero, piso, dpto, localidad):
+    return Domicilio.query.filter_by(
+            calle=calle,
+            numero=numero,
+            piso=piso,
+            dpto=dpto,
+            localidad=localidad
+        ).first()
+
+def eliminar_miembro(id):
+    miembro = Miembro.query.get(id)
+    miembro.activo = False;
+    db.session.commit()
