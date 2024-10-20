@@ -156,7 +156,7 @@ class JineteOAmazona(db.Model):
     conductor_caballo_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
     conductor_caballo = db.relationship('Miembro', foreign_keys=[conductor_caballo_id])
 
-    caballo_id = db.Column(db.Integer, db.ForeignKey('ecuestre.id'))
+    caballo_id = db.Column(db.Integer, db.ForeignKey('ecuestres.id'))
     caballo = db.relationship('Ecuestre', foreign_keys=[caballo_id])
 
     auxiliar_pista_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
