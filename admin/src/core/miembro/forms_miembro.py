@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, SelectField
+from wtforms import StringField, IntegerField, SubmitField, SelectField, FileField
 from wtforms.validators import DataRequired, Optional
 
 class InfoMiembroForm(FlaskForm):
@@ -22,3 +22,20 @@ class InfoMiembroForm(FlaskForm):
     localidad = StringField('Localidad', validators=[DataRequired('Ingrese la localidad.')])
     alias = StringField('Alias', validators=[Optional()])
     submit = SubmitField('Guardar')
+
+class ArchivoMiembroForm(FlaskForm):
+    nombre = StringField(
+        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+    )
+    archivo = FileField("Archivo", validators=[DataRequired("Seleccione un archivo")])
+    tipo = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
+    submit = SubmitField("Guardar")
+
+
+class EnlaceMiembroForm(FlaskForm):
+    nombre = StringField(
+        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+    )
+    url = StringField("Enlace", validators=[DataRequired("Ingrese el enlace.")])
+    tipo = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
+    submit = SubmitField("Guardar")

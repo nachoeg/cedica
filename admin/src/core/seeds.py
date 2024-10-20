@@ -184,6 +184,18 @@ def run():
         tipo_id=2
     )
 
+    tipos_de_documento_miembro = [
+        "Titulo",
+        "Copia del DNI",
+        "CV",
+        "Certificado",
+        "Vacunacion",
+        "Otro"
+    ]
+    
+    for tipo in tipos_de_documento_miembro:
+        miembro.crear_tipo_de_documento(tipo=tipo)
+
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
