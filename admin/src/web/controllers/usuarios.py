@@ -48,8 +48,8 @@ def registrar_usuario():
                                 form.alias.data, form.admin_sistema.data,
                                 form.roles.data)
         flash(f'Registro exitoso. \
-              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
-        return redirect(url_for('usuarios.registrar_usuario'))
+              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+        return redirect(url_for('usuarios.listado_usuarios.html'))
     return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
 

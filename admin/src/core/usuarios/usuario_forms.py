@@ -4,7 +4,7 @@ from wtforms import (BooleanField, EmailField, PasswordField,
 from wtforms.validators import Email, InputRequired, Length
 from wtforms.widgets import html_params
 from src.core.database import db
-from core.usuarios.usuario import Rol, Usuario
+from core.usuarios.usuario import Rol
 
 
 def select_multi_checkbox(field, ul_class='', **kwargs):
@@ -22,17 +22,17 @@ def select_multi_checkbox(field, ul_class='', **kwargs):
     return ''.join(html)
 
 
-def emails():
-    emails = db.session.execute(db.select(Usuario.email)).scalars().all()
+# def emails():
+#     emails = db.session.execute(db.select(Usuario.email)).scalars().all()
 
-    return emails
+#     return emails
 
 
 class UsuarioForm(FlaskForm):
     email = EmailField("Email", validators=[InputRequired(), Email()])
     contraseña = PasswordField(
-        "Contraseña", 
-        validators=[InputRequired(), 
+        "Contraseña",
+        validators=[InputRequired(),
                     Length(min=4, message="La contraseña debe tener por lo \
                         menos %(min)d caracteres")
                     ]
@@ -44,6 +44,6 @@ class UsuarioForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(UsuarioForm, self).__init__(*args, **kwargs)
         self.roles.choices = [
-            (rol.id, rol.nombre) for rol in 
+            (rol.id, rol.nombre) for rol in
             db.session.execute(db.select(Rol)).unique().scalars().all()
             ]
