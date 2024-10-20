@@ -172,7 +172,7 @@ def run():
     pago1 = pago.crear_pago(
         monto=10000,
         descripcion="Horas extras",
-        fechaDePago="2024-02-11",
+        fecha_pago="2024-02-11",
         miembro_id=miembro1.id,
         tipo_id=1
     )
@@ -180,9 +180,21 @@ def run():
     pago2 = pago.crear_pago(
         monto=20000,
         descripcion="Mantenimiento",
-        fechaDePago="2024-03-12",
+        fecha_pago="2024-03-12",
         tipo_id=2
     )
+
+    tipos_de_documento_miembro = [
+        "Titulo",
+        "Copia del DNI",
+        "CV",
+        "Certificado",
+        "Vacunacion",
+        "Otro"
+    ]
+    
+    for tipo in tipos_de_documento_miembro:
+        miembro.crear_tipo_de_documento(tipo=tipo)
 
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
