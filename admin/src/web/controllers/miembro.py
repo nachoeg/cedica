@@ -1,5 +1,5 @@
 from flask import current_app, Blueprint, render_template, request, redirect, url_for, flash
-from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios, buscar_domicilio, eliminar_miembro, listar_tipos_de_documentos, listar_documentos, crear_documento
+from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, obtener_documento, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios, buscar_domicilio, eliminar_miembro, listar_tipos_de_documentos, listar_documentos, crear_documento
 from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
@@ -299,3 +299,8 @@ def miembro_subir_enlace(id: int):
     return render_template(
         "pages/ecuestre/subir_enlace.html", form=form, miembro=miembro
     )
+
+@bp.route("/<int:miembro_id>/documentos/<int:id>", methods=['GET'])
+def miembro_ver_documento(miembro_id:int, id: int):
+    documento = obtener_documento(id)
+    return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)

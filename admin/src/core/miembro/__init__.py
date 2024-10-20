@@ -160,3 +160,7 @@ def crear_documento(nombre, tipo_de_documento_id, url, miembro_id):
     db.session.add(documento)
     db.session.commit()
     return documento
+
+def obtener_documento(id):
+    documento = DocumentoMiembro.query.get(id)
+    return documento

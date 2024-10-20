@@ -46,16 +46,16 @@
 <script>
 
     function irAlDocumento(id) {
-        window.location.href = `/miembro/{{ miembro.id }}/documentos/${id}`;
+        window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}`;
     }
 
     function editarDocumento(id) {
-        window.location.href = `/miembro/{{ miembro.id }}/documentos/${id}/editar`;
+        window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/editar`;
     }
 
     function borrarDocumento(id) {
         if (confirm('¿Está seguro que desea borrar este documento?')) {
-            window.location.href = `/miembro/{{ miembro.id }}/documentos/${id}/borrar`;
+            window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/borrar`;
         }
     }
 
