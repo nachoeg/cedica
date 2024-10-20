@@ -1,8 +1,9 @@
 from src.core.database import db
+import enum
 
 
 class TipoDeJyA(db.Model):
-    __tablename__ = "tipo_de_jya"
+    __tablename__ = "tipos_de_jya"
 
     id = db.Column(db.Integer, primary_key=True)
     tipo = db.Column(db.String(100), nullable=False)
@@ -11,8 +12,48 @@ class TipoDeJyA(db.Model):
         return self.tipo
 
 
+class TipoDeDocumento(db.Model):
+    __tablename__ = "tipos_de_documento_ecuestre"
+
+    id = db.Column(db.Integer, primary_key=True)
+    tipo = db.Column(db.String(100), nullable=False)
+
+    def __str__(self):
+        return self.tipo
+
+
+class Documento(db.Model):
+    __tablename__ = "documentos_ecuestre"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+    url = db.Column(db.String(100), nullable=False)
+
+    # Relacion con tipo de documento
+    tipo_de_documento_id = db.Column(
+        db.Integer, db.ForeignKey("tipos_de_documento_ecuestre.id"), nullable=False
+    )
+    tipo_de_documento = db.relationship("TipoDeDocumento", backref="documentos")
+
+    # Relacion con ecuestre
+    ecuestre_id = db.Column(db.Integer, db.ForeignKey("ecuestres.id"), nullable=False)
+    ecuestre = db.relationship("Ecuestre", backref="documentos")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "fecha": self.fecha,
+            "tipo": self.tipo_de_documento.tipo if self.tipo_de_documento else None,
+        }
+
+    def __repr__(self):
+        return f'<Documento #{self.id} nombre="{self.nombre}" fecha="{self.fecha}" tipo="{self.tipo}" url="{self.url}" ecuestre="{self.ecuestre}">'
+
+
 class Ecuestre(db.Model):
-    __tablename__ = "ecuestre"
+    __tablename__ = "ecuestres"
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
@@ -26,7 +67,7 @@ class Ecuestre(db.Model):
 
     # Relacion con tipo de j&a
     tipo_de_jya_id = db.Column(
-        db.Integer, db.ForeignKey("tipo_de_jya.id"), nullable=False
+        db.Integer, db.ForeignKey("tipos_de_jya.id"), nullable=False
     )
     tipo_de_jya = db.relationship("TipoDeJyA", backref="ecuestre")
 
@@ -80,7 +121,7 @@ class Ecuestre(db.Model):
 entrenadores_ecuestre = db.Table(
     "entrenadores_ecuestre",
     db.Column(
-        "ecuestre_id", db.Integer, db.ForeignKey("ecuestre.id"), primary_key=True
+        "ecuestre_id", db.Integer, db.ForeignKey("ecuestres.id"), primary_key=True
     ),
     db.Column("miembro_id", db.Integer, db.ForeignKey("miembro.id"), primary_key=True),
 )
@@ -89,7 +130,7 @@ entrenadores_ecuestre = db.Table(
 conductores_ecuestre = db.Table(
     "conductores_ecuestre",
     db.Column(
-        "ecuestre_id", db.Integer, db.ForeignKey("ecuestre.id"), primary_key=True
+        "ecuestre_id", db.Integer, db.ForeignKey("ecuestres.id"), primary_key=True
     ),
     db.Column("miembro_id", db.Integer, db.ForeignKey("miembro.id"), primary_key=True),
 )

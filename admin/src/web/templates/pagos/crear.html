@@ -1,132 +1,84 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Cargar pago {% endblock %}
-
-{% block head %}
-    {{ super() }}
-    <style>
-        /* Estilos generales para el formulario */
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Estilos para las etiquetas y entradas del formulario */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        /* Estilos para el botón de envío */
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Agregar un espaciado entre los elementos */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        /* Estilo adicional para mejorar el aspecto del formulario en dispositivos móviles */
-        @media (max-width: 768px) {
-            form {
-                padding: 15px;
-            }
-
-            button {
-                font-size: 14px;
-            }
-        }
-    </style>
-{% endblock %}
+{% block title %} {{titulo}} {% endblock %}
 
 {% block main %}
-<h1>Crear Pago</h1>
+<h1>{{titulo}}</h1>
 
-<form method="POST" action="{{ url_for('pago.pago_crear') }}">
+<form method="POST" class="formulario">
+    {{ form.hidden_tag() }}
 
-    <!-- Tipo de Pago -->
-    <label for="tipo_id">Tipo de Pago</label>
-    <select name="tipo_id" id="tipo_id" required onchange="toggleDNIField()">
-    <option value="">Seleccionar Tipo de Pago</option>
-        {% for tipo in tipos_pagos %}
-        <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+    <div class="text-red-600">
+        {{ form.tipo_id.label }}
+        {{ form.tipo_id }}
+        {% for error in form.tipo_id.errors %}
+            <div class="text-danger">{{ error }}</div>
         {% endfor %}
-    </select>
-
-    <!-- Monto -->
-    <label for="monto">Monto</label>
-    <input type="number" name="monto" id="monto" required min="0" step="0.01"> <!-- Validación en frontend -->
-    
-    <!-- Descripción -->
-    <label for="descripcion">Descripción</label>
-    <input type="text" name="descripcion" id="descripcion" required>
-    
-    <!-- Fecha de Pago -->
-    <label for="fechaDePago">Fecha de Pago</label>
-    <input type="date" name="fechaDePago" id="fechaDePago" max="{{ fecha_hoy }}" required>
-
-    <!-- DNI del Miembro (Oculto por defecto) -->
-    <div id="miembro_dni_field" style="display:none;">
-        <label for="dni">DNI del Miembro</label>
-        <input type="text" name="dni" id="dni">
     </div>
 
-    <button type="submit">Crear</button>
+    <div class="text-red-600">
+        {{ form.monto.label }}
+        {{ form.monto }}
+        {% for error in form.monto.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.descripcion.label }}
+        {{ form.descripcion }}
+        {% for error in form.descripcion.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.fechaDePago.label }}
+        {{ form.fechaDePago }}
+        {% for error in form.fechaDePago.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600" id="dni_group">
+        {{ form.dni.label }}
+        {{ form.dni }}
+        {% for error in form.dni.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
 </form>
 
-<!-- Script para mostrar/ocultar el campo DNI según el tipo de pago -->
-<script>
-    function toggleDNIField() {
-        var tipoPagoSelect = document.getElementById("tipo_id");
-        var dniField = document.getElementById("miembro_dni_field");
-        var selectedOption = tipoPagoSelect.options[tipoPagoSelect.selectedIndex].text;
 
-        // Mostrar el campo DNI solo si el tipo de pago es "Honorario"
-        if (selectedOption.toLowerCase() === "honorario") {
-            dniField.style.display = "block";
-        } else {
-            dniField.style.display = "none";
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('[name="fechaDePago"]').setAttribute('max', today);
+
+        const tipoSelect = document.getElementById('tipo_id');
+        const dniGroup = document.getElementById('dni_group');
+        const dniField = document.querySelector('[name="dni"]');
+
+        function toggleDniField() {
+            const selectedOption = tipoSelect.options[tipoSelect.selectedIndex].text;
+            if (selectedOption === 'Honorario') {
+                dniGroup.style.display = 'block';
+                dniField.setAttribute('required', 'required'); // Hacer que el DNI sea requerido
+            } else {
+                dniGroup.style.display = 'none';
+                dniField.removeAttribute('required'); // Eliminar el atributo required si no es Honorario
+            }
         }
-    }
+
+        // Verificar el estado inicial al cargar la página
+        toggleDniField();
+
+        // Escuchar los cambios en el select de tipo de pago
+        tipoSelect.addEventListener('change', toggleDniField);
+    });
 </script>
 {% endblock %}

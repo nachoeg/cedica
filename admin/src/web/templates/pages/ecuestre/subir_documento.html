@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Subir documento ecuestre {% endblock %}
+
+{% block main %}
+
+
+<form novalidate method="POST" class="formulario" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+  <div class="formulario-header">
+    <h1> Subir documento ecuestre </h1>
+  </div>
+  <div class="formulario-body">
+    <div>
+      {{ form.nombre.label }} {{ form.nombre }}
+      {% for error in form.nombre.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.tipo.label }} {{ form.tipo }}
+      {% for error in form.tipo.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.archivo.label }} {{ form.archivo }}
+      {% for error in form.archivo.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.submit() }}
+    </div>
+  </div>
+</form>
+
+{% endblock %}

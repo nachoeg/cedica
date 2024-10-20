@@ -87,9 +87,20 @@ def run():
         "Actividades Recreativas",
         "Equitación",
     ]
-
+    
     for tipo in tipos_de_jya:
         ecuestre.crear_tipo_de_jya(tipo=tipo)
+        
+    tipos_de_documento_ecuestre = [
+        "Ficha general del caballo",
+        "Planificación de entrenamiento",
+        "Informe de Evolución",
+        "Carga de Imágenes",
+        "Registro veterinario"
+    ]
+    
+    for tipo in tipos_de_documento_ecuestre:
+        ecuestre.crear_tipo_de_documento(tipo=tipo)
 
     j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214428864)
     j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='La Pampa', localidad_nacimiento='Santa Rosa', domicilio_actual='62 n312',telefono_actual=2214569794, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214678864)
@@ -157,6 +168,22 @@ def run():
 
     for tipo in tipos_de_pagos:
         pago.cargar_tipo_pago(nombre=tipo)
+
+    pago1 = pago.crear_pago(
+        monto=10000,
+        descripcion="Horas extras",
+        fechaDePago="2024-02-11",
+        miembro_id=miembro1.id,
+        tipo_id=1
+    )
+
+    pago2 = pago.crear_pago(
+        monto=20000,
+        descripcion="Mantenimiento",
+        fechaDePago="2024-03-12",
+        tipo_id=2
+    )
+
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():

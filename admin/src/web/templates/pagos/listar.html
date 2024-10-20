@@ -1,81 +1,53 @@
 {% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
 
 {% block title %} Listado de Pagos {% endblock %}
 
 {% block main %}
 
-<h1>Listado de Pagos</h1>
+{% set configuracion = {
+'encabezados': [
+    {'id': 'fechaDePago', 'nombre': 'Fecha de pago', 'ordenar': True},
+    {'id': 'tipo_pago', 'nombre': 'Tipo de pago'},
+    {'id': 'monto', 'nombre': 'Monto'},
+    {'id': 'descripcion', 'nombre': 'Descripción'},
+    {'id': 'beneficiario', 'nombre': 'Beneficiario (DNI)'}
+],
+'acciones': [
+    {'nombre': 'Ver', 'funcion': 'verPago'},
+    {'nombre': 'Editar', 'funcion': 'editarPago'},
+    {'nombre': 'Borrar', 'funcion': 'borrarPago'},
+],
+'filtros': [
+    {'id': 'fecha_inicio', 'nombre': 'Fecha Inicio', 'tipo': 'fecha', 'valor': fecha_inicio},
+    {'id': 'fecha_fin', 'nombre': 'Fecha Fin', 'tipo': 'fecha', 'valor': fecha_fin},
+    {'id': 'tipo_pago_id', 'nombre': 'Tipo de Pago', 'tipo': 'seleccion', 'opciones': tipos_pago | map(attribute='nombre'), 'valor': tipo_pago_id},
+    {'id': 'beneficiario', 'nombre': 'Beneficiario (DNI)', 'tipo': 'texto', 'valor': beneficiario}
+],
+'crear': {
+    'url': url_for('pago.pago_crear'),
+    'nombre': 'Crear Pago'
+}
+} %}
 
-<form method="GET">
-    <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}" placeholder="Fecha Inicio">
-    <input type="date" name="fecha_fin" value="{{ fecha_fin }}" placeholder="Fecha Fin">
-    
-    <select name="tipo_pago_id">
-        <option value="">Selecciona Tipo de Pago</option>
-        {% for tipo in tipos_pago %}
-            <option value="{{ tipo.id }}" {% if tipo_pago_id == tipo.id %}selected{% endif %}>
-                {{ tipo.nombre }}
-            </option>
-        {% endfor %}
-    </select>
-    
-    <button type="submit">Filtrar</button>
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>Tipo de Pago</th>
-            <th>Monto</th>
-            <th>Descripción</th>
-            <th>
-                <a href="{{ url_for('pago.pago_listar', orden='fechaDePago', asc=1 if not ascendente else 0, pagina=page) }}">
-                    Fecha de Pago
-                    {% if orden_campo == 'fechaDePago' %}
-                        {% if ascendente %}
-                            ↑
-                        {% else %}
-                            ↓
-                        {% endif %}
-                    {% endif %}
-                </a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for pago in pagos_paginados.items %}
-        <tr>
-            <td>{{ pago.tipo_pago.nombre }}</td>
-            <td>{{ pago.monto }}</td>
-            <td>{{ pago.descripcion }}</td>
-            <td>{{ pago.fechaDePago.strftime('%Y-%m-%d') }}</td>
-            <td>
-                <a href="{{ url_for('pago.pago_mostrar', id=pago.id) }}">Ver</a>
-                <form action="{{ url_for('pago.pago_eliminar', id=pago.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este pago?');">Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="4">No se encontraron pagos.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- Paginación -->
-<div class="pagination">
-    {% for page in pagos_paginados.iter_pages() %}
-        {% if page %}
-            <a href="{{ url_for('pago.pago_listar', orden=orden_campo, asc=ascendente, pagina=page) }}">{{ page }}</a>
-        {% else %}
-            <span>…</span>
-        {% endif %}
-    {% endfor %}
-</div>
+{{ tabla(configuracion, pagos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
 {% endblock %}
 
+{% block scripts %}
+<script>
+    function verPago(id) {
+        window.location.href = `/pagos/${id}`;
+    }
 
-<a href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Modificar</a>
+    function borrarPago(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar este pago?')) {
+            window.location.href = `/pagos/${id}/eliminar`;
+        }
+    }
+
+    function editarPago(id) {
+        window.location.href = `/pagos/${id}/editar`;
+    }
+</script>
+{% endblock %}

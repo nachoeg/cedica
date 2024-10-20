@@ -1,10 +1,22 @@
 {% from 'components/iconos.html' import dropdown_icon, search_icon,
-ordering_icon, chevron_left_icon, sliders_horizontal_icon, plus_icon %} {%
+ordering_icon, chevron_left_icon, sliders_horizontal_icon, plus_icon, upload_icon %} {%
 macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, orden, ordenar_por) %}
 
 <div id="tabla"
   class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden">
   <div class="flex items-center space-x-2 px-6 py-4">
+    <!-- Boton subir -->
+    {% if configuracion.subir %}
+    <a href="{{ configuracion.subir.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
+      {{ upload_icon('size-4') }} {{ configuracion.subir.nombre }}
+    </a>
+    {% endif %}
+    <!-- Boton enlace -->
+    {% if configuracion.enlace %}
+    <a href="{{ configuracion.enlace.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
+      {{ plus_icon('size-4') }} {{ configuracion.enlace.nombre }}
+    </a>
+    {% endif %}
     <!-- Boton crear -->
     {% if configuracion.crear %}
     <a href="{{ configuracion.crear.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
@@ -184,7 +196,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
         </button>
         {% endfor %}
       </div>
-      <button type="button" id="tabla-siguiente-pagina" {% if pagina==cant_paginas %} disabled {% endif %}
+      <button type="button" id="tabla-siguiente-pagina" {% if pagina>=cant_paginas %} disabled {% endif %}
         onclick="cambiarPaginaTabla('{{ pagina + 1 }}')"
         class="{{ botonPaginacionClases }} {{ botonPaginacionInactivo }}">
         {{ chevron_left_icon('size-3 rotate-180') }}
