@@ -8,7 +8,7 @@ def listar_pagos(
     fecha_fin="",
     tipo_pago_id="",
     beneficiario="",
-    ordenar_por="fechaDePago",
+    ordenar_por="fecha_pago",
     orden="asc",
     pagina=1,
     cant_por_pagina=10,
@@ -16,9 +16,9 @@ def listar_pagos(
     query = Pago.query.join(TipoDePago).join(Miembro, isouter=True)
 
     if fecha_inicio:
-        query = query.filter(Pago.fechaDePago >= datetime.strptime(fecha_inicio, '%Y-%m-%d'))
+        query = query.filter(Pago.fecha_pago >= datetime.strptime(fecha_inicio, '%Y-%m-%d'))
     if fecha_fin:
-        query = query.filter(Pago.fechaDePago <= datetime.strptime(fecha_fin, '%Y-%m-%d'))
+        query = query.filter(Pago.fecha_pago <= datetime.strptime(fecha_fin, '%Y-%m-%d'))
     if tipo_pago_id:
         pago_tipo = TipoDePago.query.filter_by(nombre=tipo_pago_id).first()
         query = query.filter(Pago.tipo_id == pago_tipo.id)

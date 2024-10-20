@@ -9,7 +9,7 @@ bp = Blueprint('pago', __name__, url_prefix='/pagos')
 @bp.get("/")
 def pago_listar():
     orden = request.args.get("orden", "asc")
-    ordenar_por = request.args.get("ordenar_por", "fechaDePago")
+    ordenar_por = request.args.get("ordenar_por", "fecha_pago")
     pagina = int(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
     search_fecha_inicio = request.args.get("fecha_inicio", "")
@@ -53,7 +53,7 @@ def pago_crear():
     if request.method == "POST" and form.validate_on_submit():
         monto = form.monto.data
         descripcion = form.descripcion.data
-        fechaDePago = form.fechaDePago.data
+        fecha_pago = form.fecha_pago.data
         tipo_id = form.tipo_id.data
 
         tipo_pago = obtener_tipo_pago(tipo_id)
@@ -68,7 +68,7 @@ def pago_crear():
                 flash(f"No se encontró ningún miembro con el DNI {miembro_dni}.", 'danger')
                 return redirect(url_for('pago.pago_crear'))
 
-        crear_pago(monto=monto, descripcion=descripcion, fechaDePago=fechaDePago, tipo_id=tipo_id, miembro_id=miembro_id)
+        crear_pago(monto=monto, descripcion=descripcion, fecha_pago=fecha_pago, tipo_id=tipo_id, miembro_id=miembro_id)
 
         flash("Pago registrado con éxito.", 'success')
         return redirect(url_for('pago.pago_listar'))
@@ -107,7 +107,7 @@ def pago_editar(id: int):
         pago.tipo_id = form.tipo_id.data
         pago.monto = form.monto.data
         pago.descripcion = form.descripcion.data
-        pago.fechaDePago = form.fechaDePago.data        
+        pago.fecha_pago = form.fecha_pago.data        
 
         tipo_pago = obtener_tipo_pago(form.tipo_id.data)
         miembro_dni = form.dni.data if tipo_pago.nombre == 'Honorario' else None

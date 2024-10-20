@@ -33,9 +33,9 @@
     </div>
 
     <div class="text-red-600">
-        {{ form.fechaDePago.label }}
-        {{ form.fechaDePago }}
-        {% for error in form.fechaDePago.errors %}
+        {{ form.fecha_pago.label }}
+        {{ form.fecha_pago }}
+        {% for error in form.fecha_pago.errors %}
         <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
@@ -59,7 +59,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const today = new Date().toISOString().split('T')[0];
-        document.querySelector('[name="fechaDePago"]').setAttribute('max', today);
+        document.querySelector('[name="fecha_pago"]').setAttribute('max', today);
 
         const tipoSelect = document.getElementById('tipo_id');
         const dniGroup = document.getElementById('dni_group');
