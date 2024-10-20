@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+
+{% block title %}Jinetes y Amazonas{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'encabezados': [
+{'id': 'id', 'nombre': 'Id'},
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
+{'id': 'dni', 'nombre': 'DNI'},
+{'id': 'sede', 'nombre': 'Sede'},
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'verJYA'},
+{'nombre': 'Editar', 'funcion': 'editarJYA'},
+{'nombre': 'Borrar','funcion': 'borrarJYA'}
+],
+'filtros': [
+{'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+],
+'crear': {
+'url': url_for('jinetes_y_amazonas.nuevo_j_y_a'),
+'nombre': 'Crear JyA'
+}
+}
+%}
+
+{{ tabla(configuracion, jinetes, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verJYA(id) {
+    window.location.href = `/jinetes_y_amazonas/${id}`;
+  }
+
+  function editarJYA(id) {
+    window.location.href = `/jinetes_y_amazonas/${id}/editar`;
+  }
+
+  function borrarJYA(id) {
+    if (confirm('¿Está seguro que desea borrar este cobro?')) {
+      window.location.href = `/jinetes_y_amazonas/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

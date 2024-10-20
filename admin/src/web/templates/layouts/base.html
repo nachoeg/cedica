@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/tema.js')}}"></script>
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
+    {% endblock %}
+</head>
+
+<body class="bg-gray-50 dark:bg-neutral-900 text-gray-950 dark:text-white h-screen flex flex-col">
+
+    <!-- Navbar -->
+    {% include 'components/navbar.html' %}
+
+    <!-- Main -->
+    <main class="max-w-[90rem] w-full mx-auto p-2 sm:p-5 lg:px-8">
+        {% include 'components/mensajes_flash.html' %}
+        {% block main %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>{% block footer %}{% endblock %}</footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('serve_preline_js') }}"></script>
+    {% block scripts %}{% endblock %}
+
+</body>
+
+</html>

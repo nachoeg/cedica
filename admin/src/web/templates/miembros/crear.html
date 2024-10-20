@@ -1,0 +1,158 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Datos del Miembro {% endblock %}
+
+{% block main %}
+
+<form method="POST" class="formulario">
+    {{ form.hidden_tag() }}
+
+    <div class="text-red-600">
+        {{ form.nombre.label }}
+        {{ form.nombre }}
+        {% for error in form.nombre.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.apellido.label }}
+        {{ form.apellido }}
+        {% for error in form.apellido.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.dni.label }}
+        {{ form.dni }}
+        {% for error in form.dni.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.email.label }}
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.telefono.label }}
+        {{ form.telefono }}
+        {% for error in form.telefono.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.nombreContactoEmergencia.label }}
+        {{ form.nombreContactoEmergencia }}
+        {% for error in form.nombreContactoEmergencia.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.telefonoContactoEmergencia.label }}
+        {{ form.telefonoContactoEmergencia }}
+        {% for error in form.telefonoContactoEmergencia.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.obraSocial.label }}
+        {{ form.obraSocial }}
+        {% for error in form.obraSocial.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.numeroAfiliado.label }}
+        {{ form.numeroAfiliado }}
+        {% for error in form.numeroAfiliado.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.condicion_id.label }}
+        {{ form.condicion_id }}
+        {% for error in form.condicion_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.profesion_id.label }}
+        {{ form.profesion_id }}
+        {% for error in form.profesion_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.puesto_laboral_id.label }}
+        {{ form.puesto_laboral_id }}
+        {% for error in form.puesto_laboral_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.calle.label }}
+        {{ form.calle }}
+        {% for error in form.calle.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.numero.label }}
+        {{ form.numero }}
+        {% for error in form.numero.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.piso.label }}
+        {{ form.piso }}
+        {% for error in form.piso.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.dpto.label }}
+        {{ form.dpto }}
+        {% for error in form.dpto.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.localidad.label }}
+        {{ form.localidad }}
+        {% for error in form.localidad.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.alias.label }}
+        {{ form.alias }}
+        {% for error in form.alias.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}

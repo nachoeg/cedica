@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+{% block title %} Nuevo cobro {% endblock %}
+{% block main %}
+<form method="post" novalidate class="formulario">
+    {{ form.csrf_token }}
+    <div>{{ form.joa.label }} {{ form.joa }}</div>
+    <div>{{ form.recibio_el_dinero.label }}: {{ form.recibio_el_dinero }}</div>
+    <div>
+        {{ form.fecha_pago.label }}
+        {{ form.fecha_pago }}
+        {% for error in form.fecha_pago.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.medio_de_pago.label }}
+        {{ form.medio_de_pago }}
+        {% for error in form.medio_de_pago.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.monto.label }}
+        {{ form.monto }}
+        {% for error in form.monto.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.observaciones.label }}
+        {{ form.observaciones }}
+        {% for error in form.observaciones.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}

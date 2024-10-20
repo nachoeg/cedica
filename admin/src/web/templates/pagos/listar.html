@@ -1,0 +1,53 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+
+{% block title %} Listado de Pagos {% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'encabezados': [
+    {'id': 'fechaDePago', 'nombre': 'Fecha de pago', 'ordenar': True},
+    {'id': 'tipo_pago', 'nombre': 'Tipo de pago'},
+    {'id': 'monto', 'nombre': 'Monto'},
+    {'id': 'descripcion', 'nombre': 'Descripción'},
+    {'id': 'beneficiario', 'nombre': 'Beneficiario (DNI)'}
+],
+'acciones': [
+    {'nombre': 'Ver', 'funcion': 'verPago'},
+    {'nombre': 'Editar', 'funcion': 'editarPago'},
+    {'nombre': 'Borrar', 'funcion': 'borrarPago'},
+],
+'filtros': [
+    {'id': 'fecha_inicio', 'nombre': 'Fecha Inicio', 'tipo': 'fecha', 'valor': fecha_inicio},
+    {'id': 'fecha_fin', 'nombre': 'Fecha Fin', 'tipo': 'fecha', 'valor': fecha_fin},
+    {'id': 'tipo_pago_id', 'nombre': 'Tipo de Pago', 'tipo': 'seleccion', 'opciones': tipos_pago | map(attribute='nombre'), 'valor': tipo_pago_id},
+    {'id': 'beneficiario', 'nombre': 'Beneficiario (DNI)', 'tipo': 'texto', 'valor': beneficiario}
+],
+'crear': {
+    'url': url_for('pago.pago_crear'),
+    'nombre': 'Crear Pago'
+}
+} %}
+
+{{ tabla(configuracion, pagos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function verPago(id) {
+        window.location.href = `/pagos/${id}`;
+    }
+
+    function borrarPago(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar este pago?')) {
+            window.location.href = `/pagos/${id}/eliminar`;
+        }
+    }
+
+    function editarPago(id) {
+        window.location.href = `/pagos/${id}/editar`;
+    }
+</script>
+{% endblock %}

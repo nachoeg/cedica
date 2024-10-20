@@ -1,0 +1,12 @@
+{% macro pilled_nav(tabs) %}
+<nav class="flex w-fit gap-x-1 transition mb-4 bg-transparent">
+  {% for tab in tabs %}
+  {% set active = tab.url == request.path %}
+  <a class="px-3 py-2 inline-flex items-center gap-2 rounded-lg text-sm focus:outline-none  text-gray-800 dark:text-neutral-100 hover:text-gray-600 dark:hover:text-neutral-300
+  {% if active %} bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 {% endif %}"
+    href="{{ tab.url }}" {% if active %} aria-current="page" {% endif %}>
+    {{ tab.nombre }}
+  </a>
+  {% endfor %}
+</nav>
+{% endmacro %}

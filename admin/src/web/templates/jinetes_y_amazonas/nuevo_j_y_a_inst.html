@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+{% block title %} Nuevo jinete/amazona {% endblock %}
+{% block main %}
+    <form method="post" novalidate>
+        {{ form.csrf_token }}
+        <div>
+            {{ form.propuesta_trabajo.label }}
+            {{ form.propuesta_trabajo }}<br>
+            {% for error in form.propuesta_trabajo.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.condicion.label }}
+            {{ form.condicion }}<br>
+            {% for error in form.condicion.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.sede.label }}
+            {{ form.sede }}<br>
+            {% for error in form.sede.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>{{ form.profesor_id.label }}: {{ form.profesor_id }}</div>
+        <div>{{ form.conductor_caballo_id.label }}: {{ form.conductor_caballo_id }}</div>
+        <div>{{ form.caballo_id.label }}: {{ form.caballo_id }}</div>
+        <div>{{ form.auxiliar_pista_id.label }}: {{ form.auxiliar_pista_id }}</div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+{% endblock %}

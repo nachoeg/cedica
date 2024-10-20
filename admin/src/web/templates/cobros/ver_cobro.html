@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Cobro {{cobro.id}}{% endblock %}
+
+{% block main %}
+
+<h1>Detalles de Cobro</h1>
+
+<p><strong>Jinete/Amazona:</strong> {{ cobro.joa.nombre }}</p>
+<p><strong>Fecha de Pago:</strong> {{ cobro.fecha_pago }}</strong>
+<p><strong>Medio de pago:</strong> {{ cobro.medio_de_pago }}
+</p>
+<p><strong>Monto:</strong> {{ cobro.monto }}</p>
+<p><strong>Observaciones:</strong> {{ cobro.observaciones }}</p>
+<a href="{{ url_for('cobros.editar_cobro', id=cobro.id) }}">Editar</a>
+<form action="#" method="POST" style="display:inline;">
+  <button type="submit"
+    onclick="return confirm('¿Estás seguro de que deseas eliminar este cobro?');">Eliminar</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% from 'components/iconos.html' import chevron_left_icon %}
+
+{% extends "layouts/base.html" %}
+{% block title %} Error {% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block main %}
+<div class="max-w-[50rem] flex flex-col mx-auto size-full text-center py-10 px-4">
+
+    <h1 class="text-7xl font-bold sm:text-9xl text-gray-800 dark:text-white">{{ error.code }}</h1>
+    <h2 class="text-4xl text-gray-800 dark:text-white sm:text-6xl">{{error.name}}</h2>
+    <p class=" text-gray-600 dark:text-neutral-400 mt-3">{{ error.description }}</p>
+    <div class="mt-5 flex flex-col justify-center items-center gap-2 sm:flex-row sm:gap-3">
+        <a class="btn btn-primary" href="/">
+            {{chevron_left_icon()}}
+            Volver al inicio
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
