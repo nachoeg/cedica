@@ -2,9 +2,28 @@ from src.core.database import db
 from src.core.ecuestre.ecuestre import Ecuestre, TipoDeJyA
 
 
-def listar_ecuestres():
-    ecuestres = Ecuestre.query.all()
-    return ecuestres
+def listar_ecuestres(
+    nombre_filtro="",
+    tipo_jya_filtro="",
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pagina=10,
+):
+    query = Ecuestre.query.join(TipoDeJyA).filter(
+        Ecuestre.nombre.ilike(f"%{nombre_filtro}%"),
+        TipoDeJyA.tipo.ilike(f"%{tipo_jya_filtro}%"),
+    )
+
+    cant_resultados = query.count()
+
+    if orden == "asc":
+        query = query.order_by(getattr(Ecuestre, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(Ecuestre, ordenar_por).desc())
+
+    ecuestres = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
+    return ecuestres, cant_resultados
 
 
 def listar_tipos_de_jya():

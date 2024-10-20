@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Email, Length
 from wtforms.fields import (
     DateTimeField,
     SelectField,
-    DecimalField,
+    DateField,
     StringField,
     SubmitField,
 )
@@ -15,9 +15,8 @@ class EcuestreForm(FlaskForm):
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del ecuestre")]
     )
-    fecha_nacimiento = DateTimeField(
+    fecha_nacimiento = DateField(
         "Fecha de nacimiento",
-        format="%d/%m/%Y",
         validators=[DataRequired("Ingrese una fecha de nacimiento")],
         default=datetime.now(),
     )
@@ -29,9 +28,8 @@ class EcuestreForm(FlaskForm):
         "Pelaje", validators=[DataRequired("Ingrese el pelaje del ecuestre")]
     )
     es_compra = SelectField("Es compra", choices=[("True", "Sí"), ("False", "No")])
-    fecha_ingreso = DateTimeField(
+    fecha_ingreso = DateField(
         "Fecha de ingreso",
-        format="%d/%m/%Y",
         validators=[DataRequired("Ingrese una fecha de ingreso")],
         default=datetime.now(),
     )

@@ -4,9 +4,9 @@ from src.core.usuarios import Usuario
 from sqlalchemy import asc, desc
 from src.core.database import db
 
-miembro_bp = Blueprint('miembro', __name__, url_prefix='/miembros')
+bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
-@miembro_bp.route('/', methods=['GET'])
+@bp.route('/', methods=['GET'])
 def miembro_listar():
     search_nombre = request.args.get('nombre', '')
     search_apellido = request.args.get('apellido', '')
@@ -48,7 +48,7 @@ def miembro_listar():
     )
 
 
-@miembro_bp.route('/crear', methods=['GET', 'POST'])
+@bp.route('/crear', methods=['GET', 'POST'])
 def miembro_crear():
     profesiones = Profesion.query.all()
     condiciones = CondicionDeTrabajo.query.all()
@@ -125,12 +125,12 @@ def miembro_crear():
     return render_template('miembros/crear.html', profesiones=profesiones, condiciones=condiciones, puestos=puestos)
 
 
-@miembro_bp.route('/<int:id>/mostrar', methods=['GET'])
+@bp.route('/<int:id>/mostrar', methods=['GET'])
 def miembro_mostrar(id):
     miembro = Miembro.query.get_or_404(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
-@miembro_bp.route('/<int:id>/editar', methods=['GET', 'POST'])
+@bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 def miembro_editar(id):
     miembro = Miembro.query.get_or_404(id)
     profesiones = Profesion.query.all()
@@ -157,7 +157,7 @@ def miembro_editar(id):
 
     return render_template('miembros/editar.html', miembro=miembro, profesiones=profesiones, condiciones=condiciones, puestos=puestos)
 
-@miembro_bp.route('/<int:id>/eliminar', methods=['POST'])
+@bp.route('/<int:id>/eliminar', methods=['POST'])
 def miembro_eliminar(id):
     miembro = Miembro.query.get_or_404(id)
     db.session.delete(miembro)

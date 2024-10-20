@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.core.ecuestre import (
-    Ecuestre,
-    TipoDeJyA,
     crear_ecuestre,
     eliminar_ecuestre,
+    obtener_ecuestre,
     listar_tipos_de_jya,
+    listar_ecuestres,
     guardar_cambios,
 )
 from src.core.ecuestre.ecuestre_form import EcuestreForm
@@ -22,19 +22,9 @@ def index():
     nombre_filtro = request.args.get("nombre", "")
     tipo_jya_filtro = request.args.get("tipo_jya", "")
 
-    query = Ecuestre.query.join(TipoDeJyA).filter(
-        Ecuestre.nombre.ilike(f"%{nombre_filtro}%"),
-        TipoDeJyA.tipo.ilike(f"%{tipo_jya_filtro}%"),
+    ecuestres, cant_resultados = listar_ecuestres(
+        nombre_filtro, tipo_jya_filtro, ordenar_por, orden, pagina, cant_por_pagina
     )
-
-    cant_resultados = query.count()
-
-    if orden == "asc":
-        query = query.order_by(getattr(Ecuestre, ordenar_por).asc())
-    else:
-        query = query.order_by(getattr(Ecuestre, ordenar_por).desc())
-
-    ecuestres = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
 
     tipos_jya = listar_tipos_de_jya()
 
@@ -58,7 +48,7 @@ def index():
 
 @bp.get("/<int:id>/")
 def ver(id: int):
-    ecuestre = Ecuestre.query.get(id)
+    ecuestre = obtener_ecuestre(id)
     return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre)
 
 
@@ -95,7 +85,7 @@ def crear():
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 def editar(id: int):
-    ecuestre = Ecuestre.query.get(id)
+    ecuestre = obtener_ecuestre(id)
     form = EcuestreForm(obj=ecuestre)
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
 

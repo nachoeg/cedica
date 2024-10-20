@@ -7,10 +7,11 @@ from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from .controllers.miembro import miembro_bp
+from .controllers.miembro import bp as miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 from src.web.controllers.cobros import bp as cobros_bp
+from src.web.controllers.pagos import bp as pagos_bp
 from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
 from src.web.storage import storage
 
@@ -66,5 +67,7 @@ def create_app(env="development", static_folder="../../static"):
     app.register_blueprint(miembro_bp)
     
     app.register_blueprint(cobros_bp)
+
+    app.register_blueprint(pagos_bp)
 
     return app

@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{titulo}} {% endblock %}
+
+{% block main %}
+<h1>{{titulo}}</h1>
+
+<form method="POST" class="formulario">
+    {{ form.hidden_tag() }}
+
+    <div class="text-red-600">
+        {{ form.tipo_id.label }}
+        {{ form.tipo_id }}
+        {% for error in form.tipo_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.monto.label }}
+        {{ form.monto }}
+        {% for error in form.monto.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.descripcion.label }}
+        {{ form.descripcion }}
+        {% for error in form.descripcion.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600">
+        {{ form.fechaDePago.label }}
+        {{ form.fechaDePago }}
+        {% for error in form.fechaDePago.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="text-red-600" id="dni_group">
+        {{ form.dni.label }}
+        {{ form.dni }}
+        {% for error in form.dni.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('[name="fechaDePago"]').setAttribute('max', today);
+
+        const tipoSelect = document.getElementById('tipo_id');
+        const dniGroup = document.getElementById('dni_group');
+        const dniField = document.querySelector('[name="dni"]');
+
+        function toggleDniField() {
+            const selectedOption = tipoSelect.options[tipoSelect.selectedIndex].text;
+            if (selectedOption === 'Honorario') {
+                dniGroup.style.display = 'block';
+                dniField.setAttribute('required', 'required'); // Hacer que el DNI sea requerido
+            } else {
+                dniGroup.style.display = 'none';
+                dniField.removeAttribute('required'); // Eliminar el atributo required si no es Honorario
+            }
+        }
+
+        // Verificar el estado inicial al cargar la página
+        toggleDniField();
+
+        // Escuchar los cambios en el select de tipo de pago
+        tipoSelect.addEventListener('change', toggleDniField);
+    });
+</script>
+{% endblock %}

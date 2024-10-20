@@ -2,7 +2,7 @@ from src.core import miembro
 from src.core import cobros, jinetes_y_amazonas
 from src.core.seeds_usuarios import cargar_usuarios
 from src.core import ecuestre
-
+from src.core import pago
 
 def run():
     
@@ -148,6 +148,31 @@ def run():
     ecuestre.asignar_entrenador(ecuestre1, miembro2)
     ecuestre.asignar_conductor(ecuestre2, miembro2)
     ecuestre.asignar_entrenador(ecuestre2, miembro2)
+
+    tipos_de_pagos = [
+        "Honorario",
+        "Provedor",
+        "Gastos varios"
+    ]
+
+    for tipo in tipos_de_pagos:
+        pago.cargar_tipo_pago(nombre=tipo)
+
+    pago1 = pago.crear_pago(
+        monto=10000,
+        descripcion="Horas extras",
+        fechaDePago="2024-02-11",
+        miembro_id=miembro1.id,
+        tipo_id=1
+    )
+
+    pago2 = pago.crear_pago(
+        monto=20000,
+        descripcion="Mantenimiento",
+        fechaDePago="2024-03-12",
+        tipo_id=2
+    )
+
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
