@@ -81,6 +81,20 @@
             {% endfor %}
         </div>
         <div>
+            {{ form.becado.label }}
+            {{ form.becado }}<br>
+            {% for error in form.becado.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.porcentaje_beca.label }}
+            {{ form.porcentaje_beca }}<br>
+            {% for error in form.porcentaje_beca.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
             {{ form.submit() }}
         </div>
     </form>

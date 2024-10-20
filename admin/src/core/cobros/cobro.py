@@ -23,7 +23,7 @@ class Cobro(db.Model):
     recibio_el_dinero_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
     recibio_el_dinero = db.relationship('Miembro')
 
-    joa_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
+    joa_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id', ondelete='CASCADE'))
 
     joa = db.relationship('JineteOAmazona')
 

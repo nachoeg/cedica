@@ -92,3 +92,39 @@ def encontrar_archivo(archivo_id):
     archivo = Archivo_JYA.query.get_or_404(archivo_id)
     
     return archivo
+
+def listar_documentos(
+    jya_id,
+    nombre_filtro="",
+    tipo_filtro="",
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pagina=10,
+):
+    if tipo_filtro == "":
+        query = Archivo_JYA.query.filter(
+            Archivo_JYA.jya_id == jya_id,
+            Archivo_JYA.titulo.ilike(f'%{nombre_filtro}%'),
+        )
+    else:
+            query = Archivo_JYA.query.filter(
+            Archivo_JYA.jya_id == jya_id,
+            Archivo_JYA.titulo.ilike(f'%{nombre_filtro}%'),
+            Archivo_JYA.tipo_archivo == tipo_filtro
+        )
+    
+    cant_resultados = query.count()
+
+    if orden == "asc":
+        query = query.order_by(getattr(Archivo_JYA, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(Archivo_JYA, ordenar_por).desc())
+
+    archivos = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
+    return archivos, cant_resultados
+
+
+def listar_tipos_de_documentos():
+    tipos_de_documentos = Archivo_JYA.listar_tipos()
+    return tipos_de_documentos
