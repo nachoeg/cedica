@@ -12,6 +12,37 @@ class Diagnostico(db.Model):
     def __repr__(self):
         return f'Diagnostico: {self.value}'
 
+
+class Familiar(db.Model):
+    __tablename__="familiares"
+
+    class NivelEscolaridad(enum.Enum):
+        primario = "Primario"
+        secundario = "Secundario"
+        terciario = "Terciario"
+        universitario = "Universitario"
+
+        def __str__(self):
+            return f'{self.value}'    
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    jya_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
+    jya = db.relationship('JineteOAmazona',cascade = "all,delete")
+
+    parentesco = db.Column(db.String(40))
+    nombre = db.Column(db.String(30))
+    apellido = db.Column(db.String(30))
+    dni = db.Column(db.Integer)
+    domicilio_actual = db.Column(db.String(60))
+    celular_actual = db.Column(db.BigInteger)
+    email = db.Column(db.String(20))
+    nivel_escolaridad = db.Column(Enum(NivelEscolaridad))
+    ocupacion = db.Column(db.String(40))
+
+    def __repr__(self):
+        return f'Familiar: {self.nombre}'
+    
 class JineteOAmazona(db.Model):
     __tablename__ = "jinetesyamazonas"
 
@@ -45,6 +76,8 @@ class JineteOAmazona(db.Model):
 
     certificado_discapacidad = db.Column(db.Boolean)
     diagnostico_id = db.Column(db.Integer, db.ForeignKey("diagnosticos.id"))
+    diagnostico = db.relationship('Diagnostico')
+
     diagnostico_otro = db.Column(db.String(30))
     tipo_discapacidad = db.Column(Enum(TipoDeDiscapacidad))
 
@@ -66,7 +99,7 @@ class JineteOAmazona(db.Model):
         def __str__(self):
             return f'{self.value}'
 
-    
+    tiene_deuda = db.Column(db.Boolean)
     asignacion_familiar = db.Column(db.Boolean)
     tipo_asignacion_familiar = db.Column(Enum(TipoDeAsignacionFamiliar))
     beneficiario_pension = db.Column(db.Boolean)
@@ -116,11 +149,20 @@ class JineteOAmazona(db.Model):
     propuesta_trabajo = db.Column(Enum(PropuestaTrabajo))
     condicion = db.Column(Enum(Condicion))
     sede = db.Column(Enum(Sede))
-    #profesor -> relacion con la tabla de miembros del equipo
-    #conductor_caballo -> relacion con la tabla de miembros del equipo 
-    #caballo -> relacion con la tabla de caballos
-    #auxiliar de pista -> relacion con la tabla de miembros de equipo
 
+    profesor_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    profesor = db.relationship('Miembro', foreign_keys=[profesor_id])
+
+    conductor_caballo_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    conductor_caballo = db.relationship('Miembro', foreign_keys=[conductor_caballo_id])
+
+    caballo_id = db.Column(db.Integer, db.ForeignKey('ecuestres.id'))
+    caballo = db.relationship('Ecuestre', foreign_keys=[caballo_id])
+
+    auxiliar_pista_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    auxiliar_pista = db.relationship('Miembro', foreign_keys=[auxiliar_pista_id])
+
+    documentos = db.relationship("Archivo_JYA", back_populates="jya")
     #TODO armar tabla de familiares a cargo
     #familiares a cargo
     #acá voy a tener que tener una tabla de familiares? es muchos a muchos
@@ -140,6 +182,49 @@ class JineteOAmazona(db.Model):
         else:
             return JineteOAmazona.query.order_by(JineteOAmazona.nombre.asc()).paginate(page=pagina, per_page=por_pagina)
 
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "apellido": self.apellido,
+            "dni": self.dni,
+            "tiene_deuda": self.tiene_deuda,
+            "edad": self.edad,
+            "fecha_nacimiento": self.fecha_nacimiento,
+            "provincia_nacimiento": self.provincia_nacimiento,
+            "localidad_nacimiento": self.localidad_nacimiento,
+            "domicilio_actual": self.domicilio_actual,
+            "telefono_actual": self.telefono_actual,
+            "contacto_emer_nombre": self.contacto_emer_nombre,
+            "contacto_emer_telefono": self.contacto_emer_telefono,
+            "becado": self.becado,
+            "porcentaje_beca": self.porcentaje_beca,
+            "certificado_discapacidad": self.certificado_discapacidad,
+            "diagnostico": self.diagnostico.nombre if self.diagnostico else None,
+            "diagnostico_otro": self.diagnostico_otro,
+            "tipo_discapacidad": self.tipo_discapacidad,
+            "asignacion_familiar": self.asignacion_familiar,
+            "tipo_asignacion_familiar": self.tipo_asignacion_familiar,
+            "beneficiario_pension": self.beneficiario_pension,
+            "tipo_pension": self.tipo_pension,
+            "obra_social": self.obra_social,
+            "num_afiliado": self.num_afiliado,
+            "posee_curatela": self.posee_curatela,
+            "observaciones_obra_social": self.observaciones_obra_social,
+            "nombre_escuela": self.nombre_escuela,
+            "direccion_escuela": self.direccion_escuela,
+            "telefono_escuela": self.telefono_escuela,
+            "grado_escuela": self.grado_escuela,
+            "observaciones_escuela": self.observaciones_escuela,
+            "propuesta_trabajo": self.propuesta_trabajo,
+            "condicion": self.condicion,
+            "sede": self.sede,
+            "profesor": self.profesor.nombre if self.profesor else None,
+            "conductor_caballo": self.conductor_caballo.nombre if self.conductor_caballo else None,
+            "caballo": self.caballo.nombre if self.caballo else None,
+            "auxiliar_pista": self.auxiliar_pista.nombre if self.auxiliar_pista else None, 
+         }
 
     def __repr__(self):
         return f'<Jinete-Amazona #{self.id} nombre:{self.nombre}, apellido: {self.apellido}>'

@@ -1,0 +1,27 @@
+{% block scripts %}
+
+<script>
+
+  function verUsuario(id) {
+    window.location.href = `/usuarios/${id}`;
+  }
+
+  function editarUsuario(id) {
+    window.location.href = `/usuarios/${id}/editar`;
+  }
+
+  function bloquearUsuario(id) {
+    if (confirm('¿Está seguro que desea bloquear este usuario?')) {
+      window.location.href = `/usuarios/${id}/bloquear`;
+    }
+  }
+
+  function eliminarUsuario(id) {
+    if (confirm('¿Está seguro que desea eliminar este usuario?')) {
+      window.location.href = `/usuarios/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

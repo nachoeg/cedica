@@ -1,0 +1,41 @@
+<!-- Dropdown iniciar sesión -->
+<div class="hs-dropdown [--auto-close:inside] [--offset:16] relative inline-flex gap-1">
+  <button id="hs-dropdown-default" type="button"
+    class="hs-dropdown-toggle btn btn-outline size-9 p-0 xs:size-fit xs:py-2 xs:px-3  " aria-haspopup="menu"
+    aria-expanded="false" aria-label="Dropdown">
+    {{login_icon('size-4')}}
+    <span class="hidden xs:inline">Iniciar sesión</span>
+  </button>
+  <div
+    class="dropdown hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full "
+    role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-default">
+    <form class="space-y-4" action="login" method="POST">
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="email" class="input" placeholder="ejemplo@email.com"
+      required>
+    </div>
+    <div>
+      <label for="password">Contraseña</label>
+      <div class="relative">
+      <input id="password" type="password" class="input pe-10" placeholder="Contraseña" value="" required>
+      <button type="button" data-hs-toggle-password='{
+        "target": "#password"
+        }'
+        class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
+        {{show_password_icon()}}
+      </button>
+      </div>
+    </div>
+    <div class="space-y-3">
+      <button type="button" class="btn btn-primary w-full">
+      Iniciar sesión
+      </button>
+      <button type="button" class="btn btn-secondary w-full">
+      {{google_icon()}}
+      Iniciar sesión con Google
+      </button>
+    </div>
+    </form>
+  </div>
+  </div>

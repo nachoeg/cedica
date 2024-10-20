@@ -23,12 +23,15 @@ def tiene_permiso(session, permiso):
     usuario = usuario_por_email(session.get('usuario'))
     if usuario is None:
         return False
-    else:
-        permisos = get_permisos(usuario)
-        # raise Exception(f'{permiso} {permisos}')
-        return permiso in permisos
+    if usuario.admin_sistema:
+        return True
+    permisos = get_permisos(usuario)
+    # raise Exception(f'{permiso} {permisos}')
+    # raise Exception(f'{usuario.admin_sistema} {permisos}')
+    return permiso in permisos
 
-    # # forma original pero si usuario es None get_permisos(usuario) da error
+    # # forma de la expl de pr
+    # # pero si usuario es None get_permisos(usuario) da error
     # return usuario is not None and permiso in permisos
 
 

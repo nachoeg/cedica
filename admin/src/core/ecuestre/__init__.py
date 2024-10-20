@@ -1,5 +1,6 @@
 from src.core.database import db
-from src.core.ecuestre.ecuestre import Ecuestre, TipoDeJyA
+from src.core.ecuestre.ecuestre import Ecuestre, TipoDeJyA, TipoDeDocumento, Documento
+from datetime import datetime
 
 
 def listar_ecuestres(
@@ -26,9 +27,40 @@ def listar_ecuestres(
     return ecuestres, cant_resultados
 
 
+def listar_documentos(
+    ecuestre_id,
+    nombre_filtro="",
+    tipo_filtro="",
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pagina=10,
+):
+    query = Documento.query.join(TipoDeDocumento).filter(
+        Documento.ecuestre_id == ecuestre_id,
+        Documento.nombre.ilike(f"%{nombre_filtro}%"),
+        TipoDeDocumento.tipo.ilike(f"%{tipo_filtro}%"),
+    )
+
+    cant_resultados = query.count()
+
+    if orden == "asc":
+        query = query.order_by(getattr(Documento, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(Documento, ordenar_por).desc())
+
+    documentos = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
+    return documentos, cant_resultados
+
+
 def listar_tipos_de_jya():
     tipos_de_jya = TipoDeJyA.query.all()
     return tipos_de_jya
+
+
+def listar_tipos_de_documentos():
+    tipos_de_documentos = TipoDeDocumento.query.all()
+    return tipos_de_documentos
 
 
 def crear_ecuestre(
@@ -63,6 +95,26 @@ def crear_tipo_de_jya(**kwargs):
     db.session.add(tipo_de_jya)
     db.session.commit()
     return tipo_de_jya
+
+
+def crear_tipo_de_documento(**kwargs):
+    tipo_de_documento = TipoDeDocumento(**kwargs)
+    db.session.add(tipo_de_documento)
+    db.session.commit()
+    return tipo_de_documento
+
+
+def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id):
+    documento = Documento(
+        nombre=nombre,
+        fecha=datetime.now(),
+        tipo_de_documento_id=tipo_de_documento_id,
+        url=url,
+        ecuestre_id=ecuestre_id,
+    )
+    db.session.add(documento)
+    db.session.commit()
+    return documento
 
 
 def eliminar_ecuestre(id):
