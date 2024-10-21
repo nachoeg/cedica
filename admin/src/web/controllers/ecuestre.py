@@ -6,10 +6,13 @@ from flask import (
     url_for,
     flash,
     current_app,
+    send_file,
 )
 from src.core.ecuestre import (
     crear_ecuestre,
     eliminar_ecuestre,
+    eliminar_documento_ecuestre,
+    obtener_documento,
     obtener_ecuestre,
     listar_ecuestres,
     listar_documentos,
@@ -21,13 +24,14 @@ from src.core.ecuestre import (
 from src.core.ecuestre.ecuestre_form import EcuestreForm
 from src.core.ecuestre.documento_form import SubirArchivoForm, SubirEnlaceForm
 from os import fstat
+from io import BytesIO
 
 
 bp = Blueprint("ecuestre", __name__, url_prefix="/ecuestre")
 
 
 @bp.get("/")
-def index():
+def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
@@ -93,7 +97,7 @@ def crear():
                 tipo_de_jya_id,
             )
             flash("Ecuestre creado con exito", "exito")
-            return redirect(url_for("ecuestre.index"))
+            return redirect(url_for("ecuestre.listar"))
         else:
             flash("Error al crear el ecuestre", "error")
 
@@ -121,7 +125,7 @@ def editar(id: int):
             ecuestre.tipo_de_jya_id = form.tipo_de_jya_id.data
             guardar_cambios()
             flash("Ecuestre actualizado con exito", "exito")
-            return redirect(url_for("ecuestre.index"))
+            return redirect(url_for("ecuestre.listar"))
         else:
             flash("Error al actualizar el ecuestre", "error")
 
@@ -136,7 +140,7 @@ def editar(id: int):
 def eliminar(id: int):
     eliminar_ecuestre(id)
     flash("Ecuestre eliminado con exito", "exito")
-    return redirect(url_for("ecuestre.index"))
+    return redirect(url_for("ecuestre.listar"))
 
 
 @bp.get("/<int:id>/documentos/")
@@ -244,6 +248,29 @@ def subir_enlace(id: int):
 
 @bp.get("/<int:id>/documentos/<int:documento_id>/eliminar/")
 def eliminar_documento(id: int, documento_id: int):
-    eliminar_documento(documento_id)
+    eliminar_documento_ecuestre(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("ecuestre.documentos", id=id))
+
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/descargar/")
+def descargar_documento(id: int, documento_id: int):
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    archivo = client.get_object("grupo17", documento.url)
+
+    # Convertir el archivo a un objeto BytesIO
+    archivo_bytes = BytesIO(archivo.read())
+
+    # Enviar el archivo al cliente
+    return send_file(
+        archivo_bytes,
+        as_attachment=True,
+        download_name=documento.url,  # Nombre del archivo para la descarga
+    )
+
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
+def ir_documento(id: int, documento_id: int):
+    documento = obtener_documento(documento_id)
+    return redirect(documento.url)
