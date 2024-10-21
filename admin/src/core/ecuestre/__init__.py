@@ -104,13 +104,14 @@ def crear_tipo_de_documento(**kwargs):
     return tipo_de_documento
 
 
-def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id):
+def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id, archivo_externo):
     documento = Documento(
         nombre=nombre,
         fecha=datetime.now(),
         tipo_de_documento_id=tipo_de_documento_id,
         url=url,
         ecuestre_id=ecuestre_id,
+        archivo_externo=archivo_externo,
     )
     db.session.add(documento)
     db.session.commit()

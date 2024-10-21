@@ -20,7 +20,8 @@
 {'id': 'tipo', 'nombre': 'Tipo'},
 ],
 'acciones': [
-{'nombre': 'Ver', 'funcion': 'irAlDocumento'},
+{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['archivo_externo', True]},
+{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['archivo_externo', False]},
 {'nombre': 'Editar', 'funcion': 'editarDocumento'},
 {'nombre': 'Borrar','funcion': 'borrarDocumento'}
 ],

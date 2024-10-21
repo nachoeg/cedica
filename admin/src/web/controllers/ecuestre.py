@@ -205,7 +205,7 @@ def subir_archivo(id: int):
                 content_type=archivo.content_type,
             )
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, ecuestre_id, archivo_externo=False)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("ecuestre.documentos", id=id))
@@ -230,7 +230,7 @@ def subir_enlace(id: int):
             ecuestre_id = id
             url = form.url.data
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, ecuestre_id, archivo_externo=True)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("ecuestre.documentos", id=id))
