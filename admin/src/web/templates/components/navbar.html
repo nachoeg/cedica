@@ -80,26 +80,24 @@ avatar_placeholder_icon, show_password_icon %}
       class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
       aria-labelledby="hs-navbar-alignment-collapse">
       {% if esta_autenticado(session) %}
-      <div class="flex flex-col my-2 sm:flex-row sm:items-center sm:my-0">
-        {% set navbarLinksClases = 'btn btn-ghost px-2 py-1.5' %}
-        {% if tiene_permiso(session, "jya_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
-        {% endif %}
-        {% if tiene_permiso(session, "ecuestre_listar") %}
-        <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
-        {% endif %}
-        {% if tiene_permiso(session, "miembro_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('miembro.miembro_listar')}}">Equipo</a>
-        {% endif %}
-        {% if tiene_permiso(session, "cobro_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobros</a>
-        {% endif %}
-        {% if tiene_permiso(session, "pago_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('pago.pago_listar')}}">Pagos</a>
-        {% endif %}
-        {% if tiene_permiso(session, "usuario_listar") %}
-          <a class="{{navbarLinksClases}}" href="{{ url_for('usuarios.listado_usuarios') }}">Usuarios</a>
-        {% endif %}
+      <div class="flex flex-col gap-1 my-2 sm:flex-row sm:items-center sm:my-0">
+        {% set navbarLink = 'btn btn-ghost px-2 py-1.5' %}
+        {% set navbarLinkActivo = 'btn btn-secondary px-2 py-1.5' %}
+        {% set enlaces = [
+          {'nombre': 'J&A', 'url': url_for('jinetes_y_amazonas.listar'), 'permiso': 'jya_listar'},
+          {'nombre': 'Ecuestre', 'url': url_for('ecuestre.index'), 'permiso': 'ecuestre_listar'},
+          {'nombre': 'Equipo', 'url': url_for('miembro.miembro_listar'), 'permiso': 'miembro_listar'},
+          {'nombre': 'Cobros', 'url': url_for('cobros.listar'), 'permiso': 'cobro_listar'},
+          {'nombre': 'Pagos', 'url': url_for('pago.pago_listar'), 'permiso': 'pago_listar'},
+          {'nombre': 'Usuarios', 'url': url_for('usuarios.listado_usuarios'), 'permiso': 'usuario_listar'}
+      ] %}
+      
+      {% for enlace in enlaces %}
+          {% if tiene_permiso(session, enlace.permiso) %}
+              <a class="{% if request.path.startswith(enlace.url) %} {{navbarLinkActivo}} {% else %} {{navbarLink}} {% endif %}"
+                 href="{{ enlace.url }}">{{ enlace.nombre }}</a>
+          {% endif %}
+      {% endfor %}
       </div>
       {% endif %}
       <div class="sm:hidden">
