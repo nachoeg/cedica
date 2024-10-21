@@ -27,7 +27,7 @@ class EcuestreForm(FlaskForm):
     pelaje = StringField(
         "Pelaje", validators=[DataRequired("Ingrese el pelaje del ecuestre")]
     )
-    es_compra = BooleanField("Es compra")
+    es_compra = BooleanField("¿Es compra?")
     fecha_ingreso = DateField(
         "Fecha de ingreso",
         validators=[DataRequired("Ingrese una fecha de ingreso")],
