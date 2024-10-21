@@ -25,7 +25,7 @@ from src.core.ecuestre.ecuestre_form import EcuestreForm
 from src.core.ecuestre.documento_form import SubirArchivoForm, SubirEnlaceForm
 from os import fstat
 from io import BytesIO
-
+import ulid
 
 bp = Blueprint("ecuestre", __name__, url_prefix="/ecuestre")
 
@@ -198,8 +198,7 @@ def subir_archivo(id: int):
             archivo = request.files["archivo"]
             client = current_app.storage.client
             size = fstat(archivo.fileno()).st_size
-            ulid = "123456789"  # cambiar por ulid = ulid.new()
-            url = f"ecuestre/{ulid}-{archivo.filename}"
+            url = f"ecuestre/{ulid.new()}-{archivo.filename}"
 
             client.put_object(
                 "grupo17",
@@ -262,11 +261,14 @@ def descargar_documento(id: int, documento_id: int):
     # Convertir el archivo a un objeto BytesIO
     archivo_bytes = BytesIO(archivo.read())
 
+    # Obtener la extensión del archivo
+    extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
+
     # Enviar el archivo al cliente
     return send_file(
         archivo_bytes,
         as_attachment=True,
-        download_name=documento.url,  # Nombre del archivo para la descarga
+        download_name=f"{documento.nombre}{extension}",  # Nombre del archivo para la descarga
     )
 
 
