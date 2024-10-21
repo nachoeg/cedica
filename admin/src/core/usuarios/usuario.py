@@ -25,6 +25,7 @@ class Usuario(db.Model):
             "activo": booleano_a_palabra(self.activo),
             "email": self.email,
             "alias": self.alias,
+            "admin_sistema": booleano_a_palabra(self.admin_sistema),
             "roles": "".join(("" + rol.nombre + ". ") for rol in self.roles)
             # "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
             # "entrenadores": " / ".join(

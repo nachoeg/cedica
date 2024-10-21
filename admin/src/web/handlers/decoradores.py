@@ -26,13 +26,7 @@ def tiene_permiso(session, permiso):
     if usuario.admin_sistema:
         return True
     permisos = get_permisos(usuario)
-    # raise Exception(f'{permiso} {permisos}')
-    # raise Exception(f'{usuario.admin_sistema} {permisos}')
     return permiso in permisos
-
-    # # forma de la expl de pr
-    # # pero si usuario es None get_permisos(usuario) da error
-    # return usuario is not None and permiso in permisos
 
 
 def chequear_permiso(permiso):
@@ -42,6 +36,27 @@ def chequear_permiso(permiso):
         @wraps(f)
         def wrapper(*args, **kwargs):
             if not tiene_permiso(session, permiso):
+                return abort(403)
+
+            return f(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def es_el_mismo(session, id):
+    return session.get('id') == id
+
+
+def chequear_usuario():
+
+    def decorator(f):
+
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            id = kwargs['id']
+            if not es_el_mismo(session, id):
                 return abort(403)
 
             return f(*args, **kwargs)

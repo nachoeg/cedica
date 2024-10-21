@@ -3,7 +3,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from src.core.usuarios import actualizar_usuario, crear_usuario, listar_usuarios, roles_por_usuario, usuario_por_id
 from src.core.usuarios.usuario_forms import UsuarioEditarForm, UsuarioForm
 from src.core.database import db
-from src.web.handlers.autenticacion import (chequear_permiso,
+from src.web.handlers.decoradores import (chequear_permiso,
                                             sesion_iniciada_requerida)
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")

@@ -41,6 +41,12 @@ def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
     db.session.commit()
 
 
+def actualizar_perfil(usuario, email, alias):
+    usuario.email = email
+    usuario.alias = alias
+    db.session.commit()
+
+
 def asignar_roles(usuario, roles):
     usuario.roles = roles
 
