@@ -183,7 +183,16 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
         {{ chevron_left_icon('size-3') }}
       </button>
       <div id="tabla-paginacion" class="flex gap-x-1">
-        {% for i in range(1, cant_paginas + 1) %}
+        {% set primer_pagina = [1, pagina - 2] | max %}
+        {% set ultima_pagina = [cant_paginas, pagina + 2] | min %}
+        {% if ultima_pagina - primer_pagina < 4 %}
+            {% if primer_pagina == 1 %}
+                {% set ultima_pagina = [5, cant_paginas] | min %}
+            {% else %}
+                {% set primer_pagina = [1, cant_paginas - 4] | max %}
+            {% endif %}
+        {% endif %}
+        {% for i in range(primer_pagina, ultima_pagina + 1) %}
             <button type="button" class="
             {{ botonPaginacionClases }} 
             {% if (i == pagina) %} 
