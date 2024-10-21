@@ -172,14 +172,9 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
     </div>
 
     <div class="flex gap-x-1">
-      {% set botonPaginacionClases = 'size-9 justify-center inline-flex items-center gap-x-2 text-sm font-medium
-      rounded-lg border-gray-200 text-gray-800 focus:outline-none focus:bg-gray-100 disabled:opacity-50
-      disabled:pointer-events-none dark:border-neutral-700 dark:text-white'%}
-      {% set botonPaginacionActivo = 'bg-gray-200 dark:bg-neutral-700' %}
-      {% set botonPaginacionInactivo = 'bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700/50' %}
       <button type="button" id="tabla-anterior-pagina" {% if pagina==1 %} disabled {% endif %}
         onclick="cambiarPaginaTabla('{{ pagina - 1 }}')"
-        class="{{ botonPaginacionClases }} {{ botonPaginacionInactivo }}">
+        class="size-9 btn btn-ghost">
         {{ chevron_left_icon('size-3') }}
       </button>
       <div id="tabla-paginacion" class="flex gap-x-1">
@@ -193,21 +188,15 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
             {% endif %}
         {% endif %}
         {% for i in range(primer_pagina, ultima_pagina + 1) %}
-            <button type="button" class="
-            {{ botonPaginacionClases }} 
-            {% if (i == pagina) %} 
-              {{ botonPaginacionActivo }}
-            {% else %} 
-              {{ botonPaginacionInactivo }} 
-            {% endif %} 
-            " onclick="cambiarPaginaTabla('{{ i }}')">
+            <button type="button" class="size-9 btn {% if (i == pagina) %} btn-secondary {% else %} btn-ghost {% endif %}" 
+            onclick="cambiarPaginaTabla('{{ i }}')">
               {{ i }}
             </button>
         {% endfor %}
       </div>
       <button type="button" id="tabla-siguiente-pagina" {% if pagina>=cant_paginas %} disabled {% endif %}
         onclick="cambiarPaginaTabla('{{ pagina + 1 }}')"
-        class="{{ botonPaginacionClases }} {{ botonPaginacionInactivo }}">
+        class="size-9 btn btn-ghost">
         {{ chevron_left_icon('size-3 rotate-180') }}
       </button>
     </div>
