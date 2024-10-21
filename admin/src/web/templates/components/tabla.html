@@ -162,7 +162,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
     </div>
   </div>
   <div
-    class="px-6 py-4 grid gap-3 sm:flex sm:justify-between sm:items-center border-t border-gray-200 dark:border-neutral-700">
+    class="px-6 py-4 grid gap-3 xs:flex xs:justify-between xs:items-center border-t border-gray-200 dark:border-neutral-700">
     <div>
       <p class="text-sm text-gray-600 dark:text-neutral-400">
         <span id="cantidad-resultados" class="font-semibold text-gray-800 dark:text-neutral-200">{{ cant_resultados }}
@@ -184,16 +184,16 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
       </button>
       <div id="tabla-paginacion" class="flex gap-x-1">
         {% for i in range(1, cant_paginas + 1) %}
-        <button type="button" class="
-        {{ botonPaginacionClases }} 
-        {% if (i == pagina) %} 
-          {{ botonPaginacionActivo }}
-        {% else %} 
-          {{ botonPaginacionInactivo }} 
-        {% endif %} 
-        " onclick="cambiarPaginaTabla('{{ i }}')">
-          {{ i }}
-        </button>
+            <button type="button" class="
+            {{ botonPaginacionClases }} 
+            {% if (i == pagina) %} 
+              {{ botonPaginacionActivo }}
+            {% else %} 
+              {{ botonPaginacionInactivo }} 
+            {% endif %} 
+            " onclick="cambiarPaginaTabla('{{ i }}')">
+              {{ i }}
+            </button>
         {% endfor %}
       </div>
       <button type="button" id="tabla-siguiente-pagina" {% if pagina>=cant_paginas %} disabled {% endif %}
