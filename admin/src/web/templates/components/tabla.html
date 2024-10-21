@@ -117,9 +117,9 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
           </thead>
 
           <!-- Resultados -->
-          <tbody id="tabla-body" class="divide-y divide-gray-200 dark:divide-neutral-700">
+          <tbody id="tabla-body">
             {% for fila in resultados %}
-            <tr class="hover:bg-gray-100/70 dark:hover:bg-neutral-700/20">
+            <tr class="hover:bg-gray-100/70 dark:hover:bg-neutral-700/20 border-b border-gray-200 dark:border-neutral-700">
               {% set fila_dict = fila.to_dict() %}
               {% for key, value in fila_dict.items() %}
               <td class="size-px whitespace-nowrap">
@@ -172,7 +172,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
       </p>
     </div>
 
-    <div class="flex gap-x-1">
+    <div class="flex justify-end gap-x-1">
       <button type="button" id="tabla-anterior-pagina" {% if pagina==1 %} disabled {% endif %}
         onclick="cambiarPaginaTabla('{{ pagina - 1 }}')"
         class="size-9 btn btn-ghost">
