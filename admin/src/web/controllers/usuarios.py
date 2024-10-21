@@ -1,7 +1,7 @@
 import math
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from src.core.usuarios import crear_usuario, listar_usuarios, usuario_por_id
-from src.core.usuarios.usuario_forms import UsuarioForm
+from src.core.usuarios import actualizar_usuario, crear_usuario, listar_usuarios, roles_por_usuario, usuario_por_id
+from src.core.usuarios.usuario_forms import UsuarioEditarForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.autenticacion import (chequear_permiso,
                                             sesion_iniciada_requerida)
@@ -43,13 +43,13 @@ def listado_usuarios():
 def registrar_usuario():
     form = UsuarioForm(request.form)
     if form.validate_on_submit():
-        # raise Exception(f'{form.roles.data}')
+        # raise Exception(f'{form.data}')
         usuario = crear_usuario(form.email.data, form.contraseña.data,
                                 form.alias.data, form.admin_sistema.data,
                                 form.roles.data)
         flash(f'Registro exitoso. \
               Alias: {usuario.alias}, email: {usuario.email}', 'exito')
-        return redirect(url_for('usuarios.listado_usuarios.html'))
+        return redirect(url_for('usuarios.listado_usuarios'))
     return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
 
@@ -61,11 +61,21 @@ def ver_usuario(id):
     return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
 
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 @chequear_permiso('usuario_editar')
 @sesion_iniciada_requerida
 def editar_usuario(id):
-    pass
+    usuario = usuario_por_id(id)
+    form = UsuarioEditarForm(obj=usuario)
+    if request.method == 'GET':
+        form.roles.data = [str(rol.id) for rol in roles_por_usuario(id)]
+    elif form.validate_on_submit():
+        # raise Exception(f'{form.data}')
+        actualizar_usuario(usuario, form.email.data, form.alias.data, form.admin_sistema.data, form.roles.data)
+        flash(f'Se guardaron los cambios al usuario \
+              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+        return redirect(url_for('usuarios.listado_usuarios'))
+    return render_template('pages/usuarios/editar_usuario.html', form=form)
 
 
 @bp.route('/<int:id>/bloquear', methods=['GET'])
@@ -76,7 +86,7 @@ def bloquear_usuario(id):
     usuario.activo = False
     db.session.commit()
     flash(f'Se ha bloqueado al usuario \
-              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
+              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
     return redirect(request.referrer)
 
 
@@ -88,7 +98,7 @@ def activar_usuario(id):
     usuario.activo = True
     db.session.commit()
     flash(f'Se ha activado al usuario \
-              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
+              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
     return redirect(request.referrer)
 
 

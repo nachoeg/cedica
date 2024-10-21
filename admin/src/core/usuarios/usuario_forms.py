@@ -47,3 +47,17 @@ class UsuarioForm(FlaskForm):
             (rol.id, rol.nombre) for rol in
             db.session.execute(db.select(Rol)).unique().scalars().all()
             ]
+
+
+class UsuarioEditarForm(FlaskForm):
+    email = EmailField("Email", validators=[InputRequired(), Email()])
+    alias = StringField("Alias")
+    admin_sistema = BooleanField("¿Es admin general?", default=False)
+    roles = SelectMultipleField("Roles", widget=select_multi_checkbox)
+
+    def __init__(self, *args, **kwargs):
+        super(UsuarioEditarForm, self).__init__(*args, **kwargs)
+        self.roles.choices = [
+            (rol.id, rol.nombre) for rol in
+            db.session.execute(db.select(Rol)).unique().scalars().all()
+            ]

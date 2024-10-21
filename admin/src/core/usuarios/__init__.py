@@ -25,16 +25,24 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[]):
 
     roles = roles_por_id(id_roles)
     # raise Exception(f'{roles}')
-    asignar_roles(usuario, roles)
+    usuario.roles = roles
     db.session.add(usuario)
     db.session.commit()
 
     return usuario
 
 
+def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
+    usuario.email = email
+    usuario.alias = alias
+    usuario.admin_sistema = admin_sistema
+    roles = roles_por_id(id_roles)
+    usuario.roles = roles
+    db.session.commit()
+
+
 def asignar_roles(usuario, roles):
-    for rol in roles:
-        usuario.roles.append(rol)
+    usuario.roles = roles
 
 
 def asignar_rol(usuario, rol):
@@ -42,6 +50,11 @@ def asignar_rol(usuario, rol):
     db.session.commit()
 
     return usuario
+
+
+def eliminar_roles(usuario):
+    for rol in usuario.roles:
+        usuario.roles.pop(rol)
 
 
 def usuario_por_id(id):
@@ -85,7 +98,14 @@ def asignar_permiso(rol, permiso):
 
 
 def roles_por_id(ids):
-    roles = db.session.execute(db.select(Rol, Rol.id.in_(ids))).unique().scalars().all()
+    ids = [int(id) for id in ids]
+    roles = db.session.execute(db.select(Rol).where(Rol.id.in_(ids))).unique().scalars().all()
+    # raise Exception(f'{roles} {ids}')
+    return roles
+
+
+def roles_por_usuario(id):
+    roles = db.session.execute(db.select(Rol).join(Usuario.roles.and_(Usuario.id == id))).unique().scalars().all()
 
     return roles
 
