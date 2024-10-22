@@ -282,7 +282,9 @@ def subir_enlace(id: int):
 @chequear_permiso("ecuestre_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
-    eliminar_documento_ecuestre(documento_id)
+    documento = eliminar_documento_ecuestre(documento_id)
+    client = current_app.storage.client
+    client.remove_object("grupo17", documento.url)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("ecuestre.documentos", id=id))
 
