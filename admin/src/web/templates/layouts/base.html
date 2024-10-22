@@ -32,7 +32,7 @@
     <footer>{% block footer %}{% endblock %}</footer>
 
     <!-- Scripts -->
-    <script src="{{ url_for('serve_preline_js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preline.js') }}"></script>
     {% block scripts %}{% endblock %}
 
 </body>

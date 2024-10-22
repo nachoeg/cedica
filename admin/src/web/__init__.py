@@ -39,13 +39,6 @@ def create_app(env="development", static_folder="../../static"):
     def home():
         return render_template("pages/home.html")
 
-    @app.route("/preline.js")
-    def serve_preline_js():
-        return send_from_directory(
-            "../../node_modules/preline/dist",
-            "preline.js",
-        )
-
     app.register_blueprint(bp_autenticacion)
     app.register_blueprint(bp_usuarios)
 
