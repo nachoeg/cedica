@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, send_file
 from flask import Blueprint
 from flask import current_app
 from os import fstat
-from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo
+from src.core.jinetes_y_amazonas import (listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo, listar_diagnosticos, listar_profesores, listar_conductores, listar_auxiliares_pista, listar_caballos)
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
 from src.core.miembro.miembro import Miembro
@@ -64,7 +64,7 @@ def nuevo_j_y_a():
 @bp.route("/cargar_info_salud/<string:id>", methods=["GET", "POST"])
 def cargar_info_salud(id: string):
     form = InfoSaludJYAForm()
-    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in Diagnostico.query.all()]
+    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
     if form.validate_on_submit():
         certificado_discapacidad = form.certificado_discapacidad.data
         diagnostico_id = form.diagnostico_id.data
@@ -111,10 +111,10 @@ def cargar_info_esc(id : string):
 @bp.route("/cargar_info_inst/<string:id>", methods=["GET", "POST"])
 def cargar_info_inst(id : string):
     form = InfoInstitucionalJYAForm()
-    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in Miembro.query.all()]
-    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in Miembro.query.all()]
-    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in Ecuestre.query.all()]
-    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in Miembro.query.all()]
+    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in listar_profesores]
+    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in listar_conductores]
+    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in listar_caballos]
+    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista]
     if form.validate_on_submit():
         propuesta_de_trabajo = form.propuesta_trabajo.data
         condicion = form.condicion.data

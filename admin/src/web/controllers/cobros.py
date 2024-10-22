@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
-from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda
+from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices
 from src.core.cobros.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 from src.core.miembro.miembro import Miembro
@@ -38,8 +38,9 @@ def listar():
 @bp.route("/nuevo_cobro", methods=["GET", "POST"])
 def nuevo_cobro():
     form = CobroForm()
-    form.joa.choices = [(joa.id, joa.nombre +" "+ joa.apellido) for joa in JineteOAmazona.query.order_by('nombre')]
-    form.recibio_el_dinero.choices = [(miembro.id, miembro.nombre + " " + miembro.apellido) for miembro in Miembro.query.order_by('nombre')]
+    form.joa.choices = cargar_joa_choices()
+    form.recibio_el_dinero.choices = cargar_miembro_choices()
+
     if form.validate_on_submit():
         fecha_pago = form.fecha_pago.data
         medio_de_pago = form.medio_de_pago.data
@@ -63,12 +64,12 @@ def ver(id: int):
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 def editar_cobro(id: int):
     cobro = encontrar_cobro(id)
-    print(cobro)
     form = CobroForm(obj=cobro)
-    form.joa.choices = [(joa.id, joa.nombre +" "+ joa.apellido) for joa in JineteOAmazona.query.order_by('nombre')]
+    form.joa.choices = cargar_joa_choices()
+    form.recibio_el_dinero.choices = cargar_miembro_choices()
     form.joa.data = cobro.joa.id
     form.medio_de_pago.data = cobro.medio_de_pago.name
-    print("Antes de entrar")
+    
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
         cobro.medio_de_pago = form.medio_de_pago.data

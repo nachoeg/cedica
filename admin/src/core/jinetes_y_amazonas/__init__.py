@@ -1,6 +1,9 @@
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.documentos import Archivo_JYA
+from src.core.miembro.miembro import Miembro
+from src.core.miembro.extras import PuestoLaboral
+from src.core.ecuestre.ecuestre import Ecuestre
 
 # funcion que crea un diagnóstico médico
 def crear_diagnostico(**kwargs):
@@ -92,3 +95,34 @@ def encontrar_archivo(archivo_id):
     archivo = Archivo_JYA.query.get_or_404(archivo_id)
     
     return archivo
+
+def listar_diagnosticos():
+    diagnosticos = Diagnostico.query.all()
+
+    return diagnosticos
+
+def listar_profesores():
+    profesores = Miembro.query.join(PuestoLaboral).filter(
+        PuestoLaboral.nombre == "Profesor de Equitación"
+    )
+
+    return profesores
+
+def listar_conductores():
+    conductores = Miembro.query.join(PuestoLaboral).filter(
+        PuestoLaboral.nombre == "Conductor"
+    )
+
+    return conductores
+
+def listar_auxiliares_pista():
+    auxiliares = Miembro.query.join(PuestoLaboral).filter(
+        PuestoLaboral.nombre == "Auxiliar de pista"
+    )
+
+    return auxiliares
+
+def listar_caballos():
+    caballos = Ecuestre.query.all()
+
+    return caballos
