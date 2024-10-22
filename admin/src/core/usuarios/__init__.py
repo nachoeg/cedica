@@ -58,6 +58,8 @@ def usuario_por_email(email):
 
     return usuario
 
+def usuario_por_alias(alias):
+    return Usuario.query.filter_by(alias=alias).first()
 
 def usuario_por_email_y_contraseña(email, contraseña):
     usuario = usuario_por_email(email)

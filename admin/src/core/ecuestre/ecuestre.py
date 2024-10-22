@@ -29,6 +29,7 @@ class Documento(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     fecha = db.Column(db.Date, nullable=False)
     url = db.Column(db.String(100), nullable=False)
+    archivo_externo = db.Column(db.Boolean, nullable=False)
 
     # Relacion con tipo de documento
     tipo_de_documento_id = db.Column(

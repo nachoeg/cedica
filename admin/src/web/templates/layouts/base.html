@@ -23,7 +23,7 @@
     {% include 'components/navbar.html' %}
 
     <!-- Main -->
-    <main class="max-w-[90rem] w-full mx-auto p-2 sm:p-5 lg:px-8">
+    <main class="max-w-[90rem] w-full mx-auto p-2 md:p-5 lg:px-8">
         {% include 'components/mensajes_flash.html' %}
         {% block main %}{% endblock %}
     </main>
@@ -32,7 +32,7 @@
     <footer>{% block footer %}{% endblock %}</footer>
 
     <!-- Scripts -->
-    <script src="{{ url_for('serve_preline_js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preline.js') }}"></script>
     {% block scripts %}{% endblock %}
 
 </body>

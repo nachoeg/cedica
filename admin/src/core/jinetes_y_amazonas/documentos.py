@@ -14,6 +14,10 @@ class Archivo_JYA(db.Model):
         cronica = "Cronica"
         documental = "Documental"
         
+        @classmethod
+        def listar(self):
+            return self._member_map_.values()
+        
         def __str__(self):
             return f'{self.value}'
         
@@ -24,12 +28,16 @@ class Archivo_JYA(db.Model):
     jya_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
     jya = db.relationship('JineteOAmazona', back_populates="documentos")
     
+    @classmethod
+    def listar_tipos(cls):
+        return [tipo.value for tipo in cls.TipoArchivo.listar()]
+    
     def to_dict(self):
         return {
             "id": self.id,
             "titulo": self.titulo,
             "fecha_subida": self.fecha_subida,
-            "tipo_archivo": self.diagnostico.nombre if self.diagnostico else None,
+            "tipo_archivo": self.tipo_archivo.value if self.tipo_archivo else None,
         }
 
     def __repr__(self):

@@ -104,13 +104,14 @@ def crear_tipo_de_documento(**kwargs):
     return tipo_de_documento
 
 
-def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id):
+def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id, archivo_externo):
     documento = Documento(
         nombre=nombre,
         fecha=datetime.now(),
         tipo_de_documento_id=tipo_de_documento_id,
         url=url,
         ecuestre_id=ecuestre_id,
+        archivo_externo=archivo_externo,
     )
     db.session.add(documento)
     db.session.commit()
@@ -131,6 +132,13 @@ def eliminar_tipo_de_jya(tipo_de_jya_id):
     return tipo_de_jya
 
 
+def eliminar_documento_ecuestre(documento_id):
+    documento = Documento.query.get(documento_id)
+    db.session.delete(documento)
+    db.session.commit()
+    return documento
+
+
 def obtener_ecuestre(ecuestre_id):
     ecuestre = Ecuestre.query.get(ecuestre_id)
     return ecuestre
@@ -139,6 +147,11 @@ def obtener_ecuestre(ecuestre_id):
 def obtener_tipo_de_jya(tipo_de_jya_id):
     tipo_de_jya = TipoDeJyA.query.get(tipo_de_jya_id)
     return tipo_de_jya
+
+
+def obtener_documento(documento_id):
+    documento = Documento.query.get(documento_id)
+    return documento
 
 
 def asignar_conductor(ecuestre, conductor):

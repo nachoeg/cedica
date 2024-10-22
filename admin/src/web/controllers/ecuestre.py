@@ -6,10 +6,13 @@ from flask import (
     url_for,
     flash,
     current_app,
+    send_file,
 )
 from src.core.ecuestre import (
     crear_ecuestre,
     eliminar_ecuestre,
+    eliminar_documento_ecuestre,
+    obtener_documento,
     obtener_ecuestre,
     listar_ecuestres,
     listar_documentos,
@@ -19,15 +22,23 @@ from src.core.ecuestre import (
     guardar_cambios,
 )
 from src.core.ecuestre.ecuestre_form import EcuestreForm
-from src.core.ecuestre.documento_form import SubirArchivoForm, SubirEnlaceForm
+from src.core.ecuestre.documento_form import (
+    SubirArchivoForm,
+    EnlaceForm,
+    EditarArchivoForm,
+)
 from os import fstat
-
+from io import BytesIO
+import ulid
+from src.web.handlers.autenticacion import sesion_iniciada_requerida, chequear_permiso
 
 bp = Blueprint("ecuestre", __name__, url_prefix="/ecuestre")
 
 
 @bp.get("/")
-def index():
+@chequear_permiso("ecuestre_listar")
+@sesion_iniciada_requerida
+def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
@@ -60,12 +71,16 @@ def index():
 
 
 @bp.get("/<int:id>/")
+@chequear_permiso("ecuestre_mostrar")
+@sesion_iniciada_requerida
 def ver(id: int):
     ecuestre = obtener_ecuestre(id)
     return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre)
 
 
 @bp.route("/crear/", methods=["GET", "POST"])
+@chequear_permiso("ecuestre_crear")
+@sesion_iniciada_requerida
 def crear():
     form = EcuestreForm()
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
@@ -93,7 +108,7 @@ def crear():
                 tipo_de_jya_id,
             )
             flash("Ecuestre creado con exito", "exito")
-            return redirect(url_for("ecuestre.index"))
+            return redirect(url_for("ecuestre.listar"))
         else:
             flash("Error al crear el ecuestre", "error")
 
@@ -103,6 +118,8 @@ def crear():
 
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("ecuestre_actualizar")
+@sesion_iniciada_requerida
 def editar(id: int):
     ecuestre = obtener_ecuestre(id)
     form = EcuestreForm(obj=ecuestre)
@@ -121,7 +138,7 @@ def editar(id: int):
             ecuestre.tipo_de_jya_id = form.tipo_de_jya_id.data
             guardar_cambios()
             flash("Ecuestre actualizado con exito", "exito")
-            return redirect(url_for("ecuestre.index"))
+            return redirect(url_for("ecuestre.listar"))
         else:
             flash("Error al actualizar el ecuestre", "error")
 
@@ -133,13 +150,17 @@ def editar(id: int):
 
 
 @bp.get("/<int:id>/eliminar/")
+@chequear_permiso("ecuestre_eliminar")
+@sesion_iniciada_requerida
 def eliminar(id: int):
     eliminar_ecuestre(id)
     flash("Ecuestre eliminado con exito", "exito")
-    return redirect(url_for("ecuestre.index"))
+    return redirect(url_for("ecuestre.listar"))
 
 
 @bp.get("/<int:id>/documentos/")
+@chequear_permiso("ecuestre_mostrar")
+@sesion_iniciada_requerida
 def documentos(id: int):
     ecuestre = obtener_ecuestre(id)
     orden = request.args.get("orden", "asc")
@@ -181,21 +202,24 @@ def documentos(id: int):
 
 
 @bp.route("/<int:id>/documentos/subir_archivo/", methods=["GET", "POST"])
+@chequear_permiso("ecuestre_crear")
+@sesion_iniciada_requerida
 def subir_archivo(id: int):
     ecuestre = obtener_ecuestre(id)
     form = SubirArchivoForm()
-    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
-            tipo = form.tipo.data
+            tipo = form.tipo_de_documento_id.data
             ecuestre_id = id
             archivo = request.files["archivo"]
             client = current_app.storage.client
             size = fstat(archivo.fileno()).st_size
-            ulid = "123456789"  # cambiar por ulid = ulid.new()
-            url = f"ecuestre/{ulid}-{archivo.filename}"
+            url = f"ecuestre/{ulid.new()}-{archivo.filename}"
 
             client.put_object(
                 "grupo17",
@@ -205,7 +229,7 @@ def subir_archivo(id: int):
                 content_type=archivo.content_type,
             )
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, ecuestre_id, archivo_externo=False)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("ecuestre.documentos", id=id))
@@ -213,24 +237,32 @@ def subir_archivo(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/subir_documento.html", form=form, ecuestre=ecuestre
+        "pages/ecuestre/formulario_documento.html",
+        form=form,
+        ecuestre=ecuestre,
+        titulo="Subir archivo",
+        subir_archivo=True,
     )
 
 
 @bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
+@chequear_permiso("ecuestre_crear")
+@sesion_iniciada_requerida
 def subir_enlace(id: int):
     ecuestre = obtener_ecuestre(id)
-    form = SubirEnlaceForm()
-    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form = EnlaceForm()
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
-            tipo = form.tipo.data
+            tipo = form.tipo_de_documento_id.data
             ecuestre_id = id
             url = form.url.data
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, ecuestre_id, archivo_externo=True)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("ecuestre.documentos", id=id))
@@ -238,12 +270,84 @@ def subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/subir_enlace.html", form=form, ecuestre=ecuestre
+        "pages/ecuestre/formulario_documento.html",
+        form=form,
+        ecuestre=ecuestre,
+        titulo="Subir enlace",
+        subir_enlace=True,
     )
 
 
 @bp.get("/<int:id>/documentos/<int:documento_id>/eliminar/")
+@chequear_permiso("ecuestre_eliminar")
+@sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
-    eliminar_documento(documento_id)
+    documento = eliminar_documento_ecuestre(documento_id)
+    client = current_app.storage.client
+    client.remove_object("grupo17", documento.url)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("ecuestre.documentos", id=id))
+
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/descargar/")
+@chequear_permiso("ecuestre_mostrar")
+@sesion_iniciada_requerida
+def descargar_documento(id: int, documento_id: int):
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    archivo = client.get_object("grupo17", documento.url)
+
+    # Convertir el archivo a un objeto BytesIO
+    archivo_bytes = BytesIO(archivo.read())
+
+    # Obtener la extensión del archivo
+    extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
+
+    # Enviar el archivo al cliente
+    return send_file(
+        archivo_bytes,
+        as_attachment=True,
+        download_name=f"{documento.nombre}{extension}",  # Nombre del archivo para la descarga
+    )
+
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
+@chequear_permiso("ecuestre_mostrar")
+@sesion_iniciada_requerida
+def ir_documento(id: int, documento_id: int):
+    documento = obtener_documento(documento_id)
+    return redirect(documento.url)
+
+
+@bp.route("/<int:id>/documentos/<int:documento_id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("ecuestre_actualizar")
+@sesion_iniciada_requerida
+def editar_documento(id: int, documento_id: int):
+    documento = obtener_documento(documento_id)
+    if documento.archivo_externo:
+        form = EnlaceForm(obj=documento)
+    else:
+        form = EditarArchivoForm(obj=documento)
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            documento.nombre = form.nombre.data
+            documento.tipo_de_documento_id = form.tipo_de_documento_id.data
+            if documento.archivo_externo:
+                documento.url = form.url.data
+            guardar_cambios()
+            flash("Documento actualizado con exito", "exito")
+            return redirect(url_for("ecuestre.documentos", id=id))
+        else:
+            flash("Error al actualizar el documento", "error")
+
+    return render_template(
+        "pages/ecuestre/formulario_documento.html",
+        form=form,
+        ecuestre=documento.ecuestre,
+        titulo=f"Editar documento #{documento_id}",
+        subir_enlace=documento.archivo_externo,
+    )
