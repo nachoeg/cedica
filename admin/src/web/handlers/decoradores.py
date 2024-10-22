@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import abort, session
-from core.usuarios import get_permisos, usuario_por_email
+from core.usuarios import get_permisos, usuario_por_email, usuario_por_id
 
 
 def esta_autenticado(session):
@@ -45,22 +45,31 @@ def chequear_permiso(permiso):
     return decorator
 
 
-def es_el_mismo(session, id):
+def es_usuario_de_sesion(session, id):
     return session.get('id') == id
 
 
-def chequear_usuario():
+def chequear_usuario_sesion(f):
 
-    def decorator(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        id = kwargs['id']
+        if not es_usuario_de_sesion(session, id):
+            return abort(403)
 
-        @wraps(f)
-        def wrapper(*args, **kwargs):
-            id = kwargs['id']
-            if not es_el_mismo(session, id):
-                return abort(403)
+        return f(*args, **kwargs)
 
-            return f(*args, **kwargs)
+    return wrapper
 
-        return wrapper
 
-    return decorator
+def no_modificar_admin(f):
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        id = kwargs['id']
+        if usuario_por_id(id).admin_sistema:
+            return abort(403)
+
+        return f(*args, **kwargs)
+
+    return wrapper

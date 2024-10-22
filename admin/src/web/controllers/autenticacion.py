@@ -3,7 +3,7 @@ from flask import (Blueprint, flash, redirect, render_template, request,
 from src.core.usuarios import (actualizar_perfil, roles_por_usuario,
                                usuario_por_email_y_contraseña, usuario_por_id)
 from src.core.usuarios.usuario_forms import UsuarioEditarForm
-from src.web.handlers.decoradores import (chequear_usuario,
+from src.web.handlers.decoradores import (chequear_usuario_sesion,
                                           sesion_iniciada_requerida)
 
 bp = Blueprint("autenticacion", __name__, url_prefix="")
@@ -53,7 +53,7 @@ def ver_perfil():
 
 
 @bp.route('/<int:id>/editar_perfil', methods=['GET', 'POST'])
-@chequear_usuario()
+@chequear_usuario_sesion
 @sesion_iniciada_requerida
 def editar_perfil(id):
     usuario = usuario_por_id(id)

@@ -6,7 +6,7 @@ from src.core.usuarios import (actualizar_usuario, crear_usuario,
                                usuario_por_id)
 from src.core.usuarios.usuario_forms import UsuarioEditarForm, UsuarioForm
 from src.core.database import db
-from src.web.handlers.decoradores import (chequear_permiso,
+from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
@@ -84,14 +84,20 @@ def editar_usuario(id):
 
 @bp.route('/<int:id>/bloquear', methods=['GET'])
 @chequear_permiso('usuario_bloquear')
+@no_modificar_admin
 @sesion_iniciada_requerida
 def bloquear_usuario(id):
     usuario = usuario_por_id(id)
-    usuario.activo = False
-    db.session.commit()
-    flash(f'Se ha bloqueado al usuario \
-              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
-    return redirect(request.referrer)
+    if usuario.activo:
+        usuario.activo = False
+        db.session.commit()
+        flash(f'Se ha bloqueado al usuario \
+                Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+    else:
+        flash(f'El usuario \
+                Alias: {usuario.alias}, email: {usuario.email} \
+                ya se encuentra bloqueado', 'info')
+    return redirect(url_for('usuarios.listado_usuarios'))
 
 
 @bp.route('/<int:id>/activar', methods=['GET'])
@@ -99,15 +105,21 @@ def bloquear_usuario(id):
 @sesion_iniciada_requerida
 def activar_usuario(id):
     usuario = usuario_por_id(id)
-    usuario.activo = True
-    db.session.commit()
-    flash(f'Se ha activado al usuario \
-              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
-    return redirect(request.referrer)
+    if not usuario.activo:
+        usuario.activo = True
+        db.session.commit()
+        flash(f'Se ha activado al usuario \
+                Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+    else:
+        flash(f'El usuario \
+                Alias: {usuario.alias}, email: {usuario.email} \
+                ya se encuentra activo', 'info')
+    return redirect(url_for('usuarios.listado_usuarios'))
 
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 @chequear_permiso('usuario_eliminar')
+@no_modificar_admin
 @sesion_iniciada_requerida
 def eliminar_usuario(id):
     usuario = usuario_por_id(id)
