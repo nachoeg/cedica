@@ -132,7 +132,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
               <td class="size-px whitespace-nowrap">
                 <div class="flex gap-1 px-4 justify-end">
                   {% for accion in configuracion.acciones %}
-                    {% if not accion.condicion or fila[accion.condicion[0]] == accion.condicion[1] %}
+                    {% if accion and (not accion.condicion or fila[accion.condicion[0]] == accion.condicion[1]) %}
                     <button type="button" class="btn btn-ghost-primary py-1 px-2"
                       onclick="{{ accion.funcion }}('{{ fila.id }}')">
                       {{ accion.icono }} {{ accion.nombre }}
