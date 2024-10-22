@@ -17,13 +17,13 @@ class Cobro(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     fecha_pago = db.Column(db.DateTime, default=datetime.now)
-    medio_de_pago = db.Column(Enum(MedioDePago))
+    medio_de_pago = db.Column(Enum(MedioDePago), nullable="False")
     monto = db.Column(db.Double, nullable=False)
     observaciones = db.Column(db.String(100))
-    recibio_el_dinero_id = db.Column(db.Integer, db.ForeignKey('miembro.id'))
+    recibio_el_dinero_id = db.Column(db.Integer, db.ForeignKey('miembro.id'), nullable=False)
     recibio_el_dinero = db.relationship('Miembro')
 
-    joa_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id', ondelete='CASCADE'))
+    joa_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id', ondelete='CASCADE'), nullable=False)
 
     joa = db.relationship('JineteOAmazona')
 
