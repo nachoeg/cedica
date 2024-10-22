@@ -1,10 +1,13 @@
 import math
-from flask import Blueprint, flash, redirect, render_template, request, url_for
-from src.core.usuarios import actualizar_usuario, crear_usuario, listar_usuarios, roles_por_usuario, usuario_por_id
+from flask import (Blueprint, flash, redirect,
+                   render_template, request, url_for)
+from src.core.usuarios import (actualizar_usuario, crear_usuario,
+                               listar_usuarios, roles_por_usuario,
+                               usuario_por_id)
 from src.core.usuarios.usuario_forms import UsuarioEditarForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (chequear_permiso,
-                                            sesion_iniciada_requerida)
+                                          sesion_iniciada_requerida)
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
@@ -71,7 +74,8 @@ def editar_usuario(id):
         form.roles.data = [str(rol.id) for rol in roles_por_usuario(id)]
     elif form.validate_on_submit():
         # raise Exception(f'{form.data}')
-        actualizar_usuario(usuario, form.email.data, form.alias.data, form.admin_sistema.data, form.roles.data)
+        actualizar_usuario(usuario, form.email.data, form.alias.data,
+                           form.admin_sistema.data, form.roles.data)
         flash(f'Se guardaron los cambios al usuario \
               Alias: {usuario.alias}, email: {usuario.email}', 'exito')
         return redirect(url_for('usuarios.listado_usuarios'))

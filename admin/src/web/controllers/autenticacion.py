@@ -1,8 +1,10 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
-from src.core.usuarios import actualizar_perfil, actualizar_usuario, roles_por_usuario, usuario_por_email_y_contraseña, usuario_por_id
+from src.core.usuarios import (actualizar_perfil, roles_por_usuario,
+                               usuario_por_email_y_contraseña, usuario_por_id)
 from src.core.usuarios.usuario_forms import UsuarioEditarForm
-from src.web.handlers.decoradores import chequear_usuario, sesion_iniciada_requerida
+from src.web.handlers.decoradores import (chequear_usuario,
+                                          sesion_iniciada_requerida)
 
 bp = Blueprint("autenticacion", __name__, url_prefix="")
 

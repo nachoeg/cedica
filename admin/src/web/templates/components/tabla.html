@@ -131,13 +131,17 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
               {% if configuracion.acciones %}
               <td class="size-px whitespace-nowrap">
                 <div class="flex gap-1 px-4 justify-end">
-                  {% for accion in configuracion.acciones %}
-                  <button type="button"
-                    class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
-                    onclick="{{ accion.funcion }}('{{ fila.id }}')">
-                    {{ accion.icono }} {{ accion.nombre }}
-                  </button>
-                  {% endfor %}
+                  {% if "admin_sistema" in fila.__dict__ %}
+                    {% include 'pages/usuarios/_botones_tabla.html' %}
+                  {% else %}
+                    {% for accion in configuracion.acciones %}
+                      <button type="button"
+                        class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+                        onclick="{{ accion.funcion }}('{{ fila.id }}')">
+                        {{ accion.icono }} {{ accion.nombre }}
+                      </button>
+                    {% endfor %}
+                  {% endif %}
                 </div>
               </td>
               {% endif %}

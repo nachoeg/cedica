@@ -71,10 +71,3 @@
 {% endblock %}
 
 {% include 'pages/usuarios/_acciones_usuario.html' %}
-
-
-<button style="background-color:darkslategrey; border-color: darkslategrey;" class="btn btn-danger w-full" type="submit" onclick="
-        if (confirm('¿Está seguro que desea bloquear este usuario?', {id})) {
-          window.location.href = `/usuarios/{{ usuario.id }}/bloquear`;}">
-        Bloquear
-      </button>

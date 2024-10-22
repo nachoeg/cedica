@@ -27,12 +27,16 @@
     'crear': {
       'url': url_for('usuarios.registrar_usuario'),
       'nombre': 'Registrar usuario'
-    }
+    },
+
+    'include': 'pages/usuarios/_acciones_usuario.html',
+
   }
 %}
 
 {{ tabla(configuracion, usuarios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
-{% endblock %}
 
 {% include 'pages/usuarios/_acciones_usuario.html' %}
+
+{% endblock %}
