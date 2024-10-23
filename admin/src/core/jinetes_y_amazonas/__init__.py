@@ -81,8 +81,8 @@ def encontrar_jya(id):
     jya = JineteOAmazona.query.get_or_404(id)
     return jya
 
-def cargar_archivo(jya_id, titulo,tipo_archivo):
-    archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo)
+def cargar_archivo(jya_id, titulo,tipo_archivo, url, archivo_externo):
+    archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo, url= url, externo=archivo_externo)
     db.session.add(archivo)
     db.session.commit()
 
@@ -162,3 +162,14 @@ def listar_caballos():
     caballos = Ecuestre.query.all()
 
     return caballos
+
+def obtener_documento(doc_id):
+    
+    return Archivo_JYA.query.get_or_404(doc_id)
+
+def eliminar_documento_j_y_a(doc_id):
+    documento = Archivo_JYA.query.get(doc_id)
+    db.session.delete(documento)
+    db.session.commit()
+
+    return documento

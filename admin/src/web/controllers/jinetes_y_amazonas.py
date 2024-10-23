@@ -3,11 +3,13 @@ from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
 from os import fstat
-from src.core.jinetes_y_amazonas import (listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo, listar_documentos, listar_tipos_de_documentos, listar_diagnosticos, listar_profesores, listar_conductores, listar_auxiliares_pista, listar_caballos)
+from src.core.jinetes_y_amazonas import (listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo, listar_documentos, listar_tipos_de_documentos, listar_diagnosticos, listar_profesores, listar_conductores, listar_auxiliares_pista, listar_caballos, obtener_documento, eliminar_documento_j_y_a)
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
-from src.core.miembro.miembro import Miembro
-from src.core.ecuestre.ecuestre import Ecuestre
+from src.core.jinetes_y_amazonas.forms_documentos import SubirArchivoForm, EnlaceForm, EditarArchivoForm
+
+import ulid
+from io import BytesIO
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 
@@ -169,29 +171,61 @@ def eliminar(id: int):
 
     return redirect(url_for("jinetes_y_amazonas.listar"))
 
-@bp.get("/<int:id>/subir_archivo/")
+@bp.route("/<int:id>/subir_archivo/", methods=["GET", "POST"])
 def subir_archivo(id: int):
-    jya = encontrar_jya(id)
 
-    return render_template("jinetes_y_amazonas/documentos.html", jya=jya)
+    form = SubirArchivoForm()
 
-@bp.post("/<int:id>/aceptar_archivo/")
-def aceptar_archivo(id):
-    params = request.form.copy()
-    titulo = request.form["titulo"]
-    jya_id = id
-    tipo_archivo = request.form["tipo_archivo"]
-    print(request.form["tipo_archivo"])
-    if "archivo" in request.files:
-        archivo = request.files["archivo"]
-        cliente = current_app.storage.client
-        tamaño = fstat(archivo.fileno()).st_size
+    if request.method == "POST":
+        if form.validate_on_submit():
+            titulo = form.titulo.data
+            jya_id = id
+            tipo_archivo = form.tipo_de_documento_id.data
+            archivo = request.files["archivo"]
+            cliente = current_app.storage.client
+            tamaño = fstat(archivo.fileno()).st_size
+            url = f"jinetes_y_amazonas/{ulid.new()}-{archivo.filename}"
+            cliente.put_object("grupo17", url, archivo, tamaño, content_type = archivo.content_type)
+            print(url)
+            cargar_archivo(jya_id, titulo,tipo_archivo,url, archivo_externo = False)
+            flash("Archivo subido con éxito", "exito")
 
-        cliente.put_object("grupo17", archivo.filename, archivo, tamaño, content_type = archivo.content_type)
-        
-        cargar_archivo(jya_id, titulo,tipo_archivo)
+            return redirect(url_for("jinetes_y_amazonas.ver_archivos", id=id))
+        else:
+            flash("Error al subir el archivo", "error")
+    return render_template(
+        "jinetes_y_amazonas/documentos.html",
+        form=form,
+        jya= id,
+        titulo="Subir archivo",
+        subir_archivo=True,
+    )
 
-    return redirect(url_for("jinetes_y_amazonas.listar"))
+@bp.route("/<int:id>/subir_enlace/", methods=["GET", "POST"])
+def subir_enlace(id: int):
+    
+    form = EnlaceForm()
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            titulo = form.titulo.data
+            jya_id = id
+            url = form.url.data
+            tipo_archivo = form.tipo_de_documento_id.data
+            cargar_archivo(jya_id, titulo, tipo_archivo, url, archivo_externo=True)
+
+            flash("Enlace a documento subido con exito", "exito")
+            return redirect(url_for("jinetes_y_amazonas.ver_archivos", id=id))
+        else:
+            flash("Error al subir el documento", "error")
+
+    return render_template(
+        "jinetes_y_amazonas/documentos.html",
+        form=form,
+        jya= id,
+        titulo="Subir enlace",
+        subir_enlace=True,
+    )
 
 @bp.get("/<int:id>/archivos")
 def ver_archivos(id: int):
@@ -241,20 +275,21 @@ def editar_archivo(jya_id: int, archivo_id:int):
     flash("Funcionalidad no implementada")
     return render_template("jinetes_y_amazonas/documentos.html", jya = archivo.jya)
 
-@bp.get("/archivo/<int:archivo_id>")
+@bp.get("/descargar_archivo/<int:archivo_id>")
 def descargar_archivo(archivo_id:int):
+    documento = obtener_documento(archivo_id)
     cliente = current_app.storage.client
-    b_name = "grupo17"
-    o_name = "WP_Effects-AI-Developers.pdf"
-    f_name = "archivo_generado_prueba1"
-    result = cliente.fget_object(b_name, o_name, f_name)
-    print("IMPRIMIENDO")
-    print(result)
-    #return redirect(url_for("jinetes_y_amazonas.listar"))
-    return send_file(result, as_attachment=True, download_name=f_name, mimetype="application/pdf")
+    archivo = cliente.get_object("grupo17", documento.url)
+    archivo_bytes = BytesIO(archivo.read())
+    extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
 
-@bp.get("/<int:id>/subir_enlace/")
-def subir_enlace(id: int):
-    jya = encontrar_jya(id)
-    flash("Funcionalidad no implementada")
-    return render_template("jinetes_y_amazonas/documentos.html", jya=jya)
+    return send_file(archivo_bytes,
+        as_attachment=True,
+        download_name=f"{documento.titulo}{extension}")
+
+@bp.get("/eliminar_documento/<int:id>")
+def eliminar_documento(id:int):
+    doc = eliminar_documento_j_y_a(id)
+    flash("Documento eliminado con éxito")
+
+    return redirect(url_for("jinetes_y_amazonas.ver_archivos", id=doc.jya_id))
