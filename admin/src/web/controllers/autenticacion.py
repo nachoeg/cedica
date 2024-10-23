@@ -2,7 +2,7 @@ from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 from src.core.usuarios import (actualizar_perfil, roles_por_usuario,
                                usuario_por_email_y_contraseña, usuario_por_id)
-from src.core.usuarios.usuario_forms import UsuarioEditarForm
+from src.core.usuarios.usuario_forms import UsuarioSinContraseñaForm
 from src.web.handlers.decoradores import (chequear_usuario_sesion,
                                           sesion_iniciada_requerida)
 
@@ -57,7 +57,7 @@ def ver_perfil():
 @sesion_iniciada_requerida
 def editar_perfil(id):
     usuario = usuario_por_id(id)
-    form = UsuarioEditarForm(obj=usuario)
+    form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'GET':
         form.roles.data = [str(rol.id) for rol in roles_por_usuario(id)]
     elif form.validate_on_submit():
