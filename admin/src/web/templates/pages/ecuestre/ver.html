@@ -36,7 +36,7 @@
     {% if tiene_permiso(session, 'ecuestre_eliminar') %}
     <button class="btn btn-danger w-full" type="submit" onclick="
       if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
-        window.location.href = `/ecuestre/${id}/eliminar`;
+        window.location.href = `/ecuestre/{{ecuestre.id}}/eliminar`;
       }">
       Eliminar
     </button>
