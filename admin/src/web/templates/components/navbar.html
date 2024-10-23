@@ -2,39 +2,39 @@
 avatar_placeholder_icon, show_password_icon %}
 
 <header
-  class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-800/65 text-sm py-2.5 border-b dark:border-neutral-700">
-  <nav class="max-w-[90rem] w-full mx-auto px-2 sm:px-5 lg:px-8 flex flex-wrap basis-full items-center justify-between">
+  class="fixed z-50 flex flex-wrap md:justify-start md:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-800/65 text-sm py-2.5 border-b dark:border-neutral-700">
+  <nav class="max-w-[90rem] w-full mx-auto px-2 md:px-5 lg:px-8 flex flex-wrap basis-full items-center justify-between">
 
     <!-- Logo -->
-    <a class="sm:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="/">
+    <a class="md:order-1 flex gap-1 text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="/">
       <img src="{{ url_for('static', filename='images/cedica-isotipo.webp')}}" alt="" class="max-h-7">
       <img src="{{ url_for('static', filename='images/cedica-logotipo.webp')}}" alt=""
         class="max-h-7 dark:brightness-200 dark:contrast-150">
     </a>
 
-    <div class="sm:order-3 flex items-center gap-x-2">
-      <!-- Hamburger button -->
-      <button type="button" class="sm:hidden hs-collapse-toggle btn btn-outline relative size-9"
-        id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
-        aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
-        {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
-        {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
-        <span class="sr-only">Toggle</span>
-      </button>
-
-      <span class="hidden sm:block">
-        {% include 'components/botonTema.html' %}
-      </span>
+    <div class="md:order-3 flex items-center gap-x-2 ">
 
       {% if not esta_autenticado(session) %}
         <a class="btn btn-outline size-9 p-0 xs:size-fit xs:py-2 xs:px-3"
           href="{{ url_for('autenticacion.iniciar_sesion') }}">
           {{login_icon('size-4')}}
-          Iniciar sesión
+          <span class="hidden xs:inline">Iniciar sesión</span>
         </a>
 
       {% else %}
-        <div class="hidden sm:block border-s h-6 mx-1.5 border-gray-200 dark:border-neutral-700"> </div>
+        <!-- Hamburger button -->
+        <button type="button" class="md:hidden hs-collapse-toggle btn btn-outline relative size-9"
+          id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
+          aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
+          {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
+          {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
+          <span class="sr-only">Toggle</span>
+        </button>
+  
+        <span class="hidden md:block">
+          {% include 'components/boton_tema.html' %}
+        </span>
+        <div class="hidden md:block border-s h-6 mx-1.5 border-gray-200 dark:border-neutral-700"> </div>
 
           <!-- Opciones de usuario -->
           <div class="hs-dropdown [--offset:16] relative inline-flex">
@@ -77,35 +77,30 @@ avatar_placeholder_icon, show_password_icon %}
 
     <!-- Menu de navegación -->
     <div id="hs-navbar-alignment"
-      class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
+      class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:grow-0 md:basis-auto md:block md:order-2"
       aria-labelledby="hs-navbar-alignment-collapse">
       {% if esta_autenticado(session) %}
-      <div class="flex flex-col my-2 sm:flex-row sm:items-center sm:my-0">
-        {% set navbarLinksClases = 'btn btn-ghost px-2 py-1.5' %}
-        {% if tiene_permiso(session, "jya_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('jinetes_y_amazonas.listar') }}">J&A</a>
-        {% endif %}
-        {% if tiene_permiso(session, "ecuestre_listar") %}
-        <a class="{{navbarLinksClases}}" href="/ecuestre">Ecuestre</a>
-        {% endif %}
-        {% if tiene_permiso(session, "miembro_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('miembro.miembro_listar')}}">Equipo</a>
-        {% endif %}
-        {% if tiene_permiso(session, "cobro_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('cobros.listar') }}">Cobros</a>
-        {% endif %}
-        {% if tiene_permiso(session, "pago_listar") %}
-        <a class="{{navbarLinksClases}}" href="{{ url_for('pago.pago_listar')}}">Pagos</a>
-        {% endif %}
-        {% if tiene_permiso(session, "usuario_listar") %}
-          <a class="{{navbarLinksClases}}" href="{{ url_for('usuarios.listado_usuarios') }}">Usuarios</a>
-        {% endif %}
+      <div class="flex flex-col me-0 lg:me-16 gap-1 my-2 md:flex-row md:items-center md:my-0">
+      {% set enlaces = [
+          {'nombre': 'J&A', 'url': url_for('jinetes_y_amazonas.listar'), 'permiso': 'jya_listar'},
+          {'nombre': 'Ecuestre', 'url': url_for('ecuestre.listar'), 'permiso': 'ecuestre_listar'},
+          {'nombre': 'Equipo', 'url': url_for('miembro.miembro_listar'), 'permiso': 'miembro_listar'},
+          {'nombre': 'Cobros', 'url': url_for('cobros.listar'), 'permiso': 'cobro_listar'},
+          {'nombre': 'Pagos', 'url': url_for('pago.pago_listar'), 'permiso': 'pago_listar'},
+          {'nombre': 'Usuarios', 'url': url_for('usuarios.listado_usuarios'), 'permiso': 'usuario_listar'}
+      ] %}
+      {% for enlace in enlaces %}
+          {% if tiene_permiso(session, enlace.permiso) %}
+              <a class="btn px-2 py-1.5 {% if request.path.startswith(enlace.url) %} btn-secondary {% else %} btn-ghost {% endif %}"
+                 href="{{ enlace.url }}">{{ enlace.nombre }}</a>
+          {% endif %}
+      {% endfor %}
       </div>
       {% endif %}
-      <div class="sm:hidden">
+      <div class="md:hidden">
         <hr class="border-t border-gray-200 dark:border-neutral-700 my-2">
         <div class="flex justify-between items-center dark:text-white px-2 py-2">Cambiar tema {% include
-          'components/botonTema.html' %}
+          'components/boton_tema.html' %}
         </div>
       </div>
     </div>

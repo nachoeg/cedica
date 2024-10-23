@@ -5,14 +5,14 @@
 {% block main %}
 <h1>{{titulo}}</h1>
 
-<form method="POST" class="formulario">
+<form novalidate method="POST" class="formulario">
     {{ form.hidden_tag() }}
 
     <div class="text-red-600">
         {{ form.tipo_id.label }}
         {{ form.tipo_id }}
         {% for error in form.tipo_id.errors %}
-            <div class="text-danger">{{ error }}</div>
+        <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
 
@@ -20,7 +20,7 @@
         {{ form.monto.label }}
         {{ form.monto }}
         {% for error in form.monto.errors %}
-            <div class="text-danger">{{ error }}</div>
+        <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
 
@@ -28,15 +28,15 @@
         {{ form.descripcion.label }}
         {{ form.descripcion }}
         {% for error in form.descripcion.errors %}
-            <div class="text-danger">{{ error }}</div>
+        <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
 
     <div class="text-red-600">
-        {{ form.fechaDePago.label }}
-        {{ form.fechaDePago }}
-        {% for error in form.fechaDePago.errors %}
-            <div class="text-danger">{{ error }}</div>
+        {{ form.fecha_pago.label }}
+        {{ form.fecha_pago }}
+        {% for error in form.fecha_pago.errors %}
+        <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
 
@@ -44,9 +44,11 @@
         {{ form.dni.label }}
         {{ form.dni }}
         {% for error in form.dni.errors %}
-            <div class="text-danger">{{ error }}</div>
+        <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
+
+    <a class="btn btn-secondary w-full" href="{{ url_for('pago.pago_listar')}}"> Volver </a>
 
     <div>
         {{ form.submit() }}
@@ -57,7 +59,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const today = new Date().toISOString().split('T')[0];
-        document.querySelector('[name="fechaDePago"]').setAttribute('max', today);
+        document.querySelector('[name="fecha_pago"]').setAttribute('max', today);
 
         const tipoSelect = document.getElementById('tipo_id');
         const dniGroup = document.getElementById('dni_group');

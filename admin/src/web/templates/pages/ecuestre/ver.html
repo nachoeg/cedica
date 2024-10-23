@@ -25,17 +25,24 @@
     <p><strong>Fecha de Ingreso:</strong> {{ ecuestre.fecha_ingreso }}</p>
     <p><strong>Sede:</strong> {{ ecuestre.sede }}</p>
     <p><strong>Tipo de J&A:</strong> {{ ecuestre.tipo_de_jya }}</p>
+    <p><strong>Entrenadores:</strong> {{ ecuestre.entrenadores }}</p>
+    <p><strong>Conductores:</strong> {{ ecuestre.conductores }}</p>
   </div>
+  {% if tiene_permiso(session, 'ecuestre_actualizar') or tiene_permiso(session, 'ecuestre_eliminar') %}
   <div class="contenedor-footer">
+    {% if tiene_permiso(session, 'ecuestre_actualizar') %}
     <a class="btn btn-secondary w-full" href="{{ url_for('ecuestre.editar', id=ecuestre.id) }}">Editar</a>
+    {% endif %}
+    {% if tiene_permiso(session, 'ecuestre_eliminar') %}
     <button class="btn btn-danger w-full" type="submit" onclick="
       if (confirm('¿Está seguro que desea borrar este ecuestre?')) {
-        window.location.href = `/ecuestre/${id}/eliminar`;
+        window.location.href = `/ecuestre/{{ecuestre.id}}/eliminar`;
       }">
       Eliminar
     </button>
-    </form>
+    {% endif %}
   </div>
+  {% endif %}
 </div>
 
 

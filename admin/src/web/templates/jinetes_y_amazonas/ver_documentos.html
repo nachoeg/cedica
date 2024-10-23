@@ -1,9 +1,15 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/pilled_nav.html" import pilled_nav %}
 
 {% block title %}Archivos de J&A{% endblock %}
 
 {% block main %}
+
+{{ pilled_nav([
+  {'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
+  {'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
+  ])}}
 
 {% set configuracion = {
 'encabezados': [
@@ -19,15 +25,20 @@
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'tipo', 'nombre': 'Tipo', 'tipo': 'seleccion', 'opciones': tipos_documento, 'valor': tipo_filtro}
 ],
-'crear': {
-'url': url_for('jinetes_y_amazonas.subir_archivo'),
-'nombre': 'Subir archivo'
-}
+'subir': {
+  'url': url_for('jinetes_y_amazonas.subir_archivo', id=jya.id),
+  'nombre': 'Subir'
+  },
+  'enlace': {
+  'url': url_for('jinetes_y_amazonas.subir_enlace', id=jya.id),
+  'nombre': 'Enlace'
+  },
 }
 %}
 
-{{ tabla(configuracion, archivos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+{{ tabla(configuracion, documentos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
 {% endblock %}
 

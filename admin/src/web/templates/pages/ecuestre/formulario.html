@@ -42,14 +42,6 @@
       {% endfor %}
     </div>
     <div>
-      <span class="input-checkbox">
-        {{ form.es_compra.label }} {{ form.es_compra }}
-      </span>
-      {% for error in form.es_compra.errors %}
-      <span class="text-red-600">{{ error }}</span>
-      {% endfor %}
-    </div>
-    <div>
       {{ form.fecha_ingreso.label }} {{ form.fecha_ingreso }}
       {% for error in form.fecha_ingreso.errors %}
       <span class="text-red-600">{{ error }}</span>
@@ -64,6 +56,24 @@
     <div>
       {{ form.tipo_de_jya_id.label }} {{ form.tipo_de_jya_id }}
       {% for error in form.tipo_de_jya_id.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="space-x-1">
+      {{ form.es_compra.label }} {{ form.es_compra }}
+      {% for error in form.es_compra.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.entrenadores.label }} {{ form.entrenadores }}
+      {% for error in form.entrenadores.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.conductores.label }} {{ form.conductores }}
+      {% for error in form.conductores.errors %}
       <span class="text-red-600">{{ error }}</span>
       {% endfor %}
     </div>

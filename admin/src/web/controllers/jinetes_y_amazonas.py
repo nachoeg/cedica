@@ -1,9 +1,9 @@
 import string
-from flask import render_template, request, redirect, url_for, send_file
+from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
 from os import fstat
-from src.core.jinetes_y_amazonas import listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo
+from src.core.jinetes_y_amazonas import (listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo, listar_documentos, listar_tipos_de_documentos, listar_diagnosticos, listar_profesores, listar_conductores, listar_auxiliares_pista, listar_caballos)
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
 from src.core.miembro.miembro import Miembro
@@ -64,7 +64,7 @@ def nuevo_j_y_a():
 @bp.route("/cargar_info_salud/<string:id>", methods=["GET", "POST"])
 def cargar_info_salud(id: string):
     form = InfoSaludJYAForm()
-    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in Diagnostico.query.all()]
+    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
     if form.validate_on_submit():
         certificado_discapacidad = form.certificado_discapacidad.data
         diagnostico_id = form.diagnostico_id.data
@@ -111,10 +111,10 @@ def cargar_info_esc(id : string):
 @bp.route("/cargar_info_inst/<string:id>", methods=["GET", "POST"])
 def cargar_info_inst(id : string):
     form = InfoInstitucionalJYAForm()
-    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in Miembro.query.all()]
-    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in Miembro.query.all()]
-    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in Ecuestre.query.all()]
-    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in Miembro.query.all()]
+    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in listar_profesores]
+    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in listar_conductores]
+    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in listar_caballos]
+    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista]
     if form.validate_on_submit():
         propuesta_de_trabajo = form.propuesta_trabajo.data
         condicion = form.condicion.data
@@ -196,13 +196,49 @@ def aceptar_archivo(id):
 @bp.get("/<int:id>/archivos")
 def ver_archivos(id: int):
     archivos = encontrar_archivos_de_jya(id)
+    jya = encontrar_jya(id)
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "id")
+    pagina = int(request.args.get("pagina", 1))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    nombre_filtro = request.args.get("nombre", "")
+    tipo_filtro = request.args.get("tipo", "")
 
-    return render_template("jinetes_y_amazonas/ver_documentos.html", archivos=archivos)
+    documentos, cant_resultados = listar_documentos(
+        jya.id,
+        nombre_filtro,
+        tipo_filtro,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pagina,
+    )
+
+    tipos_documento = listar_tipos_de_documentos()
+
+    cant_paginas = cant_resultados // cant_por_pagina
+    if cant_resultados % cant_por_pagina != 0:
+        cant_paginas += 1
+
+    return render_template(
+        "jinetes_y_amazonas/ver_documentos.html",
+        jya=jya,
+        documentos=documentos,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
+        nombre_filtro=nombre_filtro,
+        tipo_filtro=tipo_filtro,
+        tipos_documento=tipos_documento,
+    )
+
 
 @bp.get("/<int:jya_id>/archivos/<int:archivo_id>/editar/")
 def editar_archivo(jya_id: int, archivo_id:int):
     archivo = encontrar_archivo(archivo_id)
-
+    flash("Funcionalidad no implementada")
     return render_template("jinetes_y_amazonas/documentos.html", jya = archivo.jya)
 
 @bp.get("/archivo/<int:archivo_id>")
@@ -216,3 +252,9 @@ def descargar_archivo(archivo_id:int):
     print(result)
     #return redirect(url_for("jinetes_y_amazonas.listar"))
     return send_file(result, as_attachment=True, download_name=f_name, mimetype="application/pdf")
+
+@bp.get("/<int:id>/subir_enlace/")
+def subir_enlace(id: int):
+    jya = encontrar_jya(id)
+    flash("Funcionalidad no implementada")
+    return render_template("jinetes_y_amazonas/documentos.html", jya=jya)

@@ -79,6 +79,44 @@ def run():
         usuario_id=2,
         activo=False
     )
+    
+    #Creo un miembro con con puesto entrenador de caballos para asignarlo a un ecuestre
+    miembro3 = miembro.crear_miembro(
+        nombre="Fernando",
+        apellido="Gomez",
+        dni="34567890",
+        nombreContactoEmergencia="Juan",
+        telefonoContactoEmergencia="345678901",
+        obraSocial="OSDE",
+        numeroAfiliado="345678901",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="fer@mail.com",
+        telefono="333444555",
+        profesion_id=1,
+        puesto_laboral_id=7,
+        usuario_id=3,
+        activo=True
+    )
+    
+    #Creo un miembro con con puesto conductor para asignarlo a un ecuestre
+    miembro4 = miembro.crear_miembro(
+        nombre="Carlos",
+        apellido="Gimenez",
+        dni="45678901",
+        nombreContactoEmergencia="Pedro",
+        telefonoContactoEmergencia="456789012",
+        obraSocial="OSDE",
+        numeroAfiliado="456789012",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="carlos@mail.com",
+        telefono="444555666",
+        profesion_id=1,
+        puesto_laboral_id=3,
+        usuario_id=4,
+        activo=True
+    )
 
     tipos_de_jya = [
         "Hipoterapia",
@@ -141,6 +179,8 @@ def run():
         fecha_ingreso="2020-01-01",
         sede="Sede1",
         tipo_de_jya_id=1,
+        conductores=[miembro4],
+        entrenadores=[miembro3]
     )
     ecuestre2 = ecuestre.crear_ecuestre(
         nombre="Caballo2",
@@ -152,13 +192,9 @@ def run():
         fecha_ingreso="2020-01-01",
         sede="Sede2",
         tipo_de_jya_id=2,
+        conductores=[],
+        entrenadores=[]
     )
-    
-    ecuestre.asignar_conductor(ecuestre1, miembro1)
-    ecuestre.asignar_conductor(ecuestre1, miembro2)
-    ecuestre.asignar_entrenador(ecuestre1, miembro2)
-    ecuestre.asignar_conductor(ecuestre2, miembro2)
-    ecuestre.asignar_entrenador(ecuestre2, miembro2)
 
     tipos_de_pagos = [
         "Honorario",
@@ -172,7 +208,7 @@ def run():
     pago1 = pago.crear_pago(
         monto=10000,
         descripcion="Horas extras",
-        fechaDePago="2024-02-11",
+        fecha_pago="2024-02-11",
         miembro_id=miembro1.id,
         tipo_id=1
     )
@@ -180,9 +216,21 @@ def run():
     pago2 = pago.crear_pago(
         monto=20000,
         descripcion="Mantenimiento",
-        fechaDePago="2024-03-12",
+        fecha_pago="2024-03-12",
         tipo_id=2
     )
+
+    tipos_de_documento_miembro = [
+        "Titulo",
+        "Copia del DNI",
+        "CV",
+        "Certificado",
+        "Vacunacion",
+        "Otro"
+    ]
+    
+    for tipo in tipos_de_documento_miembro:
+        miembro.crear_tipo_de_documento(tipo=tipo)
 
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
