@@ -66,6 +66,18 @@
       {% endfor %}
     </div>
     <div>
+      {{ form.entrenadores.label }} {{ form.entrenadores }}
+      {% for error in form.entrenadores.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.conductores.label }} {{ form.conductores }}
+      {% for error in form.conductores.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div>
       {{ form.submit() }}
     </div>
   </div>

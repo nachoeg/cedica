@@ -1,5 +1,6 @@
 from src.core.database import db
-import enum
+from sqlalchemy import event
+from flask import current_app
 
 
 class TipoDeJyA(db.Model):
@@ -38,8 +39,9 @@ class Documento(db.Model):
     tipo_de_documento = db.relationship("TipoDeDocumento", backref="documentos")
 
     # Relacion con ecuestre
-    ecuestre_id = db.Column(db.Integer, db.ForeignKey("ecuestres.id"), nullable=False)
-    ecuestre = db.relationship("Ecuestre", backref="documentos")
+    ecuestre_id = db.Column(
+        db.Integer, db.ForeignKey("ecuestres.id", ondelete="CASCADE"), nullable=False
+    )
 
     def to_dict(self):
         return {
@@ -86,6 +88,14 @@ class Ecuestre(db.Model):
         secondary="conductores_ecuestre",
         lazy=True,
         backref=db.backref("conductores_ecuestres", lazy=True),
+    )
+
+    # Relacion con documentos
+    documentos = db.relationship(
+        "Documento",
+        backref="ecuestre",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
 
     def to_dict(self):
@@ -135,3 +145,19 @@ conductores_ecuestre = db.Table(
     ),
     db.Column("miembro_id", db.Integer, db.ForeignKey("miembro.id"), primary_key=True),
 )
+
+
+# Eliminar archivo asociado en MinIO antes de eliminar el documento de la base de datos
+@event.listens_for(Documento, "before_delete")
+def before_delete(mapper, connection, target):
+    client = current_app.storage.client
+    client.remove_object("grupo17", target.url)
+
+
+# Eliminar archivos asociados en MinIO antes de eliminar el ecuestre de la base de datos
+@event.listens_for(Ecuestre, "before_delete")
+def before_delete_ecuestre(mapper, connection, target):
+    client = current_app.storage.client
+    documentos = Documento.query.filter_by(ecuestre_id=target.id).all()
+    for documento in documentos:
+        client.remove_object("grupo17", documento.url)

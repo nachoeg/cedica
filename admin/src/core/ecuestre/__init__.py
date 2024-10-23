@@ -1,5 +1,6 @@
 from src.core.database import db
 from src.core.ecuestre.ecuestre import Ecuestre, TipoDeJyA, TipoDeDocumento, Documento
+from src.core.miembro import Miembro, PuestoLaboral
 from datetime import datetime
 
 
@@ -63,6 +64,24 @@ def listar_tipos_de_documentos():
     return tipos_de_documentos
 
 
+def listar_entrenadores():
+    entrenadores = (
+        Miembro.query.join(PuestoLaboral, Miembro.puesto_laboral_id == PuestoLaboral.id)
+        .filter(PuestoLaboral.nombre == "Entrenador de Caballos")
+        .all()
+    )
+    return entrenadores
+
+
+def listar_conductores():
+    conductores = (
+        Miembro.query.join(PuestoLaboral)
+        .filter(PuestoLaboral.nombre == "Conductor")
+        .all()
+    )
+    return conductores
+
+
 def crear_ecuestre(
     nombre,
     fecha_nacimiento,
@@ -73,6 +92,8 @@ def crear_ecuestre(
     fecha_ingreso,
     sede,
     tipo_de_jya_id,
+    conductores,
+    entrenadores,
 ):
     ecuestre = Ecuestre(
         nombre=nombre,
@@ -84,6 +105,8 @@ def crear_ecuestre(
         fecha_ingreso=fecha_ingreso,
         sede=sede,
         tipo_de_jya_id=tipo_de_jya_id,
+        conductores=conductores,
+        entrenadores=entrenadores,
     )
     db.session.add(ecuestre)
     db.session.commit()

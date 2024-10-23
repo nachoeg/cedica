@@ -18,9 +18,12 @@ from src.core.ecuestre import (
     listar_documentos,
     listar_tipos_de_jya,
     listar_tipos_de_documentos,
+    listar_conductores,
+    listar_entrenadores,
     crear_documento,
     guardar_cambios,
 )
+from src.core.miembro import obtener_miembro
 from src.core.ecuestre.ecuestre_form import EcuestreForm
 from src.core.ecuestre.documento_form import (
     SubirArchivoForm,
@@ -75,7 +78,7 @@ def listar():
 @sesion_iniciada_requerida
 def ver(id: int):
     ecuestre = obtener_ecuestre(id)
-    return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre)
+    return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre.to_dict())
 
 
 @bp.route("/crear/", methods=["GET", "POST"])
@@ -84,6 +87,12 @@ def ver(id: int):
 def crear():
     form = EcuestreForm()
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
+    form.conductores.choices = [(-1, "Ninguno")] + [
+        (c.id, c.nombre + " " + c.apellido) for c in listar_conductores()
+    ]
+    form.entrenadores.choices = [(-1, "Ninguno")] + [
+        (e.id, e.nombre + " " + e.apellido) for e in listar_entrenadores()
+    ]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -96,6 +105,16 @@ def crear():
             fecha_ingreso = form.fecha_ingreso.data
             sede = form.sede.data
             tipo_de_jya_id = form.tipo_de_jya_id.data
+            conductores = [
+                obtener_miembro(conductor)
+                for conductor in form.conductores.data
+                if conductor != -1
+            ]
+            entrenadores = [
+                obtener_miembro(entrenador)
+                for entrenador in form.entrenadores.data
+                if entrenador != -1
+            ]
             crear_ecuestre(
                 nombre,
                 fecha_nacimiento,
@@ -106,6 +125,8 @@ def crear():
                 fecha_ingreso,
                 sede,
                 tipo_de_jya_id,
+                conductores,
+                entrenadores,
             )
             flash("Ecuestre creado con exito", "exito")
             return redirect(url_for("ecuestre.listar"))
@@ -124,6 +145,12 @@ def editar(id: int):
     ecuestre = obtener_ecuestre(id)
     form = EcuestreForm(obj=ecuestre)
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
+    form.entrenadores.choices = [(-1, "Ninguno")] + [
+        (e.id, e.nombre + " " + e.apellido) for e in listar_entrenadores()
+    ]
+    form.conductores.choices = [(-1, "Ninguno")] + [
+        (c.id, c.nombre + " " + c.apellido) for c in listar_conductores()
+    ]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -136,11 +163,24 @@ def editar(id: int):
             ecuestre.fecha_ingreso = form.fecha_ingreso.data
             ecuestre.sede = form.sede.data
             ecuestre.tipo_de_jya_id = form.tipo_de_jya_id.data
+            ecuestre.conductores = [
+                obtener_miembro(conductor)
+                for conductor in form.conductores.data
+                if conductor != -1
+            ]
+            ecuestre.entrenadores = [
+                obtener_miembro(entrenador)
+                for entrenador in form.entrenadores.data
+                if entrenador != -1
+            ]
             guardar_cambios()
             flash("Ecuestre actualizado con exito", "exito")
             return redirect(url_for("ecuestre.listar"))
         else:
             flash("Error al actualizar el ecuestre", "error")
+
+    form.conductores.data = [c.id for c in ecuestre.conductores]
+    form.entrenadores.data = [e.id for e in ecuestre.entrenadores]
 
     return render_template(
         "pages/ecuestre/formulario.html",
@@ -282,9 +322,7 @@ def subir_enlace(id: int):
 @chequear_permiso("ecuestre_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
-    documento = eliminar_documento_ecuestre(documento_id)
-    client = current_app.storage.client
-    client.remove_object("grupo17", documento.url)
+    eliminar_documento_ecuestre(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("ecuestre.documentos", id=id))
 
