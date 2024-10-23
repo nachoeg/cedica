@@ -26,7 +26,8 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     return (total, usuarios)
 
 
-def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[], creacion=datetime.now):
+def crear_usuario(email, contraseña, alias, admin_sistema=False,
+                  id_roles=[], creacion=datetime.now()):
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
                       alias=alias, admin_sistema=admin_sistema,
@@ -86,8 +87,10 @@ def usuario_por_email(email):
 
     return usuario
 
+
 def usuario_por_alias(alias):
     return Usuario.query.filter_by(alias=alias).first()
+
 
 def usuario_por_email_y_contraseña(email, contraseña):
     usuario = usuario_por_email(email)
@@ -96,6 +99,14 @@ def usuario_por_email_y_contraseña(email, contraseña):
         return usuario
 
     return None
+
+
+def todos_emails():
+    return db.session.execute(db.select(Usuario.email)).scalars().all()
+
+
+def todos_alias():
+    return db.session.execute(db.select(Usuario.alias)).scalars().all()
 
 
 # ROLES

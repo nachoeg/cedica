@@ -1,13 +1,17 @@
+from src.core.usuarios import todos_alias, todos_emails
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
-from wtforms.validators import Email, InputRequired, Length
+from wtforms.validators import Email, InputRequired, Length, ValidationError
 from wtforms.widgets import html_params
 from src.core.database import db
-from core.usuarios.usuario import Rol
+from core.usuarios.usuario import Rol, Usuario
 
 
 def select_multi_checkbox(field, ul_class='', **kwargs):
+    """Devuelve un widget personalizado de selección múltiple
+    en el que cada opción es una checkbox.
+    """
     kwargs.setdefault('type', 'checkbox')
     field_id = kwargs.pop('id', field.id)
     html = ['<ul %s>' % html_params(id=field_id, class_=ul_class)]
@@ -22,14 +26,48 @@ def select_multi_checkbox(field, ul_class='', **kwargs):
     return ''.join(html)
 
 
-# def emails():
-#     emails = db.session.execute(db.select(Usuario.email)).scalars().all()
+class Unique(object):
+    """Validador que verifica que el valor del campo
+     sea único si se modificó.
+     """
+    def __init__(self, model, field, message=None):
+        self.model = model
+        self.field = field
+        if message is None:
+            message = u'Este valor ya existe'
+        self.message = message
 
-#     return emails
+    def __call__(self, form, field):
+        if field.object_data == field.data:
+            return
+        check = db.session.execute(db.select(self.model).where(self.field == field.data)).scalars().all()
+        # raise Exception(f'{check}')
+        # check = DBSession.query(model).filter(field == data).first()
+        if check:
+            raise ValidationError(self.message)
 
 
-class UsuarioForm(FlaskForm):
-    email = EmailField("Email", validators=[InputRequired(), Email()])
+class UsuarioSinContraseñaForm(FlaskForm):
+    email = EmailField("Email", validators=[
+        InputRequired("El formato del email no es correcto."),
+        Email(),
+        Unique(Usuario, Usuario.email, message="El mail ingresado ya existe"),
+        ])
+    alias = StringField("Alias", validators=[
+        Unique(Usuario, Usuario.alias, message="El alias ingresado ya existe"),
+        ])
+    admin_sistema = BooleanField("¿Es admin general?", default=False)
+    roles = SelectMultipleField("Roles", widget=select_multi_checkbox)
+
+    def __init__(self, *args, **kwargs):
+        super(UsuarioSinContraseñaForm, self).__init__(*args, **kwargs)
+        self.roles.choices = [
+            (rol.id, rol.nombre) for rol in
+            db.session.execute(db.select(Rol)).unique().scalars().all()
+            ]
+
+
+class UsuarioForm(UsuarioSinContraseñaForm):
     contraseña = PasswordField(
         "Contraseña",
         validators=[InputRequired(),
@@ -37,27 +75,3 @@ class UsuarioForm(FlaskForm):
                         menos %(min)d caracteres")
                     ]
         )
-    alias = StringField("Alias")
-    admin_sistema = BooleanField("¿Es admin general?", default=False)
-    roles = SelectMultipleField("Roles", widget=select_multi_checkbox)
-
-    def __init__(self, *args, **kwargs):
-        super(UsuarioForm, self).__init__(*args, **kwargs)
-        self.roles.choices = [
-            (rol.id, rol.nombre) for rol in
-            db.session.execute(db.select(Rol)).unique().scalars().all()
-            ]
-
-
-class UsuarioEditarForm(FlaskForm):
-    email = EmailField("Email", validators=[InputRequired(), Email()])
-    alias = StringField("Alias")
-    admin_sistema = BooleanField("¿Es admin general?", default=False)
-    roles = SelectMultipleField("Roles", widget=select_multi_checkbox)
-
-    def __init__(self, *args, **kwargs):
-        super(UsuarioEditarForm, self).__init__(*args, **kwargs)
-        self.roles.choices = [
-            (rol.id, rol.nombre) for rol in
-            db.session.execute(db.select(Rol)).unique().scalars().all()
-            ]
