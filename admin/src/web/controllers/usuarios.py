@@ -20,7 +20,7 @@ def listado_usuarios():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     email_filtro = request.args.get("email", "")
     activo_filtro = request.args.get("activo", "")
     rol_filtro = request.args.get("rol", "")
