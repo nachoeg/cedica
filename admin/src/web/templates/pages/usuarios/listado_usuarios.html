@@ -7,13 +7,12 @@
 
 {% set configuracion = {
     'encabezados': [
-      {'id': 'id', 'nombre': 'Id'},
-      {'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
-      {'id': 'email', 'nombre': 'Email', 'ordenar': True},
       {'id': 'alias', 'nombre': 'Alias', 'ordenar': True},
+      {'id': 'email', 'nombre': 'Email', 'ordenar': True},
+      {'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
+      {'id': 'creacion', 'nombre': 'Fecha de creación', 'ordenar': True},
       {'id': 'admin_sistema', 'nombre': 'Es admin', 'ordenar': True},
       {'id': 'roles', 'nombre': 'Roles'},
-      {'id': 'fecha_creacion', 'nombre': 'Fecha de creación', 'ordenar': True},
     ],
     'acciones': [
       {'nombre': 'Ver', 'funcion': 'verUsuario'},

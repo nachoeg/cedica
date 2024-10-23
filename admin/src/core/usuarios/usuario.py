@@ -22,13 +22,12 @@ class Usuario(db.Model):
 
     def to_dict(self):
         return {
-            "id": self.id,
-            "activo": booleano_a_palabra(self.activo),
-            "email": self.email,
             "alias": self.alias,
+            "email": self.email,
+            "activo": booleano_a_palabra(self.activo),
+            "fecha_creación": fechahora_a_fecha(self.creacion),
             "admin_sistema": booleano_a_palabra(self.admin_sistema),
             "roles": "".join(("" + rol.nombre + ". ") for rol in self.roles),
-            "fecha_creación": fechahora_a_fecha(self.creacion),
         }
 
     def __repr__(self):

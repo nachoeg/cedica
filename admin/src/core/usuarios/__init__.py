@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.core.bcrypt import bcrypt
 from src.core.database import db
 from core.usuarios.usuario import Permiso, Rol, Usuario
@@ -8,13 +9,14 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
                     email_filtro, activo_filtro, rol_filtro):
     # raise Exception(f'{rol_filtro}{nombres_roles()}')
     usuarios = db.paginate(
-        db.select(Usuario
-                  ).distinct().join(Usuario.roles, isouter=True
-                                    ).where(Usuario.email.ilike(f"%{email_filtro}%"),
-                                            (Usuario.activo == activo_filtro) if activo_filtro != '' else True,
-                                            (Rol.nombre == rol_filtro) if rol_filtro != '' else True,
-                                            ).order_by(getattr(getattr(
-                                                Usuario, ordenar_por), orden)()),
+        db.select(
+            Usuario).distinct().join(
+                Usuario.roles, isouter=True).where(
+                    Usuario.email.ilike(f"%{email_filtro}%"),
+                    (Usuario.activo == activo_filtro) if activo_filtro != '' else True,
+                    (Rol.nombre == rol_filtro) if rol_filtro != '' else True,
+                    ).order_by(getattr(getattr(
+                        Usuario, ordenar_por), orden)()),
         page=pagina,
         per_page=cant_por_pagina,
         error_out=False)
@@ -24,10 +26,11 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     return (total, usuarios)
 
 
-def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[]):
+def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[], creacion=datetime.now):
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
-                      alias=alias, admin_sistema=admin_sistema)
+                      alias=alias, admin_sistema=admin_sistema,
+                      creacion=creacion)
 
     roles = roles_por_id(id_roles)
     # raise Exception(f'{roles}')
