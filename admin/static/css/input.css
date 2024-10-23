@@ -135,6 +135,10 @@
   @apply px-0 py-0 rounded-r-none;
 }
 
+.formulario select[multiple] option {
+  @apply py-1 px-3;
+}
+
 .dropdown input[type="file"],
 .formulario input[type="file"] {
   @apply p-0 pe-3 file:bg-gray-100 file:border-0 file:me-4 file:py-2 file:px-4 dark:file:bg-neutral-700 dark:file:text-neutral-200;

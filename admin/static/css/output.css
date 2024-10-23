@@ -1830,6 +1830,10 @@ html {
   white-space: nowrap;
 }
 
+.text-nowrap {
+  text-wrap: nowrap;
+}
+
 .\!rounded-sm {
   border-radius: 0.125rem !important;
 }
@@ -2498,6 +2502,13 @@ html {
   padding-right: 0px;
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+.formulario select[multiple] option {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 .dropdown input[type="file"],

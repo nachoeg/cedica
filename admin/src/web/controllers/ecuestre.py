@@ -87,10 +87,10 @@ def ver(id: int):
 def crear():
     form = EcuestreForm()
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
-    form.conductores.choices = [
+    form.conductores.choices = [(-1, "Ninguno")] + [
         (c.id, c.nombre + " " + c.apellido) for c in listar_conductores()
     ]
-    form.entrenadores.choices = [
+    form.entrenadores.choices = [(-1, "Ninguno")] + [
         (e.id, e.nombre + " " + e.apellido) for e in listar_entrenadores()
     ]
 
@@ -106,10 +106,14 @@ def crear():
             sede = form.sede.data
             tipo_de_jya_id = form.tipo_de_jya_id.data
             conductores = [
-                obtener_miembro(conductor) for conductor in form.conductores.data
+                obtener_miembro(conductor)
+                for conductor in form.conductores.data
+                if conductor != -1
             ]
             entrenadores = [
-                obtener_miembro(entrenador) for entrenador in form.entrenadores.data
+                obtener_miembro(entrenador)
+                for entrenador in form.entrenadores.data
+                if entrenador != -1
             ]
             crear_ecuestre(
                 nombre,
@@ -141,10 +145,10 @@ def editar(id: int):
     ecuestre = obtener_ecuestre(id)
     form = EcuestreForm(obj=ecuestre)
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
-    form.entrenadores.choices = [
+    form.entrenadores.choices = [(-1, "Ninguno")] + [
         (e.id, e.nombre + " " + e.apellido) for e in listar_entrenadores()
     ]
-    form.conductores.choices = [
+    form.conductores.choices = [(-1, "Ninguno")] + [
         (c.id, c.nombre + " " + c.apellido) for c in listar_conductores()
     ]
 
@@ -160,10 +164,14 @@ def editar(id: int):
             ecuestre.sede = form.sede.data
             ecuestre.tipo_de_jya_id = form.tipo_de_jya_id.data
             ecuestre.conductores = [
-                obtener_miembro(conductor) for conductor in form.conductores.data
+                obtener_miembro(conductor)
+                for conductor in form.conductores.data
+                if conductor != -1
             ]
             ecuestre.entrenadores = [
-                obtener_miembro(entrenador) for entrenador in form.entrenadores.data
+                obtener_miembro(entrenador)
+                for entrenador in form.entrenadores.data
+                if entrenador != -1
             ]
             guardar_cambios()
             flash("Ecuestre actualizado con exito", "exito")
