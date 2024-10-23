@@ -9,10 +9,11 @@
 'encabezados': [
 {'id': 'id', 'nombre': 'Id'},
 {'id': 'fecha_pago', 'nombre': 'Fecha de pago', 'ordenar': True},
-{'id': 'medio_de_pago', 'nombre': 'Medio de pago', 'ordenar': True},
+{'id': 'medio_de_pago', 'nombre': 'Medio de pago'},
 {'id': 'monto', 'nombre': 'Monto'},
 {'id': 'observaciones', 'nombre': 'Observacones'},
-{'id': 'joa', 'nombre': 'Jinete/Amazona'}
+{'id': 'joa', 'nombre': 'Jinete/Amazona'},
+{'id': 'recibio_el_dinero', 'nombre': "Recibio el dinero"}
 ],
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verCobro'},
@@ -21,6 +22,10 @@
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'apellido', 'nombre': 'Apellido', 'tipo': 'texto', 'valor': apellido_filtro },
+{'id': 'medio_de_pago', 'nombre': 'Medio de pago', 'tipo': 'seleccion', 'opciones': medios_de_pago,'valor': medio_pago_filtro },
+{'id': 'despues_de', 'nombre': 'Después de', 'tipo': 'fecha', 'valor': despues_de_filtro },
+{'id': 'antes_de', 'nombre': 'Antes de', 'tipo': 'fecha', 'valor': antes_de_filtro },
 ],
 'crear': {
 'url': url_for('cobros.nuevo_cobro'),

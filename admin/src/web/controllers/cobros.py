@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
-from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices
+from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices, listar_medios_de_pago
 from src.core.cobros.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 from src.core.miembro.miembro import Miembro
@@ -17,16 +17,26 @@ def listar():
     pagina = int(request.args.get('pagina', 1))
     cant_por_pag = int(request.args.get('por_pag',10))
     nombre_filtro = request.args.get("nombre", "")
+    apellido_filtro = request.args.get("apellido", "")
+    medio_pago_filtro = request.args.get("medio_de_pago", "")
+    despues_de_filtro = request.args.get("despues_de", "")
+    antes_de_filtro = request.args.get("antes_de", "")
 
-    cobros = listar_cobros()
+    cobros = listar_cobros(
+        nombre_filtro, apellido_filtro, medio_pago_filtro,despues_de_filtro, antes_de_filtro, ordenar_por, orden, pagina, cant_por_pag
+    )
+
+    medios_de_pago = listar_medios_de_pago()
+    
     cant_resultados = len(cobros.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
     
-        return render_template(
+    return render_template(
         "cobros/listar.html",
         cobros=cobros,
+        medios_de_pago = medios_de_pago,
         cant_resultados=cant_resultados,
         cant_paginas=cant_paginas,
         pagina=pagina,

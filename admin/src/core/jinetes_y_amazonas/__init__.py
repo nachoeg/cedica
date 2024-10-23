@@ -1,6 +1,6 @@
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
-from src.core.jinetes_y_amazonas.documentos import Archivo_JYA
+from src.core.jinetes_y_amazonas.documentos import Archivo_JYA, TipoArchivo
 from src.core.miembro.miembro import Miembro
 from src.core.miembro.extras import PuestoLaboral
 from src.core.ecuestre.ecuestre import Ecuestre
@@ -105,16 +105,14 @@ def listar_documentos(
     pagina=1,
     cant_por_pagina=10,
 ):
-    if tipo_filtro == "":
-        query = Archivo_JYA.query.filter(
+    query = Archivo_JYA.query.filter(
             Archivo_JYA.jya_id == jya_id,
             Archivo_JYA.titulo.ilike(f'%{nombre_filtro}%'),
         )
-    else:
-            query = Archivo_JYA.query.filter(
-            Archivo_JYA.jya_id == jya_id,
-            Archivo_JYA.titulo.ilike(f'%{nombre_filtro}%'),
-            Archivo_JYA.tipo_archivo == tipo_filtro
+    if tipo_filtro != "":
+        tipo = TipoArchivo(tipo_filtro).name
+        query = query.filter(
+            Archivo_JYA.tipo_archivo == tipo
         )
     
     cant_resultados = query.count()
@@ -129,7 +127,8 @@ def listar_documentos(
 
 
 def listar_tipos_de_documentos():
-    tipos_de_documentos = Archivo_JYA.listar_tipos()
+    tipos_de_documentos = TipoArchivo.listar()
+
     return tipos_de_documentos
 
 

@@ -3,23 +3,23 @@ from datetime import datetime
 import enum
 from sqlalchemy.types import Enum
 
+class TipoArchivo(enum.Enum):
+    entrevista = "Entrevista"
+    evaluacion = "Evaluacion"
+    planificacion = "Planificacion"
+    evolucion = "Evolución"
+    cronica = "Cronica"
+    documental = "Documental"
+    
+    @classmethod
+    def listar(self):
+        return self._member_map_.values()
+    
+    def __str__(self):
+        return f'{self.value}'
+
 class Archivo_JYA(db.Model):
     __tablename__ = "archivos_jya"
-
-    class TipoArchivo(enum.Enum):
-        entrevista = "Entrevista"
-        evaluacion = "Evaluacion"
-        planificacion = "Planificacion"
-        evolucion = "Evolución"
-        cronica = "Cronica"
-        documental = "Documental"
-        
-        @classmethod
-        def listar(self):
-            return self._member_map_.values()
-        
-        def __str__(self):
-            return f'{self.value}'
         
     id = db.Column(db.Integer, primary_key = True)
     titulo = db.Column(db.String(50))
@@ -27,10 +27,7 @@ class Archivo_JYA(db.Model):
     tipo_archivo = db.Column(Enum(TipoArchivo))
     jya_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
     jya = db.relationship('JineteOAmazona', back_populates="documentos")
-    
-    @classmethod
-    def listar_tipos(cls):
-        return [tipo.value for tipo in cls.TipoArchivo.listar()]
+
     
     def to_dict(self):
         return {
