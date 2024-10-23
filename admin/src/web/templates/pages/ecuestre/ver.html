@@ -25,6 +25,8 @@
     <p><strong>Fecha de Ingreso:</strong> {{ ecuestre.fecha_ingreso }}</p>
     <p><strong>Sede:</strong> {{ ecuestre.sede }}</p>
     <p><strong>Tipo de J&A:</strong> {{ ecuestre.tipo_de_jya }}</p>
+    <p><strong>Entrenadores:</strong> {{ ecuestre.entrenadores }}</p>
+    <p><strong>Conductores:</strong> {{ ecuestre.conductores }}</p>
   </div>
   {% if tiene_permiso(session, 'ecuestre_actualizar') or tiene_permiso(session, 'ecuestre_eliminar') %}
   <div class="contenedor-footer">

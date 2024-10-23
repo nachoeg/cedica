@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired
 from wtforms.fields import (
     BooleanField,
     SelectField,
     DateField,
     StringField,
     SubmitField,
+    SelectMultipleField,
 )
 from datetime import datetime
 
@@ -37,4 +37,6 @@ class EcuestreForm(FlaskForm):
         "Sede", validators=[DataRequired("Ingrese la sede del ecuestre")]
     )
     tipo_de_jya_id = SelectField("Tipo de Jinete y Amazona", coerce=int)
+    conductores = SelectMultipleField("Conductores", coerce=int)
+    entrenadores = SelectMultipleField("Entrenadores", coerce=int)
     submit = SubmitField("Guardar")
