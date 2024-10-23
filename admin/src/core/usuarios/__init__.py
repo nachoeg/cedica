@@ -4,11 +4,17 @@ from core.usuarios.usuario import Permiso, Rol, Usuario
 
 
 # USUARIOS
-def listar_usuarios(email_filtro, orden, ordenar_por, pagina, cant_por_pagina):
+def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
+                    email_filtro, activo_filtro, rol_filtro):
+    # raise Exception(f'{rol_filtro}{nombres_roles()}')
     usuarios = db.paginate(
-        db.select(
-            Usuario
-            ).order_by(getattr(getattr(Usuario, ordenar_por), orden)()),
+        db.select(Usuario
+                  ).distinct().join(Usuario.roles, isouter=True
+                                    ).where(Usuario.email.ilike(f"%{email_filtro}%"),
+                                            (Usuario.activo == activo_filtro) if activo_filtro != '' else True,
+                                            (Rol.nombre == rol_filtro) if rol_filtro != '' else True,
+                                            ).order_by(getattr(getattr(
+                                                Usuario, ordenar_por), orden)()),
         page=pagina,
         per_page=cant_por_pagina,
         error_out=False)
@@ -96,6 +102,12 @@ def crear_rol(**kwargs):
     return rol
 
 
+def nombres_roles():
+    roles = db.session.execute(db.select(Rol.nombre)).scalars().all()
+
+    return roles
+
+
 def asignar_permiso(rol, permiso):
     rol.permisos.append(permiso)
     db.session.commit()
@@ -105,13 +117,15 @@ def asignar_permiso(rol, permiso):
 
 def roles_por_id(ids):
     ids = [int(id) for id in ids]
-    roles = db.session.execute(db.select(Rol).where(Rol.id.in_(ids))).unique().scalars().all()
+    roles = db.session.execute(db.select(Rol).where(
+        Rol.id.in_(ids))).unique().scalars().all()
     # raise Exception(f'{roles} {ids}')
     return roles
 
 
 def roles_por_usuario(id):
-    roles = db.session.execute(db.select(Rol).join(Usuario.roles.and_(Usuario.id == id))).unique().scalars().all()
+    roles = db.session.execute(db.select(Rol).join(
+        Usuario.roles.and_(Usuario.id == id))).unique().scalars().all()
 
     return roles
 
@@ -129,6 +143,11 @@ def get_permisos(usuario):
     """Devuelve una lista con los nombres de los permisos del usuario que
     recibe por parámetro.
     """
-    permisos = db.session.execute(db.select(Permiso.nombre).join(Permiso.roles).join(Rol.usuarios.and_(Usuario.id == usuario.id))).unique().scalars().all()
+    permisos = db.session.execute(db.select(Permiso.nombre
+                                            ).join(Permiso.roles
+                                                   ).join(Rol.usuarios.and_(
+                                                       Usuario.id == usuario.id
+                                                       ))
+                                  ).unique().scalars().all()
 
     return permisos

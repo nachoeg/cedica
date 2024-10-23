@@ -8,13 +8,15 @@ from src.web.controllers.usuarios import bp as bp_usuarios
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from web.handlers.funciones_auxiliares import booleano_a_palabra, fechahora, fechahora_a_fecha
+from src.web.handlers.funciones_auxiliares import (booleano_a_palabra,
+                                                   fechahora,
+                                                   fechahora_a_fecha)
 from src.web.controllers.miembro import bp as miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 from src.web.controllers.cobros import bp as cobros_bp
 from src.web.controllers.pagos import bp as pagos_bp
-from web.handlers.decoradores import esta_autenticado, tiene_permiso
+from src.web.handlers.decoradores import esta_autenticado, tiene_permiso
 from src.web.storage import storage
 from src.web import helpers_jya
 

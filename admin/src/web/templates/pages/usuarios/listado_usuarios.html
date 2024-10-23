@@ -13,6 +13,7 @@
       {'id': 'alias', 'nombre': 'Alias', 'ordenar': True},
       {'id': 'admin_sistema', 'nombre': 'Es admin', 'ordenar': True},
       {'id': 'roles', 'nombre': 'Roles'},
+      {'id': 'fecha_creacion', 'nombre': 'Fecha de creación', 'ordenar': True},
     ],
     'acciones': [
       {'nombre': 'Ver', 'funcion': 'verUsuario'},
@@ -22,7 +23,10 @@
     ],
     'filtros': [
       {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
-
+      {'id': 'activo', 'nombre': 'Activo', 'tipo': 'seleccion', 'valor': activo_filtro,
+       'opciones': ['Sí', 'No']
+      },
+      {'id': 'rol', 'nombre': 'Rol', 'tipo': 'seleccion', 'valor': rol_filtro, 'opciones': roles },
     ],
     'crear': {
       'url': url_for('usuarios.registrar_usuario'),

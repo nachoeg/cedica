@@ -2,12 +2,13 @@ import math
 from flask import (Blueprint, flash, redirect,
                    render_template, request, url_for)
 from src.core.usuarios import (actualizar_usuario, crear_usuario,
-                               listar_usuarios, roles_por_usuario,
+                               listar_usuarios, nombres_roles, roles_por_usuario,
                                usuario_por_id)
 from src.core.usuarios.usuario_forms import UsuarioEditarForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)
+from src.web.handlers.funciones_auxiliares import palabra_a_booleano
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
@@ -21,12 +22,18 @@ def listado_usuarios():
     pagina = int(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
     email_filtro = request.args.get("email", "")
+    activo_filtro = request.args.get("activo", "")
+    rol_filtro = request.args.get("rol", "")
 
+    # activo_filtro = palabra_a_booleano(activo_filtro)
     cant_resultados, usuarios = listar_usuarios(
-        email_filtro, orden, ordenar_por, pagina, cant_por_pagina
+        orden, ordenar_por, pagina, cant_por_pagina,
+        email_filtro, palabra_a_booleano(activo_filtro), rol_filtro
         )
 
     cant_paginas = math.ceil(cant_resultados / cant_por_pagina)
+
+    roles = nombres_roles()
 
     return render_template(
         "pages/usuarios/listado_usuarios.html",
@@ -37,6 +44,9 @@ def listado_usuarios():
         orden=orden,
         ordenar_por=ordenar_por,
         email_filtro=email_filtro,
+        activo_filtro=activo_filtro,
+        rol_filtro=rol_filtro,
+        roles=roles
     )
 
 
