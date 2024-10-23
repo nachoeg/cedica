@@ -166,3 +166,10 @@ def listar_caballos():
 def obtener_documento(doc_id):
     
     return Archivo_JYA.query.get_or_404(doc_id)
+
+def eliminar_documento_j_y_a(doc_id):
+    documento = Archivo_JYA.query.get(doc_id)
+    db.session.delete(documento)
+    db.session.commit()
+
+    return documento

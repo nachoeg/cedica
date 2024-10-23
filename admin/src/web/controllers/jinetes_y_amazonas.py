@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
 from os import fstat
-from src.core.jinetes_y_amazonas import (listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo, listar_documentos, listar_tipos_de_documentos, listar_diagnosticos, listar_profesores, listar_conductores, listar_auxiliares_pista, listar_caballos, obtener_documento)
+from src.core.jinetes_y_amazonas import (listar_j_y_a, crear_j_o_a, cargar_informacion_salud, cargar_informacion_economica, cargar_informacion_escuela, cargar_informacion_institucional, eliminar_jya, encontrar_jya, cargar_archivo,encontrar_archivos_de_jya, encontrar_archivo, listar_documentos, listar_tipos_de_documentos, listar_diagnosticos, listar_profesores, listar_conductores, listar_auxiliares_pista, listar_caballos, obtener_documento, eliminar_documento_j_y_a)
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona, Diagnostico
 from src.core.jinetes_y_amazonas.forms_jinetes import NuevoJYAForm, InfoSaludJYAForm, InfoEconomicaJYAForm, InfoEscolaridadJYAForm,InfoInstitucionalJYAForm
 from src.core.miembro.miembro import Miembro
@@ -245,12 +245,9 @@ def editar_archivo(jya_id: int, archivo_id:int):
 
 @bp.get("/descargar_archivo/<int:archivo_id>")
 def descargar_archivo(archivo_id:int):
-    print("imprimiendo?")
     documento = obtener_documento(archivo_id)
     cliente = current_app.storage.client
-    print("quiero imprimir")
     archivo = cliente.get_object("grupo17", documento.url)
-    print(archivo.url)
     archivo_bytes = BytesIO(archivo.read())
     extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
 
@@ -264,3 +261,10 @@ def subir_enlace(id: int):
     flash("Funcionalidad no implementada")
 
     return render_template("jinetes_y_amazonas/documentos.html", jya=jya)
+
+@bp.get("/eliminar_documento/<int:id>")
+def eliminar_documento(id:int):
+    doc = eliminar_documento_j_y_a(id)
+    flash("Documento eliminado con éxito")
+
+    return redirect(url_for("jinetes_y_amazonas.ver_archivos", id=doc.jya_id))
