@@ -19,9 +19,10 @@
 {'id': 'tipo_archivo', 'nombre': 'Tipo de archivo'},
 ],
 'acciones': [
+{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['externo', True]},
+{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['externo', False]},
 {'nombre': 'Editar', 'funcion': 'editarDocumento'},
 {'nombre': 'Eliminar', 'funcion': 'eliminarDocumento'},
-{'nombre': 'Descargar','funcion': 'descargarDocumento'}
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -45,6 +46,11 @@
 {% block scripts %}
 
 <script>
+
+  function irAlDocumento(id) {
+      window.open(
+        `/jinetes_y_amazonas/documentos/${id}/ir`, '_blank').focus();
+  }
 
   function editarDocumento(id) {
     window.location.href = `/jinetes_y_amazonas/${id}/editar`;

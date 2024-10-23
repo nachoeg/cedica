@@ -22,13 +22,13 @@ class Archivo_JYA(db.Model):
     __tablename__ = "archivos_jya"
         
     id = db.Column(db.Integer, primary_key = True)
-    titulo = db.Column(db.String(50))
+    titulo = db.Column(db.String(50), nullable=False)
     fecha_subida = db.Column(db.DateTime,default=datetime.now)
     url = db.Column(db.String(100), nullable=False)
     tipo_archivo = db.Column(Enum(TipoArchivo))
     jya_id = db.Column(db.Integer, db.ForeignKey('jinetesyamazonas.id'))
     jya = db.relationship('JineteOAmazona', back_populates="documentos")
-
+    externo = db.Column(db.Boolean, nullable=False)
     
     def to_dict(self):
         return {
