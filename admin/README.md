@@ -15,3 +15,12 @@ Trabajo integrador de la materia Proyecto de Software en la Facultad de Informá
 | tecnica@mail.com&#8204;         | tecnica           | no       | Técnica
 | voluntariado@mail.com&#8204;    | voluntariado      | no       | Voluntariado
 | sinroles@mail.com&#8204;        | sinroles          | no       | -
+
+<br>
+
+<h2 style="text-align:center;">Grupo 17</h2>
+
+- Ignacio Escudero González
+- Lea Agustina Mankowski Kochubey
+- Matías Geringer
+- Verónica Cao
