@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.core import usuarios
 
 
@@ -7,6 +8,8 @@ def cargar_permisos():
     permisos["permiso_usuario_mostrar"] = usuarios.crear_permiso(nombre="usuario_mostrar")
     permisos["permiso_usuario_crear"] = usuarios.crear_permiso(nombre="usuario_crear")
     permisos["permiso_usuario_actualizar"] = usuarios.crear_permiso(nombre="usuario_actualizar")
+    permisos["permiso_usuario_bloquear"] = usuarios.crear_permiso(nombre="usuario_bloquear")
+    permisos["permiso_usuario_activar"] = usuarios.crear_permiso(nombre="usuario_activar")
     permisos["permiso_usuario_eliminar"] = usuarios.crear_permiso(nombre="usuario_eliminar")
 
     permisos["permiso_miembro_listar"] = usuarios.crear_permiso(nombre="miembro_listar")
@@ -107,12 +110,16 @@ def cargar_roles():
 
 def cargar_usuarios():
 
-    usuarios.crear_usuario(email="admin@mail.com", contraseña="admin", alias="Clau", admin_sistema=True)
+    usuarios.crear_usuario(email="admin@mail.com", contraseña="admin", alias="Clau", admin_sistema=True, creacion=datetime(2022, 3, 12))
 
-    todos_los_roles = usuarios.crear_usuario(email="roles@mail.com", contraseña="3.roles", alias="Juan")
-    ecuestre = usuarios.crear_usuario(email="ecuestre@mail.com", contraseña="ecuestre", alias="Jorge")
-    tecnica = usuarios.crear_usuario(email="tecnica@mail.com", contraseña="tecnica", alias="Maria")
-    administracion = usuarios.crear_usuario(email="administracion@mail.com", contraseña="administracion", alias="Néstor")
+    usuarios.crear_usuario(email="admin2@mail.com", contraseña="admin2", alias="Ale", admin_sistema=True, creacion=datetime(2021, 5, 29, 15, 23))
+
+    todos_los_roles = usuarios.crear_usuario(email="roles@mail.com", contraseña="4.roles", alias="Ana", creacion=datetime(1992, 1, 17))
+    administracion = usuarios.crear_usuario(email="administracion@mail.com", contraseña="administracion", alias="Juan", creacion=datetime(1999, 4, 23))
+    ecuestre = usuarios.crear_usuario(email="ecuestre@mail.com", contraseña="ecuestre", alias="Pablo", creacion=datetime(2024, 10, 23))
+    tecnica = usuarios.crear_usuario(email="tecnica@mail.com", contraseña="tecnica", alias="Maria", creacion=datetime(2021, 5, 29, 12, 37))
+    voluntariado = usuarios.crear_usuario(email="voluntariado@mail.com", contraseña="voluntariado", alias="Néstor", creacion=datetime(2023, 5, 29))
+    sin_roles = usuarios.crear_usuario(email="sinroles@mail.com", contraseña="sin_roles", alias="Sandra", creacion=datetime(2005, 12, 25))
 
     roles = cargar_roles()
 

@@ -1,14 +1,22 @@
+from datetime import datetime
 from src.core.bcrypt import bcrypt
 from src.core.database import db
 from core.usuarios.usuario import Permiso, Rol, Usuario
 
 
 # USUARIOS
-def listar_usuarios(email_filtro, orden, ordenar_por, pagina, cant_por_pagina):
+def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
+                    email_filtro, activo_filtro, rol_filtro):
+    # raise Exception(f'{rol_filtro}{nombres_roles()}')
     usuarios = db.paginate(
         db.select(
-            Usuario
-            ).order_by(getattr(getattr(Usuario, ordenar_por), orden)()),
+            Usuario).distinct().join(
+                Usuario.roles, isouter=True).where(
+                    Usuario.email.ilike(f"%{email_filtro}%"),
+                    (Usuario.activo == activo_filtro) if activo_filtro != '' else True,
+                    (Rol.nombre == rol_filtro) if rol_filtro != '' else True,
+                    ).order_by(getattr(getattr(
+                        Usuario, ordenar_por), orden)()),
         page=pagina,
         per_page=cant_por_pagina,
         error_out=False)
@@ -18,23 +26,39 @@ def listar_usuarios(email_filtro, orden, ordenar_por, pagina, cant_por_pagina):
     return (total, usuarios)
 
 
-def crear_usuario(email, contraseña, alias, admin_sistema=False, id_roles=[]):
+def crear_usuario(email, contraseña, alias, admin_sistema=False,
+                  id_roles=[], creacion=datetime.now()):
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
-                      alias=alias, admin_sistema=admin_sistema)
+                      alias=alias, admin_sistema=admin_sistema,
+                      creacion=creacion)
 
     roles = roles_por_id(id_roles)
     # raise Exception(f'{roles}')
-    asignar_roles(usuario, roles)
+    usuario.roles = roles
     db.session.add(usuario)
     db.session.commit()
 
     return usuario
 
 
+def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
+    usuario.email = email
+    usuario.alias = alias
+    usuario.admin_sistema = admin_sistema
+    roles = roles_por_id(id_roles)
+    usuario.roles = roles
+    db.session.commit()
+
+
+def actualizar_perfil(usuario, email, alias):
+    usuario.email = email
+    usuario.alias = alias
+    db.session.commit()
+
+
 def asignar_roles(usuario, roles):
-    for rol in roles:
-        usuario.roles.append(rol)
+    usuario.roles = roles
 
 
 def asignar_rol(usuario, rol):
@@ -42,6 +66,11 @@ def asignar_rol(usuario, rol):
     db.session.commit()
 
     return usuario
+
+
+def eliminar_roles(usuario):
+    for rol in usuario.roles:
+        usuario.roles.pop(rol)
 
 
 def usuario_por_id(id):
@@ -59,6 +88,10 @@ def usuario_por_email(email):
     return usuario
 
 
+def usuario_por_alias(alias):
+    return Usuario.query.filter_by(alias=alias).first()
+
+
 def usuario_por_email_y_contraseña(email, contraseña):
     usuario = usuario_por_email(email)
 
@@ -66,6 +99,14 @@ def usuario_por_email_y_contraseña(email, contraseña):
         return usuario
 
     return None
+
+
+def todos_emails():
+    return db.session.execute(db.select(Usuario.email)).scalars().all()
+
+
+def todos_alias():
+    return db.session.execute(db.select(Usuario.alias)).scalars().all()
 
 
 # ROLES
@@ -77,6 +118,12 @@ def crear_rol(**kwargs):
     return rol
 
 
+def nombres_roles():
+    roles = db.session.execute(db.select(Rol.nombre)).scalars().all()
+
+    return roles
+
+
 def asignar_permiso(rol, permiso):
     rol.permisos.append(permiso)
     db.session.commit()
@@ -85,7 +132,16 @@ def asignar_permiso(rol, permiso):
 
 
 def roles_por_id(ids):
-    roles = db.session.execute(db.select(Rol, Rol.id.in_(ids))).unique().scalars().all()
+    ids = [int(id) for id in ids]
+    roles = db.session.execute(db.select(Rol).where(
+        Rol.id.in_(ids))).unique().scalars().all()
+    # raise Exception(f'{roles} {ids}')
+    return roles
+
+
+def roles_por_usuario(id):
+    roles = db.session.execute(db.select(Rol).join(
+        Usuario.roles.and_(Usuario.id == id))).unique().scalars().all()
 
     return roles
 
@@ -103,6 +159,11 @@ def get_permisos(usuario):
     """Devuelve una lista con los nombres de los permisos del usuario que
     recibe por parámetro.
     """
-    permisos = db.session.execute(db.select(Permiso.nombre).join(Permiso.roles).join(Rol.usuarios.and_(Usuario.id == usuario.id))).unique().scalars().all()
+    permisos = db.session.execute(db.select(Permiso.nombre
+                                            ).join(Permiso.roles
+                                                   ).join(Rol.usuarios.and_(
+                                                       Usuario.id == usuario.id
+                                                       ))
+                                  ).unique().scalars().all()
 
     return permisos

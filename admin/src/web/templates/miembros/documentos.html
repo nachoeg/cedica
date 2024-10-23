@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/pilled_nav.html" import pilled_nav %}
+
+{% block title %}Documentos del miembro{% endblock %}
+
+{% block main %}
+
+{{ pilled_nav([
+    {'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
+    {'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
+])}}
+
+{% set configuracion = {
+
+'encabezados': [
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'fecha', 'nombre': 'Fecha', 'ordenar': True},
+{'id': 'tipo', 'nombre': 'Tipo'},
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'irAlDocumento'},
+{'nombre': 'Editar', 'funcion': 'editarDocumento'},
+{'nombre': 'Borrar','funcion': 'borrarDocumento'}
+],
+'filtros': [
+{'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'tipo', 'nombre': 'Tipo', 'tipo': 'seleccion', 'opciones': tipos_documento, 'valor': tipo_filtro}
+],
+'subir': {
+'url': url_for('miembro.miembro_subir_archivo', id=miembro.id),
+'nombre': 'Subir'
+},
+'enlace': {
+'url': url_for('miembro.miembro_subir_enlace', id=miembro.id),
+'nombre': 'Enlace'
+},
+}
+%}
+
+{{ tabla(configuracion, documentos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    function irAlDocumento(id) {
+        window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}`;
+    }
+
+    function editarDocumento(id) {
+        window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/editar`;
+    }
+
+    function borrarDocumento(id) {
+        if (confirm('¿Está seguro que desea borrar este documento?')) {
+            window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/borrar`;
+        }
+    }
+
+</script>
+{% endblock %}

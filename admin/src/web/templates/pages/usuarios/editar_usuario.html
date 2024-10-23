@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Registrar usuario {% endblock %}
+{% block title %} Editar usuario {% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -11,14 +11,13 @@
 
   {% from "pages/_form_base.html" import render_field %}
   <form method=post class="formulario">
-    <h1>Registrar usuario</h1>
+    <h1>Editar usuario</h1>
     {{ form.csrf_token }}
     <dl>
       {{ render_field(form.email, type="email") }}
-      {{ render_field(form.contraseña, type="password") }}
       {{ render_field(form.alias) }}
       <div id="chau">{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
-      <div class="hola">{{ render_field(form.roles, id="roles") }}</div>
+      <div class="hola">{{ render_field(form.roles, id="roles", type="checkbox") }}</div>
     </dl>
     <p><input type=submit>
   </form>

@@ -1,6 +1,10 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
-from core.usuarios import usuario_por_email_y_contraseña, usuario_por_id
+from src.core.usuarios import (actualizar_perfil, roles_por_usuario,
+                               usuario_por_email_y_contraseña, usuario_por_id)
+from src.core.usuarios.usuario_forms import UsuarioSinContraseñaForm
+from src.web.handlers.decoradores import (chequear_usuario_sesion,
+                                          sesion_iniciada_requerida)
 
 bp = Blueprint("autenticacion", __name__, url_prefix="")
 
@@ -42,6 +46,24 @@ def cerrar_sesion():
 
 
 @bp.route('/perfil', methods=['GET'])
+@sesion_iniciada_requerida
 def ver_perfil():
     usuario = usuario_por_id(session.get('id'))
     return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
+
+
+@bp.route('/<int:id>/editar_perfil', methods=['GET', 'POST'])
+@chequear_usuario_sesion
+@sesion_iniciada_requerida
+def editar_perfil(id):
+    usuario = usuario_por_id(id)
+    form = UsuarioSinContraseñaForm(obj=usuario)
+    if request.method == 'GET':
+        form.roles.data = [str(rol.id) for rol in roles_por_usuario(id)]
+    elif form.validate_on_submit():
+        # raise Exception(f'{form.data}')
+        actualizar_perfil(usuario, form.email.data, form.alias.data)
+        flash(f'Se guardaron los cambios al usuario \
+              Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+        return redirect(url_for('autenticacion.ver_perfil'))
+    return render_template('pages/usuarios/editar_perfil.html', form=form)

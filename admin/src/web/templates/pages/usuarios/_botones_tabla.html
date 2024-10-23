@@ -1,0 +1,52 @@
+<button type="button"
+  class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+  onclick="verUsuario('{{ fila.id }}')">
+  Ver
+</button>
+
+{% if session.get('id') == fila.id %}
+
+<button type="button"
+  class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+  onclick="editarPerfil('{{ fila.id }}')">
+  Editar
+</button>
+
+{% else %}
+
+<button type="button"
+  class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+  onclick="editarUsuario('{{ fila.id }}')">
+  Editar
+</button>
+
+{% endif %}
+
+
+
+{% if fila.activo %}
+<button type="button"
+  class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+  onclick="bloquearUsuario('{{ fila.id }}')" 
+  {% if fila.admin_sistema %} disabled {% endif %}>
+  Bloquear
+</button>
+{% else %}
+<button type="button"
+  class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+  onclick="activarUsuario('{{ fila.id }}')" 
+  {% if fila.admin_sistema %} disabled {% endif %}>
+  Activar
+</button>
+{% endif %}
+
+
+<button type="button"
+  class="py-1 px-2 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400"
+  onclick="eliminarUsuario('{{ fila.id }}')" 
+  {% if fila.admin_sistema %} disabled {% endif %}>
+  Eliminar
+</button>
+
+
+

@@ -1,10 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from src.core.miembro import Miembro, Profesion, CondicionDeTrabajo, PuestoLaboral, Domicilio
-from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios
-from src.core.miembro.forms_miembro import InfoMiembroForm
-from src.core.usuarios import Usuario
-from src.core.database import db
-
+from flask import current_app, Blueprint, render_template, request, redirect, url_for, flash
+from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, obtener_documento, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios, buscar_domicilio, eliminar_miembro, listar_tipos_de_documentos, listar_documentos, crear_documento
+from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm
+from src.core.usuarios import usuario_por_alias
+from os import fstat
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
@@ -59,11 +57,11 @@ def miembro_listar():
 def miembro_crear():
     form = InfoMiembroForm()
     
-    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in CondicionDeTrabajo.query.all()]
-    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in Profesion.query.all()]
-    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in PuestoLaboral.query.all()]
+    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
+    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
+    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
 
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate_on_submit():
         nombre = form.nombre.data
         apellido = form.apellido.data
         dni = form.dni.data
@@ -83,13 +81,13 @@ def miembro_crear():
         localidad = form.localidad.data
         alias = form.alias.data
 
-        domicilio_existente = Domicilio.query.filter_by(
+        domicilio_existente = buscar_domicilio(
             calle=calle,
             numero=numero,
             piso=piso,
             dpto=dpto,
             localidad=localidad
-        ).first()
+        )
 
         if domicilio_existente:
             domicilio_id = domicilio_existente.id
@@ -98,7 +96,7 @@ def miembro_crear():
             domicilio_id = nuevo_domicilio.id
 
         if alias:
-            usuario = Usuario.query.filter_by(alias=alias_usuario).first()
+            usuario = usuario_por_alias(alias_usuario)
             if usuario:
                 usuario_id = usuario.id
                 alias_usuario = usuario_id
@@ -142,11 +140,11 @@ def miembro_editar(id: int):
     if miembro.usuario != None:
         form.alias.data = miembro.usuario.alias 
     
-    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in CondicionDeTrabajo.query.all()]
-    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in Profesion.query.all()]
-    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in PuestoLaboral.query.all()]
+    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
+    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
+    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
     
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate_on_submit():
         miembro.nombre = form.nombre.data
         miembro.apellido = form.apellido.data
         miembro.dni = form.dni.data
@@ -160,13 +158,13 @@ def miembro_editar(id: int):
         miembro.profesion_id = form.profesion_id.data
         miembro.puesto_laboral_id = form.puesto_laboral_id.data
 
-        domicilio_existente = Domicilio.query.filter_by(
+        domicilio_existente = buscar_domicilio(
             calle=form.calle.data,
             numero=form.numero.data,
             piso=form.piso.data,
             dpto=form.dpto.data,
             localidad=form.localidad.data
-        ).first()
+        )
 
         if domicilio_existente:
             miembro.domicilio_id = domicilio_existente.id
@@ -176,7 +174,7 @@ def miembro_editar(id: int):
 
         alias_usuario = form.alias.data
         if alias_usuario:
-            usuario = Usuario.query.filter_by(alias=alias_usuario).first()
+            usuario = usuario_por_alias(alias_usuario)
             if usuario:
                 usuario_id = usuario.id
                 alias_usuario = usuario_id
@@ -193,13 +191,116 @@ def miembro_editar(id: int):
 
 @bp.route('/<int:id>', methods=['GET'])
 def miembro_mostrar(id):
-    miembro = Miembro.query.get_or_404(id)
+    miembro = obtener_miembro(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 def miembro_eliminar(id):
-    miembro = Miembro.query.get_or_404(id)
-    db.session.delete(miembro)
-    db.session.commit()
+    eliminar_miembro(id)
     flash("Miembro eliminado con exito.", 'success')
     return redirect(url_for('miembro.miembro_listar'))
+
+@bp.get("/<int:id>/documentos/")
+def miembro_documentos(id: int):
+    miembro = obtener_miembro(id)
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "id")
+    pagina = int(request.args.get("pagina", 1))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    nombre_filtro = request.args.get("nombre", "")
+    tipo_filtro = request.args.get("tipo", "")
+
+    documentos, cant_resultados = listar_documentos(
+        miembro.id,
+        nombre_filtro,
+        tipo_filtro,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pagina,
+    )
+
+    tipos_documento = listar_tipos_de_documentos()
+
+    cant_paginas = cant_resultados // cant_por_pagina
+    if cant_resultados % cant_por_pagina != 0:
+        cant_paginas += 1
+
+    return render_template(
+        "miembros/documentos.html",
+        miembro=miembro,
+        documentos=documentos,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
+        nombre_filtro=nombre_filtro,
+        tipo_filtro=tipo_filtro,
+        tipos_documento=tipos_documento,
+    )
+
+@bp.route("/<int:id>/documentos/subir_archivo/", methods=["GET", "POST"])
+def miembro_subir_archivo(id: int):
+    miembro = obtener_miembro(id)
+    form = ArchivoMiembroForm()
+    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            nombre = form.nombre.data
+            tipo = form.tipo.data
+            ecuestre_id = id
+            archivo = request.files["archivo"]
+            client = current_app.storage.client
+            size = fstat(archivo.fileno()).st_size
+            ulid = ulid.new()
+            url = f"miembro/{ulid}-{archivo.filename}"
+
+            client.put_object(
+                "grupo17",
+                url,
+                archivo,
+                size,
+                content_type=archivo.content_type,
+            )
+
+            crear_documento(nombre, tipo, url, ecuestre_id)
+
+            flash("Documento subido con exito", "exito")
+            return redirect(url_for("miembro.miembro_documentos", id=id))
+        else:
+            flash("Error al subir el documento", "error")
+
+    return render_template(
+        "pages/ecuestre/subir_documento.html", form=form, miembro=miembro
+    )
+
+@bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
+def miembro_subir_enlace(id: int):
+    miembro = obtener_miembro(id)
+    form = EnlaceMiembroForm()
+    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            nombre = form.nombre.data
+            tipo = form.tipo.data
+            ecuestre_id = id
+            url = form.url.data
+
+            crear_documento(nombre, tipo, url, ecuestre_id)
+
+            flash("Documento subido con exito", "exito")
+            return redirect(url_for("miembro.miembro_documentos", id=id))
+        else:
+            flash("Error al subir el documento", "error")
+
+    return render_template(
+        "pages/ecuestre/subir_enlace.html", form=form, miembro=miembro
+    )
+
+@bp.route("/<int:miembro_id>/documentos/<int:id>", methods=['GET'])
+def miembro_ver_documento(miembro_id:int, id: int):
+    documento = obtener_documento(id)
+    return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)

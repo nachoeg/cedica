@@ -1,6 +1,7 @@
+from datetime import datetime
 from src.core.database import db
 from src.core.miembro.miembro import Miembro
-from src.core.miembro.extras import CondicionDeTrabajo, Profesion, PuestoLaboral
+from src.core.miembro.extras import CondicionDeTrabajo, Profesion, PuestoLaboral, TipoDeDocumentoMiembro, DocumentoMiembro
 from src.core.miembro.domicilio import Domicilio
 
 def listar_miembros(
@@ -14,7 +15,7 @@ def listar_miembros(
     pagina=1,
     cant_por_pagina=10
 ):
-    query = Miembro.query.join(Profesion)
+    query = Miembro.query.join(Profesion).filter(Miembro.activo.is_(True))
 
     if nombre_filtro:
         query = query.filter(Miembro.nombre.ilike(f'%{nombre_filtro}%'))
@@ -43,6 +44,32 @@ def listar_miembros(
 
     miembros = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
     return miembros, cant_resultados
+
+def listar_documentos(
+    miembro_id,
+    nombre_filtro="",
+    tipo_filtro="",
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pagina=10,
+):
+    query = DocumentoMiembro.query.join(TipoDeDocumentoMiembro).filter(
+        DocumentoMiembro.miembro_id == miembro_id,
+        DocumentoMiembro.nombre.ilike(f"%{nombre_filtro}%"),
+        TipoDeDocumentoMiembro.tipo.ilike(f"%{tipo_filtro}%"),
+    )
+
+    cant_resultados = query.count()
+
+    if orden == "asc":
+        query = query.order_by(getattr(DocumentoMiembro, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(DocumentoMiembro, ordenar_por).desc())
+
+    documentos = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
+    return documentos, cant_resultados
+
 def crear_miembro(**kwargs):
     miembro = Miembro(**kwargs)
     db.session.add(miembro)
@@ -93,3 +120,47 @@ def guardar_cambios():
 def obtener_miembro(id):
     miembro = Miembro.query.get(id)
     return miembro
+
+def obtener_miembro_dni(dni):
+    miembro = Miembro.query.filter_by(dni=dni).first()
+    return miembro
+
+def buscar_domicilio(calle, numero, piso, dpto, localidad):
+    return Domicilio.query.filter_by(
+            calle=calle,
+            numero=numero,
+            piso=piso,
+            dpto=dpto,
+            localidad=localidad
+        ).first()
+
+def eliminar_miembro(id):
+    miembro = Miembro.query.get(id)
+    miembro.activo = False;
+    db.session.commit()
+
+def listar_tipos_de_documentos():
+    tipos_de_documentos = TipoDeDocumentoMiembro.query.all()
+    return tipos_de_documentos
+
+def crear_tipo_de_documento(tipo):
+    tipo_de_documento = TipoDeDocumentoMiembro(tipo=tipo)
+    db.session.add(tipo_de_documento)
+    db.session.commit()
+    return tipo_de_documento
+
+def crear_documento(nombre, tipo_de_documento_id, url, miembro_id):
+    documento = DocumentoMiembro(
+        nombre=nombre,
+        fecha=datetime.now(),
+        tipo_de_documento_id=tipo_de_documento_id,
+        url=url,
+        miembro_id=miembro_id,
+    )
+    db.session.add(documento)
+    db.session.commit()
+    return documento
+
+def obtener_documento(id):
+    documento = DocumentoMiembro.query.get(id)
+    return documento

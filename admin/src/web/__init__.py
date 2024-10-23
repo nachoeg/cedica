@@ -8,13 +8,15 @@ from src.web.controllers.usuarios import bp as bp_usuarios
 from src.core import database
 from src.core.config import config
 from src.core import seeds
-from web.handlers.funciones_auxiliares import booleano_a_palabra, fechahora_a_fecha
+from src.web.handlers.funciones_auxiliares import (booleano_a_palabra,
+                                                   fechahora,
+                                                   fechahora_a_fecha)
 from src.web.controllers.miembro import bp as miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 from src.web.controllers.cobros import bp as cobros_bp
 from src.web.controllers.pagos import bp as pagos_bp
-from src.web.handlers.autenticacion import esta_autenticado, tiene_permiso
+from src.web.handlers.decoradores import esta_autenticado, tiene_permiso
 from src.web.storage import storage
 from src.web import helpers_jya
 
@@ -39,13 +41,6 @@ def create_app(env="development", static_folder="../../static"):
     def home():
         return render_template("pages/home.html")
 
-    @app.route("/preline.js")
-    def serve_preline_js():
-        return send_from_directory(
-            "../../node_modules/preline/dist",
-            "preline.js",
-        )
-
     app.register_blueprint(bp_autenticacion)
     app.register_blueprint(bp_usuarios)
 
@@ -57,6 +52,7 @@ def create_app(env="development", static_folder="../../static"):
     app.jinja_env.globals.update(tiene_permiso=tiene_permiso)
     app.jinja_env.globals.update(booleano_a_palabra=booleano_a_palabra)
     app.jinja_env.globals.update(fechahora_a_fecha=fechahora_a_fecha)
+    app.jinja_env.globals.update(fechahora=fechahora)
     app.jinja_env.globals.update(documento_url=helpers_jya.archivo_url)
 
     @app.cli.command(name="reset-db")

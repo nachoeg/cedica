@@ -7,10 +7,11 @@
 
 {% set configuracion = {
     'encabezados': [
-      {'id': 'id', 'nombre': 'Id'},
-      {'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
-      {'id': 'email', 'nombre': 'Email', 'ordenar': True},
       {'id': 'alias', 'nombre': 'Alias', 'ordenar': True},
+      {'id': 'email', 'nombre': 'Email', 'ordenar': True},
+      {'id': 'activo', 'nombre': 'Activo', 'ordenar': True},
+      {'id': 'creacion', 'nombre': 'Fecha de creación', 'ordenar': True},
+      {'id': 'admin_sistema', 'nombre': 'Es admin', 'ordenar': True},
       {'id': 'roles', 'nombre': 'Roles'},
     ],
     'acciones': [
@@ -21,17 +22,24 @@
     ],
     'filtros': [
       {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
-
+      {'id': 'activo', 'nombre': 'Activo', 'tipo': 'seleccion', 'valor': activo_filtro,
+       'opciones': ['Sí', 'No']
+      },
+      {'id': 'rol', 'nombre': 'Rol', 'tipo': 'seleccion', 'valor': rol_filtro, 'opciones': roles },
     ],
     'crear': {
       'url': url_for('usuarios.registrar_usuario'),
       'nombre': 'Registrar usuario'
-    }
+    },
+
+    'include': 'pages/usuarios/_acciones_usuario.html',
+
   }
 %}
 
 {{ tabla(configuracion, usuarios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
-{% endblock %}
 
 {% include 'pages/usuarios/_acciones_usuario.html' %}
+
+{% endblock %}

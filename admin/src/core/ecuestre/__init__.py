@@ -1,5 +1,6 @@
 from src.core.database import db
 from src.core.ecuestre.ecuestre import Ecuestre, TipoDeJyA, TipoDeDocumento, Documento
+from src.core.miembro import Miembro, PuestoLaboral
 from datetime import datetime
 
 
@@ -63,6 +64,24 @@ def listar_tipos_de_documentos():
     return tipos_de_documentos
 
 
+def listar_entrenadores():
+    entrenadores = (
+        Miembro.query.join(PuestoLaboral, Miembro.puesto_laboral_id == PuestoLaboral.id)
+        .filter(PuestoLaboral.nombre == "Entrenador de Caballos")
+        .all()
+    )
+    return entrenadores
+
+
+def listar_conductores():
+    conductores = (
+        Miembro.query.join(PuestoLaboral)
+        .filter(PuestoLaboral.nombre == "Conductor")
+        .all()
+    )
+    return conductores
+
+
 def crear_ecuestre(
     nombre,
     fecha_nacimiento,
@@ -73,6 +92,8 @@ def crear_ecuestre(
     fecha_ingreso,
     sede,
     tipo_de_jya_id,
+    conductores,
+    entrenadores,
 ):
     ecuestre = Ecuestre(
         nombre=nombre,
@@ -84,6 +105,8 @@ def crear_ecuestre(
         fecha_ingreso=fecha_ingreso,
         sede=sede,
         tipo_de_jya_id=tipo_de_jya_id,
+        conductores=conductores,
+        entrenadores=entrenadores,
     )
     db.session.add(ecuestre)
     db.session.commit()
@@ -104,13 +127,14 @@ def crear_tipo_de_documento(**kwargs):
     return tipo_de_documento
 
 
-def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id):
+def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id, archivo_externo):
     documento = Documento(
         nombre=nombre,
         fecha=datetime.now(),
         tipo_de_documento_id=tipo_de_documento_id,
         url=url,
         ecuestre_id=ecuestre_id,
+        archivo_externo=archivo_externo,
     )
     db.session.add(documento)
     db.session.commit()
@@ -131,6 +155,13 @@ def eliminar_tipo_de_jya(tipo_de_jya_id):
     return tipo_de_jya
 
 
+def eliminar_documento_ecuestre(documento_id):
+    documento = Documento.query.get(documento_id)
+    db.session.delete(documento)
+    db.session.commit()
+    return documento
+
+
 def obtener_ecuestre(ecuestre_id):
     ecuestre = Ecuestre.query.get(ecuestre_id)
     return ecuestre
@@ -139,6 +170,11 @@ def obtener_ecuestre(ecuestre_id):
 def obtener_tipo_de_jya(tipo_de_jya_id):
     tipo_de_jya = TipoDeJyA.query.get(tipo_de_jya_id)
     return tipo_de_jya
+
+
+def obtener_documento(documento_id):
+    documento = Documento.query.get(documento_id)
+    return documento
 
 
 def asignar_conductor(ecuestre, conductor):

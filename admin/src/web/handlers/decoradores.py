@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import abort, session
-from core.usuarios import get_permisos, usuario_por_email
+from src.core.usuarios import get_permisos, usuario_por_email, usuario_por_id
 
 
 def esta_autenticado(session):
@@ -26,13 +26,7 @@ def tiene_permiso(session, permiso):
     if usuario.admin_sistema:
         return True
     permisos = get_permisos(usuario)
-    # raise Exception(f'{permiso} {permisos}')
-    # raise Exception(f'{usuario.admin_sistema} {permisos}')
     return permiso in permisos
-
-    # # forma de la expl de pr
-    # # pero si usuario es None get_permisos(usuario) da error
-    # return usuario is not None and permiso in permisos
 
 
 def chequear_permiso(permiso):
@@ -49,3 +43,33 @@ def chequear_permiso(permiso):
         return wrapper
 
     return decorator
+
+
+def es_usuario_de_sesion(session, id):
+    return session.get('id') == id
+
+
+def chequear_usuario_sesion(f):
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        id = kwargs['id']
+        if not es_usuario_de_sesion(session, id):
+            return abort(403)
+
+        return f(*args, **kwargs)
+
+    return wrapper
+
+
+def no_modificar_admin(f):
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        id = kwargs['id']
+        if usuario_por_id(id).admin_sistema:
+            return abort(403)
+
+        return f(*args, **kwargs)
+
+    return wrapper

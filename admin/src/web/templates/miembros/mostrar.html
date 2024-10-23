@@ -1,8 +1,15 @@
 {% extends "layouts/base.html" %}
+{% from "components/pilled_nav.html" import pilled_nav %}
 
 {% block title %} Listado de Miembros {% endblock %}
 
 {% block main %}
+
+{{ pilled_nav([
+    {'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
+    {'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
+])}}
+
 <div class="contenedor">
     <h1 class="text-xl">Detalles de Miembro</h1>
     

@@ -10,9 +10,19 @@
     window.location.href = `/usuarios/${id}/editar`;
   }
 
+  function editarPerfil(id) {
+    window.location.href = `/${id}/editar_perfil`;
+  }
+
   function bloquearUsuario(id) {
     if (confirm('¿Está seguro que desea bloquear este usuario?')) {
       window.location.href = `/usuarios/${id}/bloquear`;
+    }
+  }
+
+  function activarUsuario(id) {
+    if (confirm('¿Está seguro que desea bloquear este usuario?')) {
+      window.location.href = `/usuarios/${id}/activar`;
     }
   }
 
