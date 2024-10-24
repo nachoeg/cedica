@@ -24,14 +24,17 @@ def listar():
     pagina = int(request.args.get('pagina', 1))
     cant_por_pag = int(request.args.get('por_pag',10))
     nombre_filtro = request.args.get("nombre", "")
+    apellido_filtro = request.args.get("apellido", "")
+    dni_filtro = request.args.get("dni", "")
+    profesional = request.args.get("profesional", "")
 
-    jinetes = listar_j_y_a()
+    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesional)
     cant_resultados = len(jinetes.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
     
-        return render_template(
+    return render_template(
         "jinetes_y_amazonas/listar.html",
         jinetes=jinetes,
         cant_resultados=cant_resultados,

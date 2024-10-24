@@ -14,10 +14,24 @@ def crear_diagnostico(**kwargs):
     return diagnostico
 
 # funcion que lista todos los jinetes o amazonas del sistema
-def listar_j_y_a(orden_asc=1, pagina_inicial=1, por_pag=20):
-    j_y_a = JineteOAmazona.todos_paginados(orden_asc, pagina_inicial,por_pag)
+def listar_j_y_a(nombre_filtro="", apellido_filtro="", dni_filtro="", profesional_filtro="", ordenar_por="id", orden="asc", pagina=1, cant_por_pag=10):
+    query = JineteOAmazona.query.filter(
+        JineteOAmazona.nombre.ilike(f"%{nombre_filtro}"),
+        JineteOAmazona.apellido.ilike(f"%{apellido_filtro}"),
+        JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}"),
+    )
+
+    if dni_filtro != "":
+        query = query.filter(JineteOAmazona.dni == dni_filtro)
+
+    if orden == "asc":
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
+
+    j_y_a_ordenados = query.paginate(page=pagina, per_page=cant_por_pag, error_out=False)
     
-    return j_y_a
+    return j_y_a_ordenados
 
 
 # función que crea un registro de jinete o amazona
