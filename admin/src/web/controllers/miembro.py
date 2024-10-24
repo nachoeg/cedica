@@ -7,7 +7,8 @@ from flask import (
     redirect, 
     url_for, 
     flash,
-    send_file)
+    send_file,
+    abort)
 from src.core.miembro import (
     crear_miembro, 
     crear_domicilio, 
@@ -19,7 +20,7 @@ from src.core.miembro import (
     obtener_miembro, 
     guardar_cambios, 
     buscar_domicilio, 
-    eliminar_miembro, 
+    cambiar_condicion_miembro, 
     listar_tipos_de_documentos, 
     listar_documentos, 
     crear_documento,
@@ -163,6 +164,8 @@ def miembro_crear():
 @sesion_iniciada_requerida
 def miembro_editar(id: int):
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     form = InfoMiembroForm(obj=miembro)
     form.calle.data = miembro.domicilio.calle
     form.numero.data = miembro.domicilio.numero
@@ -226,14 +229,16 @@ def miembro_editar(id: int):
 @sesion_iniciada_requerida
 def miembro_mostrar(id):
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
-@bp.route('/<int:id>/eliminar', methods=['GET'])
+@bp.route('/<int:id>/cambiar_condicion', methods=['GET'])
 @chequear_permiso("miembro_eliminar")
 @sesion_iniciada_requerida
-def miembro_eliminar(id):
-    eliminar_miembro(id)
-    flash("Miembro eliminado con exito.", 'success')
+def miembro_cambiar_condicion(id):
+    cambiar_condicion_miembro(id)
+    flash("Miembro activado/desactivado con exito.", 'success')
     return redirect(url_for('miembro.miembro_listar'))
 
 @bp.get("/<int:id>/documentos/")
@@ -241,6 +246,8 @@ def miembro_eliminar(id):
 @sesion_iniciada_requerida
 def miembro_documentos(id: int):
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
@@ -283,6 +290,8 @@ def miembro_documentos(id: int):
 @sesion_iniciada_requerida
 def miembro_subir_archivo(id: int):
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     form = ArchivoMiembroForm()
     form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
@@ -320,6 +329,8 @@ def miembro_subir_archivo(id: int):
 @sesion_iniciada_requerida
 def miembro_subir_enlace(id: int):
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     form = EnlaceMiembroForm()
     form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
@@ -344,7 +355,7 @@ def miembro_subir_enlace(id: int):
 @bp.route("/<int:miembro_id>/documentos/<int:id>", methods=['GET'])
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
-def miembro_ver_documento(miembro_id:int, id: int):
+def miembro_ver_documento(miembro_id: int, id: int):
     documento = obtener_documento(id)
     return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)
 
@@ -358,7 +369,7 @@ def ir_documento(id: int,documento_id: int):
 @bp.get("/<int:id>/documentos/<int:documento_id>/descargar/")
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
-def descargar_documento(documento_id: int):
+def descargar_documento(id: int, documento_id: int):
     documento = obtener_documento(documento_id)
     client = current_app.storage.client
     archivo = client.get_object("grupo17", documento.url)

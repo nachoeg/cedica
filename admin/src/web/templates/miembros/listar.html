@@ -17,9 +17,10 @@
     {'id': 'fecha_creacion', 'nombre': 'Fecha de registro', 'ordenar': True}
 ],
 'acciones': [
-    {'nombre': 'Ver', 'funcion': 'verMiembro'},
-    {'nombre': 'Editar', 'funcion': 'editarMiembro'},
-    {'nombre': 'Borrar', 'funcion': 'borrarMiembro'},
+    {'nombre': 'Ver', 'funcion': 'verMiembro', 'condicion': ['activo', True]},
+    {'nombre': 'Editar', 'funcion': 'editarMiembro', 'condicion': ['activo', True]},
+    {'nombre': 'Desactivar', 'funcion': 'cambiarCondicion', 'condicion': ['activo', True]},
+    {'nombre': 'Activar', 'funcion': 'cambiarCondicion', 'condicion': ['activo', False]},
 ],
 'filtros': [
     {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro},
@@ -44,9 +45,9 @@
         window.location.href = `/miembros/${id}`;
     }
 
-    function borrarMiembro(id) {
-        if (confirm('¿Estás seguro de que deseas eliminar este miembro?')) {
-            window.location.href = `/miembros/${id}/eliminar`;
+    function cambiarCondicion(id) {
+        if (confirm('¿Estás seguro de que deseas activar/desactivar este miembro?')) {
+            window.location.href = `/miembros/${id}/cambiar_condicion`;
         }
     }
 
