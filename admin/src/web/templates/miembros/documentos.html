@@ -19,9 +19,10 @@
 {'id': 'tipo', 'nombre': 'Tipo'},
 ],
 'acciones': [
-{'nombre': 'Ver', 'funcion': 'irAlDocumento'},
-{'nombre': 'Editar', 'funcion': 'editarDocumento'},
-{'nombre': 'Borrar','funcion': 'borrarDocumento'}
+{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['archivo_externo', True]},
+{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['archivo_externo', False]},
+{'nombre': 'Editar', 'funcion': 'editarDocumento'} if tiene_permiso(session, 'miembro_actualizar') else False,
+{'nombre': 'Eliminar','funcion': 'eliminarDocumento'} if tiene_permiso(session, 'miembro_eliminar') else False
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -46,16 +47,21 @@
 <script>
 
     function irAlDocumento(id) {
-        window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}`;
+        window.open(
+        `/miembros/{{ miembro.id }}/documentos/${id}/ir`, '_blank').focus();
+    }
+
+    function descargarDocumento(id) {
+        window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/descargar`;
     }
 
     function editarDocumento(id) {
         window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/editar`;
     }
 
-    function borrarDocumento(id) {
+    function eliminarDocumento(id) {
         if (confirm('¿Está seguro que desea borrar este documento?')) {
-            window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/borrar`;
+            window.location.href = `/miembros/{{ miembro.id }}/documentos/${id}/eliminar`;
         }
     }
 

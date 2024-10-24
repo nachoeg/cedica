@@ -28,7 +28,14 @@ class ArchivoMiembroForm(FlaskForm):
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
     )
     archivo = FileField("Archivo", validators=[DataRequired("Seleccione un archivo")])
-    tipo = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
+    tipo_de_documento_id = SelectField("Tipo", coerce=int, validators=[DataRequired("Seleccione una opcion")])    
+    submit = SubmitField("Guardar")
+
+class EditarArchivoMiembroForm(FlaskForm):
+    nombre = StringField(
+        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+    )
+    tipo_de_documento_id = SelectField("Tipo", coerce=int, validators=[DataRequired("Seleccione una opcion.")])
     submit = SubmitField("Guardar")
 
 
@@ -37,5 +44,5 @@ class EnlaceMiembroForm(FlaskForm):
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
     )
     url = StringField("Enlace", validators=[DataRequired("Ingrese el enlace.")])
-    tipo = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
+    tipo_de_documento_id = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
     submit = SubmitField("Guardar")

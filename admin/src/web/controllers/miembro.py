@@ -1,3 +1,4 @@
+from io import BytesIO
 from flask import (
     current_app, 
     Blueprint, 
@@ -5,7 +6,8 @@ from flask import (
     request, 
     redirect, 
     url_for, 
-    flash)
+    flash,
+    send_file)
 from src.core.miembro import (
     crear_miembro, 
     crear_domicilio, 
@@ -20,12 +22,13 @@ from src.core.miembro import (
     eliminar_miembro, 
     listar_tipos_de_documentos, 
     listar_documentos, 
-    crear_documento)
-from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm
+    crear_documento,
+    eliminar_documento_miembro)
+from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-
+import ulid
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
@@ -234,6 +237,8 @@ def miembro_eliminar(id):
     return redirect(url_for('miembro.miembro_listar'))
 
 @bp.get("/<int:id>/documentos/")
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
 def miembro_documentos(id: int):
     miembro = obtener_miembro(id)
     orden = request.args.get("orden", "asc")
@@ -274,21 +279,22 @@ def miembro_documentos(id: int):
     )
 
 @bp.route("/<int:id>/documentos/subir_archivo/", methods=["GET", "POST"])
+@chequear_permiso("miembro_crear")
+@sesion_iniciada_requerida
 def miembro_subir_archivo(id: int):
     miembro = obtener_miembro(id)
     form = ArchivoMiembroForm()
-    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
-            tipo = form.tipo.data
-            ecuestre_id = id
+            tipo = form.tipo_de_documento_id.data
+            miembro_id = id
             archivo = request.files["archivo"]
             client = current_app.storage.client
             size = fstat(archivo.fileno()).st_size
-            ulid = ulid.new()
-            url = f"miembro/{ulid}-{archivo.filename}"
+            url = f"miembro/{ulid.new()}-{archivo.filename}"
 
             client.put_object(
                 "grupo17",
@@ -298,7 +304,7 @@ def miembro_subir_archivo(id: int):
                 content_type=archivo.content_type,
             )
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, miembro_id, archivo_externo=False)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("miembro.miembro_documentos", id=id))
@@ -306,23 +312,25 @@ def miembro_subir_archivo(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/subir_documento.html", form=form, miembro=miembro
+        "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_archivo=True
     )
 
 @bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
+@chequear_permiso("miembro_crear")
+@sesion_iniciada_requerida
 def miembro_subir_enlace(id: int):
     miembro = obtener_miembro(id)
     form = EnlaceMiembroForm()
-    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
-            tipo = form.tipo.data
-            ecuestre_id = id
+            tipo = form.tipo_de_documento_id.data
+            miembro_id = id
             url = form.url.data
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, miembro_id, archivo_externo=True)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("miembro.miembro_documentos", id=id))
@@ -330,10 +338,79 @@ def miembro_subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/subir_enlace.html", form=form, miembro=miembro
+        "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_enlace=True
     )
 
 @bp.route("/<int:miembro_id>/documentos/<int:id>", methods=['GET'])
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
 def miembro_ver_documento(miembro_id:int, id: int):
     documento = obtener_documento(id)
     return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
+def ir_documento(id: int,documento_id: int):
+    documento = obtener_documento(documento_id)
+    return redirect(documento.url)
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/descargar/")
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
+def descargar_documento(documento_id: int):
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    archivo = client.get_object("grupo17", documento.url)
+
+    archivo_bytes = BytesIO(archivo.read())
+
+    extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
+
+    # Enviar el archivo al cliente
+    return send_file(
+        archivo_bytes,
+        as_attachment=True,
+        download_name=f"{documento.nombre}{extension}"
+    )
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/eliminar/")
+@chequear_permiso("miembro_eliminar")
+@sesion_iniciada_requerida
+def eliminar_documento(id: int, documento_id: int):
+    eliminar_documento_miembro(documento_id)
+    flash("Documento eliminado con exito", "exito")
+    return redirect(url_for("miembro.miembro_documentos", id=id))
+
+@bp.route("/<int:id>/documentos/<int:documento_id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("miembro_actualizar")
+@sesion_iniciada_requerida
+def editar_documento(id: int, documento_id: int):
+    documento = obtener_documento(documento_id)
+    if documento.archivo_externo:
+        form = EnlaceMiembroForm(obj=documento)
+    else:
+        form =  EditarArchivoMiembroForm(obj=documento)
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            documento.nombre = form.nombre.data
+            documento.tipo_de_documento_id = form.tipo_de_documento_id.data
+            if documento.archivo_externo:
+                documento.url = form.url.data
+            guardar_cambios()
+            flash("Documento actualizado con exito", "exito")
+            return redirect(url_for("miembro.miembro_documentos", id=id))
+        else:
+            flash("Error al actualizar el documento", "error")
+
+    return render_template(
+        "pages/ecuestre/formulario_documento.html",
+        form=form,
+        miembro=documento.miembro,
+        titulo=f"Editar documento #{documento_id}",
+        subir_enlace=documento.archivo_externo,
+    )

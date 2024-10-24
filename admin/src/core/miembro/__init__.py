@@ -156,13 +156,14 @@ def crear_tipo_de_documento(tipo):
     db.session.commit()
     return tipo_de_documento
 
-def crear_documento(nombre, tipo_de_documento_id, url, miembro_id):
+def crear_documento(nombre, tipo_de_documento_id, url, miembro_id, archivo_externo):
     documento = DocumentoMiembro(
         nombre=nombre,
         fecha=datetime.now(),
         tipo_de_documento_id=tipo_de_documento_id,
         url=url,
         miembro_id=miembro_id,
+        archivo_externo=archivo_externo
     )
     db.session.add(documento)
     db.session.commit()
@@ -170,4 +171,10 @@ def crear_documento(nombre, tipo_de_documento_id, url, miembro_id):
 
 def obtener_documento(id):
     documento = DocumentoMiembro.query.get(id)
+    return documento
+
+def eliminar_documento_miembro(documento_id):
+    documento = DocumentoMiembro.query.get(documento_id)
+    db.session.delete(documento)
+    db.session.commit()
     return documento
