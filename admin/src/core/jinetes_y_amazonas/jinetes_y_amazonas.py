@@ -7,7 +7,7 @@ class Diagnostico(db.Model):
     __tablename__ = "diagnosticos"
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50))
+    nombre = db.Column(db.String(50), unique=True)
 
     def __repr__(self):
         return f'Diagnostico: {self.value}'
@@ -51,7 +51,7 @@ class JineteOAmazona(db.Model):
     #información general de la persona
     nombre = db.Column(db.String(30))
     apellido = db.Column(db.String(30))
-    dni = db.Column(db.Integer)
+    dni = db.Column(db.Integer, unique=True)
     edad = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
     provincia_nacimiento = db.Column(db.String(50))
@@ -185,6 +185,7 @@ class JineteOAmazona(db.Model):
             "porcentaje_beca": ( str(self.porcentaje_beca) +"%" if self.becado else '-'),
             "propuesta_trabajo": self.propuesta_trabajo,
             "condicion": self.condicion,
+            "profesionales_a_cargo": self.profesionales_a_cargo
          }
 
     def __repr__(self):

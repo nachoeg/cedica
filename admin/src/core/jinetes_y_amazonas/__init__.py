@@ -18,9 +18,11 @@ def listar_j_y_a(nombre_filtro="", apellido_filtro="", dni_filtro="", profesiona
     query = JineteOAmazona.query.filter(
         JineteOAmazona.nombre.ilike(f"%{nombre_filtro}"),
         JineteOAmazona.apellido.ilike(f"%{apellido_filtro}"),
-        JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}"),
     )
 
+    if profesional_filtro != "":
+        query = query.filter(JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}"))
+    
     if dni_filtro != "":
         query = query.filter(JineteOAmazona.dni == dni_filtro)
 

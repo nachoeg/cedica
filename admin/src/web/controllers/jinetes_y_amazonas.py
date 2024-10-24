@@ -26,9 +26,9 @@ def listar():
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
-    profesional = request.args.get("profesional", "")
+    profesionales_a_cargo = request.args.get("profesionales_a_cargo", "")
 
-    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesional)
+    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesionales_a_cargo)
     cant_resultados = len(jinetes.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
@@ -43,6 +43,9 @@ def listar():
         orden=orden,
         ordenar_por=ordenar_por,
         nombre_filtro=nombre_filtro,
+        apellido_filtro=apellido_filtro,
+        dni_filtro=dni_filtro,
+        profesionales_a_cargo=profesionales_a_cargo
     )
 
 @bp.route("/nuevo_joa", methods=["GET", "POST"])
