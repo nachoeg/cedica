@@ -1,13 +1,38 @@
-from flask import current_app, Blueprint, render_template, request, redirect, url_for, flash
-from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, obtener_documento, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios, buscar_domicilio, eliminar_miembro, listar_tipos_de_documentos, listar_documentos, crear_documento
+from flask import (
+    current_app, 
+    Blueprint, 
+    render_template, 
+    request, 
+    redirect, 
+    url_for, 
+    flash)
+from src.core.miembro import (
+    crear_miembro, 
+    crear_domicilio, 
+    listar_condiciones, 
+    listar_profesiones, 
+    obtener_documento, 
+    listar_puestos_laborales, 
+    listar_miembros, 
+    obtener_miembro, 
+    guardar_cambios, 
+    buscar_domicilio, 
+    eliminar_miembro, 
+    listar_tipos_de_documentos, 
+    listar_documentos, 
+    crear_documento)
 from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
 
 @bp.route('/', methods=['GET'])
+@chequear_permiso("miembro_listar")
+@sesion_iniciada_requerida
 def miembro_listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
@@ -54,9 +79,11 @@ def miembro_listar():
     )
 
 @bp.route('/crear', methods=['GET', 'POST'])
+@chequear_permiso("miembro_crear")
+@sesion_iniciada_requerida
 def miembro_crear():
     form = InfoMiembroForm()
-    
+
     form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
     form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
     form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
@@ -126,9 +153,11 @@ def miembro_crear():
         flash("Miembro registrado con éxito.", 'success')
         return redirect(url_for('miembro.miembro_listar'))
 
-    return render_template('miembros/crear.html', form=form)
+    return render_template('miembros/crear.html', form=form, titulo="Crear miembro")
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("miembro_actualizar")
+@sesion_iniciada_requerida
 def miembro_editar(id: int):
     miembro = obtener_miembro(id)
     form = InfoMiembroForm(obj=miembro)
@@ -187,14 +216,18 @@ def miembro_editar(id: int):
         guardar_cambios()
         return redirect(url_for("miembro.miembro_listar")) 
 
-    return render_template("miembros/crear.html", form=form)    
+    return render_template("miembros/crear.html", form=form, titulo="Editar miembro")    
 
 @bp.route('/<int:id>', methods=['GET'])
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
 def miembro_mostrar(id):
     miembro = obtener_miembro(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
+@chequear_permiso("miembro_eliminar")
+@sesion_iniciada_requerida
 def miembro_eliminar(id):
     eliminar_miembro(id)
     flash("Miembro eliminado con exito.", 'success')
