@@ -17,7 +17,7 @@ class Storage:
         secure = app.config.get("MINIO_SECURE", False)
 
         # inicializa el cliente de MinIO
-        self._client = Minio(minio_server=minio_server, access_key=access_key,
+        self._client = Minio(minio_server, access_key=access_key,
                              secret_key=secret_key, secure=secure)
 
         # adjunta el cliente al contexto de la app
