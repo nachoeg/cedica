@@ -1,12 +1,21 @@
 from src.core.pago.pago_forms import PagoForm
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from src.core.pago import crear_pago, listar_pagos, obtener_pago, guardar_cambios, listar_tipos_pagos, obtener_tipo_pago, eliminar_pago
+from src.core.pago import (
+    crear_pago, 
+    listar_pagos, 
+    obtener_pago, 
+    guardar_cambios, 
+    listar_tipos_pagos, 
+    obtener_tipo_pago, 
+    eliminar_pago)
 from src.core.miembro import obtener_miembro_dni, obtener_miembro
-from src.core.database import db
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 
 bp = Blueprint('pago', __name__, url_prefix='/pagos')
 
 @bp.get("/")
+@chequear_permiso("pago_listar")
+@sesion_iniciada_requerida
 def pago_listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "fecha_pago")
@@ -46,6 +55,8 @@ def pago_listar():
     )
 
 @bp.route('/crear', methods=['GET', 'POST'])
+@chequear_permiso("pago_crear")
+@sesion_iniciada_requerida
 def pago_crear():
     form = PagoForm()
     form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in listar_tipos_pagos()]
@@ -73,10 +84,12 @@ def pago_crear():
         flash("Pago registrado con éxito.", 'success')
         return redirect(url_for('pago.pago_listar'))
 
-    return render_template('pagos/crear.html', form=form)
+    return render_template('pagos/crear.html', form=form, titulo="Crear pago")
 
 
 @bp.route('/<int:id>', methods=['GET'])
+@chequear_permiso("pago_mostrar")
+@sesion_iniciada_requerida
 def pago_mostrar(id):
     pago = obtener_pago(id)
     if pago.miembro_id:
@@ -87,12 +100,16 @@ def pago_mostrar(id):
     return render_template('pagos/mostrar.html', pago=pago, beneficiario=beneficiario)
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
+@chequear_permiso("pago_eliminar")
+@sesion_iniciada_requerida
 def pago_eliminar(id):
     eliminar_pago(id)
     flash("Pago eliminado con exito.", 'success')
     return redirect(url_for('pago.pago_listar'))
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("pago_actualizar")
+@sesion_iniciada_requerida
 def pago_editar(id: int):
     pago = obtener_pago(id)
     form = PagoForm(obj=pago)
@@ -121,4 +138,4 @@ def pago_editar(id: int):
         guardar_cambios()
         return redirect(url_for("pago.pago_listar"))
 
-    return render_template("pagos/crear.html", form=form)
+    return render_template("pagos/crear.html", form=form, titulo="Editar pago")

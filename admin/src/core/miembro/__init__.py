@@ -15,6 +15,8 @@ def listar_miembros(
     pagina=1,
     cant_por_pagina=10
 ):
+    """Lista los miembros de forma pagina, listando por defecto 10 miembros por pagina,
+    se aplican distintos filtros, como por nombre, apellido, dni, email o profesion"""
     query = Miembro.query.join(Profesion).filter(Miembro.activo.is_(True))
 
     if nombre_filtro:
@@ -54,6 +56,7 @@ def listar_documentos(
     pagina=1,
     cant_por_pagina=10,
 ):
+    """Listao todos los documentos asignados a un usuarios, utiliza filtros para buscar un documento por nombre o tipo"""
     query = DocumentoMiembro.query.join(TipoDeDocumentoMiembro).filter(
         DocumentoMiembro.miembro_id == miembro_id,
         DocumentoMiembro.nombre.ilike(f"%{nombre_filtro}%"),
@@ -71,6 +74,7 @@ def listar_documentos(
     return documentos, cant_resultados
 
 def crear_miembro(**kwargs):
+    """Crea un nuevo miembro y lo guarda en la base de datos"""
     miembro = Miembro(**kwargs)
     db.session.add(miembro)
     db.session.commit()
@@ -118,14 +122,17 @@ def guardar_cambios():
     db.session.commit()
 
 def obtener_miembro(id):
+    """Obtiene un miembro a parit del ID"""
     miembro = Miembro.query.get(id)
     return miembro
 
 def obtener_miembro_dni(dni):
+    """Obtiene un miembro a partir del dni"""
     miembro = Miembro.query.filter_by(dni=dni).first()
     return miembro
 
 def buscar_domicilio(calle, numero, piso, dpto, localidad):
+    """A partir de ciertos datos dados, busca si equiste un domicilio cargado en el sistema con los mismos datos"""
     return Domicilio.query.filter_by(
             calle=calle,
             numero=numero,

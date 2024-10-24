@@ -47,37 +47,37 @@ def run():
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
         apellido="Maria",
-        dni="12345678",
+        dni="31732976",
         nombreContactoEmergencia="Pedro",
         telefonoContactoEmergencia="123456789",
         obraSocial="OSDE",
-        numeroAfiliado="987654321",
+        numeroAfiliado="763",
         condicion_id=1,
         domicilio_id=domicilio1.id,
         email="jose@mail.com",
-        telefono="111222333",
+        telefono="211579341",
         profesion_id=1,
-        puesto_laboral_id=1,
+        puesto_laboral_id=2,
         usuario_id=1,
         activo=True
     )
 
     miembro2 = miembro.crear_miembro(
         nombre="Ana",
-        apellido="Perez",
-        dni="87654321",
+        apellido="Garcia",
+        dni="23455902",
         nombreContactoEmergencia="Laura",
         telefonoContactoEmergencia="987654321",
         obraSocial="Swiss Medical",
-        numeroAfiliado="123456789",
+        numeroAfiliado="891",
         condicion_id=1,
         domicilio_id=domicilio2.id,
         email="ana@mail.com",
-        telefono="222333444",
-        profesion_id=1,
-        puesto_laboral_id=1,
+        telefono="211986321",
+        profesion_id=10,
+        puesto_laboral_id=6,
         usuario_id=2,
-        activo=False
+        activo=True
     )
     
     #Creo un miembro con con puesto entrenador de caballos para asignarlo a un ecuestre
@@ -93,7 +93,7 @@ def run():
         domicilio_id=domicilio2.id,
         email="fer@mail.com",
         telefono="333444555",
-        profesion_id=1,
+        profesion_id=11,
         puesto_laboral_id=7,
         usuario_id=3,
         activo=True
@@ -112,7 +112,7 @@ def run():
         domicilio_id=domicilio2.id,
         email="carlos@mail.com",
         telefono="444555666",
-        profesion_id=1,
+        profesion_id=11,
         puesto_laboral_id=3,
         usuario_id=4,
         activo=True
