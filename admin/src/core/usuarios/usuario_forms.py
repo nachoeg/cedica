@@ -1,4 +1,3 @@
-from src.core.usuarios import todos_alias, todos_emails
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)

@@ -32,10 +32,9 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
-
-    roles = roles_por_id(id_roles)
-    # raise Exception(f'{roles}')
-    usuario.roles = roles
+    if not admin_sistema:
+        roles = roles_por_id(id_roles)
+        usuario.roles = roles
     db.session.add(usuario)
     db.session.commit()
 
@@ -46,8 +45,11 @@ def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
     usuario.email = email
     usuario.alias = alias
     usuario.admin_sistema = admin_sistema
-    roles = roles_por_id(id_roles)
-    usuario.roles = roles
+    if admin_sistema:
+        usuario.roles = []
+    else:
+        roles = roles_por_id(id_roles)
+        usuario.roles = roles
     db.session.commit()
 
 
@@ -99,14 +101,6 @@ def usuario_por_email_y_contraseña(email, contraseña):
         return usuario
 
     return None
-
-
-def todos_emails():
-    return db.session.execute(db.select(Usuario.email)).scalars().all()
-
-
-def todos_alias():
-    return db.session.execute(db.select(Usuario.alias)).scalars().all()
 
 
 # ROLES

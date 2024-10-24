@@ -1,0 +1,30 @@
+<script>
+
+  function mostrar_ocultar() {
+    var roles = document.getElementsByClassName("roles");
+    var mensaje = document.getElementById("mensaje_roles")
+    var es_admin = document.getElementById("es_admin").checked;
+    var i;
+    if (es_admin === false) {
+      for (i = 0; i < roles.length; i++) {
+        roles[i].style.display = 'block';
+        roles[i].style.margin = 'auto';
+      }
+      mensaje.style.display = 'none';
+    } 
+    else {
+      for (i = 0; i < roles.length; i++) {
+        roles[i].style.display = 'none';
+      }
+      mensaje.style.display = 'block';
+      mensaje.style.margin = '7px';
+    }
+  };
+
+  document.getElementById("es_admin").addEventListener("change", function(){
+    mostrar_ocultar();
+  });
+
+  mostrar_ocultar();
+
+</script>
