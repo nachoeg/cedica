@@ -10,6 +10,7 @@ from src.core.jinetes_y_amazonas.forms_documentos import SubirArchivoForm, Enlac
 
 import ulid
 from io import BytesIO
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 
@@ -18,6 +19,8 @@ bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 '''
 
 @bp.get("/")
+@chequear_permiso("jya_listar")
+@sesion_iniciada_requerida
 def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
@@ -49,6 +52,8 @@ def listar():
     )
 
 @bp.route("/nuevo_joa", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def nuevo_j_y_a():
     form = NuevoJYAForm()
     if form.validate_on_submit():
@@ -70,6 +75,8 @@ def nuevo_j_y_a():
     return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form)
 
 @bp.route("/cargar_info_salud/<string:id>", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def cargar_info_salud(id: string):
     form = InfoSaludJYAForm()
     form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
@@ -84,6 +91,8 @@ def cargar_info_salud(id: string):
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_salud.html", form=form)
 
 @bp.route("/cargar_info_econ/<string:id>", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def cargar_info_econ(id : string):
     form = InfoEconomicaJYAForm()
 
@@ -102,6 +111,8 @@ def cargar_info_econ(id : string):
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_econ.html", form=form)
 
 @bp.route("/cargar_info_esc/<string:id>", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def cargar_info_esc(id : string):
     form = InfoEscolaridadJYAForm()
     if form.validate_on_submit():
@@ -117,6 +128,8 @@ def cargar_info_esc(id : string):
 
 
 @bp.route("/cargar_info_inst/<string:id>", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def cargar_info_inst(id : string):
     form = InfoInstitucionalJYAForm()
     form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in listar_profesores]
@@ -160,24 +173,32 @@ def editar_cobro(id: str):
  '''
 
 @bp.get("/<int:id>/")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
 def ver(id: int):
     jya = encontrar_jya(id)
 
     return render_template("jinetes_y_amazonas/ver_jya.html", jya=jya)
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("jya_actualizar")
+@sesion_iniciada_requerida
 def editar_jya(id:int):
     jya = encontrar_jya(id)
 
     return redirect(url_for('jinetes_y_amazonas.listar'))
 
 @bp.get("/<int:id>/eliminar/")
+@chequear_permiso("jya_eliminar")
+@sesion_iniciada_requerida
 def eliminar(id: int):
     eliminar_jya(id)
 
     return redirect(url_for("jinetes_y_amazonas.listar"))
 
 @bp.route("/<int:id>/subir_archivo/", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def subir_archivo(id: int):
 
     form = SubirArchivoForm()
@@ -208,6 +229,8 @@ def subir_archivo(id: int):
     )
 
 @bp.route("/<int:id>/subir_enlace/", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
 def subir_enlace(id: int):
     
     form = EnlaceForm()
@@ -234,6 +257,8 @@ def subir_enlace(id: int):
     )
 
 @bp.get("/<int:id>/archivos")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
 def ver_archivos(id: int):
     archivos = encontrar_archivos_de_jya(id)
     jya = encontrar_jya(id)
@@ -276,12 +301,16 @@ def ver_archivos(id: int):
 
 
 @bp.get("/<int:jya_id>/archivos/<int:archivo_id>/editar/")
+@chequear_permiso("jya_actualizar")
+@sesion_iniciada_requerida
 def editar_archivo(jya_id: int, archivo_id:int):
     archivo = encontrar_archivo(archivo_id)
     flash("Funcionalidad no implementada")
     return render_template("jinetes_y_amazonas/documentos.html", jya = archivo.jya)
 
 @bp.get("/descargar_archivo/<int:archivo_id>")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
 def descargar_archivo(archivo_id:int):
     documento = obtener_documento(archivo_id)
     cliente = current_app.storage.client
@@ -294,6 +323,8 @@ def descargar_archivo(archivo_id:int):
         download_name=f"{documento.titulo}{extension}")
 
 @bp.get("/eliminar_documento/<int:id>")
+@chequear_permiso("jya_eliminar")
+@sesion_iniciada_requerida
 def eliminar_documento(id:int):
     doc = eliminar_documento_j_y_a(id)
     flash("Documento eliminado con éxito")
