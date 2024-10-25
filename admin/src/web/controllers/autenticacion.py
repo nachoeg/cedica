@@ -1,6 +1,6 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
-from src.core.usuarios import (actualizar_perfil, roles_por_usuario,
+from src.core.usuarios import (actualizar_perfil,
                                usuario_por_email_y_contraseña, usuario_por_id)
 from core.forms.usuario_forms import (IniciarSesionForm,
                                       UsuarioSinContraseñaForm)
@@ -21,6 +21,7 @@ def iniciar_sesion():
             contraseña = form.contraseña.data
             usuario = usuario_por_email_y_contraseña(email, contraseña)
             if usuario is None or not usuario.activo:
+                form.email.data = ""
                 flash('Usuario y/o contraseña incorrectos', 'error')
             else:
                 session.clear()
@@ -35,7 +36,6 @@ def iniciar_sesion():
         else:
             flash('No se pudo iniciar la sesión. Revise los datos ingresados',
                   'error')
-
     return render_template('pages/usuarios/iniciar_sesion.html', form=form)
 
 
