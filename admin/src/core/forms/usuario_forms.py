@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
-from wtforms.validators import (Email, InputRequired, Length,
-                                ValidationError, AnyOf)
+from wtforms.validators import (Email, InputRequired, Length)
 from wtforms.widgets import html_params
-from src.core.database import db
-from core.usuarios.usuario import Rol, Usuario
+from core.forms.validaciones import Unico, valor_en_opciones
+from core.usuarios import get_roles
+from core.usuarios.usuario import Usuario
 
 
 def select_multi_checkbox(field, ul_class='', **kwargs):
@@ -24,47 +24,6 @@ def select_multi_checkbox(field, ul_class='', **kwargs):
         html.append('<label for="%s">%s</label></li>' % (choice_id, label))
     html.append('</ul>')
     return ''.join(html)
-
-
-class Unique(object):
-    """Validador que verifica que el valor del campo
-     sea único si se modificó.
-     """
-    def __init__(self, model, field, message=None):
-        self.model = model
-        self.field = field
-        if message is None:
-            message = u'Este valor ya existe'
-        self.message = message
-
-    def __call__(self, form, field):
-        """Permite llamar a la clase como una función"""
-        if field.object_data == field.data:
-            return
-        check = db.session.execute(db.select(self.model).where(
-            self.field == field.data)).scalars().all()
-        if check:
-            raise ValidationError(self.message)
-
-
-# def validar_email(form, field):
-#     validacion = re.match(
-#         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
-#     if not validacion:
-#         raise ValidationError("El mail debe contener '@' y '.'")
-
-
-def opcion_en_opciones(opciones):
-    """Función que valida que los id de roles seleccionados estén entre
-    las opciones.
-    """
-    mensaje = "El valor selecionado no está entre las opciones válidas."
-
-    def _length(form, field):
-        if not set(field.data).issubset(set(opciones)):
-            raise ValidationError(mensaje)
-
-    return _length
 
 
 class IniciarSesionForm(FlaskForm):
@@ -90,26 +49,26 @@ class UsuarioSinContraseñaForm(FlaskForm):
     email = EmailField("Email", validators=[
         InputRequired("Debe ingresar un email."),
         Email("El mail debe contener '@' y '.'"),
-        Unique(Usuario, Usuario.email, message="El mail ingresado ya existe"),
+        Unico(Usuario, Usuario.email, message="El mail ingresado ya existe"),
         ])
     alias = StringField("Alias", validators=[
-        Unique(Usuario, Usuario.alias, message="El alias ingresado ya existe"),
+        Unico(Usuario, Usuario.alias, message="El alias ingresado ya existe"),
         ])
     admin_sistema = BooleanField("¿Es admin general?", default=False)
-    roles = SelectMultipleField("Roles", widget=select_multi_checkbox, )
+    roles = SelectMultipleField("Roles", widget=select_multi_checkbox,
+                                coerce=int)
 
     def __init__(self, *args, **kwargs):
         """Construye los atributos necesarios para la
         clase UsuarioSinContraseñaForm.
         """
         super(UsuarioSinContraseñaForm, self).__init__(*args, **kwargs)
-        opciones = [
-            (rol.id, rol.nombre) for rol in
-            db.session.execute(db.select(Rol)).unique().scalars().all()
-            ]
+        # carga las opciones al campo roles
+        opciones = [(rol.id, rol.nombre) for rol in get_roles()]
         self.roles.choices = opciones
-        id_opciones = [str(opcion[0]) for opcion in self.roles.choices]
-        self.roles.validators = [opcion_en_opciones(id_opciones)]
+        # agrega validación de que el valor recibido está entre las opciones
+        id_opciones = [opcion[0] for opcion in self.roles.choices]
+        self.roles.validators = [valor_en_opciones(id_opciones)]
 
 
 class UsuarioForm(UsuarioSinContraseñaForm):
