@@ -22,6 +22,9 @@ bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 @chequear_permiso("jya_listar")
 @sesion_iniciada_requerida
 def listar():
+    '''
+        Controlador que muestra el listado de jinetes y amazonas del sistema.
+    '''
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get('pagina', 1))
@@ -55,6 +58,9 @@ def listar():
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def nuevo_j_y_a():
+    '''
+        Controlador que muestra el formulario de alta de un jinete o amazona o guarda los datos ingresados en él.
+    '''
     form = NuevoJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -80,6 +86,9 @@ def nuevo_j_y_a():
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def cargar_info_salud(id: int):
+    '''
+        Controlador que muestra muestra el formulario de alta de la información de salud del jinete o amazona o guarda los datos asociados a él.
+    '''
     form = InfoSaludJYAForm()
     form.diagnostico.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
     form.submit.label.text = "Continuar"
@@ -98,6 +107,9 @@ def cargar_info_salud(id: int):
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def cargar_info_econ(id : int):
+    '''
+        Controlador que muestra el formulario de carga de la información económica del jinete o amazona, o guarda los datos ingrsados en él.
+    '''
     form = InfoEconomicaJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -119,6 +131,9 @@ def cargar_info_econ(id : int):
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def cargar_info_esc(id : int):
+    '''
+        Controlador que muestra el formulario para la carga de información de escolaridad del jinete o amazona, o guarda los datos cargados en él.
+    '''
     form = InfoEscolaridadJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -138,6 +153,9 @@ def cargar_info_esc(id : int):
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def cargar_info_inst(id : int):
+    '''
+        Controlador que muestra el formulario para la carga de información institucional del jinete o amazona, o guarda los datos cargados en él.
+    '''
     form = InfoInstitucionalJYAForm()
     form.submit.label.text = "Finalizar"
 
@@ -164,6 +182,9 @@ def cargar_info_inst(id : int):
 @chequear_permiso("jya_mostrar")
 @sesion_iniciada_requerida
 def ver(id: int):
+    '''
+        Controlador que permite visualizar la información de un jinete o amazona.
+    '''
     jya = encontrar_jya(id)
 
     return render_template("jinetes_y_amazonas/ver_jya.html", jya=jya)
@@ -173,6 +194,9 @@ def ver(id: int):
 @chequear_permiso("jya_eliminar")
 @sesion_iniciada_requerida
 def eliminar(id: int):
+    '''
+        Controlador que elimina un jinete o amazona y redirige al listado de jinetes y amazonas
+    '''
     eliminar_jya(id)
 
     return redirect(url_for("jinetes_y_amazonas.listar"))
@@ -181,6 +205,9 @@ def eliminar(id: int):
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def subir_archivo(id: int):
+    '''
+        Controlador que muestra el formulario para el alta de un archivo en el sistema.
+    '''
 
     form = SubirArchivoForm()
 
@@ -213,6 +240,9 @@ def subir_archivo(id: int):
 @chequear_permiso("jya_crear")
 @sesion_iniciada_requerida
 def subir_enlace(id: int):
+    '''
+        Controlador que muestra el formulario para el alta de un archivo externo en el sistema (enlace a un archivo externo).
+    '''
     
     form = EnlaceForm()
 
@@ -241,6 +271,9 @@ def subir_enlace(id: int):
 @chequear_permiso("jya_mostrar")
 @sesion_iniciada_requerida
 def ver_archivos(id: int):
+    '''
+        Controlador que devuelve el listado de archivos asociados a un jinete o amazona.
+    '''
     archivos = encontrar_archivos_de_jya(id)
     jya = encontrar_jya(id)
     orden = request.args.get("orden", "asc")
@@ -285,6 +318,9 @@ def ver_archivos(id: int):
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
 def editar_archivo(jya_id: int, archivo_id:int):
+    '''
+        Controlador que muestra el formulario para la edición de un archivo o enlace.
+    '''
     archivo = encontrar_archivo(archivo_id)
     flash("Funcionalidad no implementada")
     return render_template("jinetes_y_amazonas/documentos.html", jya = archivo.jya)
@@ -293,6 +329,9 @@ def editar_archivo(jya_id: int, archivo_id:int):
 @chequear_permiso("jya_mostrar")
 @sesion_iniciada_requerida
 def descargar_archivo(archivo_id:int):
+    '''
+        Controlador que permite la descarga de un archivo dado su id.
+    '''
     documento = obtener_documento(archivo_id)
     cliente = current_app.storage.client
     archivo = cliente.get_object("grupo17", documento.url)
@@ -307,6 +346,9 @@ def descargar_archivo(archivo_id:int):
 @chequear_permiso("jya_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id:int):
+    '''
+        Controlador que permite la eliminación de un documento y redirige a la vista de listado de archivos.
+    '''
     doc = eliminar_documento_j_y_a(id)
     flash("Documento eliminado con éxito")
 
@@ -316,6 +358,9 @@ def eliminar_documento(id:int):
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
 def editar_j_y_a(id: int):
+    '''
+        Controlador que muestra permite editar la información general del jinete o amazona.
+    '''
     jya = encontrar_jya(id)
     form = NuevoJYAForm(obj=jya)
     form.submit.label.text= "Guardar"
@@ -345,6 +390,9 @@ def editar_j_y_a(id: int):
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
 def editar_info_salud(id: int):
+    '''
+        Controlador que muestra permite editar la información de salud del jinete o amazona.
+    '''
     jya = encontrar_jya(id)
     form = InfoSaludJYAForm(obj=jya)
     form.diagnostico.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
@@ -372,6 +420,9 @@ def editar_info_salud(id: int):
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
 def editar_info_econ(id : int):
+    '''
+        Controlador que muestra permite editar la información economica del jinete o amazona.
+    '''
     jya = encontrar_jya(id)
     form = InfoEconomicaJYAForm(obj=jya)
     form.submit.label.text= "Guardar"
@@ -398,6 +449,9 @@ def editar_info_econ(id : int):
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
 def editar_info_esc(id : int):
+    '''
+        Controlador que muestra permite editar la información sobre escolaridad del jinete o amazona.
+    '''
     jya = encontrar_jya(id)
     form = InfoEscolaridadJYAForm(obj=jya)
     form.submit.label.text= "Guardar"
@@ -423,6 +477,9 @@ def editar_info_esc(id : int):
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
 def editar_info_inst(id : int):
+    '''
+        Controlador que muestra permite editar la información institucional relacionada al jinete o amazona.
+    '''
     jya = encontrar_jya(id)
     form = InfoInstitucionalJYAForm(obj=jya)
     

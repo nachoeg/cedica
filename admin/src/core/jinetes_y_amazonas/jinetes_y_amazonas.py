@@ -4,6 +4,9 @@ import enum
 from sqlalchemy.types import Enum
 
 class Diagnostico(db.Model):
+    ''' 
+        Modelo correspondiente a los diagnósticos de salud de J&A.
+    '''
     __tablename__ = "diagnosticos"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -14,6 +17,9 @@ class Diagnostico(db.Model):
 
 
 class Familiar(db.Model):
+    ''' 
+        Modelo correspondiente a los familiares de J&A.
+    '''
     __tablename__="familiares"
 
     class NivelEscolaridad(enum.Enum):
@@ -44,6 +50,9 @@ class Familiar(db.Model):
         return f'Familiar: {self.nombre}'
     
 class JineteOAmazona(db.Model):
+    ''' 
+        Modelo correspondiente a los J&A.
+    '''
     __tablename__ = "jinetesyamazonas"
 
     id = db.Column(db.Integer, primary_key=True)
