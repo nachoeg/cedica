@@ -1,3 +1,4 @@
+import re
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
@@ -37,28 +38,56 @@ class Unique(object):
         self.message = message
 
     def __call__(self, form, field):
+        """Permite llamar a la clase como una función"""
         if field.object_data == field.data:
             return
-        check = db.session.execute(db.select(self.model).where(self.field == field.data)).scalars().all()
-        # raise Exception(f'{check}')
-        # check = DBSession.query(model).filter(field == data).first()
+        check = db.session.execute(db.select(self.model).where(
+            self.field == field.data)).scalars().all()
         if check:
             raise ValidationError(self.message)
 
 
+# def validar_email(form, field):
+#     validacion = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
+#     if not validacion:
+#         raise ValidationError("El mail debe contener '@' y '.'")
+
+
+class IniciarSesionForm(FlaskForm):
+    """Clase que hereda de FlaskForm y representa el formulario
+    un usuario sin el campo 'contraseña'.
+    """
+    email = EmailField(
+        "Email",
+        validators=[
+            InputRequired("Debe ingresar un email."),
+            Email("El mail debe contener '@' y '.'"),
+        ])
+    contraseña = PasswordField(
+        "Contraseña",
+        validators=[InputRequired("Debe ingresar una contraseña.")],
+        )
+
+
 class UsuarioSinContraseñaForm(FlaskForm):
+    """Clase que hereda de FlaskForm y representa el formulario
+    un usuario sin el campo 'contraseña'.
+    """
     email = EmailField("Email", validators=[
-        InputRequired("El formato del email no es correcto."),
-        Email(),
+        InputRequired("Debe ingresar un email."),
+        Email("El mail debe contener '@' y '.'"),
         Unique(Usuario, Usuario.email, message="El mail ingresado ya existe"),
         ])
     alias = StringField("Alias", validators=[
         Unique(Usuario, Usuario.alias, message="El alias ingresado ya existe"),
         ])
     admin_sistema = BooleanField("¿Es admin general?", default=False)
-    roles = SelectMultipleField("Roles", widget=select_multi_checkbox)
+    roles = SelectMultipleField("Roles", widget=select_multi_checkbox, )
 
     def __init__(self, *args, **kwargs):
+        """Construye los atributos necesarios para la
+        clase UsuarioSinContraseñaForm.
+        """
         super(UsuarioSinContraseñaForm, self).__init__(*args, **kwargs)
         self.roles.choices = [
             (rol.id, rol.nombre) for rol in
@@ -67,9 +96,12 @@ class UsuarioSinContraseñaForm(FlaskForm):
 
 
 class UsuarioForm(UsuarioSinContraseñaForm):
+    """Clase que hereda de UsuarioSinContraseñaForm y representa
+    el formulario de un usuario.
+    """
     contraseña = PasswordField(
         "Contraseña",
-        validators=[InputRequired(),
+        validators=[InputRequired("Debe ingresar una contraseña."),
                     Length(min=4, message="La contraseña debe tener por lo \
                         menos %(min)d caracteres")
                     ]

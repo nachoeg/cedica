@@ -9,11 +9,23 @@
 {% endblock %}
 
 {% block main %}
-<form action="{{ url_for('autenticacion.iniciar_sesion') }}" class="formulario mt-20 xs:max-w-max xs:min-w-80"
-  method="POST">
+
+{% from "pages/usuarios/_campo_form.html" import render_field %}
+<form method=post class="formulario mt-20 xs:max-w-max xs:min-w-80">
   <h1 class="text-center text-xl font-medium">Iniciar sesión</h1>
-  <input type="email" name="email" id="email" placeholder="Correo" required />
-  <input type="password" name="contraseña" id="contraseña" placeholder="Contraseña" required />
+  {{ form.csrf_token }}
+  <div>
+    {{ form.email(placeholder="Correo") }}
+    {% for error in form.email.errors %}
+    <span class="text-red-600">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div>
+    {{ form.contraseña(placeholder="Contraseña") }}
+    {% for error in form.contraseña.errors %}
+    <span class="text-red-600">{{ error }}</span>
+    {% endfor %}
+  </div>
   <div class="flex flex-col gap-2">
     <button type="submit">Iniciar sesión</button>
     <button type="button" class="btn btn-secondary-light w-full">
@@ -22,4 +34,6 @@
     </button>
   </div>
 </form>
+
+
 {% endblock %}

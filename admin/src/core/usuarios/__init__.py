@@ -7,7 +7,10 @@ from core.usuarios.usuario import Permiso, Rol, Usuario
 # USUARIOS
 def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
                     email_filtro, activo_filtro, rol_filtro):
-    # raise Exception(f'{rol_filtro}{nombres_roles()}')
+    """Devuelve una tupla que contiene un listado paginado
+    de usuarios, filtrado y ordenado, y la cantidad total de
+    usuarios que genera la consulta.
+    """
     usuarios = db.paginate(
         db.select(
             Usuario).distinct().join(
@@ -28,6 +31,9 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
 
 def crear_usuario(email, contraseña, alias, admin_sistema=False,
                   id_roles=[], creacion=datetime.now()):
+    """Crea un objeto de tipo Usuario con los datos que recibe por
+    parámetro y lo devuelve.
+    """
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
                       alias=alias, admin_sistema=admin_sistema,
@@ -42,6 +48,11 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
 
 
 def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
+    """Modifica los datos del usuario que recibe por parámetro con los
+    datos en el resto de los parámetros.
+
+    Parámetros:
+    """
     usuario.email = email
     usuario.alias = alias
     usuario.admin_sistema = admin_sistema
@@ -54,6 +65,11 @@ def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
 
 
 def actualizar_perfil(usuario, email, alias):
+    """Modifica los datos del usuario que recibe por parámetro con los
+    datos en el resto de los parámetros.
+
+    Parámetros:
+    """
     usuario.email = email
     usuario.alias = alias
     db.session.commit()
@@ -84,9 +100,6 @@ def usuario_por_id(id):
 def usuario_por_email(email):
     usuario = db.session.execute(db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
 
-    # # first() y one() devuelven una tupla, para que sea sólo el objeto tendría que usar scalars
-    # usuario = db.session.scalars(db.select(Usuario).where(Usuario.email == email)).first()
-
     return usuario
 
 
@@ -113,6 +126,9 @@ def crear_rol(**kwargs):
 
 
 def nombres_roles():
+    """Devuelve una lista con los nombres de todos los roles
+    en la base de datos.
+    """
     roles = db.session.execute(db.select(Rol.nombre)).scalars().all()
 
     return roles
