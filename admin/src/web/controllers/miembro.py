@@ -391,6 +391,9 @@ def descargar_documento(id: int, documento_id: int):
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
     """Elimina un documento asignado al miembro"""
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    client.remove_object("grupo17", documento_id.url)
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
