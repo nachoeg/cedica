@@ -26,7 +26,7 @@ from src.core.miembro import (
     crear_documento,
     eliminar_documento_miembro,
     miembro_por_id)
-from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
+from src.core.forms.miembro_forms import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso

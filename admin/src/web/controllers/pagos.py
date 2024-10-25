@@ -1,4 +1,4 @@
-from src.core.pago.pago_forms import PagoForm
+from src.core.forms.pago_forms import PagoForm
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from src.core.pago import (
     crear_pago, 
