@@ -87,6 +87,9 @@ def cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, 
     jya.auxiliar_pista_id = auxiliar_pista_id
     db.session.commit()
 
+def guardar_cambios():
+    db.session.commit()
+
 def eliminar_jya(id):
     jya = JineteOAmazona.query.get_or_404(id)
     db.session.delete(jya)
@@ -157,7 +160,7 @@ def listar_profesores():
     profesores = Miembro.query.join(PuestoLaboral).filter(
         PuestoLaboral.nombre == "Profesor de Equitación"
     )
-
+    print(profesores)
     return profesores
 
 def listar_conductores():
