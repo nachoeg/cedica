@@ -7,7 +7,7 @@ class Diagnostico(db.Model):
     __tablename__ = "diagnosticos"
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50))
+    nombre = db.Column(db.String(50), unique=True)
 
     def __repr__(self):
         return f'Diagnostico: {self.value}'
@@ -51,7 +51,7 @@ class JineteOAmazona(db.Model):
     #información general de la persona
     nombre = db.Column(db.String(30))
     apellido = db.Column(db.String(30))
-    dni = db.Column(db.Integer)
+    dni = db.Column(db.Integer, unique=True)
     edad = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
     provincia_nacimiento = db.Column(db.String(50))
@@ -169,19 +169,6 @@ class JineteOAmazona(db.Model):
     #TODO armar tabla de dias de asistencia
     #dias
     #acá voy a tener que tener una tabla de dias? es muchos a muchos
-    
-    '''
-        Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
-        El parámetro asc se utiliza para que, si se le pasa de manera explícita un 0 como parámetro, 
-        se devuelvan los resultados de manera descendente
-    '''
-    @staticmethod
-    def todos_paginados(asc=1, pagina=1, por_pagina=2):
-        if asc == 0:
-                return JineteOAmazona.query.order_by(JineteOAmazona.nombre.desc()).paginate(page=pagina, per_page=por_pagina)
-        else:
-            return JineteOAmazona.query.order_by(JineteOAmazona.nombre.asc()).paginate(page=pagina, per_page=por_pagina)
-
 
     def to_dict(self):
         return {
@@ -189,41 +176,16 @@ class JineteOAmazona(db.Model):
             "nombre": self.nombre,
             "apellido": self.apellido,
             "dni": self.dni,
-            "tiene_deuda": self.tiene_deuda,
+            "sede": self.sede,
+            "tiene_deuda": ('TIENE DEUDA' if self.tiene_deuda else '-'),
             "edad": self.edad,
-            "fecha_nacimiento": self.fecha_nacimiento,
-            "provincia_nacimiento": self.provincia_nacimiento,
-            "localidad_nacimiento": self.localidad_nacimiento,
             "domicilio_actual": self.domicilio_actual,
             "telefono_actual": self.telefono_actual,
-            "contacto_emer_nombre": self.contacto_emer_nombre,
-            "contacto_emer_telefono": self.contacto_emer_telefono,
-            "becado": self.becado,
-            "porcentaje_beca": self.porcentaje_beca,
-            "certificado_discapacidad": self.certificado_discapacidad,
-            "diagnostico": self.diagnostico.nombre if self.diagnostico else None,
-            "diagnostico_otro": self.diagnostico_otro,
-            "tipo_discapacidad": self.tipo_discapacidad,
-            "asignacion_familiar": self.asignacion_familiar,
-            "tipo_asignacion_familiar": self.tipo_asignacion_familiar,
-            "beneficiario_pension": self.beneficiario_pension,
-            "tipo_pension": self.tipo_pension,
-            "obra_social": self.obra_social,
-            "num_afiliado": self.num_afiliado,
-            "posee_curatela": self.posee_curatela,
-            "observaciones_obra_social": self.observaciones_obra_social,
-            "nombre_escuela": self.nombre_escuela,
-            "direccion_escuela": self.direccion_escuela,
-            "telefono_escuela": self.telefono_escuela,
-            "grado_escuela": self.grado_escuela,
-            "observaciones_escuela": self.observaciones_escuela,
+            "contacto_emergencia": str(self.contacto_emer_telefono) + " (" + self.contacto_emer_nombre + ")",
+            "porcentaje_beca": ( str(self.porcentaje_beca) +"%" if self.becado else '-'),
             "propuesta_trabajo": self.propuesta_trabajo,
             "condicion": self.condicion,
-            "sede": self.sede,
-            "profesor": self.profesor.nombre if self.profesor else None,
-            "conductor_caballo": self.conductor_caballo.nombre if self.conductor_caballo else None,
-            "caballo": self.caballo.nombre if self.caballo else None,
-            "auxiliar_pista": self.auxiliar_pista.nombre if self.auxiliar_pista else None, 
+            "profesionales_a_cargo": self.profesionales_a_cargo
          }
 
     def __repr__(self):

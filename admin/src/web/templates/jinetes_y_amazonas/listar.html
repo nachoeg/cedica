@@ -12,14 +12,27 @@
 {'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
 {'id': 'dni', 'nombre': 'DNI'},
 {'id': 'sede', 'nombre': 'Sede'},
+{'id': 'tiene_deuda', 'nombre': 'Deuda'},
+{'id': 'edad', 'nombre': 'Edad'},
+{'id': 'domicilio_actual', 'nombre': 'Dirección'},
+{'id': 'telefono_actual', 'nombre': 'Telefono'},
+{'id': 'contacto_emergencia', 'nombre': 'Contacto de emergencia'},
+{'id': 'porcentaje_beca', 'nombre': 'Porcentaje de beca'},
+{'id': 'propuesta_trabajo', 'nombre': 'Propuesta de trabajo'},
+{'id': 'condicion', 'nombre': 'Condición'},
+{'id': 'profesionales_a_cargo', 'nombre': 'Profesionales a cargo'}
 ],
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verJYA'},
 {'nombre': 'Editar', 'funcion': 'editarJYA'},
-{'nombre': 'Borrar','funcion': 'borrarJYA'}
+{'nombre': 'Borrar','funcion': 'borrarJYA'},
+{'nombre': 'Documentos', 'funcion': 'verDocumentos'}
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
+{'id': 'apellido', 'nombre': 'Apellido', 'tipo': 'texto', 'valor': apellido_filtro },
+{'id': 'dni', 'nombre': 'DNI', 'tipo': 'texto', 'valor': dni_filtro },
+{'id': 'profesionales_a_cargo', 'nombre': 'Profesional', 'tipo': 'texto', 'valor': profesional_filtro },
 ],
 'crear': {
 'url': url_for('jinetes_y_amazonas.nuevo_j_y_a'),
@@ -48,6 +61,10 @@
     if (confirm('¿Está seguro que desea borrar este cobro?')) {
       window.location.href = `/jinetes_y_amazonas/${id}/eliminar`;
     }
+  }
+
+  function verDocumentos(id){
+    window.location.href = `/jinetes_y_amazonas/${id}/archivos`;
   }
 
 </script>

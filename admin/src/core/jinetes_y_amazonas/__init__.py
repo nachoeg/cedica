@@ -14,10 +14,26 @@ def crear_diagnostico(**kwargs):
     return diagnostico
 
 # funcion que lista todos los jinetes o amazonas del sistema
-def listar_j_y_a(orden_asc=1, pagina_inicial=1, por_pag=20):
-    j_y_a = JineteOAmazona.todos_paginados(orden_asc, pagina_inicial,por_pag)
+def listar_j_y_a(nombre_filtro="", apellido_filtro="", dni_filtro="", profesional_filtro="", ordenar_por="id", orden="asc", pagina=1, cant_por_pag=10):
+    query = JineteOAmazona.query.filter(
+        JineteOAmazona.nombre.ilike(f"%{nombre_filtro}"),
+        JineteOAmazona.apellido.ilike(f"%{apellido_filtro}"),
+    )
+
+    if profesional_filtro != "":
+        query = query.filter(JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}"))
     
-    return j_y_a
+    if dni_filtro != "":
+        query = query.filter(JineteOAmazona.dni == dni_filtro)
+
+    if orden == "asc":
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
+
+    j_y_a_ordenados = query.paginate(page=pagina, per_page=cant_por_pag, error_out=False)
+    
+    return j_y_a_ordenados
 
 
 # función que crea un registro de jinete o amazona
@@ -81,8 +97,8 @@ def encontrar_jya(id):
     jya = JineteOAmazona.query.get_or_404(id)
     return jya
 
-def cargar_archivo(jya_id, titulo,tipo_archivo):
-    archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo)
+def cargar_archivo(jya_id, titulo,tipo_archivo, url, archivo_externo):
+    archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo, url= url, externo=archivo_externo)
     db.session.add(archivo)
     db.session.commit()
 
@@ -162,3 +178,14 @@ def listar_caballos():
     caballos = Ecuestre.query.all()
 
     return caballos
+
+def obtener_documento(doc_id):
+    
+    return Archivo_JYA.query.get_or_404(doc_id)
+
+def eliminar_documento_j_y_a(doc_id):
+    documento = Archivo_JYA.query.get(doc_id)
+    db.session.delete(documento)
+    db.session.commit()
+
+    return documento

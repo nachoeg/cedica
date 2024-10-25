@@ -5,10 +5,10 @@ from src.core.pago import obtener_tipo_pago
 from datetime import date
 
 class PagoForm(FlaskForm):
-    tipo_id = SelectField('Tipo de Pago', validators=[DataRequired('Debe seleccionar una opcion.')])
-    monto = DecimalField('Monto', validators=[DataRequired('Debe de ingresar un monto.'), NumberRange(min=0.01, message="El monto debe ser mayor a 0")])
+    tipo_id = SelectField('Tipo de Pago*', validators=[DataRequired('Debe seleccionar una opcion.')])
+    monto = DecimalField('Monto*', validators=[DataRequired('Debe de ingresar un monto.'), NumberRange(min=0.01, message="El monto debe ser mayor a 0")])
     descripcion = StringField('Descripción', validators=[Optional()])
-    fecha_pago = DateField('Fecha de Pago', validators=[DataRequired('Debe ingresar una fecha de pago.')])
+    fecha_pago = DateField('Fecha de Pago*', validators=[DataRequired('Debe ingresar una fecha de pago.')])
     dni = StringField('DNI', validators=[])  
     submit = SubmitField('Guardar')
 
