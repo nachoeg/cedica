@@ -24,10 +24,26 @@
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>{{ form.profesor_id.label }}: {{ form.profesor_id }}</div>
-        <div>{{ form.conductor_caballo_id.label }}: {{ form.conductor_caballo_id }}</div>
-        <div>{{ form.caballo_id.label }}: {{ form.caballo_id }}</div>
-        <div>{{ form.auxiliar_pista_id.label }}: {{ form.auxiliar_pista_id }}</div>
+        <div>{{ form.profesor_id.label }}: {{ form.profesor_id }}
+            {% for error in form.profesor_id.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>{{ form.conductor_caballo_id.label }}: {{ form.conductor_caballo_id }}
+            {% for error in form.conductor_caballo_id.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>{{ form.caballo_id.label }}: {{ form.caballo_id }}
+            {% for error in form.caballo_id.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>{{ form.auxiliar_pista_id.label }}: {{ form.auxiliar_pista_id }}
+            {% for error in form.auxiliar_pista_id.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
         <div>
             {{ form.submit() }}
         </div>

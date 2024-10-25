@@ -13,6 +13,8 @@ def listar_pagos(
     pagina=1,
     cant_por_pagina=10,
 ):
+    """ Funcion que lista todos los pagos de forma pagina, con un cantidad predefinida
+    de 10 pagos por pagina"""
     query = Pago.query.join(TipoDePago).join(Miembro, isouter=True)
 
     if fecha_inicio:
@@ -36,16 +38,19 @@ def listar_pagos(
     return pagos, cant_resultados
 
 def crear_pago(**kwargs):
+    """Crea un pago y lo guarda en la base de datos"""
     pago = Pago(**kwargs)
     db.session.add(pago)
     db.session.commit()
     return pago
 
 def listar_tipos_pagos():
+    """Lista los diferentes tipos de pagos que estan cargados en el sistema"""
     tiposDePagos = TipoDePago.query.all()
     return tiposDePagos
 
 def cargar_tipo_pago(nombre):
+    """Carga un tipo de pago nuevo"""
     pago = TipoDePago(nombre=nombre)
     db.session.add(pago)
     db.session.commit()
@@ -55,14 +60,17 @@ def guardar_cambios():
     db.session.commit()
 
 def obtener_pago(id):
-    pago = Pago.query.get(id)
+    """ Obtiene un pago a partir del id"""
+    pago = Pago.query.get_or_404(id)
     return pago
 
 def obtener_tipo_pago(id):
-    tipo_pago = TipoDePago.query.get(id)
+    tipo_pago = TipoDePago.query.get_or_404(id)
+    """Obtiene un tipo de pago a partir del id"""
     return tipo_pago
 
 def eliminar_pago(id):
-    pago = Pago.query.get(id)
+    """Elimina un pago, buscando por id el pago en la base de datos"""
+    pago = Pago.query.get_or_404(id)
     db.session.delete(pago)
     db.session.commit()

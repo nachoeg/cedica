@@ -36,7 +36,8 @@ class DocumentoMiembro(db.Model):
         db.Integer, db.ForeignKey("tipos_de_documento_miembro.id"), nullable=False
     )
     tipo_de_documento = db.relationship("TipoDeDocumentoMiembro", backref="documentos_miembro")
-
+    archivo_externo = db.Column(db.Boolean, nullable=False)
+    
     miembro_id = db.Column(db.Integer, db.ForeignKey("miembro.id"), nullable=False)
     miembro = db.relationship("Miembro", backref="documentos_miembro")
 

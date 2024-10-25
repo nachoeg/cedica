@@ -47,37 +47,37 @@ def run():
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
         apellido="Maria",
-        dni="12345678",
-        nombreContactoEmergencia="Pedro",
-        telefonoContactoEmergencia="123456789",
-        obraSocial="OSDE",
-        numeroAfiliado="987654321",
+        dni="31732976",
+        nombre_contacto_emergencia="Pedro",
+        telefono_contacto_emergencia="123456789",
+        obra_social="OSDE",
+        numero_afiliado="763",
         condicion_id=1,
         domicilio_id=domicilio1.id,
         email="jose@mail.com",
-        telefono="111222333",
+        telefono="211579341",
         profesion_id=1,
-        puesto_laboral_id=1,
+        puesto_laboral_id=2,
         usuario_id=1,
         activo=True
     )
 
     miembro2 = miembro.crear_miembro(
         nombre="Ana",
-        apellido="Perez",
-        dni="87654321",
-        nombreContactoEmergencia="Laura",
-        telefonoContactoEmergencia="987654321",
-        obraSocial="Swiss Medical",
-        numeroAfiliado="123456789",
+        apellido="Garcia",
+        dni="23455902",
+        nombre_contacto_emergencia="Laura",
+        telefono_contacto_emergencia="987654321",
+        obra_social="Swiss Medical",
+        numero_afiliado="891",
         condicion_id=1,
         domicilio_id=domicilio2.id,
         email="ana@mail.com",
-        telefono="222333444",
-        profesion_id=1,
-        puesto_laboral_id=1,
+        telefono="211986321",
+        profesion_id=10,
+        puesto_laboral_id=6,
         usuario_id=2,
-        activo=False
+        activo=True
     )
     
     #Creo un miembro con con puesto entrenador de caballos para asignarlo a un ecuestre
@@ -85,15 +85,15 @@ def run():
         nombre="Fernando",
         apellido="Gomez",
         dni="34567890",
-        nombreContactoEmergencia="Juan",
-        telefonoContactoEmergencia="345678901",
-        obraSocial="OSDE",
-        numeroAfiliado="345678901",
+        nombre_contacto_emergencia="Juan",
+        telefono_contacto_emergencia="345678901",
+        obra_social="OSDE",
+        numero_afiliado="345678901",
         condicion_id=1,
         domicilio_id=domicilio2.id,
         email="fer@mail.com",
         telefono="333444555",
-        profesion_id=1,
+        profesion_id=11,
         puesto_laboral_id=7,
         usuario_id=3,
         activo=True
@@ -104,15 +104,15 @@ def run():
         nombre="Carlos",
         apellido="Gimenez",
         dni="45678901",
-        nombreContactoEmergencia="Pedro",
-        telefonoContactoEmergencia="456789012",
-        obraSocial="OSDE",
-        numeroAfiliado="456789012",
+        nombre_contacto_emergencia="Pedro",
+        telefono_contacto_emergencia="456789012",
+        obra_social="OSDE",
+        numero_afiliado="456789012",
         condicion_id=1,
         domicilio_id=domicilio2.id,
         email="carlos@mail.com",
         telefono="444555666",
-        profesion_id=1,
+        profesion_id=11,
         puesto_laboral_id=3,
         usuario_id=4,
         activo=True
@@ -140,9 +140,9 @@ def run():
     for tipo in tipos_de_documento_ecuestre:
         ecuestre.crear_tipo_de_documento(tipo=tipo)
 
-    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214428864)
-    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='La Pampa', localidad_nacimiento='Santa Rosa', domicilio_actual='62 n312',telefono_actual=2214569794, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214678864)
-    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim", dni= 14234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='Buenos Aires', localidad_nacimiento='La Plata', domicilio_actual='20 n67',telefono_actual=2214569784, contacto_emer_nombre='Jimena',contacto_emer_telefono=2214671264)
+    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 36234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214428864)
+    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 36234222, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='La Pampa', localidad_nacimiento='Santa Rosa', domicilio_actual='62 n312',telefono_actual=2214569794, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214678864)
+    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim", dni= 36234223, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='Buenos Aires', localidad_nacimiento='La Plata', domicilio_actual='20 n67',telefono_actual=2214569784, contacto_emer_nombre='Jimena',contacto_emer_telefono=2214671264)
 
     cobro1 = cobros.crear_cobro(
         medio_de_pago="efectivo",

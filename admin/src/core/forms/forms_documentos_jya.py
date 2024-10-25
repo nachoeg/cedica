@@ -9,6 +9,9 @@ from wtforms.fields import (
 )
 
 class SubirArchivoForm(FlaskForm):
+    ''' 
+        Formulario utilizado para subir un archivo.
+    '''
     titulo = StringField(
         "Titulo", validators=[DataRequired("Ingrese el nombre del documento")]
     )
@@ -18,6 +21,9 @@ class SubirArchivoForm(FlaskForm):
 
 
 class EnlaceForm(FlaskForm):
+    ''' 
+        Formulario utilizado para subir un enlace.
+    '''
     titulo = StringField(
         "Titulo", validators=[DataRequired("Ingrese el nombre del documento")]
     )
@@ -27,6 +33,9 @@ class EnlaceForm(FlaskForm):
 
 
 class EditarArchivoForm(FlaskForm):
+    ''' 
+        Formulario utilizado para editar un archivo.
+    '''
     titulo = StringField(
         "Titulo", validators=[DataRequired("Ingrese el nombre del documento")]
     )

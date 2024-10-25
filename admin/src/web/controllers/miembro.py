@@ -1,14 +1,47 @@
-from flask import current_app, Blueprint, render_template, request, redirect, url_for, flash
-from src.core.miembro import crear_miembro, crear_domicilio, listar_condiciones, listar_profesiones, obtener_documento, listar_puestos_laborales, listar_miembros, obtener_miembro, guardar_cambios, buscar_domicilio, eliminar_miembro, listar_tipos_de_documentos, listar_documentos, crear_documento
-from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm
+from io import BytesIO
+from flask import (
+    current_app, 
+    Blueprint, 
+    render_template, 
+    request, 
+    redirect, 
+    url_for, 
+    flash,
+    send_file,
+    abort)
+from src.core.miembro import (
+    crear_miembro, 
+    crear_domicilio, 
+    listar_condiciones, 
+    listar_profesiones, 
+    obtener_documento, 
+    listar_puestos_laborales, 
+    listar_miembros, 
+    obtener_miembro, 
+    guardar_cambios, 
+    buscar_domicilio, 
+    cambiar_condicion_miembro, 
+    listar_tipos_de_documentos, 
+    listar_documentos, 
+    crear_documento,
+    eliminar_documento_miembro,
+    miembro_por_id)
+from src.core.forms.miembro_forms import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+import ulid
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 
 
 @bp.route('/', methods=['GET'])
+@chequear_permiso("miembro_listar")
+@sesion_iniciada_requerida
 def miembro_listar():
+    """ Realiza el listado paginado de los miembros del equipo,
+    permite filtrar por nombre, apellido, dni, email y profesion, ademas de ordenar
+    asc y desc por nombre, apellido y fecha de creacion"""
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
     pagina = int(request.args.get("pagina", 1))
@@ -54,9 +87,12 @@ def miembro_listar():
     )
 
 @bp.route('/crear', methods=['GET', 'POST'])
+@chequear_permiso("miembro_crear")
+@sesion_iniciada_requerida
 def miembro_crear():
+    """ Levante el formulario para crear un miembro y recibe los datos que envia al modulo de miembro para crear uno nuevo"""
     form = InfoMiembroForm()
-    
+
     form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
     form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
     form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
@@ -67,10 +103,10 @@ def miembro_crear():
         dni = form.dni.data
         email = form.email.data
         telefono = form.telefono.data
-        nombre_contacto_emergencia = form.nombreContactoEmergencia.data
-        telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
-        obra_social = form.obraSocial.data
-        numero_afiliado = form.numeroAfiliado.data
+        nombre_contacto_emergencia = form.nombre_contacto_emergencia.data
+        telefono_contacto_emergencia = form.telefono_contacto_emergencia.data
+        obra_social = form.obra_social.data
+        numero_afiliado = form.numero_afiliado.data
         condicion_id = form.condicion_id.data
         profesion_id = form.profesion_id.data
         puesto_laboral_id = form.puesto_laboral_id.data
@@ -126,11 +162,16 @@ def miembro_crear():
         flash("Miembro registrado con éxito.", 'success')
         return redirect(url_for('miembro.miembro_listar'))
 
-    return render_template('miembros/crear.html', form=form)
+    return render_template('miembros/crear.html', form=form, titulo="Crear miembro")
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("miembro_actualizar")
+@sesion_iniciada_requerida
 def miembro_editar(id: int):
+    """Levanta un formulario para editar un miembro con los datos precargados del mismo"""
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     form = InfoMiembroForm(obj=miembro)
     form.calle.data = miembro.domicilio.calle
     form.numero.data = miembro.domicilio.numero
@@ -150,10 +191,10 @@ def miembro_editar(id: int):
         miembro.dni = form.dni.data
         miembro.email = form.email.data
         miembro.telefono = form.telefono.data
-        miembro.nombre_contacto_emergencia = form.nombreContactoEmergencia.data
-        miembro.telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
-        miembro.obra_social = form.obraSocial.data
-        miembro.numero_afiliado = form.numeroAfiliado.data
+        miembro.nombre_contacto_emergencia = form.nombre_contacto_emergencia.data
+        miembro.telefono_contacto_emergencia = form.telefono_contacto_emergencia.data
+        miembro.obra_social = form.obra_social.data
+        miembro.numero_afiliado = form.numero_afiliado.data
         miembro.condicion_id = form.condicion_id.data
         miembro.profesion_id = form.profesion_id.data
         miembro.puesto_laboral_id = form.puesto_laboral_id.data
@@ -180,29 +221,38 @@ def miembro_editar(id: int):
                 alias_usuario = usuario_id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
-                return redirect(url_for('miembro.miembro_crear'))
+                return render_template("miembros/crear.html", form=form)
         else:
             miembro.usuario_id = None      
 
         guardar_cambios()
         return redirect(url_for("miembro.miembro_listar")) 
 
-    return render_template("miembros/crear.html", form=form)    
+    return render_template("miembros/crear.html", form=form, titulo="Editar miembro")    
 
 @bp.route('/<int:id>', methods=['GET'])
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
 def miembro_mostrar(id):
-    miembro = obtener_miembro(id)
+    """Muestra la informacion de un miembro del equipo"""
+    miembro = miembro_por_id(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
-@bp.route('/<int:id>/eliminar', methods=['GET'])
-def miembro_eliminar(id):
-    eliminar_miembro(id)
-    flash("Miembro eliminado con exito.", 'success')
+@bp.route('/<int:id>/cambiar_condicion', methods=['GET'])
+@chequear_permiso("miembro_eliminar")
+@sesion_iniciada_requerida
+def miembro_cambiar_condicion(id):
+    """Activa o desactiva a un miembro del equipo"""
+    cambiar_condicion_miembro(id)
+    flash("Miembro activado/desactivado con exito.", 'success')
     return redirect(url_for('miembro.miembro_listar'))
 
 @bp.get("/<int:id>/documentos/")
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
 def miembro_documentos(id: int):
-    miembro = obtener_miembro(id)
+    """Lista los documentos de un miembro del sistema y los muestra de forma paginada"""
+    miembro = miembro_por_id(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
@@ -241,21 +291,25 @@ def miembro_documentos(id: int):
     )
 
 @bp.route("/<int:id>/documentos/subir_archivo/", methods=["GET", "POST"])
+@chequear_permiso("miembro_crear")
+@sesion_iniciada_requerida
 def miembro_subir_archivo(id: int):
+    """Permite subir un archivo desde la computadora del usuario y guardarlo como un documento del miembro"""
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     form = ArchivoMiembroForm()
-    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
-            tipo = form.tipo.data
-            ecuestre_id = id
+            tipo = form.tipo_de_documento_id.data
+            miembro_id = id
             archivo = request.files["archivo"]
             client = current_app.storage.client
             size = fstat(archivo.fileno()).st_size
-            ulid = ulid.new()
-            url = f"miembro/{ulid}-{archivo.filename}"
+            url = f"miembro/{ulid.new()}-{archivo.filename}"
 
             client.put_object(
                 "grupo17",
@@ -265,7 +319,7 @@ def miembro_subir_archivo(id: int):
                 content_type=archivo.content_type,
             )
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, miembro_id, archivo_externo=False)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("miembro.miembro_documentos", id=id))
@@ -273,23 +327,28 @@ def miembro_subir_archivo(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/subir_documento.html", form=form, miembro=miembro
+        "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_archivo=True
     )
 
 @bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
+@chequear_permiso("miembro_crear")
+@sesion_iniciada_requerida
 def miembro_subir_enlace(id: int):
+    """Guada un enlace como documento del miembro"""
     miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     form = EnlaceMiembroForm()
-    form.tipo.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
 
     if request.method == "POST":
         if form.validate_on_submit():
             nombre = form.nombre.data
-            tipo = form.tipo.data
-            ecuestre_id = id
+            tipo = form.tipo_de_documento_id.data
+            miembro_id = id
             url = form.url.data
 
-            crear_documento(nombre, tipo, url, ecuestre_id)
+            crear_documento(nombre, tipo, url, miembro_id, archivo_externo=True)
 
             flash("Documento subido con exito", "exito")
             return redirect(url_for("miembro.miembro_documentos", id=id))
@@ -297,10 +356,85 @@ def miembro_subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/subir_enlace.html", form=form, miembro=miembro
+        "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_enlace=True
     )
 
-@bp.route("/<int:miembro_id>/documentos/<int:id>", methods=['GET'])
-def miembro_ver_documento(miembro_id:int, id: int):
-    documento = obtener_documento(id)
-    return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)
+@bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
+def ir_documento(id: int,documento_id: int):
+    """Redirigue al enlace previamente cargado como documento del miembro"""
+    documento = obtener_documento(documento_id)
+    return redirect(documento.url)
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/descargar/")
+@chequear_permiso("miembro_mostrar")
+@sesion_iniciada_requerida
+def descargar_documento(id: int, documento_id: int):
+    """Descarga el archivo previamente cargado como documento del miembro"""
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    archivo = client.get_object("grupo17", documento.url)
+
+    archivo_bytes = BytesIO(archivo.read())
+
+    extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
+
+    return send_file(
+        archivo_bytes,
+        as_attachment=True,
+        download_name=f"{documento.nombre}{extension}"
+    )
+
+@bp.get("/<int:id>/documentos/<int:documento_id>/eliminar/")
+@chequear_permiso("miembro_eliminar")
+@sesion_iniciada_requerida
+def eliminar_documento(id: int, documento_id: int):
+    """Elimina un documento asignado al miembro"""
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    client.remove_object("grupo17", documento_id.url)
+    miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
+    eliminar_documento_miembro(documento_id)
+    flash("Documento eliminado con exito", "exito")
+    return redirect(url_for("miembro.miembro_documentos", id=id))
+
+@bp.route("/<int:id>/documentos/<int:documento_id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("miembro_actualizar")
+@sesion_iniciada_requerida
+def editar_documento(id: int, documento_id: int):
+    """Permite modificar un documento, para los enlaces se permite modificar todos los valores, 
+    mientras que para archivos se puede modificar solamente tipo y nombre"""
+    miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
+    documento = obtener_documento(documento_id)
+    if documento.archivo_externo:
+        form = EnlaceMiembroForm(obj=documento)
+    else:
+        form =  EditarArchivoMiembroForm(obj=documento)
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            documento.nombre = form.nombre.data
+            documento.tipo_de_documento_id = form.tipo_de_documento_id.data
+            if documento.archivo_externo:
+                documento.url = form.url.data
+            guardar_cambios()
+            flash("Documento actualizado con exito", "exito")
+            return redirect(url_for("miembro.miembro_documentos", id=id))
+        else:
+            flash("Error al actualizar el documento", "error")
+
+    return render_template(
+        "pages/ecuestre/formulario_documento.html",
+        form=form,
+        miembro=documento.miembro,
+        titulo=f"Editar documento #{documento_id}",
+        subir_enlace=documento.archivo_externo,
+    )

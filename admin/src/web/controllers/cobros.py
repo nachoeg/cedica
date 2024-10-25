@@ -1,17 +1,18 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
 from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices, listar_medios_de_pago
-from src.core.cobros.cobro_forms import CobroForm
+from core.forms.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 from src.core.miembro.miembro import Miembro
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
-'''
-    Retorna los cobros listados de manera ascendente según la fecha de pago
-'''
+
 @bp.get("/")
 def listar():
+    '''
+        Controlador que muestra el listado de cobros a J&A del sistema.
+    '''
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get('pagina', 1))
@@ -47,6 +48,9 @@ def listar():
 
 @bp.route("/nuevo_cobro", methods=["GET", "POST"])
 def nuevo_cobro():
+    '''
+        Controlador que muestra el formulario de alta de un cobro o lo retorna para que sea guardado.
+    '''
     form = CobroForm()
     form.joa.choices = cargar_joa_choices()
     form.recibio_el_dinero.choices = cargar_miembro_choices()
@@ -68,11 +72,17 @@ def nuevo_cobro():
 
 @bp.get("/<int:id>/")
 def ver(id: int):
+    '''
+        Controlador que permite la visualización de la información de un cobro.
+    '''
     cobro = encontrar_cobro(id)
     return render_template("cobros/ver_cobro.html", cobro=cobro)
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 def editar_cobro(id: int):
+    '''
+        Controlador que muestra un formulario para editar un cobro o guarda la información cargada en él.
+    '''
     cobro = encontrar_cobro(id)
     form = CobroForm(obj=cobro)
     form.joa.choices = cargar_joa_choices()
