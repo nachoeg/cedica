@@ -25,3 +25,4 @@ def fechahora(fechahora):
     '%d-%m-%Y %H:%M'.
     """
     return fechahora.strftime('%d-%m-%Y %H:%M')
+

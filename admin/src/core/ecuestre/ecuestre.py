@@ -106,7 +106,7 @@ class Ecuestre(db.Model):
             "sexo": self.sexo,
             "raza": self.raza,
             "pelaje": self.pelaje,
-            "es_compra": self.es_compra,
+            "es_compra": "Compra" if self.es_compra else "Donación",
             "fecha_ingreso": self.fecha_ingreso,
             "sede": self.sede,
             "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,

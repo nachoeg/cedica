@@ -24,8 +24,8 @@ from src.core.ecuestre import (
     guardar_cambios,
 )
 from src.core.miembro import obtener_miembro
-from src.core.ecuestre.ecuestre_form import EcuestreForm
-from src.core.ecuestre.documento_form import (
+from src.core.forms.ecuestre_form import EcuestreForm
+from core.forms.ecuestre_documento_form import (
     SubirArchivoForm,
     EnlaceForm,
     EditarArchivoForm,
