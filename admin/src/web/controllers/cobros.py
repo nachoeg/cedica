@@ -17,7 +17,7 @@ def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get('pagina', 1))
-    cant_por_pag = int(request.args.get('por_pag',10))
+    cant_por_pag = int(request.args.get('por_pag',6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     medio_pago_filtro = request.args.get("medio_de_pago", "")

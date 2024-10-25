@@ -28,13 +28,13 @@ def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get('pagina', 1))
-    cant_por_pag = int(request.args.get('por_pag',10))
+    cant_por_pag = int(request.args.get('por_pag',6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
     profesionales_a_cargo = request.args.get("profesionales_a_cargo", "")
 
-    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesionales_a_cargo)
+    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesionales_a_cargo, ordenar_por, orden,pagina, cant_por_pag)
     cant_resultados = len(jinetes.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
