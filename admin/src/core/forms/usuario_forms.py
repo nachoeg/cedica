@@ -1,8 +1,8 @@
-import re
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
-from wtforms.validators import Email, InputRequired, Length, ValidationError
+from wtforms.validators import (Email, InputRequired, Length,
+                                ValidationError, AnyOf)
 from wtforms.widgets import html_params
 from src.core.database import db
 from core.usuarios.usuario import Rol, Usuario
@@ -48,9 +48,23 @@ class Unique(object):
 
 
 # def validar_email(form, field):
-#     validacion = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
+#     validacion = re.match(
+#         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
 #     if not validacion:
 #         raise ValidationError("El mail debe contener '@' y '.'")
+
+
+def opcion_en_opciones(opciones):
+    """Función que valida que los id de roles seleccionados estén entre
+    las opciones.
+    """
+    mensaje = "El valor selecionado no está entre las opciones válidas."
+
+    def _length(form, field):
+        if not set(field.data).issubset(set(opciones)):
+            raise ValidationError(mensaje)
+
+    return _length
 
 
 class IniciarSesionForm(FlaskForm):
@@ -89,10 +103,13 @@ class UsuarioSinContraseñaForm(FlaskForm):
         clase UsuarioSinContraseñaForm.
         """
         super(UsuarioSinContraseñaForm, self).__init__(*args, **kwargs)
-        self.roles.choices = [
+        opciones = [
             (rol.id, rol.nombre) for rol in
             db.session.execute(db.select(Rol)).unique().scalars().all()
             ]
+        self.roles.choices = opciones
+        id_opciones = [str(opcion[0]) for opcion in self.roles.choices]
+        self.roles.validators = [opcion_en_opciones(id_opciones)]
 
 
 class UsuarioForm(UsuarioSinContraseñaForm):

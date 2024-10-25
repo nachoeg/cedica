@@ -62,6 +62,7 @@ def registrar_usuario():
     """
     form = UsuarioForm(request.form)
     if request.method == 'POST':
+        # raise Exception(f'{set(form.roles.data).issubset(set(form.roles.validators[0].values))} {set(form.roles.data)} {set(form.roles.validators[0].values)}')
         if form.validate_on_submit():
             # raise Exception(f'{form.data}')
             usuario = crear_usuario(form.email.data, form.contraseña.data,

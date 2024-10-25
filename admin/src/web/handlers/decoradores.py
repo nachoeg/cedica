@@ -4,10 +4,14 @@ from src.core.usuarios import get_permisos, usuario_por_email, usuario_por_id
 
 
 def esta_autenticado(session):
+    """Devuelve True si hay un usuario en la sesión actual."""
     return session.get('usuario') is not None
 
 
 def sesion_iniciada_requerida(f):
+    """Decorador que evalúa si hay un usuario autenticado, aborta con error 401
+    en caso contrario.
+    """
 
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -20,6 +24,9 @@ def sesion_iniciada_requerida(f):
 
 
 def tiene_permiso(session, permiso):
+    """Devuelve True si el usuario de la sesión tiene el permiso
+    pasado por parámetro.
+    """
     usuario = usuario_por_email(session.get('usuario'))
     if usuario is None:
         return False
@@ -30,6 +37,9 @@ def tiene_permiso(session, permiso):
 
 
 def chequear_permiso(permiso):
+    """Decorador que evalúa si un usuario tiene el permiso recibido
+    por parámetro, aborta con error 403 en caso contrario.
+    """
 
     def decorator(f):
 
@@ -50,6 +60,10 @@ def es_usuario_de_sesion(session, id):
 
 
 def chequear_usuario_sesion(f):
+    """Decorador que evalúa si el usuario cuyo id se toma de los parámetros
+    de la función es el mismo que el usuario en la sesión actual.
+    Aborta con error 403 en caso contrario.
+    """
 
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -63,6 +77,9 @@ def chequear_usuario_sesion(f):
 
 
 def no_modificar_admin(f):
+    """Decorador que aborta con error 403 si el usuario
+    cuyo id se recibe es admin.
+    """
 
     @wraps(f)
     def wrapper(*args, **kwargs):
