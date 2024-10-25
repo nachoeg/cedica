@@ -1,15 +1,14 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Editar usuario {% endblock %}
+{% block title %} Editar perfil {% endblock %}
 
 {% block head %}
 {{ super() }}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block main %}
 
-  {% from "pages/_form_base.html" import render_field %}
+  {% from "pages/usuarios/_campo_form.html" import render_field %}
   <form method=post class="formulario">
     <h1>Editar usuario</h1>
     {{ form.csrf_token }}

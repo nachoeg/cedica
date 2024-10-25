@@ -8,7 +8,8 @@ from wtforms.fields import (
     SubmitField,
     SelectMultipleField,
 )
-from datetime import datetime
+from src.core.forms.validaciones import FechaNoFutura
+from datetime import date
 
 
 class EcuestreForm(FlaskForm):
@@ -17,8 +18,11 @@ class EcuestreForm(FlaskForm):
     )
     fecha_nacimiento = DateField(
         "Fecha de nacimiento",
-        validators=[DataRequired("Ingrese una fecha de nacimiento")],
-        default=datetime.now(),
+        validators=[
+            DataRequired("Ingrese una fecha de nacimiento"),
+            FechaNoFutura(),
+        ],
+        default=date.today(),
     )
     sexo = SelectField("Sexo", choices=[("M", "Macho"), ("H", "Hembra")])
     raza = StringField(
@@ -31,10 +35,10 @@ class EcuestreForm(FlaskForm):
     fecha_ingreso = DateField(
         "Fecha de ingreso",
         validators=[DataRequired("Ingrese una fecha de ingreso")],
-        default=datetime.now(),
+        default=date.today(),
     )
-    sede = StringField(
-        "Sede", validators=[DataRequired("Ingrese la sede del ecuestre")]
+    sede = SelectField(
+        "Sede", choices=[("CASJ", "CASJ"), ("HLP", "HLP"), ("otro", "Otro")]
     )
     tipo_de_jya_id = SelectField("Tipo de Jinete y Amazona", coerce=int)
     conductores = SelectMultipleField("Conductores", coerce=int)
