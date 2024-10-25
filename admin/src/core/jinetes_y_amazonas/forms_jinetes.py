@@ -25,7 +25,7 @@ class NuevoJYAForm(FlaskForm):
 #información de salud
 class InfoSaludJYAForm(FlaskForm):
     certificado_discapacidad = BooleanField('¿Tiene certificado de discapacidad?')
-    diagnostico_id = SelectField(u'Diagnóstico', coerce=int)
+    diagnostico = SelectField(u'Diagnóstico', coerce=int)
     diagnostico_otro = StringField('Otro diagnóstico', validators=[Length(max=64)])
     tipo_discapacidad = SelectField('Tipo de discapacidad', choices=[('mental', 'Mental') , ('motora','Motora'), ('sensorial','Sensorial'), ('visceral','Visceral')])
     submit = SubmitField('Continuar')

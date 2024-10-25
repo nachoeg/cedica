@@ -81,12 +81,12 @@ def nuevo_j_y_a():
 @sesion_iniciada_requerida
 def cargar_info_salud(id: int):
     form = InfoSaludJYAForm()
-    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
+    form.diagnostico.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
     form.submit.label.text = "Continuar"
 
     if form.validate_on_submit():
         certificado_discapacidad = form.certificado_discapacidad.data
-        diagnostico_id = form.diagnostico_id.data
+        diagnostico_id = form.diagnostico.data
         diagnostico_otro = form.diagnostico_otro.data
         tipo_discapacidad = form.tipo_discapacidad.data
         cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad)
@@ -347,14 +347,16 @@ def editar_j_y_a(id: int):
 def editar_info_salud(id: int):
     jya = encontrar_jya(id)
     form = InfoSaludJYAForm(obj=jya)
-    form.diagnostico_id.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
-    form.diagnostico_id.data = jya.diagnostico
+    form.diagnostico.choices = [(diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()]
+    
+    if jya.diagnostico != None:
+        form.diagnostico.data = jya.diagnostico.id
     form.submit.label.text= "Guardar"
 
     if request.method == "POST":
         if form.validate_on_submit():
             jya.certificado_discapacidad = form.certificado_discapacidad.data
-            jya.diagnostico_id = form.diagnostico_id.data
+            jya.diagnostico_id = form.diagnostico.data
             jya.diagnostico_otro = form.diagnostico_otro.data
             jya.tipo_discapacidad = form.tipo_discapacidad.data
             guardar_cambios()
@@ -399,7 +401,7 @@ def editar_info_esc(id : int):
     jya = encontrar_jya(id)
     form = InfoEscolaridadJYAForm(obj=jya)
     form.submit.label.text= "Guardar"
-
+    #form.diagnostico.data = jya.diagnostico.id
     if request.method == "POST":
         if form.validate_on_submit():
             jya.nombre_escuela = form.nombre_escuela.data
@@ -424,17 +426,24 @@ def editar_info_inst(id : int):
     jya = encontrar_jya(id)
     form = InfoInstitucionalJYAForm(obj=jya)
     
-    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in listar_profesores]
-    form.profesor.data = jya.profesor.id
-
-    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in listar_conductores]
-    form.conductor_caballo_id.data = jya.conductor_caballo.id
+    form.profesor_id.choices = [(profesor.id, profesor.nombre) for profesor in listar_profesores()]
+    if jya.profesor != None:
+        form.profesor.data = jya.profesor.id
     
-    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in listar_caballos]
-    form.caballo.data = jya.caballo.id
+    form.conductor_caballo_id.choices = [(conductor.id, conductor.nombre) for conductor in listar_conductores()]
     
-    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista]
-    form.auxiliar_pista.data = jya.auxiliar_pista.id
+    if jya.conductor_caballo != None:
+        form.conductor_caballo_id.data = jya.conductor_caballo.id
+    
+    form.caballo_id.choices = [(caballo.id, caballo.nombre) for caballo in listar_caballos()]
+    
+    if jya.caballo != None:
+        form.caballo.data = jya.caballo.id
+    
+    form.auxiliar_pista_id.choices = [(auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista()]
+    
+    if jya.auxiliar_pista != None:
+        form.auxiliar_pista.data = jya.auxiliar_pista.id
     
     form.submit.label.text= "Guardar"
 
