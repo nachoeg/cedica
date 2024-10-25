@@ -38,6 +38,9 @@ bp = Blueprint('miembro', __name__, url_prefix='/miembros')
 @chequear_permiso("miembro_listar")
 @sesion_iniciada_requerida
 def miembro_listar():
+    """ Realiza el listado paginado de los miembros del equipo,
+    permite filtrar por nombre, apellido, dni, email y profesion, ademas de ordenar
+    asc y desc por nombre, apellido y fecha de creacion"""
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
     pagina = int(request.args.get("pagina", 1))
@@ -86,6 +89,7 @@ def miembro_listar():
 @chequear_permiso("miembro_crear")
 @sesion_iniciada_requerida
 def miembro_crear():
+    """ Levante el formulario para crear un miembro y recibe los datos que envia al modulo de miembro para crear uno nuevo"""
     form = InfoMiembroForm()
 
     form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
@@ -163,6 +167,7 @@ def miembro_crear():
 @chequear_permiso("miembro_actualizar")
 @sesion_iniciada_requerida
 def miembro_editar(id: int):
+    """Levanta un formulario para editar un miembro con los datos precargados del mismo"""
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
@@ -228,6 +233,7 @@ def miembro_editar(id: int):
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
 def miembro_mostrar(id):
+    """Muestra la informacion de un miembro del equipo"""
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
@@ -237,6 +243,7 @@ def miembro_mostrar(id):
 @chequear_permiso("miembro_eliminar")
 @sesion_iniciada_requerida
 def miembro_cambiar_condicion(id):
+    """Activa o desactiva a un miembro del equipo"""
     cambiar_condicion_miembro(id)
     flash("Miembro activado/desactivado con exito.", 'success')
     return redirect(url_for('miembro.miembro_listar'))
@@ -245,6 +252,7 @@ def miembro_cambiar_condicion(id):
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
 def miembro_documentos(id: int):
+    """Lista los documentos de un miembro del sistema y los muestra de forma paginada"""
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
@@ -289,6 +297,7 @@ def miembro_documentos(id: int):
 @chequear_permiso("miembro_crear")
 @sesion_iniciada_requerida
 def miembro_subir_archivo(id: int):
+    """Permite subir un archivo desde la computadora del usuario y guardarlo como un documento del miembro"""
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
@@ -328,6 +337,7 @@ def miembro_subir_archivo(id: int):
 @chequear_permiso("miembro_crear")
 @sesion_iniciada_requerida
 def miembro_subir_enlace(id: int):
+    """Guada un enlace como documento del miembro"""
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
@@ -356,6 +366,7 @@ def miembro_subir_enlace(id: int):
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
 def miembro_ver_documento(miembro_id: int, id: int):
+    """Muestra la informacion de un documento"""
     documento = obtener_documento(id)
     return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)
 
@@ -363,6 +374,7 @@ def miembro_ver_documento(miembro_id: int, id: int):
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
 def ir_documento(id: int,documento_id: int):
+    """Redirigue al enlace previamente cargado como documento del miembro"""
     documento = obtener_documento(documento_id)
     return redirect(documento.url)
 
@@ -370,6 +382,7 @@ def ir_documento(id: int,documento_id: int):
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
 def descargar_documento(id: int, documento_id: int):
+    """Descarga el archivo previamente cargado como documento del miembro"""
     documento = obtener_documento(documento_id)
     client = current_app.storage.client
     archivo = client.get_object("grupo17", documento.url)
@@ -378,7 +391,6 @@ def descargar_documento(id: int, documento_id: int):
 
     extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
 
-    # Enviar el archivo al cliente
     return send_file(
         archivo_bytes,
         as_attachment=True,
@@ -389,6 +401,7 @@ def descargar_documento(id: int, documento_id: int):
 @chequear_permiso("miembro_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
+    """Elimina un documento asignado al miembro"""
     eliminar_documento_miembro(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("miembro.miembro_documentos", id=id))
@@ -397,6 +410,8 @@ def eliminar_documento(id: int, documento_id: int):
 @chequear_permiso("miembro_actualizar")
 @sesion_iniciada_requerida
 def editar_documento(id: int, documento_id: int):
+    """Permite modificar un documento, para los enlaces se permite modificar todos los valores, 
+    mientras que para archivos se puede modificar solamente tipo y nombre"""
     documento = obtener_documento(documento_id)
     if documento.archivo_externo:
         form = EnlaceMiembroForm(obj=documento)

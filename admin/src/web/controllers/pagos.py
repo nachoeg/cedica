@@ -17,6 +17,8 @@ bp = Blueprint('pago', __name__, url_prefix='/pagos')
 @chequear_permiso("pago_listar")
 @sesion_iniciada_requerida
 def pago_listar():
+    """Lista los pagos de forma paginada, una cantidad de 10 por pagina, permite aplicar filtros y ordenar de manera
+    ascendente y descendente por diversos campos"""
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "fecha_pago")
     pagina = int(request.args.get("pagina", 1))
@@ -58,6 +60,8 @@ def pago_listar():
 @chequear_permiso("pago_crear")
 @sesion_iniciada_requerida
 def pago_crear():
+    """Levanta el formulario para crear pagos y recibe los datos para enviarlos
+    al modulo de pago y crear uno nuevo"""
     form = PagoForm()
     form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in listar_tipos_pagos()]
     
@@ -91,6 +95,7 @@ def pago_crear():
 @chequear_permiso("pago_mostrar")
 @sesion_iniciada_requerida
 def pago_mostrar(id):
+    """Muestra la informacion del pago"""
     pago = obtener_pago(id)
     if pago.miembro_id:
         miembro = obtener_miembro(pago.miembro_id)
@@ -103,6 +108,8 @@ def pago_mostrar(id):
 @chequear_permiso("pago_eliminar")
 @sesion_iniciada_requerida
 def pago_eliminar(id):
+    """Permite eliminar un pago del sistema, 
+    toma el id y se lo envia la modulo de pago para hacer efectiva la baja"""
     eliminar_pago(id)
     flash("Pago eliminado con exito.", 'success')
     return redirect(url_for('pago.pago_listar'))
@@ -111,6 +118,8 @@ def pago_eliminar(id):
 @chequear_permiso("pago_actualizar")
 @sesion_iniciada_requerida
 def pago_editar(id: int):
+    """Controlador parar realizar la edicion del pago, 
+    levanta el formulario con datos precargados"""
     pago = obtener_pago(id)
     form = PagoForm(obj=pago)
     if request.method == "GET" and (pago.miembro_id != None):
