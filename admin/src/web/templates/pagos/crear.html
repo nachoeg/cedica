@@ -3,10 +3,16 @@
 {% block title %} {{titulo}} {% endblock %}
 
 {% block main %}
-<h1>{{titulo}}</h1>
 
 <form novalidate method="POST" class="formulario">
+    {{ form.csrf_token }}
+    <div class="formulario-header">
+    <h1> {{titulo}} </h1>
+    </div>
+    
     {{ form.hidden_tag() }}
+    
+    <p class="text-gray-600 text-xs italic">Los campos con * son obligatorios </p>
 
     <div class="text-red-600">
         {{ form.tipo_id.label }}

@@ -2,9 +2,9 @@ import math
 from flask import (Blueprint, flash, redirect,
                    render_template, request, url_for)
 from src.core.usuarios import (actualizar_usuario, crear_usuario,
-                               listar_usuarios, nombres_roles, roles_por_usuario,
-                               usuario_por_id)
-from src.core.usuarios.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
+                               listar_usuarios, nombres_roles, 
+                               roles_por_usuario, usuario_por_id)
+from core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)
@@ -17,6 +17,9 @@ bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 @chequear_permiso('usuario_listar')
 @sesion_iniciada_requerida
 def listado_usuarios():
+    """Devuelve la vista de usuarios en la base de datos
+    Los datos se envían paginados, filtrados y ordenados.
+    """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
@@ -54,8 +57,12 @@ def listado_usuarios():
 @chequear_permiso('usuario_crear')
 @sesion_iniciada_requerida
 def registrar_usuario():
+    """Devuelve la vista que permite registrar un usuario.
+    Registra al usuario si los datos del formulario son correctos.
+    """
     form = UsuarioForm(request.form)
     if request.method == 'POST':
+        # raise Exception(f'{set(form.roles.data).issubset(set(form.roles.validators[0].values))} {set(form.roles.data)} {set(form.roles.validators[0].values)}')
         if form.validate_on_submit():
             # raise Exception(f'{form.data}')
             usuario = crear_usuario(form.email.data, form.contraseña.data,
@@ -65,7 +72,8 @@ def registrar_usuario():
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('usuarios.listado_usuarios'))
         else:
-            flash('No se pudo generar el registro. Revise los datos ingresados',
+            flash('No se pudo generar el registro. \
+                  Revise los datos ingresados',
                   'error')
     return render_template('pages/usuarios/registrar_usuario.html', form=form)
 
@@ -74,6 +82,7 @@ def registrar_usuario():
 @chequear_permiso('usuario_mostrar')
 @sesion_iniciada_requerida
 def ver_usuario(id):
+    """Devuelve la vista de los datos del usuario cuyo id recibe como parámetro."""
     usuario = usuario_por_id(id)
     return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
 
@@ -82,6 +91,10 @@ def ver_usuario(id):
 @chequear_permiso('usuario_editar')
 @sesion_iniciada_requerida
 def editar_usuario(id):
+    """Devuelve la vista de edición de perfil del usuario
+    cuyo id recibe como parámetro y edita al usuario si
+    los datos del formulario son correctos.
+    """
     usuario = usuario_por_id(id)
     form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'GET':
@@ -95,7 +108,8 @@ def editar_usuario(id):
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('usuarios.listado_usuarios'))
         else:
-            flash('No se pudo actualizar el registro. Revise los datos ingresados',
+            flash('No se pudo actualizar el registro. \
+                  Revise los datos ingresados',
                   'error')
     return render_template('pages/usuarios/editar_usuario.html', form=form)
 

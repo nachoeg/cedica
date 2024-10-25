@@ -1,9 +1,9 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
 from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices, listar_medios_de_pago
-from src.core.cobros.cobro_forms import CobroForm
+from core.forms.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
-from src.core.miembro.miembro import Miembro
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
@@ -11,6 +11,8 @@ bp = Blueprint("cobros", __name__, url_prefix="/cobros")
     Retorna los cobros listados de manera ascendente según la fecha de pago
 '''
 @bp.get("/")
+@chequear_permiso("cobro_listar")
+@sesion_iniciada_requerida
 def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
@@ -46,6 +48,8 @@ def listar():
     )
 
 @bp.route("/nuevo_cobro", methods=["GET", "POST"])
+@chequear_permiso("cobro_crear")
+@sesion_iniciada_requerida
 def nuevo_cobro():
     form = CobroForm()
     form.joa.choices = cargar_joa_choices()
@@ -67,11 +71,15 @@ def nuevo_cobro():
     return render_template("cobros/crear_cobro.html", form=form)
 
 @bp.get("/<int:id>/")
+@chequear_permiso("cobro_mostrar")
+@sesion_iniciada_requerida
 def ver(id: int):
     cobro = encontrar_cobro(id)
     return render_template("cobros/ver_cobro.html", cobro=cobro)
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("cobro_actualizar")
+@sesion_iniciada_requerida
 def editar_cobro(id: int):
     cobro = encontrar_cobro(id)
     form = CobroForm(obj=cobro)

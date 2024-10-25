@@ -11,10 +11,10 @@ class Miembro(db.Model):
     dni = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(50), nullable=False)
     telefono = db.Column(db.Integer, nullable=False)
-    nombreContactoEmergencia = db.Column(db.String(100), nullable=False)
-    telefonoContactoEmergencia = db.Column(db.Integer, nullable=False)
-    obraSocial = db.Column(db.String(100), nullable=True)
-    numeroAfiliado = db.Column(db.Integer, nullable=False)
+    nombre_contacto_emergencia = db.Column(db.String(100), nullable=False)
+    telefono_contacto_emergencia = db.Column(db.Integer, nullable=False)
+    obra_social = db.Column(db.String(100), nullable=True)
+    numero_afiliado = db.Column(db.Integer, nullable=False)
 
     # relacion con condicion
     condicion_id = db.Column(db.Integer, db.ForeignKey('condicion_trabajo.id'), nullable=False)
@@ -36,8 +36,8 @@ class Miembro(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)
     usuario = db.relationship('Usuario', backref='miembro', uselist=False)
 
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    activo = db.Column(db.Boolean, nullable=False)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    activo = db.Column(db.Boolean, default=True, nullable=False)
 
     def __repr__(self):
         return f'<Miembro #{self.id} email="{self.email}" alias="{self.alias}" activo={self.activo}'

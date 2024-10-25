@@ -7,7 +7,7 @@ class Diagnostico(db.Model):
     __tablename__ = "diagnosticos"
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50))
+    nombre = db.Column(db.String(50), unique=True)
 
     def __repr__(self):
         return f'Diagnostico: {self.value}'
@@ -51,7 +51,7 @@ class JineteOAmazona(db.Model):
     #información general de la persona
     nombre = db.Column(db.String(30))
     apellido = db.Column(db.String(30))
-    dni = db.Column(db.Integer)
+    dni = db.Column(db.Integer, unique=True)
     edad = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
     provincia_nacimiento = db.Column(db.String(50))
@@ -169,19 +169,6 @@ class JineteOAmazona(db.Model):
     #TODO armar tabla de dias de asistencia
     #dias
     #acá voy a tener que tener una tabla de dias? es muchos a muchos
-    
-    '''
-        Método que devuelve los resultados paginados dada la pagina y la cantidad de elementos por página.
-        El parámetro asc se utiliza para que, si se le pasa de manera explícita un 0 como parámetro, 
-        se devuelvan los resultados de manera descendente
-    '''
-    @staticmethod
-    def todos_paginados(asc=1, pagina=1, por_pagina=2):
-        if asc == 0:
-                return JineteOAmazona.query.order_by(JineteOAmazona.nombre.desc()).paginate(page=pagina, per_page=por_pagina)
-        else:
-            return JineteOAmazona.query.order_by(JineteOAmazona.nombre.asc()).paginate(page=pagina, per_page=por_pagina)
-
 
     def to_dict(self):
         return {
@@ -198,6 +185,7 @@ class JineteOAmazona(db.Model):
             "porcentaje_beca": ( str(self.porcentaje_beca) +"%" if self.becado else '-'),
             "propuesta_trabajo": self.propuesta_trabajo,
             "condicion": self.condicion,
+            "profesionales_a_cargo": self.profesionales_a_cargo
          }
 
     def __repr__(self):
