@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for
 from flask import Blueprint
 from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices, listar_medios_de_pago
-from src.core.cobros.cobro_forms import CobroForm
+from core.forms.cobro_forms import CobroForm
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 
