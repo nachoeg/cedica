@@ -7,7 +7,10 @@ from core.usuarios.usuario import Permiso, Rol, Usuario
 # USUARIOS
 def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
                     email_filtro, activo_filtro, rol_filtro):
-    # raise Exception(f'{rol_filtro}{nombres_roles()}')
+    """Devuelve una tupla que contiene un listado paginado
+    de usuarios, filtrado y ordenado, y la cantidad total de
+    usuarios que genera la consulta.
+    """
     usuarios = db.paginate(
         db.select(
             Usuario).distinct().join(
@@ -28,14 +31,16 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
 
 def crear_usuario(email, contraseña, alias, admin_sistema=False,
                   id_roles=[], creacion=datetime.now()):
+    """Crea un objeto de tipo Usuario con los datos que recibe por
+    parámetro y lo devuelve.
+    """
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
-
-    roles = roles_por_id(id_roles)
-    # raise Exception(f'{roles}')
-    usuario.roles = roles
+    if not admin_sistema:
+        roles = roles_por_id(id_roles)
+        usuario.roles = roles
     db.session.add(usuario)
     db.session.commit()
 
@@ -43,47 +48,58 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
 
 
 def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
+    """Modifica los datos del usuario que recibe por parámetro con los
+    datos en el resto de los parámetros.
+
+    Parámetros:
+    """
     usuario.email = email
     usuario.alias = alias
     usuario.admin_sistema = admin_sistema
-    roles = roles_por_id(id_roles)
-    usuario.roles = roles
+    if admin_sistema:
+        usuario.roles = []
+    else:
+        roles = roles_por_id(id_roles)
+        usuario.roles = roles
     db.session.commit()
 
 
 def actualizar_perfil(usuario, email, alias):
+    """Modifica los datos del usuario que recibe por parámetro con los
+    datos en el resto de los parámetros.
+
+    Parámetros:
+    """
     usuario.email = email
     usuario.alias = alias
     db.session.commit()
 
 
-def asignar_roles(usuario, roles):
-    usuario.roles = roles
-
-
 def asignar_rol(usuario, rol):
+    """Agrega un rol a los roles del usuario
+    pasado por parámetro.
+    """
     usuario.roles.append(rol)
     db.session.commit()
 
     return usuario
 
 
-def eliminar_roles(usuario):
-    for rol in usuario.roles:
-        usuario.roles.pop(rol)
-
-
 def usuario_por_id(id):
+    """Devuelve el usuario correspondiente al id pasado por
+    parámetro. Si no lo encuentra levanta un error 404.
+    """
     usuario = db.get_or_404(Usuario, id)
 
     return usuario
 
 
 def usuario_por_email(email):
-    usuario = db.session.execute(db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
-
-    # # first() y one() devuelven una tupla, para que sea sólo el objeto tendría que usar scalars
-    # usuario = db.session.scalars(db.select(Usuario).where(Usuario.email == email)).first()
+    """Devuelve el usuario correspondiente al email pasado por
+    parámetro.
+    """
+    usuario = db.session.execute(
+        db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
 
     return usuario
 
@@ -93,6 +109,9 @@ def usuario_por_alias(alias):
 
 
 def usuario_por_email_y_contraseña(email, contraseña):
+    """Devuelve el usuario correspondiente al email y contraseña
+    pasados por parámetro.
+    """
     usuario = usuario_por_email(email)
 
     if usuario and bcrypt.check_password_hash(usuario.contraseña, contraseña):
@@ -101,16 +120,11 @@ def usuario_por_email_y_contraseña(email, contraseña):
     return None
 
 
-def todos_emails():
-    return db.session.execute(db.select(Usuario.email)).scalars().all()
-
-
-def todos_alias():
-    return db.session.execute(db.select(Usuario.alias)).scalars().all()
-
-
 # ROLES
 def crear_rol(**kwargs):
+    """Crea un objeto de tipo Rol con los datos que recibe por
+    parámetro y lo devuelve.
+    """
     rol = Rol(**kwargs)
     db.session.add(rol)
     db.session.commit()
@@ -119,12 +133,18 @@ def crear_rol(**kwargs):
 
 
 def nombres_roles():
+    """Devuelve una lista con los nombres de todos los roles
+    en la base de datos.
+    """
     roles = db.session.execute(db.select(Rol.nombre)).scalars().all()
 
     return roles
 
 
 def asignar_permiso(rol, permiso):
+    """Agrega un permiso a los permisos del rol
+    pasado por parámetro.
+    """
     rol.permisos.append(permiso)
     db.session.commit()
 
@@ -132,14 +152,19 @@ def asignar_permiso(rol, permiso):
 
 
 def roles_por_id(ids):
+    """Devuelve los roles correspondientes a los ids
+    pasados por parámetro.
+    """
     ids = [int(id) for id in ids]
     roles = db.session.execute(db.select(Rol).where(
         Rol.id.in_(ids))).unique().scalars().all()
-    # raise Exception(f'{roles} {ids}')
     return roles
 
 
 def roles_por_usuario(id):
+    """Devuelve los roles del usuario cuyo id se recibe
+    pasados por parámetro.
+    """
     roles = db.session.execute(db.select(Rol).join(
         Usuario.roles.and_(Usuario.id == id))).unique().scalars().all()
 
@@ -148,6 +173,9 @@ def roles_por_usuario(id):
 
 # PERMISOS
 def crear_permiso(**kwargs):
+    """Crea un objeto de tipo Permiso con los datos que recibe por
+    parámetro y lo devuelve.
+    """
     permiso = Permiso(**kwargs)
     db.session.add(permiso)
     db.session.commit()

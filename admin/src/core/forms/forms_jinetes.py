@@ -4,8 +4,10 @@ from wtforms.validators import DataRequired, Email, Length
 from wtforms.fields import DateTimeField, SelectField, StringField, SubmitField, IntegerField, BooleanField, TextAreaField, SelectMultipleField
 from datetime import datetime
 
-#información general de la persona
 class NuevoJYAForm(FlaskForm):
+    ''' 
+        Formulario utilizado para cargar la información general del jinete o amazona.
+    '''
     nombre = StringField('Nombre', validators=[DataRequired('Ingrese el nombre del jinete o la amazona')])
     apellido = StringField('Apellido', validators=[DataRequired('Ingrese el apellido del jinete o la amazona')])
     dni = IntegerField('DNI')
@@ -22,17 +24,21 @@ class NuevoJYAForm(FlaskForm):
     submit = SubmitField('Continuar')
 
 
-#información de salud
 class InfoSaludJYAForm(FlaskForm):
+    ''' 
+        Formulario utilizado para cargar la información de salud del jinete o amazona.
+    '''
     certificado_discapacidad = BooleanField('¿Tiene certificado de discapacidad?')
-    diagnostico_id = SelectField(u'Diagnóstico', coerce=int)
+    diagnostico = SelectField(u'Diagnóstico', coerce=int)
     diagnostico_otro = StringField('Otro diagnóstico', validators=[Length(max=64)])
     tipo_discapacidad = SelectField('Tipo de discapacidad', choices=[('mental', 'Mental') , ('motora','Motora'), ('sensorial','Sensorial'), ('visceral','Visceral')])
     submit = SubmitField('Continuar')
 
 
-#informacion economica
 class InfoEconomicaJYAForm(FlaskForm):
+    ''' 
+        Formulario utilizado para cargar la información económica del jinete o amazona.
+    '''
     asignacion_familiar = BooleanField('¿Recibe asignación familiar?')
     tipo_asignacion_familiar = SelectField('Tipo de asignación familiar', choices=[('auhijo','Asignación Universal por hijo'),('auhdisc','Asignación Universal por hijo con Discapacidad'),('aaescolar','Asignación por ayuda escolar anual')])
     beneficiario_pension = BooleanField('¿Es beneficiario de alguna pensión?')
@@ -44,8 +50,10 @@ class InfoEconomicaJYAForm(FlaskForm):
     submit = SubmitField('Continuar')
 
 
-#informacion sobre escolaridad y profesionales a cargo
 class InfoEscolaridadJYAForm(FlaskForm):
+    ''' 
+        Formulario utilizado para cargar la información relacionada a la escolaridad del jinete o amazona.
+    '''
     nombre_escuela = StringField('Nombre de escuela', validators=[Length(max=40)])
     direccion_escuela = StringField('Direccion de escuela', validators=[Length(max=50)])
     telefono_escuela = IntegerField('Telefono de la escuela')
@@ -54,8 +62,10 @@ class InfoEscolaridadJYAForm(FlaskForm):
     profesionales_a_cargo = TextAreaField('Profesionales a cargo',validators=[Length(max=200)])
     submit = SubmitField('Continuar')
 
-#trabajo en nuestra institucion
 class InfoInstitucionalJYAForm(FlaskForm):
+    ''' 
+        Formulario utilizado para cargar la información institucional relacionada al jinete o amazona.
+    '''
     propuesta_trabajo = SelectField('Propuesta de trabajo', choices=[('hipoterapia','Hipoterapia'),('monta_terapeutica','Monta terapéutica'),('deporte_ecuestre', 'Deporte ecuestre adaptado'), ('actividades_recreativas', 'Actividades recreativas'), ('equitacion', 'Equitación')])
     condicion = SelectField('Condicion', choices=[('regular','Regular'), ('de_baja', 'De baja')])
     sede = SelectField('Sede', choices=[('CASJ', 'CASJ'),('HLP','HLP'), ('otro', 'Otro')])

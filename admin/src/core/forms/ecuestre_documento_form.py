@@ -7,13 +7,20 @@ from wtforms.fields import (
     StringField,
     SubmitField,
 )
+from src.core.forms.validaciones import LimiteDeArchivo
 
 
 class SubirArchivoForm(FlaskForm):
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
     )
-    archivo = FileField("Archivo", validators=[DataRequired("Seleccione un archivo")])
+    archivo = FileField(
+        "Archivo",
+        validators=[
+            DataRequired("Selecciona un archivo"),
+            LimiteDeArchivo(tamanio_en_mb=100),
+        ],
+    )
     tipo_de_documento_id = SelectField("Tipo", coerce=int)
     submit = SubmitField("Guardar")
 

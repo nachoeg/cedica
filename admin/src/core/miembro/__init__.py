@@ -15,7 +15,9 @@ def listar_miembros(
     pagina=1,
     cant_por_pagina=10
 ):
-    query = Miembro.query.join(Profesion).filter(Miembro.activo.is_(True))
+    """Lista los miembros de forma pagina, listando por defecto 10 miembros por pagina,
+    se aplican distintos filtros, como por nombre, apellido, dni, email o profesion"""
+    query = Miembro.query.join(Profesion)
 
     if nombre_filtro:
         query = query.filter(Miembro.nombre.ilike(f'%{nombre_filtro}%'))
@@ -54,6 +56,7 @@ def listar_documentos(
     pagina=1,
     cant_por_pagina=10,
 ):
+    """Listao todos los documentos asignados a un usuarios, utiliza filtros para buscar un documento por nombre o tipo"""
     query = DocumentoMiembro.query.join(TipoDeDocumentoMiembro).filter(
         DocumentoMiembro.miembro_id == miembro_id,
         DocumentoMiembro.nombre.ilike(f"%{nombre_filtro}%"),
@@ -71,6 +74,7 @@ def listar_documentos(
     return documentos, cant_resultados
 
 def crear_miembro(**kwargs):
+    """Crea un nuevo miembro y lo guarda en la base de datos"""
     miembro = Miembro(**kwargs)
     db.session.add(miembro)
     db.session.commit()
@@ -118,14 +122,20 @@ def guardar_cambios():
     db.session.commit()
 
 def obtener_miembro(id):
-    miembro = Miembro.query.get(id)
+    """Obtiene un miembro a parit del ID"""
+    miembro = Miembro.query.filter_by(id=id).filter(Miembro.activo.is_(True)).first()
     return miembro
 
 def obtener_miembro_dni(dni):
-    miembro = Miembro.query.filter_by(dni=dni).first()
+    """Obtiene un miembro a partir del dni"""
+    miembro = Miembro.query.filter_by(dni=dni, activo=True).first()
     return miembro
 
+def miembro_por_id(id):
+    return Miembro.query.get_or_404(id)
+
 def buscar_domicilio(calle, numero, piso, dpto, localidad):
+    """A partir de ciertos datos dados, busca si equiste un domicilio cargado en el sistema con los mismos datos"""
     return Domicilio.query.filter_by(
             calle=calle,
             numero=numero,
@@ -134,9 +144,12 @@ def buscar_domicilio(calle, numero, piso, dpto, localidad):
             localidad=localidad
         ).first()
 
-def eliminar_miembro(id):
-    miembro = Miembro.query.get(id)
-    miembro.activo = False;
+def cambiar_condicion_miembro(id):
+    miembro = Miembro.query.get_or_404(id)
+    if miembro.activo == True:
+        miembro.activo = False
+    else:
+        miembro.activo = True
     db.session.commit()
 
 def listar_tipos_de_documentos():
@@ -149,18 +162,25 @@ def crear_tipo_de_documento(tipo):
     db.session.commit()
     return tipo_de_documento
 
-def crear_documento(nombre, tipo_de_documento_id, url, miembro_id):
+def crear_documento(nombre, tipo_de_documento_id, url, miembro_id, archivo_externo):
     documento = DocumentoMiembro(
         nombre=nombre,
         fecha=datetime.now(),
         tipo_de_documento_id=tipo_de_documento_id,
         url=url,
         miembro_id=miembro_id,
+        archivo_externo=archivo_externo
     )
     db.session.add(documento)
     db.session.commit()
     return documento
 
 def obtener_documento(id):
-    documento = DocumentoMiembro.query.get(id)
+    documento = DocumentoMiembro.query.get_or_404(id)
+    return documento
+
+def eliminar_documento_miembro(documento_id):
+    documento = DocumentoMiembro.query.get_or_404(documento_id)
+    db.session.delete(documento)
+    db.session.commit()
     return documento
