@@ -7,7 +7,7 @@ from wtforms.fields import (
     StringField,
     SubmitField,
 )
-from src.web.handlers.funciones_auxiliares import LimiteDeArchivo
+from src.core.forms.validaciones import LimiteDeArchivo
 
 
 class SubirArchivoForm(FlaskForm):

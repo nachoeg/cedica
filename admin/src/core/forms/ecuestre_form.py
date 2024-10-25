@@ -8,7 +8,7 @@ from wtforms.fields import (
     SubmitField,
     SelectMultipleField,
 )
-from src.web.handlers.funciones_auxiliares import FechaNoFutura
+from src.core.forms.validaciones import FechaNoFutura
 from datetime import date
 
 
