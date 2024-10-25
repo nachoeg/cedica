@@ -33,11 +33,11 @@
     
     <div class="flex gap-3">
         <a class="btn btn-secondary w-full" href="{{ url_for('miembro.miembro_listar')}}"> Volver </a>
-        <a class="btn btn-secondary w-full" href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Editar</a>
+        <!-- <a class="btn btn-secondary w-full" href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Editar</a>
         <button class="btn btn-danger w-full" type="submit" onclick="
         if (confirm('¿Está seguro que desea borrar este miembro?')) {
             window.location.href = `/miembros/${id}/eliminar`;
-        }"> Eliminar </button>
+        }"> Eliminar </button> -->
     </div>
 </div>
 {% endblock %}

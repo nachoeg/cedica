@@ -61,16 +61,16 @@ def guardar_cambios():
 
 def obtener_pago(id):
     """ Obtiene un pago a partir del id"""
-    pago = Pago.query.get(id)
+    pago = Pago.query.get_or_404(id)
     return pago
 
 def obtener_tipo_pago(id):
-    tipo_pago = TipoDePago.query.get(id)
+    tipo_pago = TipoDePago.query.get_or_404(id)
     """Obtiene un tipo de pago a partir del id"""
     return tipo_pago
 
 def eliminar_pago(id):
     """Elimina un pago, buscando por id el pago en la base de datos"""
-    pago = Pago.query.get(id)
+    pago = Pago.query.get_or_404(id)
     db.session.delete(pago)
     db.session.commit()

@@ -131,6 +131,9 @@ def obtener_miembro_dni(dni):
     miembro = Miembro.query.filter_by(dni=dni, activo=True).first()
     return miembro
 
+def miembro_por_id(id):
+    return Miembro.query.get_or_404(id)
+
 def buscar_domicilio(calle, numero, piso, dpto, localidad):
     """A partir de ciertos datos dados, busca si equiste un domicilio cargado en el sistema con los mismos datos"""
     return Domicilio.query.filter_by(
@@ -142,7 +145,7 @@ def buscar_domicilio(calle, numero, piso, dpto, localidad):
         ).first()
 
 def cambiar_condicion_miembro(id):
-    miembro = Miembro.query.get(id)
+    miembro = Miembro.query.get_or_404(id)
     if miembro.activo == True:
         miembro.activo = False
     else:
@@ -173,11 +176,11 @@ def crear_documento(nombre, tipo_de_documento_id, url, miembro_id, archivo_exter
     return documento
 
 def obtener_documento(id):
-    documento = DocumentoMiembro.query.get(id)
+    documento = DocumentoMiembro.query.get_or_404(id)
     return documento
 
 def eliminar_documento_miembro(documento_id):
-    documento = DocumentoMiembro.query.get(documento_id)
+    documento = DocumentoMiembro.query.get_or_404(documento_id)
     db.session.delete(documento)
     db.session.commit()
     return documento

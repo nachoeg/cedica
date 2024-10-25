@@ -24,7 +24,8 @@ from src.core.miembro import (
     listar_tipos_de_documentos, 
     listar_documentos, 
     crear_documento,
-    eliminar_documento_miembro)
+    eliminar_documento_miembro,
+    miembro_por_id)
 from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
@@ -102,10 +103,10 @@ def miembro_crear():
         dni = form.dni.data
         email = form.email.data
         telefono = form.telefono.data
-        nombre_contacto_emergencia = form.nombreContactoEmergencia.data
-        telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
-        obra_social = form.obraSocial.data
-        numero_afiliado = form.numeroAfiliado.data
+        nombre_contacto_emergencia = form.nombre_contacto_emergencia.data
+        telefono_contacto_emergencia = form.telefono_contacto_emergencia.data
+        obra_social = form.obra_social.data
+        numero_afiliado = form.numero_afiliado.data
         condicion_id = form.condicion_id.data
         profesion_id = form.profesion_id.data
         puesto_laboral_id = form.puesto_laboral_id.data
@@ -190,10 +191,10 @@ def miembro_editar(id: int):
         miembro.dni = form.dni.data
         miembro.email = form.email.data
         miembro.telefono = form.telefono.data
-        miembro.nombre_contacto_emergencia = form.nombreContactoEmergencia.data
-        miembro.telefono_contacto_emergencia = form.telefonoContactoEmergencia.data
-        miembro.obra_social = form.obraSocial.data
-        miembro.numero_afiliado = form.numeroAfiliado.data
+        miembro.nombre_contacto_emergencia = form.nombre_contacto_emergencia.data
+        miembro.telefono_contacto_emergencia = form.telefono_contacto_emergencia.data
+        miembro.obra_social = form.obra_social.data
+        miembro.numero_afiliado = form.numero_afiliado.data
         miembro.condicion_id = form.condicion_id.data
         miembro.profesion_id = form.profesion_id.data
         miembro.puesto_laboral_id = form.puesto_laboral_id.data
@@ -220,7 +221,7 @@ def miembro_editar(id: int):
                 alias_usuario = usuario_id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
-                return redirect(url_for('miembro.miembro_crear'))
+                return render_template("miembros/crear.html", form=form)
         else:
             miembro.usuario_id = None      
 
@@ -234,9 +235,7 @@ def miembro_editar(id: int):
 @sesion_iniciada_requerida
 def miembro_mostrar(id):
     """Muestra la informacion de un miembro del equipo"""
-    miembro = obtener_miembro(id)
-    if miembro is None:
-        abort(404)
+    miembro = miembro_por_id(id)
     return render_template('miembros/mostrar.html', miembro=miembro)
 
 @bp.route('/<int:id>/cambiar_condicion', methods=['GET'])
@@ -253,9 +252,7 @@ def miembro_cambiar_condicion(id):
 @sesion_iniciada_requerida
 def miembro_documentos(id: int):
     """Lista los documentos de un miembro del sistema y los muestra de forma paginada"""
-    miembro = obtener_miembro(id)
-    if miembro is None:
-        abort(404)
+    miembro = miembro_por_id(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
@@ -362,14 +359,6 @@ def miembro_subir_enlace(id: int):
         "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_enlace=True
     )
 
-@bp.route("/<int:miembro_id>/documentos/<int:id>", methods=['GET'])
-@chequear_permiso("miembro_mostrar")
-@sesion_iniciada_requerida
-def miembro_ver_documento(miembro_id: int, id: int):
-    """Muestra la informacion de un documento"""
-    documento = obtener_documento(id)
-    return render_template("miembros/ver_documento.html", documento=documento, miembro_id=miembro_id)
-
 @bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
@@ -402,6 +391,9 @@ def descargar_documento(id: int, documento_id: int):
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
     """Elimina un documento asignado al miembro"""
+    miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     eliminar_documento_miembro(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("miembro.miembro_documentos", id=id))
@@ -412,6 +404,9 @@ def eliminar_documento(id: int, documento_id: int):
 def editar_documento(id: int, documento_id: int):
     """Permite modificar un documento, para los enlaces se permite modificar todos los valores, 
     mientras que para archivos se puede modificar solamente tipo y nombre"""
+    miembro = obtener_miembro(id)
+    if miembro is None:
+        abort(404)
     documento = obtener_documento(documento_id)
     if documento.archivo_externo:
         form = EnlaceMiembroForm(obj=documento)

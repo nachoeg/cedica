@@ -80,7 +80,7 @@ def pago_crear():
             if miembro:
                 miembro_id = miembro.id
             else:
-                flash(f"No se encontró ningún miembro con el DNI {miembro_dni}.", 'danger')
+                flash(f"No se encontró ningún miembro activo con el DNI {miembro_dni}.", 'danger')
                 return redirect(url_for('pago.pago_crear'))
 
         crear_pago(monto=monto, descripcion=descripcion, fecha_pago=fecha_pago, tipo_id=tipo_id, miembro_id=miembro_id)
@@ -140,7 +140,7 @@ def pago_editar(id: int):
             if miembro:
                 miembro_id = miembro.id
             else:
-                flash(f"No se encontró ningún miembro con el DNI {miembro_dni}.", 'danger')
+                flash(f"No se encontró ningún miembro activo con el DNI {miembro_dni}.", 'danger')
                 return render_template("pagos/crear.html", form=form)
         pago.miembro_id = miembro_id    
 

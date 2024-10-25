@@ -21,8 +21,8 @@
 'acciones': [
 {'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['archivo_externo', True]},
 {'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['archivo_externo', False]},
-{'nombre': 'Editar', 'funcion': 'editarDocumento'} if tiene_permiso(session, 'miembro_actualizar') else False,
-{'nombre': 'Eliminar','funcion': 'eliminarDocumento'} if tiene_permiso(session, 'miembro_eliminar') else False
+{'nombre': 'Editar', 'funcion': 'editarDocumento'} if tiene_permiso(session, 'miembro_actualizar') and miembro.activo == True else False,
+{'nombre': 'Eliminar','funcion': 'eliminarDocumento'} if tiene_permiso(session, 'miembro_eliminar')and miembro.activo == True else False
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -31,11 +31,11 @@
 'subir': {
 'url': url_for('miembro.miembro_subir_archivo', id=miembro.id),
 'nombre': 'Subir'
-},
+} if miembro.activo == True else False, 
 'enlace': {
 'url': url_for('miembro.miembro_subir_enlace', id=miembro.id),
 'nombre': 'Enlace'
-},
+} if miembro.activo == True else False
 }
 %}
 
