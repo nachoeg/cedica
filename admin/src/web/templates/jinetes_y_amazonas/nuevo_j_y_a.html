@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %}
-{% block title %} Nuevo jinete/amazona {% endblock %}
+{% block title %} {{ titulo }} {% endblock %}
 {% block main %}
     <form method="post" novalidate>
         {{ form.csrf_token }}

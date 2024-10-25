@@ -26,7 +26,7 @@ from src.core.miembro import (
     crear_documento,
     eliminar_documento_miembro,
     miembro_por_id)
-from src.core.miembro.forms_miembro import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
+from src.core.forms.miembro_forms import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
 from src.core.usuarios import usuario_por_alias
 from os import fstat
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
@@ -391,6 +391,9 @@ def descargar_documento(id: int, documento_id: int):
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
     """Elimina un documento asignado al miembro"""
+    documento = obtener_documento(documento_id)
+    client = current_app.storage.client
+    client.remove_object("grupo17", documento_id.url)
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
