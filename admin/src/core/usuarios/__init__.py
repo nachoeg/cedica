@@ -171,6 +171,13 @@ def roles_por_usuario(id):
     return roles
 
 
+def get_roles():
+    """Devuelve todos los roles."""
+    roles = db.session.execute(db.select(Rol)).unique().scalars().all()
+
+    return roles
+
+
 # PERMISOS
 def crear_permiso(**kwargs):
     """Crea un objeto de tipo Permiso con los datos que recibe por
@@ -183,7 +190,7 @@ def crear_permiso(**kwargs):
     return permiso
 
 
-def get_permisos(usuario):
+def nombres_permisos(usuario):
     """Devuelve una lista con los nombres de los permisos del usuario que
     recibe por parámetro.
     """

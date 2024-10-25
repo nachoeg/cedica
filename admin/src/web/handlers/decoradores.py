@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import abort, session
-from src.core.usuarios import get_permisos, usuario_por_email, usuario_por_id
+from src.core.usuarios import nombres_permisos, usuario_por_email, usuario_por_id
 
 
 def esta_autenticado(session):
@@ -12,7 +12,6 @@ def sesion_iniciada_requerida(f):
     """Decorador que evalúa si hay un usuario autenticado, aborta con error 401
     en caso contrario.
     """
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         if not esta_autenticado(session):
@@ -32,7 +31,7 @@ def tiene_permiso(session, permiso):
         return False
     if usuario.admin_sistema:
         return True
-    permisos = get_permisos(usuario)
+    permisos = nombres_permisos(usuario)
     return permiso in permisos
 
 
@@ -40,7 +39,6 @@ def chequear_permiso(permiso):
     """Decorador que evalúa si un usuario tiene el permiso recibido
     por parámetro, aborta con error 403 en caso contrario.
     """
-
     def decorator(f):
 
         @wraps(f)
@@ -56,6 +54,9 @@ def chequear_permiso(permiso):
 
 
 def es_usuario_de_sesion(session, id):
+    """Devuelve True si el id que recibe por parámetro
+    es el mismo id de la sesión actual.
+    """
     return session.get('id') == id
 
 
@@ -64,7 +65,6 @@ def chequear_usuario_sesion(f):
     de la función es el mismo que el usuario en la sesión actual.
     Aborta con error 403 en caso contrario.
     """
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         id = kwargs['id']
@@ -80,7 +80,6 @@ def no_modificar_admin(f):
     """Decorador que aborta con error 403 si el usuario
     cuyo id se recibe es admin.
     """
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         id = kwargs['id']

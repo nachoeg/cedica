@@ -62,9 +62,7 @@ def registrar_usuario():
     """
     form = UsuarioForm(request.form)
     if request.method == 'POST':
-        # raise Exception(f'{set(form.roles.data).issubset(set(form.roles.validators[0].values))} {set(form.roles.data)} {set(form.roles.validators[0].values)}')
         if form.validate_on_submit():
-            # raise Exception(f'{form.data}')
             usuario = crear_usuario(form.email.data, form.contraseña.data,
                                     form.alias.data, form.admin_sistema.data,
                                     form.roles.data)
@@ -82,7 +80,9 @@ def registrar_usuario():
 @chequear_permiso('usuario_mostrar')
 @sesion_iniciada_requerida
 def ver_usuario(id):
-    """Devuelve la vista de los datos del usuario cuyo id recibe como parámetro."""
+    """Devuelve la vista de los datos del usuario 
+    cuyo id recibe como parámetro.
+    """
     usuario = usuario_por_id(id)
     return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
 
