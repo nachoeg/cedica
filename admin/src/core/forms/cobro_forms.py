@@ -5,6 +5,9 @@ from wtforms.fields import DateTimeField, SelectField, DecimalField, StringField
 from datetime import datetime
 
 class CobroForm(FlaskForm):
+    ''' 
+        Formulario para manejar la entidad Cobro.
+    '''
     fecha_pago = DateTimeField('Fecha de pago', format='%d/%m/%Y', validators=[DataRequired('Ingrese una fecha de pago')], default=datetime.now())
     medio_de_pago = SelectField('Medio de pago', choices=[('efectivo', 'Efectivo'), ('credito', 'Tarjeta de crédito'), ('debito', 'Tarjeta de débito'), ('otro', 'Otro medio de pago')])
     monto = DecimalField('Monto', validators=[DataRequired('Ingrese el monto que se cobró')])

@@ -26,7 +26,7 @@
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
-{'id': 'tipo', 'nombre': 'Tipo', 'tipo': 'seleccion', 'opciones': tipos_documento, 'valor': tipo_filtro}
+{'id': 'tipo', 'nombre': 'Tipo', 'tipo': 'seleccion', 'opciones': tipos_documento | map(attribute='tipo'), 'valor': tipo_filtro}
 ],
 'subir': {
 'url': url_for('miembro.miembro_subir_archivo', id=miembro.id),

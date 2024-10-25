@@ -5,6 +5,7 @@ from src.web.handlers.funciones_auxiliares import (booleano_a_palabra,
 
 
 class Usuario(db.Model):
+    """Clase que representa un usuario del sistema."""
     __tablename__ = "usuarios"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +22,11 @@ class Usuario(db.Model):
                             backref=db.backref('usuarios', lazy=False))
 
     def to_dict(self):
+        """Método que devuelve un diccionario con los datos
+        del usuario: alias, email, activo, fecha_creacion,
+        admin_sistema y roles."
+
+        """
         return {
             "alias": self.alias,
             "email": self.email,
@@ -31,11 +37,13 @@ class Usuario(db.Model):
         }
 
     def __repr__(self):
+        """Método que devuelve la representación de un usuario."""
         return f'<Usuario #{self.id} email={self.email} alias={self.alias} \
                   activo={self.activo}>'
 
 
 class Rol(db.Model):
+    """Clase que representa un rol en el sistema."""
     __tablename__ = "roles"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -45,16 +53,19 @@ class Rol(db.Model):
                                backref=db.backref('roles', lazy=True))
 
     def __repr__(self):
+        """Método que devuelve la representación de un rol."""
         return f'<Rol #{self.id} nombre={self.nombre}>'
 
 
 class Permiso(db.Model):
+    """Clase que representa un permiso en el sistema."""
     __tablename__ = "permisos"
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False, unique=True)
 
     def __repr__(self):
+        """Método que devuelve la representación de un permiso."""
         return f'<Permiso #{self.id} nombre={self.nombre}>'
 
 
