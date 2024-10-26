@@ -3,6 +3,8 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 from wtforms.fields import DateTimeField, SelectField, StringField, SubmitField, IntegerField, BooleanField, TextAreaField, SelectMultipleField
 from datetime import datetime
+from core.forms.validaciones import Unico
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
 class NuevoJYAForm(FlaskForm):
     ''' 
@@ -10,7 +12,7 @@ class NuevoJYAForm(FlaskForm):
     '''
     nombre = StringField('Nombre', validators=[DataRequired('Ingrese el nombre del jinete o la amazona')])
     apellido = StringField('Apellido', validators=[DataRequired('Ingrese el apellido del jinete o la amazona')])
-    dni = IntegerField('DNI')
+    dni = IntegerField('DNI', validators=[Unico(JineteOAmazona, JineteOAmazona.dni)])
     edad = IntegerField('Edad')
     fecha_nacimiento =  DateTimeField('Fecha de nacimiento', format='%d/%m/%Y')
     provincia_nacimiento = StringField('Provincia de nacimiento', validators=[Length(max=64)])
