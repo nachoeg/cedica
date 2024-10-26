@@ -30,7 +30,7 @@ class InfoMiembroForm(FlaskForm):
 
 class ArchivoMiembroForm(FlaskForm):
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+        "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
     archivo = FileField("Archivo", validators=[DataRequired("Seleccione un archivo"), LimiteDeArchivo(tamanio_en_mb=100)])
     tipo_de_documento_id = SelectField("Tipo", coerce=int, validators=[DataRequired("Seleccione una opcion")])    
@@ -38,7 +38,7 @@ class ArchivoMiembroForm(FlaskForm):
 
 class EditarArchivoMiembroForm(FlaskForm):
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+        "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
     tipo_de_documento_id = SelectField("Tipo", coerce=int, validators=[DataRequired("Seleccione una opcion.")])
     submit = SubmitField("Guardar")
@@ -46,7 +46,7 @@ class EditarArchivoMiembroForm(FlaskForm):
 
 class EnlaceMiembroForm(FlaskForm):
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+        "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
     url = StringField("Enlace", validators=[DataRequired("Ingrese el enlace.")])
     tipo_de_documento_id = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
