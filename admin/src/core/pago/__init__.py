@@ -11,7 +11,7 @@ def listar_pagos(
     ordenar_por="fecha_pago",
     orden="asc",
     pagina=1,
-    cant_por_pagina=10,
+    cant_por_pagina=6,
 ):
     """ Funcion que lista todos los pagos de forma pagina, con un cantidad predefinida
     de 10 pagos por pagina"""

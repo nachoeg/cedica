@@ -54,7 +54,7 @@ def listar_documentos(
     ordenar_por="id",
     orden="asc",
     pagina=1,
-    cant_por_pagina=10,
+    cant_por_pagina=6,
 ):
     """Listao todos los documentos asignados a un usuarios, utiliza filtros para buscar un documento por nombre o tipo"""
     query = DocumentoMiembro.query.join(TipoDeDocumentoMiembro).filter(

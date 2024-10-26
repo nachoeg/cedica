@@ -10,9 +10,9 @@ class Miembro(db.Model):
     apellido = db.Column(db.String(100), nullable=False)
     dni = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(50), nullable=False)
-    telefono = db.Column(db.Integer, nullable=False)
+    telefono = db.Column(db.BigInteger, nullable=False)
     nombre_contacto_emergencia = db.Column(db.String(100), nullable=False)
-    telefono_contacto_emergencia = db.Column(db.Integer, nullable=False)
+    telefono_contacto_emergencia = db.Column(db.BigInteger, nullable=False)
     obra_social = db.Column(db.String(100), nullable=True)
     numero_afiliado = db.Column(db.Integer, nullable=False)
 

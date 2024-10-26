@@ -28,7 +28,7 @@ def FechaNoFutura():
 class Unico(object):
     """Validador que verifica que el valor del campo
      sea único si se modificó.
-     """
+    """
     def __init__(self, model, field, message=None):
         self.model = model
         self.field = field
