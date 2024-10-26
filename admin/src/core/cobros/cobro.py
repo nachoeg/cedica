@@ -3,6 +3,8 @@ from datetime import datetime
 import enum
 from sqlalchemy.types import Enum
 
+from src.web.handlers.funciones_auxiliares import fechahora_a_fecha
+
 
 class MedioDePago(enum.Enum):
     """Clase de tipo enumerativo para gestionar las opciones de medios de pago de cobros"""
@@ -46,7 +48,7 @@ class Cobro(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "fecha_pago": self.fecha_pago,
+            "fecha_pago": fechahora_a_fecha(self.fecha_pago),
             "medio_de_pago": self.medio_de_pago,
             "monto": self.monto,
             "observaciones": self.observaciones,

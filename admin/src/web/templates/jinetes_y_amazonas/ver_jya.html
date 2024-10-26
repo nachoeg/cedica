@@ -23,7 +23,7 @@
     <p style="color: red;"><strong>Tiene deuda</strong></p>
     {% endif %}
     <p><strong>Edad:</strong> {{ jya.edad }}</p>
-    <p><strong>Fecha de nacimiento:</strong> {{ jya.fecha_nacimiento }}</p>
+    <p><strong>Fecha de nacimiento:</strong> {{ fechahora_a_fecha(jya.fecha_nacimiento) }}</p>
     <p><strong>Provincia de nacimiento:</strong> {{ jya.provincia_nacimiento }}</p>
     <p><strong>Localidad de nacimiento:</strong> {{ jya.localidad_nacimiento }}</p>
     <p><strong>Domicilio actual:</strong> {{ jya.domicilio_actual }}</p>
