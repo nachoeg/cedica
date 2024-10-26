@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from flask import Blueprint
 from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices, listar_medios_de_pago
 from core.forms.cobro_forms import CobroForm
@@ -16,7 +16,7 @@ def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get('pagina', 1))
-    cant_por_pag = int(request.args.get('por_pag',10))
+    cant_por_pag = int(request.args.get('por_pag',6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     medio_pago_filtro = request.args.get("medio_de_pago", "")
@@ -66,6 +66,7 @@ def nuevo_cobro():
             marcar_deuda(joa_id)
         crear_cobro(fecha_pago, medio_de_pago, monto, observaciones,joa_id, recibio_el_dinero_id)
 
+        flash("Cobro guardado con éxito", "exito")
         return redirect(url_for('cobros.listar'))
 
     return render_template("cobros/crear_cobro.html", form=form)
@@ -98,6 +99,7 @@ def editar_cobro(id: int):
         cobro.joa_id = form.joa.data
         guardar_cambios()
 
+        flash("Cambios en el cobro guardados con éxito", "exito")
         return redirect(url_for('cobros.listar'))
     return render_template('cobros/crear_cobro.html', form=form)
 

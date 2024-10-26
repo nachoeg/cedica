@@ -28,13 +28,13 @@ def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get('pagina', 1))
-    cant_por_pag = int(request.args.get('por_pag',10))
+    cant_por_pag = int(request.args.get('por_pag',6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
     profesionales_a_cargo = request.args.get("profesionales_a_cargo", "")
 
-    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesionales_a_cargo)
+    jinetes = listar_j_y_a(nombre_filtro, apellido_filtro, dni_filtro, profesionales_a_cargo, ordenar_por, orden,pagina, cant_por_pag)
     cant_resultados = len(jinetes.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
@@ -78,6 +78,7 @@ def nuevo_j_y_a():
         contacto_emer_telefono = form.contacto_emer_telefono.data
         jya_nuevo = crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono)
 
+        flash("Nuevo J&A creado. Continúe con la carga de información", "exito")
         return redirect(url_for('jinetes_y_amazonas.cargar_info_salud', id=jya_nuevo.id))
 
     return render_template("jinetes_y_amazonas/nuevo_j_y_a.html", form=form, titulo="Nuevo jinete/amazona")
@@ -99,6 +100,8 @@ def cargar_info_salud(id: int):
         diagnostico_otro = form.diagnostico_otro.data
         tipo_discapacidad = form.tipo_discapacidad.data
         cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad)
+        flash("Información de salud guardada. Continúe con la carga.", "exito")
+
         return redirect(url_for('jinetes_y_amazonas.cargar_info_econ', id=id))
 
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_salud.html", form=form, titulo="Nuevo jinete/amazona")
@@ -124,6 +127,7 @@ def cargar_info_econ(id : int):
         observaciones_obra_social = form.observaciones_obra_social.data
 
         cargar_informacion_economica(id, asignacion_familiar, tipo_asignacion_familiar, beneficiario_pension,tipo_pension, obra_social, num_afiliado, posee_curatela, observaciones_obra_social)
+        flash("Información económica guardada. Continúe con la carga", "exito")
         return redirect(url_for('jinetes_y_amazonas.cargar_info_esc', id= id))
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_econ.html", form=form, titulo="Nuevo jinete/amazona")
 
@@ -145,6 +149,7 @@ def cargar_info_esc(id : int):
         observaciones_escuela = form.observaciones_escuela.data
         profesionales_a_cargo = form.profesionales_a_cargo.data
         cargar_informacion_escuela(id, nombre_escuela, direccion_escuela, telefono_escuela, grado_escuela, observaciones_escuela, profesionales_a_cargo)
+        flash("Informacion de escolaridad guardada. Continúe con la carga.", "exito")
         return redirect(url_for('jinetes_y_amazonas.cargar_info_inst', id = id))
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_esc.html", form=form, titulo="Nuevo jinete/amazona")
 
@@ -173,6 +178,8 @@ def cargar_info_inst(id : int):
         auxiliar_pista_id = form.auxiliar_pista_id.data
         dias = form.dias.data
         cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias, profesor_id, conductor_caballo_id, caballo_id, auxiliar_pista_id)
+        
+        flash("Información institucional guardada. Continúe con la carga.", "exito")
         return redirect(url_for('jinetes_y_amazonas.listar'))
     
     return render_template("jinetes_y_amazonas/nuevo_j_y_a_inst.html", form=form, titulo="Nuevo jinete/amazona")
@@ -199,6 +206,7 @@ def eliminar(id: int):
     '''
     eliminar_jya(id)
 
+    flash("J&A eliminado con éxito.", "exito")
     return redirect(url_for("jinetes_y_amazonas.listar"))
 
 @bp.route("/<int:id>/subir_archivo/", methods=["GET", "POST"])
@@ -409,6 +417,7 @@ def editar_info_salud(id: int):
             jya.tipo_discapacidad = form.tipo_discapacidad.data
             guardar_cambios()
 
+            flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for('jinetes_y_amazonas.ver', id=id))
         else:
             flash("Error al actualizar jinete/amazona","error")
@@ -439,7 +448,7 @@ def editar_info_econ(id : int):
             jya.observaciones_obra_social = form.observaciones_obra_social.data
 
             guardar_cambios()
-
+            flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for('jinetes_y_amazonas.ver', id=id))
         else:
             flash("Error al actualizar jinete/amazona","error")
@@ -465,7 +474,8 @@ def editar_info_esc(id : int):
             jya.observaciones_escuela = form.observaciones_escuela.data
             jya.profesionales_a_cargo = form.profesionales_a_cargo.data
             guardar_cambios()
-
+            
+            flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for('jinetes_y_amazonas.ver', id=id))
         else:
             flash("Error al actualizar jinete/amazona","error")
@@ -515,6 +525,7 @@ def editar_info_inst(id : int):
             jya.auxiliar_pista_id = form.auxiliar_pista_id.data
             #jya.dias = form.dias.data
             guardar_cambios()
+            flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for('jinetes_y_amazonas.ver', id=id))
         else:
             flash("Error al actualizar jinete/amazona","error")
