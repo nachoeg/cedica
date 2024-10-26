@@ -1,4 +1,4 @@
-from admin.src.core.forms.validaciones import LimiteDeArchivo
+from src.core.forms.validaciones import LimiteDeArchivo
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired

@@ -1,3 +1,4 @@
+from src.core.forms.forms_documentos_jya import SubirArchivoForm
 from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
@@ -112,6 +113,14 @@ def nuevo_j_y_a():
         telefono_actual = form.telefono_actual.data
         contacto_emer_nombre = form.contacto_emer_nombre.data
         contacto_emer_telefono = form.contacto_emer_telefono.data
+        becado = form.becado
+
+        if becado:
+            porcentaje_beca = form.porcentaje_beca
+        else:
+            becado = False
+            porcentaje_beca = None
+
         jya_nuevo = crear_j_o_a(
             nombre,
             apellido,
@@ -124,6 +133,8 @@ def nuevo_j_y_a():
             telefono_actual,
             contacto_emer_nombre,
             contacto_emer_telefono,
+            becado,
+            porcentaje_beca
         )
 
         flash("Nuevo J&A creado. Continúe con la carga de información", "exito")
@@ -186,9 +197,21 @@ def cargar_info_econ(id: int):
 
     if form.validate_on_submit():
         asignacion_familiar = form.asignacion_familiar.data
-        tipo_asignacion_familiar = form.tipo_asignacion_familiar.data
+
+        if asignacion_familiar:
+            tipo_asignacion_familiar = form.tipo_asignacion_familiar.data
+        else:
+            asignacion_familiar = False
+            tipo_asignacion_familiar = None
+        
         beneficiario_pension = form.beneficiario_pension.data
-        tipo_pension = form.tipo_pension.data
+
+        if beneficiario_pension:
+            tipo_pension = form.tipo_pension.data
+        else:
+            beneficiario_pension = False
+            tipo_pension = None
+
         obra_social = form.obra_social.data
         num_afiliado = form.num_afiliado.data
         posee_curatela = form.posee_curatela.data
@@ -452,7 +475,7 @@ def editar_archivo(jya_id: int, archivo_id: int):
     Controlador que muestra el formulario para la edición de un archivo o enlace.
     """
     archivo = encontrar_archivo(archivo_id)
-    flash("Funcionalidad no implementada")
+    flash("Funcionalidad no implementada", "error")
     return render_template("pages/jinetes_y_amazonas/documentos.html", jya=archivo.jya)
 
 
@@ -512,6 +535,13 @@ def editar_j_y_a(id: int):
             jya.telefono_actual = form.telefono_actual.data
             jya.contacto_emer_nombre = form.contacto_emer_nombre.data
             jya.contacto_emer_telefono = form.contacto_emer_telefono.data
+            jya.becado = form.becado.data
+
+            if jya.becado:
+                jya.porcentaje_beca = form.porcentaje_beca.data
+            else:
+                jya.porcentaje_beca = "0%"
+
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for("jinetes_y_amazonas.ver", id=id))
@@ -538,7 +568,7 @@ def editar_info_salud(id: int):
         (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
     ]
 
-    if jya.diagnostico != None:
+    if jya.diagnostico is not None:
         form.diagnostico.data = jya.diagnostico.id
     form.submit.label.text = "Guardar"
 
@@ -579,9 +609,20 @@ def editar_info_econ(id: int):
     if request.method == "POST":
         if form.validate_on_submit():
             jya.asignacion_familiar = form.asignacion_familiar.data
-            jya.tipo_asignacion_familiar = form.tipo_asignacion_familiar.data
+        
+            if jya.asignacion_familiar:
+                jya.tipo_asignacion_familiar = form.tipo_asignacion_familiar.data
+            else:
+                jya.asignacion_familiar = False
+                jya.tipo_asignacion_familiar = None
             jya.beneficiario_pension = form.beneficiario_pension.data
-            jya.tipo_pension = form.tipo_pension.data
+
+            if jya.beneficiario_pension:
+                jya.tipo_pension = form.tipo_pension.data
+            else:
+                jya.beneficiario_pension = False
+                jya.tipo_pension = None
+            
             jya.obra_social = form.obra_social.data
             jya.num_afiliado = form.num_afiliado.data
             jya.posee_curatela = form.posee_curatela.data
@@ -636,9 +677,6 @@ def editar_info_esc(id: int):
         + " "
         + str(jya.apellido),
     )
-            flash("Error al actualizar jinete/amazona","error")
-    
-    return render_template("pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html", form=form, titulo="Editar información de salud - Jinete/Amazona "+str(jya.nombre)+ " "+str(jya.apellido))
 
 
 @bp.route("/editar_info_inst/<int:id>", methods=["GET", "POST"])
@@ -654,28 +692,29 @@ def editar_info_inst(id: int):
     form.profesor_id.choices = [
         (profesor.id, profesor.nombre) for profesor in listar_profesores()
     ]
-    if jya.profesor != None:
+
+    if jya.profesor is not None:
         form.profesor.data = jya.profesor.id
 
     form.conductor_caballo_id.choices = [
         (conductor.id, conductor.nombre) for conductor in listar_conductores()
     ]
 
-    if jya.conductor_caballo != None:
+    if jya.conductor_caballo is not None:
         form.conductor_caballo_id.data = jya.conductor_caballo.id
 
     form.caballo_id.choices = [
         (caballo.id, caballo.nombre) for caballo in listar_caballos()
     ]
 
-    if jya.caballo != None:
+    if jya.caballo is not None:
         form.caballo.data = jya.caballo.id
 
     form.auxiliar_pista_id.choices = [
         (auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista()
     ]
 
-    if jya.auxiliar_pista != None:
+    if jya.auxiliar_pista is not None:
         form.auxiliar_pista.data = jya.auxiliar_pista.id
 
     form.submit.label.text = "Guardar"
@@ -689,7 +728,6 @@ def editar_info_inst(id: int):
             jya.conductor_caballo_id = form.profesor_id.data
             jya.caballo_id = form.caballo_id.data
             jya.auxiliar_pista_id = form.auxiliar_pista_id.data
-            # jya.dias = form.dias.data
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for("jinetes_y_amazonas.ver", id=id))
