@@ -21,7 +21,6 @@
 'acciones': [
 {'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['externo', True]},
 {'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['externo', False]},
-{'nombre': 'Editar', 'funcion': 'editarDocumento'},
 {'nombre': 'Eliminar', 'funcion': 'eliminarDocumento'},
 ],
 'filtros': [
@@ -50,10 +49,6 @@
   function irAlDocumento(id) {
       window.open(
         `/jinetes_y_amazonas/documentos/${id}/ir`, '_blank').focus();
-  }
-
-  function editarDocumento(id) {
-    window.location.href = `/jinetes_y_amazonas/${id}/editar`;
   }
 
   function descargarDocumento(id) {

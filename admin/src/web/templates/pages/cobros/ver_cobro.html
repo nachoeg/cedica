@@ -7,7 +7,7 @@
 <h1>Detalles de Cobro</h1>
 
 <p><strong>Jinete/Amazona:</strong> {{ cobro.joa.nombre }}</p>
-<p><strong>Fecha de Pago:</strong> {{ cobro.fecha_pago }}</strong>
+<p><strong>Fecha de Pago:</strong> {{ fechahora_a_fecha(cobro.fecha_pago) }}</strong>
 <p><strong>Medio de pago:</strong> {{ cobro.medio_de_pago }}
 </p>
 <p><strong>Monto:</strong> {{ cobro.monto }}</p>

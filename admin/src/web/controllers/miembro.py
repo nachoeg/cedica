@@ -45,7 +45,7 @@ def miembro_listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
     pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
@@ -69,7 +69,7 @@ def miembro_listar():
             cant_paginas += 1
 
     return render_template(
-        "miembros/listar.html",
+        "pages/miembros/listar.html",
         miembros=miembros,
         profesiones=profesiones,
         puestos=puestos,
@@ -162,7 +162,7 @@ def miembro_crear():
         flash("Miembro registrado con éxito.", 'success')
         return redirect(url_for('miembro.miembro_listar'))
 
-    return render_template('miembros/crear.html', form=form, titulo="Crear miembro")
+    return render_template('pages/miembros/crear.html', form=form, titulo="Crear miembro")
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 @chequear_permiso("miembro_actualizar")
@@ -221,14 +221,14 @@ def miembro_editar(id: int):
                 alias_usuario = usuario_id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
-                return render_template("miembros/crear.html", form=form)
+                return render_template("pages/miembros/crear.html", form=form)
         else:
             miembro.usuario_id = None      
 
         guardar_cambios()
         return redirect(url_for("miembro.miembro_listar")) 
 
-    return render_template("miembros/crear.html", form=form, titulo="Editar miembro")    
+    return render_template("pages/miembros/crear.html", form=form, titulo="Editar miembro")    
 
 @bp.route('/<int:id>', methods=['GET'])
 @chequear_permiso("miembro_mostrar")
@@ -236,7 +236,7 @@ def miembro_editar(id: int):
 def miembro_mostrar(id):
     """Muestra la informacion de un miembro del equipo"""
     miembro = miembro_por_id(id)
-    return render_template('miembros/mostrar.html', miembro=miembro)
+    return render_template('pages/miembros/mostrar.html', miembro=miembro)
 
 @bp.route('/<int:id>/cambiar_condicion', methods=['GET'])
 @chequear_permiso("miembro_eliminar")
@@ -256,7 +256,7 @@ def miembro_documentos(id: int):
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")
 
@@ -277,7 +277,7 @@ def miembro_documentos(id: int):
         cant_paginas += 1
 
     return render_template(
-        "miembros/documentos.html",
+        "pages/miembros/documentos.html",
         miembro=miembro,
         documentos=documentos,
         cant_resultados=cant_resultados,
@@ -391,12 +391,13 @@ def descargar_documento(id: int, documento_id: int):
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
     """Elimina un documento asignado al miembro"""
-    documento = obtener_documento(documento_id)
-    client = current_app.storage.client
-    client.remove_object("grupo17", documento_id.url)
     miembro = obtener_miembro(id)
     if miembro is None:
         abort(404)
+    documento = obtener_documento(documento_id)
+    if not documento.archivo_externo:
+        client = current_app.storage.client
+        client.remove_object("grupo17", documento.url)
     eliminar_documento_miembro(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("miembro.miembro_documentos", id=id))
