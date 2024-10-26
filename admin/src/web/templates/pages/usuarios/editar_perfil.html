@@ -10,13 +10,17 @@
 
   {% from "pages/usuarios/_campo_form.html" import render_field %}
   <form method=post class="formulario">
-    <h1>Editar usuario</h1>
+    <div class="formulario-header">
+      <h1>Editar usuario</h1>
+    </div>
     {{ form.csrf_token }}
-    <dl>
-      {{ render_field(form.email, type="email") }}
-      {{ render_field(form.alias) }}
-    </dl>
-    <p><input type=submit>
+    <div class="formulario-body">
+      <dl>
+        {{ render_field(form.email, type="email") }}
+        {{ render_field(form.alias) }}
+      </dl>
+      <p><input type=submit>
+    </div>
   </form>
 
 
