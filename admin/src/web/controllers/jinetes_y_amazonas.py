@@ -1,4 +1,3 @@
-import string
 from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
@@ -62,7 +61,14 @@ def listar():
     profesionales_a_cargo = request.args.get("profesionales_a_cargo", "")
 
     jinetes = listar_j_y_a(
-        nombre_filtro, apellido_filtro, dni_filtro, profesionales_a_cargo
+        nombre_filtro,
+        apellido_filtro,
+        dni_filtro,
+        profesionales_a_cargo,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pag,
     )
     cant_resultados = len(jinetes.items)
     cant_paginas = cant_resultados // cant_por_pag
