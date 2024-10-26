@@ -2,6 +2,8 @@ from src.core.database import db
 from datetime import datetime
 import enum
 from sqlalchemy.types import Enum
+from sqlalchemy import event
+from flask import current_app
 
 class TipoArchivo(enum.Enum):
     entrevista = "Entrevista"
@@ -41,3 +43,10 @@ class Archivo_JYA(db.Model):
     def __repr__(self):
         return f'<Archivo #{self.id} titulo: {self.titulo} tipo de archivo_ {self.tipo_archivo}'
 
+
+
+@event.listens_for(Archivo_JYA, "before_delete")
+def antes_de_eliminar(mapper, connection, target):
+    """Eliminar archivo asociado en MinIO antes de eliminar el documento de la base de datos."""
+    client = current_app.storage.client
+    client.remove_object("grupo17", target.url)

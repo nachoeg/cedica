@@ -1,17 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Length
 from wtforms.fields import (
     DateTimeField,
     SelectField,
-    StringField,
-    SubmitField,
     IntegerField,
     BooleanField,
     TextAreaField,
     SelectMultipleField,
 )
-from datetime import datetime
 
 
 class NuevoJYAForm(FlaskForm):
