@@ -48,11 +48,13 @@ class UsuarioSinContraseñaForm(FlaskForm):
     """
     email = EmailField("Email", validators=[
         InputRequired("Debe ingresar un email."),
+        Length(max=100, message="No puedo tener más de %(max)d caracteres."),
         Email("El mail debe contener '@' y '.'"),
-        Unico(Usuario, Usuario.email, message="El mail ingresado ya existe"),
+        Unico(Usuario, Usuario.email, message="El mail ingresado ya existe."),
         ])
     alias = StringField("Alias", validators=[
-        Unico(Usuario, Usuario.alias, message="El alias ingresado ya existe"),
+        Length(max=100, message="No puedo tener más de %(max)d caracteres."),
+        Unico(Usuario, Usuario.alias, message="El alias ingresado ya existe."),
         ])
     admin_sistema = BooleanField("¿Es admin general?", default=False)
     roles = SelectMultipleField("Roles", widget=select_multi_checkbox,
@@ -78,7 +80,7 @@ class UsuarioForm(UsuarioSinContraseñaForm):
     contraseña = PasswordField(
         "Contraseña",
         validators=[InputRequired("Debe ingresar una contraseña."),
-                    Length(min=4, message="La contraseña debe tener por lo \
-                        menos %(min)d caracteres")
+                    Length(min=4, max=100, message="La contraseña debe \
+                           tener por lo menos %(min)d caracteres.")
                     ]
         )

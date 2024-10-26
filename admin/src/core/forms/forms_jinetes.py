@@ -10,37 +10,27 @@ from wtforms.fields import (
     SelectMultipleField,
 )
 
+from core.forms.validaciones import Unico
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
 class NuevoJYAForm(FlaskForm):
     """
     Formulario utilizado para cargar la información general del jinete o amazona.
     """
-
-    nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del jinete o la amazona")]
-    )
-    apellido = StringField(
-        "Apellido",
-        validators=[DataRequired("Ingrese el apellido del jinete o la amazona")],
-    )
-    dni = IntegerField("DNI")
-    edad = IntegerField("Edad")
-    fecha_nacimiento = DateTimeField("Fecha de nacimiento", format="%d/%m/%Y")
-    provincia_nacimiento = StringField(
-        "Provincia de nacimiento", validators=[Length(max=64)]
-    )
-    localidad_nacimiento = StringField(
-        "Localidad de nacimiento", validators=[Length(max=64)]
-    )
-    domicilio_actual = StringField("Domicilio actual", validators=[Length(max=64)])
-    telefono_actual = IntegerField("Telefono actual")
-    contacto_emer_nombre = StringField(
-        "Nombre de contacto de emergencia", validators=[Length(max=64)]
-    )
-    contacto_emer_telefono = IntegerField("Telefono de contacto de emergencia")
-    becado = BooleanField("¿Tiene beca?")
-    porcentaje_beca = StringField("Porcentaje de beca", validators=[Length(max=64)])
-    submit = SubmitField("Continuar")
+    nombre = StringField('Nombre', validators=[DataRequired('Ingrese el nombre del jinete o la amazona')])
+    apellido = StringField('Apellido', validators=[DataRequired('Ingrese el apellido del jinete o la amazona')])
+    dni = IntegerField('DNI', validators=[Unico(JineteOAmazona, JineteOAmazona.dni)])
+    edad = IntegerField('Edad')
+    fecha_nacimiento =  DateTimeField('Fecha de nacimiento', format='%d/%m/%Y')
+    provincia_nacimiento = StringField('Provincia de nacimiento', validators=[Length(max=64)])
+    localidad_nacimiento = StringField('Localidad de nacimiento', validators=[Length(max=64)])
+    domicilio_actual = StringField('Domicilio actual', validators=[Length(max=64)])
+    telefono_actual = IntegerField('Telefono actual')
+    contacto_emer_nombre = StringField('Nombre de contacto de emergencia', validators=[Length(max=64)])
+    contacto_emer_telefono = IntegerField('Telefono de contacto de emergencia')
+    becado = BooleanField('¿Tiene beca?')
+    porcentaje_beca = StringField('Porcentaje de beca', validators=[Length(max=64)])
+    submit = SubmitField('Continuar')
 
 
 class InfoSaludJYAForm(FlaskForm):
