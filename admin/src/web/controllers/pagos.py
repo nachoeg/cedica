@@ -22,7 +22,7 @@ def pago_listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "fecha_pago")
     pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     search_fecha_inicio = request.args.get("fecha_inicio", "")
     search_fecha_fin = request.args.get("fecha_fin", "")
     tipo_pago_id = request.args.get("tipo_pago_id", "")
@@ -42,7 +42,7 @@ def pago_listar():
             cant_paginas += 1
 
     return render_template(
-        "pagos/listar.html",
+        "pages/pagos/listar.html",
         pagos=pagos,
         tipos_pago=tipos_pago,
         cant_resultados=cant_resultados,
@@ -88,7 +88,7 @@ def pago_crear():
         flash("Pago registrado con éxito.", 'success')
         return redirect(url_for('pago.pago_listar'))
 
-    return render_template('pagos/crear.html', form=form, titulo="Crear pago")
+    return render_template('pages/pagos/crear.html', form=form, titulo="Crear pago")
 
 
 @bp.route('/<int:id>', methods=['GET'])
@@ -102,7 +102,7 @@ def pago_mostrar(id):
         beneficiario= miembro.dni
     else:
         beneficiario = ''
-    return render_template('pagos/mostrar.html', pago=pago, beneficiario=beneficiario)
+    return render_template('pages/pagos/mostrar.html', pago=pago, beneficiario=beneficiario)
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 @chequear_permiso("pago_eliminar")
@@ -141,10 +141,10 @@ def pago_editar(id: int):
                 miembro_id = miembro.id
             else:
                 flash(f"No se encontró ningún miembro activo con el DNI {miembro_dni}.", 'danger')
-                return render_template("pagos/crear.html", form=form)
+                return render_template("pages/pagos/crear.html", form=form)
         pago.miembro_id = miembro_id    
 
         guardar_cambios()
         return redirect(url_for("pago.pago_listar"))
 
-    return render_template("pagos/crear.html", form=form, titulo="Editar pago")
+    return render_template("pages/pagos/crear.html", form=form, titulo="Editar pago")
