@@ -1,22 +1,29 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask import Blueprint
-from src.core.cobros import listar_cobros, crear_cobro, encontrar_cobro, guardar_cambios, marcar_deuda, cargar_joa_choices, cargar_miembro_choices, listar_medios_de_pago
+from src.core.cobros import (
+    listar_cobros,
+    crear_cobro,
+    encontrar_cobro,
+    guardar_cambios,
+    marcar_deuda,
+    cargar_joa_choices,
+    cargar_miembro_choices,
+    listar_medios_de_pago,
+)
 from core.forms.cobro_forms import CobroForm
-from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
-from src.core.miembro.miembro import Miembro
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
 
 @bp.get("/")
 def listar():
-    '''
-        Controlador que muestra el listado de cobros a J&A del sistema.
-    '''
+    """
+    Controlador que muestra el listado de cobros a J&A del sistema.
+    """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get('pagina', 1))
-    cant_por_pag = int(request.args.get('por_pag',6))
+    pagina = int(request.args.get("pagina", 1))
+    cant_por_pag = int(request.args.get("por_pag", 10))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     medio_pago_filtro = request.args.get("medio_de_pago", "")
@@ -24,20 +31,28 @@ def listar():
     antes_de_filtro = request.args.get("antes_de", "")
 
     cobros = listar_cobros(
-        nombre_filtro, apellido_filtro, medio_pago_filtro,despues_de_filtro, antes_de_filtro, ordenar_por, orden, pagina, cant_por_pag
+        nombre_filtro,
+        apellido_filtro,
+        medio_pago_filtro,
+        despues_de_filtro,
+        antes_de_filtro,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pag,
     )
 
     medios_de_pago = listar_medios_de_pago()
-    
+
     cant_resultados = len(cobros.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
-    
+
     return render_template(
-        "cobros/listar.html",
+        "pages/cobros/listar.html",
         cobros=cobros,
-        medios_de_pago = medios_de_pago,
+        medios_de_pago=medios_de_pago,
         cant_resultados=cant_resultados,
         cant_paginas=cant_paginas,
         pagina=pagina,
@@ -46,11 +61,12 @@ def listar():
         nombre_filtro=nombre_filtro,
     )
 
+
 @bp.route("/nuevo_cobro", methods=["GET", "POST"])
 def nuevo_cobro():
-    '''
-        Controlador que muestra el formulario de alta de un cobro o lo retorna para que sea guardado.
-    '''
+    """
+    Controlador que muestra el formulario de alta de un cobro o lo retorna para que sea guardado.
+    """
     form = CobroForm()
     form.joa.choices = cargar_joa_choices()
     form.recibio_el_dinero.choices = cargar_miembro_choices()
@@ -64,33 +80,42 @@ def nuevo_cobro():
         recibio_el_dinero_id = form.recibio_el_dinero.data
         if form.tiene_deuda:
             marcar_deuda(joa_id)
-        crear_cobro(fecha_pago, medio_de_pago, monto, observaciones,joa_id, recibio_el_dinero_id)
+        crear_cobro(
+            fecha_pago,
+            medio_de_pago,
+            monto,
+            observaciones,
+            joa_id,
+            recibio_el_dinero_id,
+        )
 
         flash("Cobro guardado con éxito", "exito")
-        return redirect(url_for('cobros.listar'))
+        return redirect(url_for("cobros.listar"))
 
-    return render_template("cobros/crear_cobro.html", form=form)
+    return render_template("pages/cobros/crear_cobro.html", form=form)
+
 
 @bp.get("/<int:id>/")
 def ver(id: int):
-    '''
-        Controlador que permite la visualización de la información de un cobro.
-    '''
+    """
+    Controlador que permite la visualización de la información de un cobro.
+    """
     cobro = encontrar_cobro(id)
-    return render_template("cobros/ver_cobro.html", cobro=cobro)
+    return render_template("pages/cobros/ver_cobro.html", cobro=cobro)
+
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 def editar_cobro(id: int):
-    '''
-        Controlador que muestra un formulario para editar un cobro o guarda la información cargada en él.
-    '''
+    """
+    Controlador que muestra un formulario para editar un cobro o guarda la información cargada en él.
+    """
     cobro = encontrar_cobro(id)
     form = CobroForm(obj=cobro)
     form.joa.choices = cargar_joa_choices()
     form.recibio_el_dinero.choices = cargar_miembro_choices()
     form.joa.data = cobro.joa.id
     form.medio_de_pago.data = cobro.medio_de_pago.name
-    
+
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
         cobro.medio_de_pago = form.medio_de_pago.data
@@ -100,6 +125,5 @@ def editar_cobro(id: int):
         guardar_cambios()
 
         flash("Cambios en el cobro guardados con éxito", "exito")
-        return redirect(url_for('cobros.listar'))
-    return render_template('cobros/crear_cobro.html', form=form)
-
+        return redirect(url_for("cobros.listar"))
+    return render_template("pages/cobros/crear_cobro.html", form=form)
