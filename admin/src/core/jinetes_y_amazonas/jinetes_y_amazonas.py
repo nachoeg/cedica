@@ -1,7 +1,9 @@
 from src.core.database import db
-from datetime import datetime
 import enum
 from sqlalchemy.types import Enum
+from sqlalchemy import event
+from flask import current_app
+from src.core.jinetes_y_amazonas import Archivo_JYA
 
 class Diagnostico(db.Model):
     ''' 
@@ -199,3 +201,13 @@ class JineteOAmazona(db.Model):
 
     def __repr__(self):
         return f'<Jinete-Amazona #{self.id} nombre:{self.nombre}, apellido: {self.apellido}>'
+    
+
+
+@event.listens_for(JineteOAmazona, "before_delete")
+def antes_de_eliminar_jinete_y_amazona(mapper, connection, target):
+    """Eliminar archivos asociados en MinIO antes de eliminar el jinete/amazona de la base de datos."""
+    client = current_app.storage.client
+    documentos = Archivo_JYA.query.filter_by(jya_id=target.id).all()
+    for documento in documentos:
+        client.remove_object("grupo17", documento.url)

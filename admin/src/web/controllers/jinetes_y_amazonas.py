@@ -76,7 +76,7 @@ def listar():
         cant_paginas += 1
 
     return render_template(
-        "jinetes_y_amazonas/listar.html",
+        "pages/jinetes_y_amazonas/listar.html",
         jinetes=jinetes,
         cant_resultados=cant_resultados,
         cant_paginas=cant_paginas,
@@ -132,7 +132,9 @@ def nuevo_j_y_a():
         )
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a.html", form=form, titulo="Nuevo jinete/amazona"
+        "pages/jinetes_y_amazonas/nuevo_j_y_a.html",
+        form=form,
+        titulo="Nuevo jinete/amazona",
     )
 
 
@@ -166,7 +168,7 @@ def cargar_info_salud(id: int):
         return redirect(url_for("jinetes_y_amazonas.cargar_info_econ", id=id))
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_salud.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
         titulo="Nuevo jinete/amazona",
     )
@@ -206,7 +208,7 @@ def cargar_info_econ(id: int):
         flash("Información económica guardada. Continúe con la carga", "exito")
         return redirect(url_for("jinetes_y_amazonas.cargar_info_esc", id=id))
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_econ.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
         titulo="Nuevo jinete/amazona",
     )
@@ -241,7 +243,7 @@ def cargar_info_esc(id: int):
         flash("Informacion de escolaridad guardada. Continúe con la carga.", "exito")
         return redirect(url_for("jinetes_y_amazonas.cargar_info_inst", id=id))
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_esc.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
         form=form,
         titulo="Nuevo jinete/amazona",
     )
@@ -294,7 +296,7 @@ def cargar_info_inst(id: int):
         return redirect(url_for("jinetes_y_amazonas.listar"))
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_inst.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
         titulo="Nuevo jinete/amazona",
     )
@@ -309,7 +311,7 @@ def ver(id: int):
     """
     jya = encontrar_jya(id)
 
-    return render_template("jinetes_y_amazonas/ver_jya.html", jya=jya)
+    return render_template("pages/jinetes_y_amazonas/ver_jya.html", jya=jya)
 
 
 @bp.get("/<int:id>/eliminar/")
@@ -355,7 +357,7 @@ def subir_archivo(id: int):
         else:
             flash("Error al subir el archivo", "error")
     return render_template(
-        "jinetes_y_amazonas/documentos.html",
+        "pages/jinetes_y_amazonas/documentos.html",
         form=form,
         jya=id,
         titulo="Subir archivo",
@@ -387,7 +389,7 @@ def subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "jinetes_y_amazonas/documentos.html",
+        "pages/jinetes_y_amazonas/documentos.html",
         form=form,
         jya=id,
         titulo="Subir enlace",
@@ -428,7 +430,7 @@ def ver_archivos(id: int):
         cant_paginas += 1
 
     return render_template(
-        "jinetes_y_amazonas/ver_documentos.html",
+        "pages/jinetes_y_amazonas/ver_documentos.html",
         jya=jya,
         documentos=documentos,
         cant_resultados=cant_resultados,
@@ -451,7 +453,7 @@ def editar_archivo(jya_id: int, archivo_id: int):
     """
     archivo = encontrar_archivo(archivo_id)
     flash("Funcionalidad no implementada")
-    return render_template("jinetes_y_amazonas/documentos.html", jya=archivo.jya)
+    return render_template("pages/jinetes_y_amazonas/documentos.html", jya=archivo.jya)
 
 
 @bp.get("/descargar_archivo/<int:archivo_id>")
@@ -517,7 +519,7 @@ def editar_j_y_a(id: int):
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a.html",
         form=form,
         titulo="Editar jinete/amazona" + str(jya.nombre) + " " + str(jya.apellido),
     )
@@ -554,7 +556,7 @@ def editar_info_salud(id: int):
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_salud.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
         titulo="Editar información de salud - Jinete/Amazona "
         + str(jya.nombre)
@@ -591,7 +593,7 @@ def editar_info_econ(id: int):
         else:
             flash("Error al actualizar jinete/amazona", "error")
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_econ.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
         titulo="Editar información de salud - Jinete/Amazona "
         + str(jya.nombre)
@@ -610,7 +612,7 @@ def editar_info_esc(id: int):
     jya = encontrar_jya(id)
     form = InfoEscolaridadJYAForm(obj=jya)
     form.submit.label.text = "Guardar"
-    # form.diagnostico.data = jya.diagnostico.id
+
     if request.method == "POST":
         if form.validate_on_submit():
             jya.nombre_escuela = form.nombre_escuela.data
@@ -634,6 +636,9 @@ def editar_info_esc(id: int):
         + " "
         + str(jya.apellido),
     )
+            flash("Error al actualizar jinete/amazona","error")
+    
+    return render_template("pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html", form=form, titulo="Editar información de salud - Jinete/Amazona "+str(jya.nombre)+ " "+str(jya.apellido))
 
 
 @bp.route("/editar_info_inst/<int:id>", methods=["GET", "POST"])
@@ -692,7 +697,7 @@ def editar_info_inst(id: int):
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_inst.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
         titulo="Editar información de salud - Jinete/Amazona "
         + str(jya.nombre)
