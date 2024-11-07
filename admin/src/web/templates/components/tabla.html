@@ -233,6 +233,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
 
   function filtrarTabla() {
     let url = new URL(window.location.href);
+    url.searchParams.delete('pagina');
     // {% if configuracion.filtros %}
     let valor;
     // {% for filtro in configuracion.filtros %}
