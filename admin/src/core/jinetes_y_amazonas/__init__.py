@@ -70,7 +70,7 @@ def crear_j_o_a(
     contacto_emer_nombre,
     contacto_emer_telefono,
     becado,
-    porcentaje_beca
+    porcentaje_beca = "0"
 ):
     """
     Funcion que crea un registro en la tabla de jinetes y amazonas a partir de los parámetros recibidos,
