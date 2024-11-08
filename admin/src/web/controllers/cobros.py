@@ -11,6 +11,7 @@ from src.core.cobros import (
     listar_medios_de_pago,
 )
 from core.forms.cobro_forms import CobroForm
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
