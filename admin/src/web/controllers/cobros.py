@@ -16,6 +16,8 @@ bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
 
 @bp.get("/")
+@chequear_permiso("cobro_listar")
+@sesion_iniciada_requerida
 def listar():
     """
     Controlador que muestra el listado de cobros a J&A del sistema.
@@ -63,6 +65,8 @@ def listar():
 
 
 @bp.route("/nuevo_cobro", methods=["GET", "POST"])
+@chequear_permiso("cobro_crear")
+@sesion_iniciada_requerida
 def nuevo_cobro():
     """
     Controlador que muestra el formulario de alta de un cobro o lo retorna para que sea guardado.
@@ -96,6 +100,8 @@ def nuevo_cobro():
 
 
 @bp.get("/<int:id>/")
+@chequear_permiso("cobro_mostrar")
+@sesion_iniciada_requerida
 def ver(id: int):
     """
     Controlador que permite la visualización de la información de un cobro.
@@ -105,6 +111,8 @@ def ver(id: int):
 
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
+@chequear_permiso("cobro_actualizar")
+@sesion_iniciada_requerida
 def editar_cobro(id: int):
     """
     Controlador que muestra un formulario para editar un cobro o guarda la información cargada en él.
