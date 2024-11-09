@@ -4,7 +4,7 @@
 <form method="post" novalidate class="formulario">
     {{ form.csrf_token }}
     <div>{{ form.joa.label }} {{ form.joa }}</div>
-    <div>{{ form.recibio_el_dinero.label }}: {{ form.recibio_el_dinero }}</div>
+    <div>{{ form.recibio_el_dinero.label }} {{ form.recibio_el_dinero }}</div>
     <div>
         {{ form.fecha_pago.label }}
         {{ form.fecha_pago }}
