@@ -122,8 +122,11 @@ def editar_cobro(id: int):
     form = CobroForm(obj=cobro)
     form.joa.choices = cargar_joa_choices()
     form.recibio_el_dinero.choices = cargar_miembro_activo_choices()
-    form.joa.data = cobro.joa.id
-    form.medio_de_pago.data = cobro.medio_de_pago.name
+    
+    if request.method == "GET":
+        form.joa.data = cobro.joa.id
+        form.medio_de_pago.data = cobro.medio_de_pago.name
+        form.recibio_el_dinero.data = cobro.recibio_el_dinero.id
 
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
@@ -131,6 +134,10 @@ def editar_cobro(id: int):
         cobro.monto = form.monto.data
         cobro.observaciones = form.observaciones.data
         cobro.joa_id = form.joa.data
+        cobro.recibio_el_dinero_id = form.recibio_el_dinero.data
+        
+        if form.tiene_deuda:
+            marcar_deuda(cobro.joa_id)
         guardar_cambios()
 
         flash("Cambios en el cobro guardados con éxito", "exito")
