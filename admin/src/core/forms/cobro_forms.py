@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, ValidationError
 from wtforms.fields import DateTimeField, SelectField, DecimalField, StringField, SubmitField, BooleanField
-from datetime import datetime
+from datetime import date, datetime
 
 class CobroForm(FlaskForm):
     ''' 
@@ -16,3 +16,7 @@ class CobroForm(FlaskForm):
     recibio_el_dinero = SelectField(u'Recibio el dinero*', coerce = int)
     tiene_deuda = BooleanField(u'¿Tiene deuda?', default=False)
     submit = SubmitField('Aceptar')
+
+    def validate_fechaDePago(self, fechaDePago):
+        if fechaDePago.data and fechaDePago.data > date.today():
+            raise ValidationError('La fecha de pago no puede ser posterior a hoy.')
