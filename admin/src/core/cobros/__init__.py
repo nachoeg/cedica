@@ -116,8 +116,20 @@ def listar_medios_de_pago():
 
 def verificar_deuda_jinete(joa_id):
     """
-    Función que retorna si el jinete/amazona tiene deuda
+    Función que retorna si el jinete/amazona tiene deuda.
     """
     jya = db.get_or_404(JineteOAmazona, joa_id)
-    
+
     return jya.tiene_deuda
+
+def eliminar_cobro(cobro_id):
+    """
+    Función que elimina un cobro.
+    """
+
+    cobro = Cobro.query.get_or_404(cobro_id)
+    db.session.delete(cobro)
+    db.session.commit()
+
+    return cobro
+

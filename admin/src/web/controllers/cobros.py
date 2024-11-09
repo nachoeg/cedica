@@ -9,7 +9,8 @@ from src.core.cobros import (
     cargar_joa_choices,
     cargar_miembro_activo_choices,
     listar_medios_de_pago,
-    verificar_deuda_jinete
+    verificar_deuda_jinete,
+    eliminar_cobro
 )
 from core.forms.cobro_forms import CobroForm
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
@@ -148,3 +149,16 @@ def editar_cobro(id: int):
     return render_template(
         "pages/cobros/crear_cobro.html", form=form, titulo="Editar cobro"
     )
+
+
+@bp.get("/<int:id>/eliminar/")
+@chequear_permiso("cobro_eliminar")
+@sesion_iniciada_requerida
+def eliminar(id: int):
+    """
+    Controlador que permite la eliminación de un cobro.
+    """
+    eliminar_cobro(id)
+    flash("Cobro eliminado con éxito", "exito")
+
+    return redirect(url_for("cobros.listar"))
