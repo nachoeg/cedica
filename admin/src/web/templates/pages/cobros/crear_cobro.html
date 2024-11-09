@@ -3,6 +3,8 @@
 {% block main %}
 <form method="post" novalidate class="formulario">
     {{ form.csrf_token }}
+    <p class="text-gray-600 text-xs italic">Los campos con * son obligatorios </p>
+
     <div>{{ form.joa.label }} {{ form.joa }}</div>
     <div>{{ form.recibio_el_dinero.label }} {{ form.recibio_el_dinero }}</div>
     <div>
@@ -44,4 +46,13 @@
         {{ form.submit() }}
     </div>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('[name="fecha_pago"]').setAttribute('max', today);
+
+    });
+</script>
+
 {% endblock %}
