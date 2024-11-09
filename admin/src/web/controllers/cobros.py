@@ -7,7 +7,7 @@ from src.core.cobros import (
     guardar_cambios,
     marcar_deuda,
     cargar_joa_choices,
-    cargar_miembro_choices,
+    cargar_miembro_activo_choices,
     listar_medios_de_pago,
 )
 from core.forms.cobro_forms import CobroForm
@@ -74,7 +74,7 @@ def nuevo_cobro():
     """
     form = CobroForm()
     form.joa.choices = cargar_joa_choices()
-    form.recibio_el_dinero.choices = cargar_miembro_choices()
+    form.recibio_el_dinero.choices = cargar_miembro_activo_choices()
 
     if form.validate_on_submit():
         fecha_pago = form.fecha_pago.data
@@ -121,7 +121,7 @@ def editar_cobro(id: int):
     cobro = encontrar_cobro(id)
     form = CobroForm(obj=cobro)
     form.joa.choices = cargar_joa_choices()
-    form.recibio_el_dinero.choices = cargar_miembro_choices()
+    form.recibio_el_dinero.choices = cargar_miembro_activo_choices()
     form.joa.data = cobro.joa.id
     form.medio_de_pago.data = cobro.medio_de_pago.name
 

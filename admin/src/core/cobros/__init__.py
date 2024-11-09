@@ -99,15 +99,14 @@ def cargar_joa_choices():
     ]
 
 
-def cargar_miembro_choices():
+def cargar_miembro_activo_choices():
     """
     Funcion que devuelve los miembros del sistema.
     """
     return [
         (miembro.id, miembro.nombre + " " + miembro.apellido)
-        for miembro in Miembro.query.order_by("nombre")
+        for miembro in Miembro.query.filter(Miembro.activo.is_(True)).order_by("nombre")
     ]
-
 
 def listar_medios_de_pago():
     """
