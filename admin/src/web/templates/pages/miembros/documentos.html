@@ -1,14 +1,14 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
-{% from "components/pilled_nav.html" import pilled_nav %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
 
 {% block title %}Documentos del miembro{% endblock %}
 
 {% block main %}
 
-{{ pilled_nav([
-    {'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
-    {'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
+{{ navbar_secundaria([
+{'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
+{'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
 ])}}
 
 {% set configuracion = {
@@ -31,7 +31,7 @@
 'subir': {
 'url': url_for('miembro.miembro_subir_archivo', id=miembro.id),
 'nombre': 'Subir'
-} if miembro.activo == True else False, 
+} if miembro.activo == True else False,
 'enlace': {
 'url': url_for('miembro.miembro_subir_enlace', id=miembro.id),
 'nombre': 'Enlace'
@@ -48,7 +48,7 @@
 
     function irAlDocumento(id) {
         window.open(
-        `/miembros/{{ miembro.id }}/documentos/${id}/ir`, '_blank').focus();
+            `/miembros/{{ miembro.id }}/documentos/${id}/ir`, '_blank').focus();
     }
 
     function descargarDocumento(id) {

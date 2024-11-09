@@ -1,8 +1,16 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
 {% extends "layouts/base.html" %}
 {% block title %} {{ titulo }} {% endblock %}
 {% block main %}
-    <form method="post" novalidate>
-        {{ form.csrf_token }}
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.listar'),
+})}}
+<form method="post" class="formulario" novalidate>
+    {{ form.csrf_token }}
+    <div class="formulario-header">
+        <h1> {{titulo}} </h1>
+    </div>
+    <div class="formulario-body">
         <div>
             {{ form.nombre.label }}
             {{ form.nombre }}<br>
@@ -97,5 +105,6 @@
         <div>
             {{ form.submit() }}
         </div>
-    </form>
+    </div>
+</form>
 {% endblock %}

@@ -1,9 +1,15 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
 
 {% block title %} {{titulo}} {% endblock %}
 
 {% block main %}
 
+
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.ver_archivos', id=jya),
+})}}
 
 <form novalidate method="POST" class="formulario" enctype="multipart/form-data">
   {{ form.csrf_token }}

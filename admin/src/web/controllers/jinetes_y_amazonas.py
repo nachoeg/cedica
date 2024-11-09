@@ -1,4 +1,5 @@
 from src.core.forms.forms_documentos_jya import SubirArchivoForm
+from src.core.forms.forms_documentos_jya import EnlaceForm
 from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
@@ -113,10 +114,10 @@ def nuevo_j_y_a():
         telefono_actual = form.telefono_actual.data
         contacto_emer_nombre = form.contacto_emer_nombre.data
         contacto_emer_telefono = form.contacto_emer_telefono.data
-        becado = form.becado
+        becado = form.becado.data
 
         if becado:
-            porcentaje_beca = form.porcentaje_beca
+            porcentaje_beca = form.porcentaje_beca.data
         else:
             becado = False
             porcentaje_beca = None
@@ -551,7 +552,7 @@ def editar_j_y_a(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a.html",
         form=form,
-        titulo="Editar jinete/amazona" + str(jya.nombre) + " " + str(jya.apellido),
+        titulo="Editar jinete/amazona " + str(jya.nombre) + " " + str(jya.apellido),
     )
 
 
@@ -636,7 +637,7 @@ def editar_info_econ(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
-        titulo="Editar información de salud - Jinete/Amazona "
+        titulo="Editar información económica - Jinete/Amazona "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
@@ -670,9 +671,9 @@ def editar_info_esc(id: int):
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
-        "jinetes_y_amazonas/nuevo_j_y_a_esc.html",
+        "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
         form=form,
-        titulo="Editar información de salud - Jinete/Amazona "
+        titulo="Editar información sobre escolaridad - Jinete/Amazona "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
@@ -737,7 +738,7 @@ def editar_info_inst(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
-        titulo="Editar información de salud - Jinete/Amazona "
+        titulo="Editar información institucional - Jinete/Amazona "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
