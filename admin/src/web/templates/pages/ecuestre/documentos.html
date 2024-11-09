@@ -1,15 +1,19 @@
-{% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
-{% from "components/pilled_nav.html" import pilled_nav %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% extends "layouts/base.html" %}
 
 {% block title %}Ecuestre documentos{% endblock %}
 
 {% block main %}
 
-{{ pilled_nav([
+{{ navbar_secundaria({
+'volver': url_for('ecuestre.listar'),
+'tabs': [
 {'nombre': 'Información general', 'url': url_for('ecuestre.ver', id=ecuestre.id)},
 {'nombre': 'Documentos', 'url': url_for('ecuestre.documentos', id=ecuestre.id)}
-])}}
+]})}}
+
 
 {% set configuracion = {
 

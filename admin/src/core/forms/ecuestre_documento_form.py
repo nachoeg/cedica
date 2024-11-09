@@ -11,6 +11,10 @@ from src.core.forms.validaciones import LimiteDeArchivo
 
 
 class SubirArchivoForm(FlaskForm):
+    """
+    Formulario para la subida de un archivo
+    """
+
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
     )
@@ -26,6 +30,10 @@ class SubirArchivoForm(FlaskForm):
 
 
 class EditarArchivoForm(FlaskForm):
+    """
+    Formulario para la edición de un archivo
+    """
+
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
     )
@@ -34,6 +42,10 @@ class EditarArchivoForm(FlaskForm):
 
 
 class EnlaceForm(FlaskForm):
+    """
+    Formulario para la creación de un enlace
+    """
+
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
     )

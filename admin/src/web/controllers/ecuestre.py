@@ -42,10 +42,14 @@ bp = Blueprint("ecuestre", __name__, url_prefix="/ecuestre")
 @chequear_permiso("ecuestre_listar")
 @sesion_iniciada_requerida
 def listar():
+    """
+    Devuelve la vista de ecuestres en la base de datos
+    Los datos se envían paginados, filtrados y ordenados.
+    """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_jya_filtro = request.args.get("tipo_jya", "")
 
@@ -77,14 +81,20 @@ def listar():
 @chequear_permiso("ecuestre_mostrar")
 @sesion_iniciada_requerida
 def ver(id: int):
+    """
+    Devuelve la vista de un ecuestre en particular con el id dado.
+    """
     ecuestre = obtener_ecuestre(id)
-    return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre.to_dict())
+    return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre)
 
 
 @bp.route("/crear/", methods=["GET", "POST"])
 @chequear_permiso("ecuestre_crear")
 @sesion_iniciada_requerida
 def crear():
+    """
+    Devuelve la vista que permite crear un ecuestre.
+    """
     form = EcuestreForm()
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
     form.conductores.choices = [(-1, "Ninguno")] + [
@@ -142,6 +152,9 @@ def crear():
 @chequear_permiso("ecuestre_actualizar")
 @sesion_iniciada_requerida
 def editar(id: int):
+    """
+    Devuelve la vista que permite editar un ecuestre con el id dado.
+    """
     ecuestre = obtener_ecuestre(id)
     form = EcuestreForm(obj=ecuestre)
     form.tipo_de_jya_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_jya()]
@@ -193,6 +206,9 @@ def editar(id: int):
 @chequear_permiso("ecuestre_eliminar")
 @sesion_iniciada_requerida
 def eliminar(id: int):
+    """
+    Elimina un ecuestre con el id dado.
+    """
     eliminar_ecuestre(id)
     flash("Ecuestre eliminado con exito", "exito")
     return redirect(url_for("ecuestre.listar"))
@@ -202,11 +218,14 @@ def eliminar(id: int):
 @chequear_permiso("ecuestre_mostrar")
 @sesion_iniciada_requerida
 def documentos(id: int):
+    """
+    Devuelve la vista de documentos de un ecuestre en particular con el id dado.
+    """
     ecuestre = obtener_ecuestre(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = int(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")
 
@@ -245,6 +264,9 @@ def documentos(id: int):
 @chequear_permiso("ecuestre_crear")
 @sesion_iniciada_requerida
 def subir_archivo(id: int):
+    """
+    Devuelve la vista que permite subir un archivo a un ecuestre con el id dado.
+    """
     ecuestre = obtener_ecuestre(id)
     form = SubirArchivoForm()
     form.tipo_de_documento_id.choices = [
@@ -289,6 +311,9 @@ def subir_archivo(id: int):
 @chequear_permiso("ecuestre_crear")
 @sesion_iniciada_requerida
 def subir_enlace(id: int):
+    """
+    Devuelve la vista que permite subir un enlace a un ecuestre con el id dado.
+    """
     ecuestre = obtener_ecuestre(id)
     form = EnlaceForm()
     form.tipo_de_documento_id.choices = [
@@ -322,6 +347,9 @@ def subir_enlace(id: int):
 @chequear_permiso("ecuestre_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id: int, documento_id: int):
+    """
+    Elimina un documento con el id dado.
+    """
     eliminar_documento_ecuestre(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("ecuestre.documentos", id=id))
@@ -331,6 +359,9 @@ def eliminar_documento(id: int, documento_id: int):
 @chequear_permiso("ecuestre_mostrar")
 @sesion_iniciada_requerida
 def descargar_documento(id: int, documento_id: int):
+    """
+    Descarga un documento con el id dado.
+    """
     documento = obtener_documento(documento_id)
     client = current_app.storage.client
     archivo = client.get_object("grupo17", documento.url)
@@ -353,6 +384,9 @@ def descargar_documento(id: int, documento_id: int):
 @chequear_permiso("ecuestre_mostrar")
 @sesion_iniciada_requerida
 def ir_documento(id: int, documento_id: int):
+    """
+    Redirige a la URL del documento con el id dado.
+    """
     documento = obtener_documento(documento_id)
     return redirect(documento.url)
 
@@ -361,6 +395,9 @@ def ir_documento(id: int, documento_id: int):
 @chequear_permiso("ecuestre_actualizar")
 @sesion_iniciada_requerida
 def editar_documento(id: int, documento_id: int):
+    """
+    Devuelve la vista que permite editar un documento con el id dado.
+    """
     documento = obtener_documento(documento_id)
     if documento.archivo_externo:
         form = EnlaceForm(obj=documento)

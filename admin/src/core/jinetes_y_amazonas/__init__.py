@@ -5,29 +5,42 @@ from src.core.miembro.miembro import Miembro
 from src.core.miembro.extras import PuestoLaboral
 from src.core.ecuestre.ecuestre import Ecuestre
 
+
 def crear_diagnostico(**kwargs):
-    ''' 
-        Funcion que crea un diagnóstico médico.
-    '''
+    """
+    Funcion que crea un diagnóstico médico.
+    """
     diagnostico = Diagnostico(**kwargs)
     db.session.add(diagnostico)
     db.session.commit()
 
     return diagnostico
 
+
 # funcion que lista todos los jinetes o amazonas del sistema
-def listar_j_y_a(nombre_filtro="", apellido_filtro="", dni_filtro="", profesional_filtro="", ordenar_por="id", orden="asc", pagina=1, cant_por_pag=10):
-    ''' 
-        Funcion que devuelve el listado de jinetes y amazonas filtrado a partir de los parámetros recibidos y ordenado según los parámetros recibidos.
-    '''
+def listar_j_y_a(
+    nombre_filtro="",
+    apellido_filtro="",
+    dni_filtro="",
+    profesional_filtro="",
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pag=10,
+):
+    """
+    Funcion que devuelve el listado de jinetes y amazonas filtrado a partir de los parámetros recibidos y ordenado según los parámetros recibidos.
+    """
     query = JineteOAmazona.query.filter(
         JineteOAmazona.nombre.ilike(f"%{nombre_filtro}"),
         JineteOAmazona.apellido.ilike(f"%{apellido_filtro}"),
     )
 
     if profesional_filtro != "":
-        query = query.filter(JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}"))
-    
+        query = query.filter(
+            JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}")
+        )
+
     if dni_filtro != "":
         query = query.filter(JineteOAmazona.dni == dni_filtro)
 
@@ -36,28 +49,61 @@ def listar_j_y_a(nombre_filtro="", apellido_filtro="", dni_filtro="", profesiona
     else:
         query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
 
-    j_y_a_ordenados = query.paginate(page=pagina, per_page=cant_por_pag, error_out=False)
-    
+    j_y_a_ordenados = query.paginate(
+        page=pagina, per_page=cant_por_pag, error_out=False
+    )
+
     return j_y_a_ordenados
 
 
 # función que crea un registro de jinete o amazona
-def crear_j_o_a(nombre, apellido, dni, edad, fecha_nacimiento, provincia_nacimiento, localidad_nacimiento, domicilio_actual, telefono_actual, contacto_emer_nombre, contacto_emer_telefono):
-    ''' 
-        Funcion que crea un registro en la tabla de jinetes y amazonas a partir de los parámetros recibidos, 
-        a partir de cargar la información general del jinete y amazona: nombre, apellido, dni, edad, fecha de nacimiento, provincia y localidad de nacimiento,
-        domicilio y telefono actuales y contacto de emergencia.
-    '''
-    j_o_a = JineteOAmazona(nombre=nombre, apellido=apellido, dni=dni, edad=edad, fecha_nacimiento=fecha_nacimiento, provincia_nacimiento=provincia_nacimiento, localidad_nacimiento=localidad_nacimiento, domicilio_actual=domicilio_actual, telefono_actual=telefono_actual, contacto_emer_nombre=contacto_emer_nombre, contacto_emer_telefono=contacto_emer_telefono)
+def crear_j_o_a(
+    nombre,
+    apellido,
+    dni,
+    edad,
+    fecha_nacimiento,
+    provincia_nacimiento,
+    localidad_nacimiento,
+    domicilio_actual,
+    telefono_actual,
+    contacto_emer_nombre,
+    contacto_emer_telefono,
+    becado,
+    porcentaje_beca
+):
+    """
+    Funcion que crea un registro en la tabla de jinetes y amazonas a partir de los parámetros recibidos,
+    a partir de cargar la información general del jinete y amazona: nombre, apellido, dni, edad, fecha de nacimiento, provincia y localidad de nacimiento,
+    domicilio y telefono actuales y contacto de emergencia.
+    """
+    j_o_a = JineteOAmazona(
+        nombre=nombre,
+        apellido=apellido,
+        dni=dni,
+        edad=edad,
+        fecha_nacimiento=fecha_nacimiento,
+        provincia_nacimiento=provincia_nacimiento,
+        localidad_nacimiento=localidad_nacimiento,
+        domicilio_actual=domicilio_actual,
+        telefono_actual=telefono_actual,
+        contacto_emer_nombre=contacto_emer_nombre,
+        contacto_emer_telefono=contacto_emer_telefono,
+        becado=becado,
+        porcentaje_beca=porcentaje_beca
+    )
     db.session.add(j_o_a)
     db.session.commit()
 
     return j_o_a
 
-def cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad):
-    ''' 
-        Funcion que, dado un jinete y amazona, carga la información de salud en el registro correspondiente.
-    '''
+
+def cargar_informacion_salud(
+    id, certificado_discapacidad, diagnostico_id, diagnostico_otro, tipo_discapacidad
+):
+    """
+    Funcion que, dado un jinete y amazona, carga la información de salud en el registro correspondiente.
+    """
     jya = JineteOAmazona.query.get_or_404(id)
     jya.certificado_discapacidad = certificado_discapacidad
     jya.diagnostico_id = diagnostico_id
@@ -66,10 +112,21 @@ def cargar_informacion_salud(id, certificado_discapacidad, diagnostico_id, diagn
 
     db.session.commit()
 
-def cargar_informacion_economica(id, asignacion_familiar, tipo_asignacion_familiar, beneficiario_pension,tipo_pension, obra_social, num_afiliado, posee_curatela, observaciones_obra_social):
-    ''' 
-        Funcion que, dado un jinete y amazona, carga la información económica en el registro correspondiente.
-    '''
+
+def cargar_informacion_economica(
+    id,
+    asignacion_familiar,
+    tipo_asignacion_familiar,
+    beneficiario_pension,
+    tipo_pension,
+    obra_social,
+    num_afiliado,
+    posee_curatela,
+    observaciones_obra_social,
+):
+    """
+    Funcion que, dado un jinete y amazona, carga la información económica en el registro correspondiente.
+    """
     jya = JineteOAmazona.query.get_or_404(id)
     jya.asignacion_familiar = asignacion_familiar
     jya.tipo_asignacion_familiar = tipo_asignacion_familiar
@@ -81,10 +138,19 @@ def cargar_informacion_economica(id, asignacion_familiar, tipo_asignacion_famili
     jya.observaciones_obra_social = observaciones_obra_social
     db.session.commit()
 
-def cargar_informacion_escuela(id, nombre_escuela, direccion_escuela, telefono_escuela, grado_escuela, observaciones_escuela, profesionales_a_cargo):
-    ''' 
-        Funcion que, dado un jinete y amazona, carga la información relacionada a la escolaridad del jinete o de la amazona, en el registro correspondiente.
-    '''
+
+def cargar_informacion_escuela(
+    id,
+    nombre_escuela,
+    direccion_escuela,
+    telefono_escuela,
+    grado_escuela,
+    observaciones_escuela,
+    profesionales_a_cargo,
+):
+    """
+    Funcion que, dado un jinete y amazona, carga la información relacionada a la escolaridad del jinete o de la amazona, en el registro correspondiente.
+    """
     jya = JineteOAmazona.query.get_or_404(id)
     jya.nombre_escuela = nombre_escuela
     jya.direccion_escuela = direccion_escuela
@@ -94,66 +160,90 @@ def cargar_informacion_escuela(id, nombre_escuela, direccion_escuela, telefono_e
     jya.profesionales_a_cargo = profesionales_a_cargo
     db.session.commit()
 
-def cargar_informacion_institucional(id, propuesta_de_trabajo, condicion, sede, dias, profesor_id, conductor_caballo_id, caballo_id, auxiliar_pista_id):
-    ''' 
-        Funcion que, dado un jinete y amazona, carga la información institucional relacionada al jinete o amazona, en el registro correspondiente.
-    '''
+
+def cargar_informacion_institucional(
+    id,
+    propuesta_de_trabajo,
+    condicion,
+    sede,
+    dias,
+    profesor_id,
+    conductor_caballo_id,
+    caballo_id,
+    auxiliar_pista_id,
+):
+    """
+    Funcion que, dado un jinete y amazona, carga la información institucional relacionada al jinete o amazona, en el registro correspondiente.
+    """
     jya = JineteOAmazona.query.get_or_404(id)
     jya.propuesta_de_trabajo = propuesta_de_trabajo
     jya.condicion = condicion
     jya.sede = sede
-    #jya.dias = dias
+    # jya.dias = dias
     jya.profesor_id = profesor_id
-    jya.conductor_caballo_id =conductor_caballo_id
+    jya.conductor_caballo_id = conductor_caballo_id
     jya.caballo_id = caballo_id
     jya.auxiliar_pista_id = auxiliar_pista_id
     db.session.commit()
 
+
 def guardar_cambios():
-    ''' 
-        Funcion que guarda los cambios en la base de datos.
-    '''
+    """
+    Funcion que guarda los cambios en la base de datos.
+    """
     db.session.commit()
 
+
 def eliminar_jya(id):
-    ''' 
-        Funcion que, dado un id, elimina el jinete o la amazona con dicho id.
-    '''
+    """
+    Funcion que, dado un id, elimina el jinete o la amazona con dicho id.
+    """
     jya = JineteOAmazona.query.get_or_404(id)
     db.session.delete(jya)
     db.session.commit()
     return jya
 
+
 def encontrar_jya(id):
-    ''' 
-        Funcion que busca y retorna un jinete o amazona por su id.
-    '''
+    """
+    Funcion que busca y retorna un jinete o amazona por su id.
+    """
     jya = JineteOAmazona.query.get_or_404(id)
     return jya
 
-def cargar_archivo(jya_id, titulo,tipo_archivo, url, archivo_externo):
-    ''' 
-        Funcion que, dado un jinete y amazona, carga la información de salud en el registro correspondiente.
-    '''
-    archivo = Archivo_JYA(titulo=titulo,jya_id=jya_id, tipo_archivo=tipo_archivo, url= url, externo=archivo_externo)
+
+def cargar_archivo(jya_id, titulo, tipo_archivo, url, archivo_externo):
+    """
+    Funcion que, dado un jinete y amazona, carga la información de salud en el registro correspondiente.
+    """
+    archivo = Archivo_JYA(
+        titulo=titulo,
+        jya_id=jya_id,
+        tipo_archivo=tipo_archivo,
+        url=url,
+        externo=archivo_externo,
+    )
     db.session.add(archivo)
     db.session.commit()
 
+
 def encontrar_archivos_de_jya(jya_id):
-    ''' 
-        Funcion que, dado el id de un jinete o amazona, retorna los documentos asociados a él.
-    '''
+    """
+    Funcion que, dado el id de un jinete o amazona, retorna los documentos asociados a él.
+    """
     jya = JineteOAmazona.query.get_or_404(jya_id)
-    
+
     return jya.documentos
 
+
 def encontrar_archivo(archivo_id):
-    ''' 
-        Funcion que busca y retorna un documento dado su id.
-    '''
+    """
+    Funcion que busca y retorna un documento dado su id.
+    """
     archivo = Archivo_JYA.query.get_or_404(archivo_id)
-    
+
     return archivo
+
 
 def listar_documentos(
     jya_id,
@@ -164,19 +254,17 @@ def listar_documentos(
     pagina=1,
     cant_por_pagina=10,
 ):
-    ''' 
-        Funcion que, dado un jinete y determinados filtros, retorna un listado de documentos.
-    '''
+    """
+    Funcion que, dado un jinete y determinados filtros, retorna un listado de documentos.
+    """
     query = Archivo_JYA.query.filter(
-            Archivo_JYA.jya_id == jya_id,
-            Archivo_JYA.titulo.ilike(f'%{nombre_filtro}%'),
-        )
+        Archivo_JYA.jya_id == jya_id,
+        Archivo_JYA.titulo.ilike(f"%{nombre_filtro}%"),
+    )
     if tipo_filtro != "":
         tipo = TipoArchivo(tipo_filtro).name
-        query = query.filter(
-            Archivo_JYA.tipo_archivo == tipo
-        )
-    
+        query = query.filter(Archivo_JYA.tipo_archivo == tipo)
+
     cant_resultados = query.count()
 
     if orden == "asc":
@@ -189,70 +277,76 @@ def listar_documentos(
 
 
 def listar_tipos_de_documentos():
-    ''' 
-        Funcion que retorna una lista con los tipos de documentos del módulo de jinetes y amazonas.
-    '''
+    """
+    Funcion que retorna una lista con los tipos de documentos del módulo de jinetes y amazonas.
+    """
     tipos_de_documentos = TipoArchivo.listar()
 
     return tipos_de_documentos
 
 
 def listar_diagnosticos():
-    ''' 
-        Funcion que devuelve el listado de diagnósticos del sistema.
-    '''
+    """
+    Funcion que devuelve el listado de diagnósticos del sistema.
+    """
     diagnosticos = Diagnostico.query.all()
 
     return diagnosticos
 
+
 def listar_profesores():
-    ''' 
-        Funcion que retorna los profesores del sistema.
-    '''
+    """
+    Funcion que retorna los profesores del sistema.
+    """
     profesores = Miembro.query.join(PuestoLaboral).filter(
         PuestoLaboral.nombre == "Profesor de Equitación"
     )
     print(profesores)
     return profesores
 
+
 def listar_conductores():
-    ''' 
-        Funcion que retorna los conductores del sistema.
-    '''
+    """
+    Funcion que retorna los conductores del sistema.
+    """
     conductores = Miembro.query.join(PuestoLaboral).filter(
         PuestoLaboral.nombre == "Conductor"
     )
 
     return conductores
 
+
 def listar_auxiliares_pista():
-    ''' 
-        Funcion que retorna los auxiliares de pista del sistema.
-    '''
+    """
+    Funcion que retorna los auxiliares de pista del sistema.
+    """
     auxiliares = Miembro.query.join(PuestoLaboral).filter(
         PuestoLaboral.nombre == "Auxiliar de pista"
     )
 
     return auxiliares
 
+
 def listar_caballos():
-    ''' 
-        Funcion que retorna la lista de caballos del sistema.
-    '''
+    """
+    Funcion que retorna la lista de caballos del sistema.
+    """
     caballos = Ecuestre.query.all()
 
     return caballos
 
+
 def obtener_documento(doc_id):
-    ''' 
-        Funcion que busca un documento a partir del id del documento.
-    '''
+    """
+    Funcion que busca un documento a partir del id del documento.
+    """
     return Archivo_JYA.query.get_or_404(doc_id)
 
+
 def eliminar_documento_j_y_a(doc_id):
-    ''' 
-        Funcion que elimina un documento a partir de conocer su id.
-    '''
+    """
+    Funcion que elimina un documento a partir de conocer su id.
+    """
     documento = Archivo_JYA.query.get(doc_id)
     db.session.delete(documento)
     db.session.commit()

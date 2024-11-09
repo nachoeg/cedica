@@ -4,7 +4,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
 
 <div id="tabla"
   class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden">
-  <div class="flex items-center space-x-2 px-6 py-4">
+  <div class="flex items-center space-x-2 p-2 md:px-6 md:py-4">
     <!-- Boton subir -->
     {% if configuracion.subir %}
     <a href="{{ configuracion.subir.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
@@ -74,9 +74,18 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
               {% endif %}
             </div>
             {% endfor %}
+            <div class="flex gap-y-3 flex-col">
+              <button type="button" 
+              onclick="limpiarFiltros()"
+              class="btn btn-secondary w-full">
+              Limpiar filtros
+            </button>
             <button type="button"
-              class="w-full text-center py-2 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-              onclick="filtrarTabla()"> Filtrar </button>
+              class="btn btn-primary w-full"
+              onclick="filtrarTabla()"> 
+              Filtrar 
+            </button>
+            </div>
           </div>
           {% endif %}
         </div>
@@ -92,7 +101,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
             <tr>
               {% for encabezado in configuracion.encabezados %}
               <th scope="col"
-                class="py-1 px-4 group text-start text-xs font-semibold text-gray-500 dark:text-neutral-500 focus:outline-none">
+                class="py-1 px-1 md:px-4 group text-start text-xs font-semibold text-gray-500 dark:text-neutral-500 focus:outline-none">
                 {% if encabezado.ordenar %}
                 <button
                   class="group py-1.5 px-2 inline-flex items-start hover:bg-gray-100 uppercase dark:hover:bg-neutral-700/50 rounded-md w-max text-nowrap"
@@ -110,7 +119,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
               </th>
               {% endfor %} {% if configuracion.acciones %}
               <th scope="col"
-                class="py-1 px-6 text-start text-xs font-semibold text-gray-800 dark:text-neutral-200 focus:outline-none">
+                class="py-1 px-3 md:px-6 text-start text-xs font-semibold text-gray-800 dark:text-neutral-200 focus:outline-none">
               </th>
               {% endif %}
             </tr>
@@ -120,17 +129,16 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
           <tbody id="tabla-body">
             {% for fila in resultados %}
             <tr class="hover:bg-gray-100/70 dark:hover:bg-neutral-700/20 border-b border-gray-200 dark:border-neutral-700">
-              {% set fila_dict = fila.to_dict() %}
-              {% for key, value in fila_dict.items() %}
+              {% for encabezado in configuracion.encabezados %}
               <td class="size-px whitespace-nowrap">
-                <div class="px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">
-                  {{ value }}
+                <div class="px-3 md:px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">
+                  {{ fila.to_dict()[encabezado.id] }}
                 </div>
               </td>
               {% endfor %}
               {% if configuracion.acciones %}
               <td class="size-px whitespace-nowrap">
-                <div class="flex gap-1 px-4 justify-end">
+                <div class="flex gap-1 px-3 md:px-4 justify-end">
                 {% if "admin_sistema" in fila.__dict__ %}
                   {% include 'pages/usuarios/_botones_tabla.html' %}
                 {% else %}
@@ -167,9 +175,9 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
     </div>
   </div>
   <div
-    class="px-6 py-4 grid gap-3 xs:flex xs:justify-between xs:items-center border-t border-gray-200 dark:border-neutral-700">
+    class="p-2 md:px-6 md:py-4 grid gap-3 xs:flex xs:justify-between xs:items-center border-t border-gray-200 dark:border-neutral-700">
     <div>
-      <p class="text-sm text-gray-600 dark:text-neutral-400">
+      <p class="ms-2 md:ms-0 text-sm text-gray-600 dark:text-neutral-400">
         <span id="cantidad-resultados" class="font-semibold text-gray-800 dark:text-neutral-200">{{ cant_resultados }}
         </span>
         resultados
@@ -233,6 +241,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
 
   function filtrarTabla() {
     let url = new URL(window.location.href);
+    url.searchParams.delete('pagina');
     // {% if configuracion.filtros %}
     let valor;
     // {% for filtro in configuracion.filtros %}
@@ -242,6 +251,17 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
     } else {
       url.searchParams.delete('{{ filtro.id }}');
     }
+    // {% endfor %}
+    // {% endif %}
+    window.location.href = url.toString();
+  }
+
+  function limpiarFiltros() {
+    let url = new URL(window.location.href);
+    url.searchParams.delete('pagina');
+    // {% if configuracion.filtros %}
+    // {% for filtro in configuracion.filtros %}
+    url.searchParams.delete('{{ filtro.id }}');
     // {% endfor %}
     // {% endif %}
     window.location.href = url.toString();

@@ -13,6 +13,10 @@ from datetime import date
 
 
 class EcuestreForm(FlaskForm):
+    """
+    Formulario para la creación de un ecuestre
+    """
+
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del ecuestre")]
     )

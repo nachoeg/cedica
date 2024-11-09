@@ -4,6 +4,10 @@ from flask import current_app
 
 
 class TipoDeJyA(db.Model):
+    """
+    Modelo correspondiente a los tipos de jinetes y amazonas.
+    """
+
     __tablename__ = "tipos_de_jya"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -14,6 +18,10 @@ class TipoDeJyA(db.Model):
 
 
 class TipoDeDocumento(db.Model):
+    """
+    Modelo correspondiente a los tipos de documentos de ecuestres.
+    """
+
     __tablename__ = "tipos_de_documento_ecuestre"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +32,10 @@ class TipoDeDocumento(db.Model):
 
 
 class Documento(db.Model):
+    """
+    Modelo correspondiente a los documentos de ecuestres.
+    """
+
     __tablename__ = "documentos_ecuestre"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -56,6 +68,10 @@ class Documento(db.Model):
 
 
 class Ecuestre(db.Model):
+    """
+    Modelo correspondiente a los ecuestres.
+    """
+
     __tablename__ = "ecuestres"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -147,16 +163,20 @@ conductores_ecuestre = db.Table(
 )
 
 
-# Eliminar archivo asociado en MinIO antes de eliminar el documento de la base de datos
 @event.listens_for(Documento, "before_delete")
 def before_delete(mapper, connection, target):
+    """
+    Elimina el archivo asociado en MinIO antes de eliminar el documento de la base de datos.
+    """
     client = current_app.storage.client
     client.remove_object("grupo17", target.url)
 
 
-# Eliminar archivos asociados en MinIO antes de eliminar el ecuestre de la base de datos
 @event.listens_for(Ecuestre, "before_delete")
 def before_delete_ecuestre(mapper, connection, target):
+    """
+    Elimina los archivos asociados en MinIO antes de eliminar el ecuestre de la base de datos.
+    """
     client = current_app.storage.client
     documentos = Documento.query.filter_by(ecuestre_id=target.id).all()
     for documento in documentos:

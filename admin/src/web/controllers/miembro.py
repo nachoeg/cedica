@@ -327,7 +327,7 @@ def miembro_subir_archivo(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_archivo=True
+        "pages/miembros/crear_documento.html", form=form, miembro=miembro, subir_archivo=True, titulo="Subir archivo"
     )
 
 @bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
@@ -356,7 +356,7 @@ def miembro_subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/ecuestre/formulario_documento.html", form=form, miembro=miembro, subir_enlace=True
+        "pages/miembros/crear_documento.html", form=form, miembro=miembro, subir_enlace=True, titulo="Subir enlace"
     )
 
 @bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
@@ -433,7 +433,7 @@ def editar_documento(id: int, documento_id: int):
             flash("Error al actualizar el documento", "error")
 
     return render_template(
-        "pages/ecuestre/formulario_documento.html",
+        "pages/miembros/crear_documento.html",
         form=form,
         miembro=documento.miembro,
         titulo=f"Editar documento #{documento_id}",

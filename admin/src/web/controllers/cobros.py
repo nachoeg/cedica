@@ -97,7 +97,9 @@ def nuevo_cobro():
         flash("Cobro guardado con éxito", "exito")
         return redirect(url_for("cobros.listar"))
 
-    return render_template("pages/cobros/crear_cobro.html", form=form)
+    return render_template(
+        "pages/cobros/crear_cobro.html", form=form, titulo="Nuevo cobro"
+    )
 
 
 @bp.get("/<int:id>/")
@@ -142,4 +144,6 @@ def editar_cobro(id: int):
 
         flash("Cambios en el cobro guardados con éxito", "exito")
         return redirect(url_for("cobros.listar"))
-    return render_template("pages/cobros/crear_cobro.html", form=form)
+    return render_template(
+        "pages/cobros/crear_cobro.html", form=form, titulo="Editar cobro"
+    )
