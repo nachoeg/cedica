@@ -4,7 +4,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
 
 <div id="tabla"
   class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden">
-  <div class="flex items-center space-x-2 px-6 py-4">
+  <div class="flex items-center space-x-2 p-2 md:px-6 md:py-4">
     <!-- Boton subir -->
     {% if configuracion.subir %}
     <a href="{{ configuracion.subir.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
@@ -74,7 +74,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
               {% endif %}
             </div>
             {% endfor %}
-            <div class="flex gap-y-2 flex-col">
+            <div class="flex gap-y-3 flex-col">
               <button type="button" 
               onclick="limpiarFiltros()"
               class="btn btn-secondary w-full">
@@ -129,11 +129,10 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
           <tbody id="tabla-body">
             {% for fila in resultados %}
             <tr class="hover:bg-gray-100/70 dark:hover:bg-neutral-700/20 border-b border-gray-200 dark:border-neutral-700">
-              {% set fila_dict = fila.to_dict() %}
-              {% for key, value in fila_dict.items() %}
+              {% for encabezado in configuracion.encabezados %}
               <td class="size-px whitespace-nowrap">
                 <div class="px-6 py-2 text-sm text-gray-800 dark:text-neutral-200">
-                  {{ value }}
+                  {{ fila.to_dict()[encabezado.id] }}
                 </div>
               </td>
               {% endfor %}
@@ -176,7 +175,7 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
     </div>
   </div>
   <div
-    class="px-6 py-4 grid gap-3 xs:flex xs:justify-between xs:items-center border-t border-gray-200 dark:border-neutral-700">
+    class="p-2 md:px-6 md:py-4 grid gap-3 xs:flex xs:justify-between xs:items-center border-t border-gray-200 dark:border-neutral-700">
     <div>
       <p class="text-sm text-gray-600 dark:text-neutral-400">
         <span id="cantidad-resultados" class="font-semibold text-gray-800 dark:text-neutral-200">{{ cant_resultados }}
