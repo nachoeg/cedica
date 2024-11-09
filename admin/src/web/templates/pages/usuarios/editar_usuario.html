@@ -1,3 +1,5 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
 
 {% block title %} Editar usuario {% endblock %}
@@ -8,6 +10,10 @@
 {% endblock %}
 
 {% block main %}
+
+{{ navbar_secundaria({
+  'volver': url_for('usuarios.listado_usuarios')
+})}}
 
 {% from "pages/usuarios/_campo_form.html" import render_field %}
 <form method=post class="formulario">
