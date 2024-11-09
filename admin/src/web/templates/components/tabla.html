@@ -74,9 +74,18 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
               {% endif %}
             </div>
             {% endfor %}
+            <div class="flex gap-y-2 flex-col">
+              <button type="button" 
+              onclick="limpiarFiltros()"
+              class="btn btn-secondary w-full">
+              Limpiar filtros
+            </button>
             <button type="button"
-              class="w-full text-center py-2 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-              onclick="filtrarTabla()"> Filtrar </button>
+              class="btn btn-primary w-full"
+              onclick="filtrarTabla()"> 
+              Filtrar 
+            </button>
+            </div>
           </div>
           {% endif %}
         </div>
@@ -243,6 +252,17 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
     } else {
       url.searchParams.delete('{{ filtro.id }}');
     }
+    // {% endfor %}
+    // {% endif %}
+    window.location.href = url.toString();
+  }
+
+  function limpiarFiltros() {
+    let url = new URL(window.location.href);
+    url.searchParams.delete('pagina');
+    // {% if configuracion.filtros %}
+    // {% for filtro in configuracion.filtros %}
+    url.searchParams.delete('{{ filtro.id }}');
     // {% endfor %}
     // {% endif %}
     window.location.href = url.toString();
