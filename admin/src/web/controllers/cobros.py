@@ -9,6 +9,7 @@ from src.core.cobros import (
     cargar_joa_choices,
     cargar_miembro_activo_choices,
     listar_medios_de_pago,
+    verificar_deuda_jinete
 )
 from core.forms.cobro_forms import CobroForm
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
@@ -83,8 +84,8 @@ def nuevo_cobro():
         observaciones = form.observaciones.data
         joa_id = form.joa.data
         recibio_el_dinero_id = form.recibio_el_dinero.data
-        if form.tiene_deuda:
-            marcar_deuda(joa_id)
+        marcar_deuda(joa_id, form.tiene_deuda.data)
+
         crear_cobro(
             fecha_pago,
             medio_de_pago,
@@ -129,6 +130,7 @@ def editar_cobro(id: int):
         form.joa.data = cobro.joa.id
         form.medio_de_pago.data = cobro.medio_de_pago.name
         form.recibio_el_dinero.data = cobro.recibio_el_dinero.id
+        form.tiene_deuda.data = verificar_deuda_jinete(cobro.joa.id)
 
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
@@ -137,9 +139,8 @@ def editar_cobro(id: int):
         cobro.observaciones = form.observaciones.data
         cobro.joa_id = form.joa.data
         cobro.recibio_el_dinero_id = form.recibio_el_dinero.data
-        
-        if form.tiene_deuda:
-            marcar_deuda(cobro.joa_id)
+        marcar_deuda(cobro.joa_id, form.tiene_deuda.data)
+
         guardar_cambios()
 
         flash("Cambios en el cobro guardados con éxito", "exito")

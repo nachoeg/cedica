@@ -80,12 +80,12 @@ def guardar_cambios():
     db.session.commit()
 
 
-def marcar_deuda(joa_id):
+def marcar_deuda(joa_id, tiene_deuda):
     """
-    Funcion que crea modifica la tabla de jinetes y amazonas para marcar que tiene deuda.
+    Funcion que modifica la tabla de jinetes y amazonas para marcar si tiene deuda o no.
     """
     jya = db.get_or_404(JineteOAmazona, joa_id)
-    jya.tiene_deuda = True
+    jya.tiene_deuda = tiene_deuda
     db.session.commit()
 
 
@@ -113,3 +113,11 @@ def listar_medios_de_pago():
     Funcion que devuelve los medios de pago del sistema.
     """
     return MedioDePago.listar()
+
+def verificar_deuda_jinete(joa_id):
+    """
+    Función que retorna si el jinete/amazona tiene deuda
+    """
+    jya = db.get_or_404(JineteOAmazona, joa_id)
+    
+    return jya.tiene_deuda
