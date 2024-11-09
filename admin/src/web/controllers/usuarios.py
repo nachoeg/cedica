@@ -98,7 +98,7 @@ def editar_usuario(id):
     usuario = usuario_por_id(id)
     form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'GET':
-        form.roles.data = [str(rol.id) for rol in roles_por_usuario(id)]
+        form.roles.data = [rol.id for rol in roles_por_usuario(id)]
     if request.method == 'POST':
         if form.validate_on_submit():
             # raise Exception(f'{form.data}')
