@@ -85,7 +85,7 @@ def ver(id: int):
     Devuelve la vista de un ecuestre en particular con el id dado.
     """
     ecuestre = obtener_ecuestre(id)
-    return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre.to_dict())
+    return render_template("pages/ecuestre/ver.html", ecuestre=ecuestre)
 
 
 @bp.route("/crear/", methods=["GET", "POST"])

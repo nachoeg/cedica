@@ -31,7 +31,7 @@ class Usuario(db.Model):
             "alias": self.alias,
             "email": self.email,
             "activo": booleano_a_palabra(self.activo),
-            "fecha_creación": fechahora_a_fecha(self.creacion),
+            "creacion": fechahora_a_fecha(self.creacion),
             "admin_sistema": booleano_a_palabra(self.admin_sistema),
             "roles": "".join(("" + rol.nombre + ". ") for rol in self.roles),
         }
