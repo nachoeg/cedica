@@ -6,10 +6,12 @@
 
 {% block main %}
 
-{{ navbar_secundaria([
+{{ navbar_secundaria({
+'volver': url_for('miembro.miembro_listar'),
+'tabs':[
 {'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
 {'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
-])}}
+]})}}
 
 {% set configuracion = {
 
