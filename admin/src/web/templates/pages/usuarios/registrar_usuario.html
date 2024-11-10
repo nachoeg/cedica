@@ -16,20 +16,19 @@
 })}}
 
 {% from "pages/usuarios/_campo_form.html" import render_field %}
+{% from "pages/usuarios/_select_multi_checkbox.html" import select_multi_checkbox %}
 <form method=post class="formulario">
   <div class="formulario-header">
     <h1>Registrar usuario</h1>
   </div> 
   {{ form.csrf_token }}
   <div class="formulario-body">
-    <dl>
-      {{ render_field(form.email, type="email") }}
-      {{ render_field(form.contraseña, type="password") }}
-      {{ render_field(form.alias) }}
-      <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
-      <div class="roles">{{ render_field(form.roles, id="roles", type="checkbox") }}</div>
-      <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
-    </dl>
+    <div>{{ render_field(form.email, type="email") }}</div>
+    <div>{{ render_field(form.contraseña, type="password") }}</div>
+    <div>{{ render_field(form.alias) }}</div>
+    <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
+    <div>{{ select_multi_checkbox(form.roles) }}</div>
+    <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
     <input type=submit>
   </div>
 </form>
