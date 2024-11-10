@@ -26,9 +26,15 @@
       {{ render_field(form.email, type="email") }}
       {{ render_field(form.alias) }}
       <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
-      <div class="roles">{{ render_field(form.roles, id="roles", type="checkbox") }}</div>
       <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
     </dl>
+    <ul>{{ form.roles.label }}
+      {% for  value, label, checked, render_kw in form.roles.iter_choices() %}
+      <li><input type="checkbox" name={{form.roles.name}} value={{value}} id="{{form.roles.id}}-{{value}}" {% if checked %}checked{% endif %}>
+        <label>{{ label }}</label>
+      </li>
+      {% endfor %}
+    </ul>
     <p><input type=submit>
   </div>
 </form>
