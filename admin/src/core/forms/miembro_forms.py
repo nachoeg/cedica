@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, SelectField, FileField
 from wtforms.validators import DataRequired, Optional, NumberRange, Email, Length
-from src.core.forms.validaciones import LimiteDeArchivo, Unico
+from src.core.forms.validaciones import LimiteDeArchivo, Unico, TipoDeArchivo
 from src.core.miembro.miembro import Miembro
 
 
@@ -32,7 +32,14 @@ class ArchivoMiembroForm(FlaskForm):
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
-    archivo = FileField("Archivo", validators=[DataRequired("Seleccione un archivo"), LimiteDeArchivo(tamanio_en_mb=100)])
+    archivo = FileField(
+        "Archivo",
+        validators=[
+            DataRequired("Seleccione un archivo"),
+            LimiteDeArchivo(tamanio_en_mb=100),
+            TipoDeArchivo(permitidos=["pdf", "doc", "xls", "jpeg"]),
+        ],
+    )
     tipo_de_documento_id = SelectField("Tipo", coerce=int, validators=[DataRequired("Seleccione una opcion")])    
     submit = SubmitField("Guardar")
 

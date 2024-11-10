@@ -3,6 +3,20 @@ from datetime import date
 from src.core.database import db
 
 
+def TipoDeArchivo(permitidos):
+    """
+    Función que devuelve un validador que chequea que el archivo sea de un tipo permitido.
+    """
+
+    def chequear_tipo(form, field):
+        if field.data.filename.split(".")[-1].lower() not in permitidos:
+            raise ValidationError(
+                f"El archivo debe ser de tipo {', '.join(permitidos)}"
+            )
+
+    return chequear_tipo
+
+
 def LimiteDeArchivo(tamanio_en_mb):
     """
     Función que devuelve un validador que chequea que el tamaño del archivo no supere el límite en MB.
