@@ -5,15 +5,15 @@ from src.core.cobros import (
     crear_cobro,
     encontrar_cobro,
     guardar_cambios,
-    marcar_deuda,
     cargar_joa_choices,
     cargar_miembro_activo_choices,
     listar_medios_de_pago,
-    verificar_deuda_jinete,
     eliminar_cobro
 )
 from core.forms.cobro_forms import CobroForm
-from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.decoradores import (
+    sesion_iniciada_requerida,
+    chequear_permiso)
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
@@ -75,7 +75,8 @@ def listar():
 @sesion_iniciada_requerida
 def nuevo_cobro():
     """
-    Controlador que muestra el formulario de alta de un cobro o lo retorna para que sea guardado.
+    Controlador que muestra el formulario de alta de un cobro
+    o lo retorna para que sea guardado.
     """
     form = CobroForm()
     form.joa.choices = cargar_joa_choices()
@@ -88,7 +89,7 @@ def nuevo_cobro():
         observaciones = form.observaciones.data
         joa_id = form.joa.data
         recibio_el_dinero_id = form.recibio_el_dinero.data
-        marcar_deuda(joa_id, form.tiene_deuda.data)
+        tiene_deuda = form.tiene_deuda.data
 
         crear_cobro(
             fecha_pago,
@@ -97,6 +98,7 @@ def nuevo_cobro():
             observaciones,
             joa_id,
             recibio_el_dinero_id,
+            tiene_deuda
         )
 
         flash("Cobro guardado con éxito", "exito")
@@ -123,18 +125,19 @@ def ver(id: int):
 @sesion_iniciada_requerida
 def editar_cobro(id: int):
     """
-    Controlador que muestra un formulario para editar un cobro o guarda la información cargada en él.
+    Controlador que muestra un formulario para editar un cobro
+    o guarda la información cargada en él.
     """
     cobro = encontrar_cobro(id)
     form = CobroForm(obj=cobro)
     form.joa.choices = cargar_joa_choices()
     form.recibio_el_dinero.choices = cargar_miembro_activo_choices()
-    
+
     if request.method == "GET":
         form.joa.data = cobro.joa.id
         form.medio_de_pago.data = cobro.medio_de_pago.name
         form.recibio_el_dinero.data = cobro.recibio_el_dinero.id
-        form.tiene_deuda.data = verificar_deuda_jinete(cobro.joa.id)
+        form.tiene_deuda.data = cobro.tiene_deuda
 
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
@@ -143,7 +146,7 @@ def editar_cobro(id: int):
         cobro.observaciones = form.observaciones.data
         cobro.joa_id = form.joa.data
         cobro.recibio_el_dinero_id = form.recibio_el_dinero.data
-        marcar_deuda(cobro.joa_id, form.tiene_deuda.data)
+        cobro.tiene_deuda = form.tiene_deuda
 
         guardar_cambios()
 

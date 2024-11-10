@@ -16,8 +16,10 @@ def listar_cobros(
     cant_por_pag=6,
 ):
     """
-    Funcion que lista todos los cobros del sistema. Recibe como parámetros filtros que ingresa el usuario
-    y devuelve los cobros ordenados por id o por fecha de pago, en orden ascendente o descendente según los parámetros recibidos.
+    Funcion que lista todos los cobros del sistema.
+    Recibe como parámetros filtros que ingresa el usuario
+    y devuelve los cobros ordenados por id o por fecha de pago,
+    en orden ascendente o descendente según los parámetros recibidos.
     """
     query = Cobro.query.join(Miembro).filter(
         Miembro.nombre.ilike(f"%{nombre_filtro}%"),
@@ -33,9 +35,9 @@ def listar_cobros(
     if antes_de_filtro != "":
         query = query.filter(Cobro.fecha_pago <= antes_de_filtro)
 
-    #se cuentan los resultados totales antes de paginar
+    # se cuentan los resultados totales antes de paginar
     cant_resultados = query.count()
-    
+
     if orden == "asc":
         query = query.order_by(getattr(Cobro, ordenar_por).asc())
     else:
@@ -48,9 +50,14 @@ def listar_cobros(
     return cobros_ordenados, cant_resultados
 
 
-# función que crea un cobro
 def crear_cobro(
-    fecha_pago, medio_de_pago, monto, observaciones, joa_id, recibio_el_dinero_id
+    fecha_pago,
+    medio_de_pago,
+    monto,
+    observaciones,
+    joa_id,
+    recibio_el_dinero_id,
+    tiene_deuda
 ):
     """
     Funcion que crea un cobro.
@@ -62,6 +69,7 @@ def crear_cobro(
         observaciones=observaciones,
         joa_id=joa_id,
         recibio_el_dinero_id=recibio_el_dinero_id,
+        tiene_deuda=tiene_deuda
     )
     db.session.add(cobro)
     db.session.commit()
@@ -71,7 +79,9 @@ def crear_cobro(
 
 def encontrar_cobro(id):
     """
-    Funcion que busca un cobro a partir de su id y lo retorna, o retorna 404 si es un id que no se corresponde con un registro en la tabla.
+    Funcion que busca un cobro a partir de su id y lo retorna,
+    o retorna 404 si es un id que no se corresponde
+    con un registro en la tabla.
     """
     return db.get_or_404(Cobro, id)
 
@@ -80,15 +90,6 @@ def guardar_cambios():
     """
     Funcion que guarda los cambios en la base de datos.
     """
-    db.session.commit()
-
-
-def marcar_deuda(joa_id, tiene_deuda):
-    """
-    Funcion que modifica la tabla de jinetes y amazonas para marcar si tiene deuda o no.
-    """
-    jya = db.get_or_404(JineteOAmazona, joa_id)
-    jya.tiene_deuda = tiene_deuda
     db.session.commit()
 
 
@@ -108,8 +109,10 @@ def cargar_miembro_activo_choices():
     """
     return [
         (miembro.id, miembro.nombre + " " + miembro.apellido)
-        for miembro in Miembro.query.filter(Miembro.activo.is_(True)).order_by("nombre")
+        for miembro in Miembro.query.filter(Miembro.activo.is_(True))
+                                    .order_by("nombre")
     ]
+
 
 def listar_medios_de_pago():
     """
@@ -117,13 +120,6 @@ def listar_medios_de_pago():
     """
     return MedioDePago.listar()
 
-def verificar_deuda_jinete(joa_id):
-    """
-    Función que retorna si el jinete/amazona tiene deuda.
-    """
-    jya = db.get_or_404(JineteOAmazona, joa_id)
-
-    return jya.tiene_deuda
 
 def eliminar_cobro(cobro_id):
     """
@@ -135,4 +131,3 @@ def eliminar_cobro(cobro_id):
     db.session.commit()
 
     return cobro
-
