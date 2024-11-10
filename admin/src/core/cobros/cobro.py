@@ -52,9 +52,9 @@ class Cobro(db.Model):
             "medio_de_pago": self.medio_de_pago,
             "monto": self.monto,
             "observaciones": self.observaciones,
-            "joa": self.joa.nombre if self.joa else None,
+            "joa": self.joa.nombre + " " + self.joa.apellido if self.joa else None,
             "recibio_el_dinero": (
-                self.recibio_el_dinero.nombre if self.recibio_el_dinero else None
+                self.recibio_el_dinero.nombre + " " + self.recibio_el_dinero.apellido if self.recibio_el_dinero else None
             ),
         }
 
