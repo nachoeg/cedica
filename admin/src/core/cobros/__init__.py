@@ -13,7 +13,7 @@ def listar_cobros(
     ordenar_por="id",
     orden="asc",
     pagina=1,
-    cant_por_pag=10,
+    cant_por_pag=6,
 ):
     """
     Funcion que lista todos los cobros del sistema. Recibe como parámetros filtros que ingresa el usuario
@@ -33,6 +33,9 @@ def listar_cobros(
     if antes_de_filtro != "":
         query = query.filter(Cobro.fecha_pago <= antes_de_filtro)
 
+    #se cuentan los resultados totales antes de paginar
+    cant_resultados = query.count()
+    
     if orden == "asc":
         query = query.order_by(getattr(Cobro, ordenar_por).asc())
     else:
@@ -42,7 +45,7 @@ def listar_cobros(
         page=pagina, per_page=cant_por_pag, error_out=False
     )
 
-    return cobros_ordenados
+    return cobros_ordenados, cant_resultados
 
 
 # función que crea un cobro

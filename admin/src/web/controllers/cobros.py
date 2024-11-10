@@ -35,7 +35,7 @@ def listar():
     despues_de_filtro = request.args.get("despues_de", "")
     antes_de_filtro = request.args.get("antes_de", "")
 
-    cobros = listar_cobros(
+    cobros, cant_resultados = listar_cobros(
         nombre_filtro,
         apellido_filtro,
         medio_pago_filtro,
@@ -49,7 +49,6 @@ def listar():
 
     medios_de_pago = listar_medios_de_pago()
 
-    cant_resultados = len(cobros.items)
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
