@@ -132,10 +132,9 @@ def miembro_crear():
             domicilio_id = nuevo_domicilio.id
 
         if alias:
-            usuario = usuario_por_alias(alias_usuario)
+            usuario = usuario_por_alias(alias)
             if usuario:
                 usuario_id = usuario.id
-                alias_usuario = usuario_id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
                 return redirect(url_for('miembro.miembro_crear'))
