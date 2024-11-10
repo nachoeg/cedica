@@ -75,3 +75,8 @@ def valor_en_opciones(opciones):
 #         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
 #     if not validacion:
 #         raise ValidationError("El mail debe contener '@' y '.'")
+
+def validar_digitos(form, field):
+    """Valida que el campo no contenga números."""
+    if any(char.isdigit() for char in field.data):
+        raise ValidationError("Este campo no puede contener números.")
