@@ -177,9 +177,6 @@ def miembro_editar(id: int):
     form.piso.data = miembro.domicilio.piso
     form.dpto.data = miembro.domicilio.dpto
     form.localidad.data = miembro.domicilio.localidad
-    if miembro.usuario != None:
-        form.alias.data = miembro.usuario.alias 
-    
     form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
     form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
     form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
@@ -212,20 +209,23 @@ def miembro_editar(id: int):
             nuevo_domicilio = crear_domicilio(calle=form.calle.data, numero=form.numero.data, piso=form.piso.data, dpto=form.dpto.data, localidad=form.localidad.data)
             miembro.domicilio_id = nuevo_domicilio.id
 
-        alias_usuario = form.alias.data
-        if alias_usuario:
-            usuario = usuario_por_alias(alias_usuario)
+        alias = form.alias.data
+        if alias:
+            usuario = usuario_por_alias(alias)
             if usuario:
-                usuario_id = usuario.id
-                alias_usuario = usuario_id
+                miembro.usuario_id = usuario.id
             else:
-                flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
-                return render_template("pages/miembros/crear.html", form=form)
-        else:
-            miembro.usuario_id = None      
+                flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
+                return render_template("pages/miembros/crear.html", form=form)      
+        elif alias == "":
+            miembro.usuario_id = None
 
         guardar_cambios()
+        flash("Miembro editado con éxito.", 'success')
         return redirect(url_for("miembro.miembro_listar")) 
+
+    if miembro.usuario != None:
+        form.alias.data = miembro.usuario.alias 
 
     return render_template("pages/miembros/crear.html", form=form, titulo="Editar miembro")    
 

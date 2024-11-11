@@ -53,7 +53,6 @@ class InfoMiembroForm(FlaskForm):
     calle = StringField('Calle*', validators=[
         DataRequired('Ingrese la calle.'),
         Length(max=100, message="No puede tener más de %(max)d caracteres."),
-        validar_digitos
     ])
     numero = IntegerField('Número*', validators=[
         DataRequired('Ingrese el número.'),
