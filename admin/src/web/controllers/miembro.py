@@ -141,7 +141,7 @@ def miembro_crear():
                     return render_template("pages/miembros/crear.html", form=form)
                 else:
                     # Si el usuario existe pero no está asignado a ningún miembro
-                    miembro.usuario_id = usuario.id
+                    usuario_id = usuario.id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
                 return render_template("pages/miembros/crear.html", form=form)
