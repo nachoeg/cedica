@@ -1,3 +1,6 @@
+from urllib.parse import urlparse
+
+
 def booleano_a_palabra(bool):
     """Devuelve 'No' si el valor pasado por parámetro es False,
     'Sí' si es verdadero.
@@ -26,3 +29,13 @@ def fechahora(fechahora):
     """
     return fechahora.strftime('%d-%m-%Y %H:%M')
 
+
+def validar_url(url: str) -> str:
+    """
+    Ajusta la URL para asegurarse de que tenga un esquema válido.
+    """
+    parsed_url = urlparse(url)
+    if not parsed_url.scheme:
+        # Agregar http:// por defecto si no tiene esquema
+        url = "http://" + url
+    return url

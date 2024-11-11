@@ -168,8 +168,9 @@ def before_delete(mapper, connection, target):
     """
     Elimina el archivo asociado en MinIO antes de eliminar el documento de la base de datos.
     """
-    client = current_app.storage.client
-    client.remove_object("grupo17", target.url)
+    if not target.archivo_externo:
+        client = current_app.storage.client
+        client.remove_object("grupo17", target.url)
 
 
 @event.listens_for(Ecuestre, "before_delete")
@@ -180,4 +181,5 @@ def before_delete_ecuestre(mapper, connection, target):
     client = current_app.storage.client
     documentos = Documento.query.filter_by(ecuestre_id=target.id).all()
     for documento in documentos:
-        client.remove_object("grupo17", documento.url)
+        if not documento.archivo_externo:
+            client.remove_object("grupo17", documento.url)
