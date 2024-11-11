@@ -134,12 +134,17 @@ def miembro_crear():
             domicilio_id = nuevo_domicilio.id
 
         if alias:
-            usuario = usuario_por_alias(alias)
+            usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
             if usuario:
-                usuario_id = usuario.id
+                if usuario.miembro:  # Si el usuario ya está asignado a un miembro
+                    flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
+                    return render_template("pages/miembros/crear.html", form=form)
+                else:
+                    # Si el usuario existe pero no está asignado a ningún miembro
+                    miembro.usuario_id = usuario.id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
-                return redirect(url_for('miembro.miembro_crear'))
+                return render_template("pages/miembros/crear.html", form=form)
         else:
             usuario_id = None
 
@@ -213,12 +218,17 @@ def miembro_editar(id: int):
 
         alias = form.alias.data
         if alias:
-            usuario = usuario_por_alias(alias)
+            usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
             if usuario:
-                miembro.usuario_id = usuario.id
+                if usuario.miembro:  # Si el usuario ya está asignado a un miembro
+                    flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
+                    return render_template("pages/miembros/crear.html", form=form)
+                else:
+                    # Si el usuario existe pero no está asignado a ningún miembro
+                    miembro.usuario_id = usuario.id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
-                return render_template("pages/miembros/crear.html", form=form)      
+                return render_template("pages/miembros/crear.html", form=form)  
         elif alias == "":
             miembro.usuario_id = None
 
