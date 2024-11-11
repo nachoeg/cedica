@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError
 from wtforms.fields import (
     BooleanField,
     SelectField,
@@ -10,6 +10,19 @@ from wtforms.fields import (
 )
 from src.core.forms.validaciones import FechaNoFutura
 from datetime import date
+
+
+def posterior_a_fecha_de_nacimiento(form, field):
+    """
+    Valida que la fecha de ingreso sea posterior o igual a la fecha de nacimiento.
+    """
+    fecha_nacimiento = form.fecha_nacimiento.data
+    fecha_ingreso = field.data
+
+    if fecha_nacimiento > fecha_ingreso:
+        raise ValidationError(
+            "La fecha de ingreso debe ser posterior o igual a la fecha de nacimiento."
+        )
 
 
 class EcuestreForm(FlaskForm):
@@ -38,7 +51,10 @@ class EcuestreForm(FlaskForm):
     es_compra = BooleanField("¿Es compra?")
     fecha_ingreso = DateField(
         "Fecha de ingreso",
-        validators=[DataRequired("Ingrese una fecha de ingreso")],
+        validators=[
+            DataRequired("Ingrese una fecha de ingreso"),
+            posterior_a_fecha_de_nacimiento,
+        ],
         default=date.today(),
     )
     sede = SelectField(

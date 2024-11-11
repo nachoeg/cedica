@@ -6,6 +6,7 @@ from sqlalchemy.types import Enum
 from sqlalchemy import event
 from flask import current_app
 
+
 class TipoArchivo(enum.Enum):
     entrevista = "Entrevista"
     evaluacion = "Evaluacion"
@@ -46,12 +47,13 @@ class Archivo_JYA(db.Model):
         return f"<Archivo #{self.id} titulo: {self.titulo} tipo de archivo_ {self.tipo_archivo}"
 
 
-
 @event.listens_for(Archivo_JYA, "before_delete")
 def antes_de_eliminar(mapper, connection, target):
     """Eliminar archivo asociado en MinIO antes de eliminar el documento de la base de datos."""
-    client = current_app.storage.client
-    client.remove_object("grupo17", target.url)
+    if not target.externo:
+        client = current_app.storage.client
+        client.remove_object("grupo17", target.url)
+
 
 @event.listens_for(JineteOAmazona, "before_delete")
 def antes_de_eliminar_jinete_y_amazona(mapper, connection, target):
@@ -59,4 +61,5 @@ def antes_de_eliminar_jinete_y_amazona(mapper, connection, target):
     client = current_app.storage.client
     documentos = Archivo_JYA.query.filter_by(jya_id=target.id).all()
     for documento in documentos:
-        client.remove_object("grupo17", documento.url)
+        if not documento.externo:
+            client.remove_object("grupo17", documento.url)

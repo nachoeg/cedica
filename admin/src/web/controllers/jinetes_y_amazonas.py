@@ -38,6 +38,8 @@ from core.forms.forms_jinetes import (
 import ulid
 from io import BytesIO
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
+
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 
@@ -55,7 +57,7 @@ def listar():
     """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pag = int(request.args.get("por_pag", 10))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
@@ -403,7 +405,7 @@ def subir_enlace(id: int):
         if form.validate_on_submit():
             titulo = form.titulo.data
             jya_id = id
-            url = form.url.data
+            url = validar_url(form.url.data)
             tipo_archivo = form.tipo_de_documento_id.data
             cargar_archivo(jya_id, titulo, tipo_archivo, url, archivo_externo=True)
 
@@ -432,7 +434,7 @@ def ver_archivos(id: int):
     jya = encontrar_jya(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")

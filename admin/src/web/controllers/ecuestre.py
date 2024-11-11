@@ -34,6 +34,7 @@ from os import fstat
 from io import BytesIO
 import ulid
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
 
 bp = Blueprint("ecuestre", __name__, url_prefix="/ecuestre")
 
@@ -48,7 +49,7 @@ def listar():
     """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_jya_filtro = request.args.get("tipo_jya", "")
@@ -224,7 +225,7 @@ def documentos(id: int):
     ecuestre = obtener_ecuestre(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")
@@ -325,7 +326,7 @@ def subir_enlace(id: int):
             nombre = form.nombre.data
             tipo = form.tipo_de_documento_id.data
             ecuestre_id = id
-            url = form.url.data
+            url = validar_url(form.url.data)
 
             crear_documento(nombre, tipo, url, ecuestre_id, archivo_externo=True)
 
@@ -412,7 +413,7 @@ def editar_documento(id: int, documento_id: int):
             documento.nombre = form.nombre.data
             documento.tipo_de_documento_id = form.tipo_de_documento_id.data
             if documento.archivo_externo:
-                documento.url = form.url.data
+                documento.url = validar_url(form.url.data)
             guardar_cambios()
             flash("Documento actualizado con exito", "exito")
             return redirect(url_for("ecuestre.documentos", id=id))
