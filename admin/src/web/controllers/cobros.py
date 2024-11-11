@@ -14,6 +14,7 @@ from core.forms.cobro_forms import CobroForm
 from src.web.handlers.decoradores import (
     sesion_iniciada_requerida,
     chequear_permiso)
+from src.web.handlers.funciones_auxiliares import convertir_a_entero
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
@@ -27,7 +28,7 @@ def listar():
     """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pag = int(request.args.get("por_pag", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")

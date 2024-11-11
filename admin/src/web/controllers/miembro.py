@@ -31,7 +31,7 @@ from src.core.usuarios import usuario_por_alias
 from os import fstat
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 import ulid
-from src.web.handlers.funciones_auxiliares import validar_url
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
 
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
@@ -46,7 +46,7 @@ def miembro_listar():
     asc y desc por nombre, apellido y fecha de creacion"""
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
@@ -257,7 +257,7 @@ def miembro_documentos(id: int):
     miembro = miembro_por_id(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")

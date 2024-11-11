@@ -39,3 +39,12 @@ def validar_url(url: str) -> str:
         # Agregar http:// por defecto si no tiene esquema
         url = "http://" + url
     return url
+
+def convertir_a_entero(valor, valor_predeterminado=1):
+    """
+    Intenta convertir el valor a un entero. Si falla, devuelve el valor predeterminado.
+    """
+    try:
+        return int(valor)
+    except (ValueError, TypeError):
+        return valor_predeterminado

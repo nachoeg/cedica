@@ -10,6 +10,7 @@ from src.core.pago import (
     eliminar_pago)
 from src.core.miembro import obtener_miembro_dni, obtener_miembro
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.funciones_auxiliares import convertir_a_entero
 
 bp = Blueprint('pago', __name__, url_prefix='/pagos')
 
@@ -21,7 +22,7 @@ def pago_listar():
     ascendente y descendente por diversos campos"""
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "fecha_pago")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     search_fecha_inicio = request.args.get("fecha_inicio", "")
     search_fecha_fin = request.args.get("fecha_fin", "")
