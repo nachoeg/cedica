@@ -31,6 +31,7 @@
 
     <div class="text-red-600">
         {{ form.monto.label }}
+        <p class="text-gray-600 text-xs italic"> (en ARS$) </p>
         {{ form.monto }}
         {% for error in form.monto.errors %}
         <span class="text-red-600">{{ error }}</span>

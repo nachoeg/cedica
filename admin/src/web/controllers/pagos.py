@@ -100,10 +100,12 @@ def pago_mostrar(id):
     pago = obtener_pago(id)
     if pago.miembro_id:
         miembro = obtener_miembro(pago.miembro_id)
-        beneficiario= miembro.dni
+        beneficiario = miembro.dni
+        nombre = miembro.nombre + " " + miembro.apellido
     else:
         beneficiario = ''
-    return render_template('pages/pagos/mostrar.html', pago=pago, beneficiario=beneficiario)
+        nombre = ''
+    return render_template('pages/pagos/mostrar.html', pago=pago, beneficiario=beneficiario, nombre=nombre)
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 @chequear_permiso("pago_eliminar")

@@ -17,9 +17,13 @@ class PagoForm(FlaskForm):
         if tipo_pago.nombre == 'Honorario':
             if (dni.data is None or dni.data == ''):
                 raise ValidationError('El campo DNI es obligatorio para pagos de tipo Honorario.')
+        if not dni.data.isdigit():
+            raise ValidationError("El DNI solo puede contener números.")
+        if len(dni.data) > 9:
+            raise ValidationError("El DNI no puede tener más de 9 dígitos.")
         elif tipo_pago.nombre != 'Honorario':
             dni.data = None
 
-    def validate_fechaDePago(self, fechaDePago):
-        if fechaDePago.data and fechaDePago.data > date.today():
+    def validate_fechaDePago(self, fecha_pago):
+        if fecha_pago.data and fecha_pago.data > date.today():
             raise ValidationError('La fecha de pago no puede ser posterior a hoy.')
