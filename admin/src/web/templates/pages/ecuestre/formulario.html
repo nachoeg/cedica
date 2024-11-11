@@ -1,9 +1,14 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
 
 {% block title %}{{titulo}}{% endblock %}
 
 {% block main %}
 
+{{ navbar_secundaria({
+'volver': url_for('ecuestre.listar')
+})}}
 
 <form novalidate method="POST" class="formulario">
   {{ form.csrf_token }}

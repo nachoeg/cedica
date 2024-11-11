@@ -1,15 +1,17 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
-{% from "components/pilled_nav.html" import pilled_nav %}
 
 {% block title %}J&A {{jya.id}}{% endblock %}
 
 {% block main %}
 
-{{ pilled_nav([
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.listar'),
+'tabs': [
 {'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
 {'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
-])}}
-
+]})}}
 <div class="contenedor">
   <div class="contenedor-header">
     <h1>Detalles de J&A</h1>
@@ -66,12 +68,8 @@
     <p><strong>Telefono de escuela:</strong> {{ jya.telefono_escuela }}</p>
     <p><strong>Grado al que asiste:</strong> {{ jya.grado_escuela }}</p>
     <p><strong>Observaciones:</strong> {{ jya.observaciones_escuela }}</p>
+    <p><strong>Profesionales a cargo:</strong> {{ jya.profesionales_a_cargo }}</p>
     <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_esc', id=jya.id)}}">Editar</a>
-
-    <hr>
-
-    <h2>Profesionales a cargo</h2>
-    <p>{{ jya.profesionales_a_cargo }}</p>
 
     <hr>
 

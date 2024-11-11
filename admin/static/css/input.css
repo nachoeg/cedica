@@ -103,7 +103,11 @@
 .contenedor-footer,
 .contenedor-header,
 .formulario-header {
-  @apply flex items-center justify-between py-3 px-4 gap-3 font-semibold border-gray-200 dark:border-neutral-700;
+  @apply flex items-center gap-2 py-3 px-4 font-semibold border-gray-200 dark:border-neutral-700;
+}
+
+.contenedor-footer {
+  @apply gap-3;
 }
 
 .contenedor-header,

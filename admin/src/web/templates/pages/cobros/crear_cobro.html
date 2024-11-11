@@ -1,10 +1,22 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
 {% extends "layouts/base.html" %}
-{% block title %} Nuevo cobro {% endblock %}
+{% block title %} {{titulo}} {% endblock %}
 {% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('cobros.listar'),
+})}}
+
 <form method="post" novalidate class="formulario">
     {{ form.csrf_token }}
+    <div class="formulario-header">
+        <h1>{{titulo}}</h1>
+    </div>
+    <div class="formulario-body">
+    <p class="text-gray-600 text-xs italic">Los campos con * son obligatorios </p>
+
     <div>{{ form.joa.label }} {{ form.joa }}</div>
-    <div>{{ form.recibio_el_dinero.label }}: {{ form.recibio_el_dinero }}</div>
+    <div>{{ form.recibio_el_dinero.label }} {{ form.recibio_el_dinero }}</div>
     <div>
         {{ form.fecha_pago.label }}
         {{ form.fecha_pago }}
@@ -43,5 +55,15 @@
     <div>
         {{ form.submit() }}
     </div>
+    </div>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('[name="fecha_pago"]').setAttribute('max', today);
+
+    });
+</script>
+
 {% endblock %}

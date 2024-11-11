@@ -1,4 +1,4 @@
-from src.core.forms.validaciones import LimiteDeArchivo
+from src.core.forms.validaciones import LimiteDeArchivo, TipoDeArchivo
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -16,7 +16,14 @@ class SubirArchivoForm(FlaskForm):
     titulo = StringField(
         "Titulo", validators=[DataRequired("Ingrese el nombre del documento")]
     )
-    archivo = FileField("Archivo", validators=[DataRequired("Seleccione un archivo"), LimiteDeArchivo(tamanio_en_mb=100)])
+    archivo = FileField(
+        "Archivo",
+        validators=[
+            DataRequired("Seleccione un archivo"),
+            LimiteDeArchivo(tamanio_en_mb=100),
+            TipoDeArchivo(permitidos=["pdf", "doc", "xls", "jpeg"]),
+        ],
+    )
     tipo_de_documento_id = SelectField(
         "Tipo",
         choices=[

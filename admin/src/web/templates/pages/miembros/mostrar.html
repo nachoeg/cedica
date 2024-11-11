@@ -1,18 +1,22 @@
 {% extends "layouts/base.html" %}
-{% from "components/pilled_nav.html" import pilled_nav %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
 
 {% block title %} Listado de Miembros {% endblock %}
 
 {% block main %}
 
-{{ pilled_nav([
-    {'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
-    {'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
-])}}
+{{ navbar_secundaria({
+'volver': url_for('miembro.miembro_listar'),
+'tabs':[
+{'nombre': 'Información general', 'url': url_for('miembro.miembro_mostrar', id=miembro.id)},
+{'nombre': 'Documentos', 'url': url_for('miembro.miembro_documentos', id=miembro.id)}
+]})}}
 
 <div class="contenedor">
-    <h1 class="text-xl">Detalles de Miembro</h1>
-    
+    <div class="contenedor-header">
+        <h1>Detalles de Miembro</h1>
+    </div>
+    <div class="contenedor-body">
     <p><strong>Nombre:</strong> {{ miembro.nombre }}</p>
     <p><strong>Apellido:</strong> {{ miembro.apellido }}</p>
     <p><strong>DNI:</strong> {{ miembro.dni }}</p>
@@ -30,16 +34,17 @@
     <p><strong>Departamento:</strong> {{ miembro.domicilio.dpto }}</p>
     <p><strong>Localidad:</strong> {{ miembro.domicilio.localidad }}</p>
     <p><strong>Usuario:</strong> {{ miembro.usuario.alias }}</p>
-    
-    <div class="flex gap-3">
-        <a class="btn btn-secondary w-full" href="{{ url_for('miembro.miembro_listar')}}"> Volver </a>
+    </div>
+
+    <div class="contenedor-footer">
         {% if miembro.activo %}
         <a class="btn btn-secondary w-full" href="{{ url_for('miembro.miembro_editar', id=miembro.id) }}">Editar</a>
         {% endif %}
         <button class="btn btn-danger w-full" type="submit" onclick="
         if (confirm('¿Está seguro que desea activar/desactivar este miembro?')) {
             window.location.href = `/miembros/{{ miembro.id }}/cambiar_condicion`;
-        }">  {{ 'Desactivar' if miembro.activo else 'Activar' }} </button>
+        }"> {{ 'Desactivar' if miembro.activo else 'Activar' }} </button>
+    </div>
     </div>
 </div>
 {% endblock %}
