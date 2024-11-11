@@ -38,6 +38,8 @@ from core.forms.forms_jinetes import (
 import ulid
 from io import BytesIO
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.funciones_auxiliares import validar_url
+
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
 
@@ -403,7 +405,7 @@ def subir_enlace(id: int):
         if form.validate_on_submit():
             titulo = form.titulo.data
             jya_id = id
-            url = form.url.data
+            url = validar_url(form.url.data)
             tipo_archivo = form.tipo_de_documento_id.data
             cargar_archivo(jya_id, titulo, tipo_archivo, url, archivo_externo=True)
 
