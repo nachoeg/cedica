@@ -146,7 +146,7 @@ def editar_cobro(id: int):
         cobro.observaciones = form.observaciones.data
         cobro.joa_id = form.joa.data
         cobro.recibio_el_dinero_id = form.recibio_el_dinero.data
-        cobro.tiene_deuda = form.tiene_deuda
+        cobro.tiene_deuda = form.tiene_deuda.data
 
         guardar_cambios()
 
