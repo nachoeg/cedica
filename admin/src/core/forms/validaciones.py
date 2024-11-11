@@ -37,22 +37,30 @@ class Unico(object):
     sea único si se modificó.
     """
 
-    def __init__(self, model, field, message=None):
+    def __init__(self, model, field, ilike=False, message=None):
         self.model = model
         self.field = field
         if message is None:
             message = "Este valor ya existe"
+        self.ilike = ilike
         self.message = message
 
     def __call__(self, form, field):
         """Permite llamar a la clase como una función"""
         if field.object_data == field.data:
             return
-        check = (
-            db.session.execute(db.select(self.model).where(self.field == field.data))
-            .scalars()
-            .all()
-        )
+        if self.ilike:
+            check = (
+                db.session.execute(db.select(self.model).where(self.field.ilike(field.data)))
+                .scalars()
+                .all()
+            )
+        else:
+            check = (
+                db.session.execute(db.select(self.model).where(self.field == field.data))
+                .scalars()
+                .all()
+            )
         if check:
             raise ValidationError(self.message)
 
@@ -68,6 +76,11 @@ def valor_en_opciones(opciones):
             raise ValidationError(mensaje)
 
     return _valor_en_opciones
+
+
+def sin_espacios(form, field):
+    if " " in field.data:
+        raise ValidationError('No puede contener espacios.')
 
 
 # def validar_email(form, field):

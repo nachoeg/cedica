@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
 from wtforms.validators import (Email, InputRequired, Length)
-from core.forms.validaciones import Unico, valor_en_opciones
+from core.forms.validaciones import Unico, sin_espacios, valor_en_opciones
 from core.usuarios import get_roles
 from core.usuarios.usuario import Usuario
 
@@ -31,11 +31,12 @@ class UsuarioSinContraseñaForm(FlaskForm):
         InputRequired("Debe ingresar un email."),
         Length(max=100, message="No puedo tener más de %(max)d caracteres."),
         Email("El mail debe contener '@' y '.'"),
-        Unico(Usuario, Usuario.email, message="El mail ingresado ya existe."),
+        Unico(Usuario, Usuario.email, ilike=True, message="El mail ingresado ya existe."),
         ])
     alias = StringField("Alias", validators=[
         Length(max=100, message="No puedo tener más de %(max)d caracteres."),
-        Unico(Usuario, Usuario.alias, message="El alias ingresado ya existe."),
+        Unico(Usuario, Usuario.alias, ilike=True, message="El alias ingresado ya existe."),
+        sin_espacios,
         ])
     admin_sistema = BooleanField("¿Es admin general?", default=False)
     roles = SelectMultipleField("Roles", coerce=int)
@@ -61,6 +62,7 @@ class UsuarioForm(UsuarioSinContraseñaForm):
         "Contraseña",
         validators=[InputRequired("Debe ingresar una contraseña."),
                     Length(min=4, max=100, message="La contraseña debe \
-                           tener por lo menos %(min)d caracteres.")
+                           tener por lo menos %(min)d caracteres."),
+                    sin_espacios,
                     ]
         )
