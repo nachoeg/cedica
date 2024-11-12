@@ -1,8 +1,14 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
 
 {% block title %} {{titulo}} {% endblock %}
 
 {% block main %}
+
+{{ navbar_secundaria({
+    'volver': url_for('pago.pago_listar')
+})}}
 
 <form novalidate method="POST" class="formulario">
     {{ form.csrf_token }}
@@ -10,6 +16,7 @@
     <h1> {{titulo}} </h1>
     </div>
     
+    <div class="formulario-body">
     {{ form.hidden_tag() }}
     
     <p class="text-gray-600 text-xs italic">Los campos con * son obligatorios </p>
@@ -24,6 +31,7 @@
 
     <div class="text-red-600">
         {{ form.monto.label }}
+        <p class="text-gray-600 text-xs italic"> (en ARS$) </p>
         {{ form.monto }}
         {% for error in form.monto.errors %}
         <span class="text-red-600">{{ error }}</span>
@@ -54,10 +62,9 @@
         {% endfor %}
     </div>
 
-    <a class="btn btn-secondary w-full" href="{{ url_for('pago.pago_listar')}}"> Volver </a>
-
     <div>
         {{ form.submit() }}
+    </div>
     </div>
 </form>
 

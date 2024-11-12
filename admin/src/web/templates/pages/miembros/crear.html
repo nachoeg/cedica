@@ -1,14 +1,21 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
 
 {% block title %} {{titulo}} {% endblock %}
 
 {% block main %}
 
+{{ navbar_secundaria({
+    'volver': url_for('miembro.miembro_listar')
+})}}
+
 <form novalidate method="POST" class="formulario">
     {{ form.csrf_token }}
     <div class="formulario-header">
         <h1> {{titulo}} </h1>
     </div>    
+    <div class="formulario-body">
 
     {{ form.hidden_tag() }}
 
@@ -149,7 +156,8 @@
         <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
-
+    <p class="text-gray-600 text-xs italic"> Puede relacionar un miembro con un usuario del sistema ingresando el alias en el siguiente campo. </p>
+    <p class="text-gray-600 text-xs italic"> El alias debe corresponder a un usuario activo del sistema y que no este relacionado a otro miembro del equipo. </p>
     <div class="text-red-600">
         {{ form.alias.label }}
         {{ form.alias }}
@@ -158,10 +166,9 @@
         {% endfor %}
     </div>
 
-    <a class="btn btn-secondary w-full" href="{{ url_for('miembro.miembro_listar')}}"> Volver </a>
-
     <div>
         {{ form.submit() }}
+    </div>
     </div>
 </form>
 {% endblock %}

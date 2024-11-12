@@ -12,6 +12,9 @@ def listar_ecuestres(
     pagina=1,
     cant_por_pagina=10,
 ):
+    """
+    Retorna el listado paginado, filtrado y ordenado de los ecuestres.
+    """
     query = Ecuestre.query.join(TipoDeJyA).filter(
         Ecuestre.nombre.ilike(f"%{nombre_filtro}%"),
         TipoDeJyA.tipo.ilike(f"%{tipo_jya_filtro}%"),
@@ -37,6 +40,9 @@ def listar_documentos(
     pagina=1,
     cant_por_pagina=10,
 ):
+    """
+    Retorna el listado paginado, filtrado y ordenado de los documentos de un ecuestre.
+    """
     query = Documento.query.join(TipoDeDocumento).filter(
         Documento.ecuestre_id == ecuestre_id,
         Documento.nombre.ilike(f"%{nombre_filtro}%"),
@@ -55,16 +61,25 @@ def listar_documentos(
 
 
 def listar_tipos_de_jya():
+    """
+    Retorna el listado de los tipos de jinetes y amazonas.
+    """
     tipos_de_jya = TipoDeJyA.query.all()
     return tipos_de_jya
 
 
 def listar_tipos_de_documentos():
+    """
+    Retorna el listado de los tipos de documentos de ecuestres.
+    """
     tipos_de_documentos = TipoDeDocumento.query.all()
     return tipos_de_documentos
 
 
 def listar_entrenadores():
+    """
+    Retorna el listado de los miembros que son entrenadores de caballos.
+    """
     entrenadores = (
         Miembro.query.join(PuestoLaboral, Miembro.puesto_laboral_id == PuestoLaboral.id)
         .filter(PuestoLaboral.nombre == "Entrenador de Caballos")
@@ -74,6 +89,9 @@ def listar_entrenadores():
 
 
 def listar_conductores():
+    """
+    Retorna el listado de los miembros que son conductores de caballos.
+    """
     conductores = (
         Miembro.query.join(PuestoLaboral)
         .filter(PuestoLaboral.nombre == "Conductor")
@@ -95,6 +113,9 @@ def crear_ecuestre(
     conductores,
     entrenadores,
 ):
+    """
+    Crea un objeto de tipo Ecuestre con los datos que recibe por parámetro y lo devuelve.
+    """
     ecuestre = Ecuestre(
         nombre=nombre,
         fecha_nacimiento=fecha_nacimiento,
@@ -114,6 +135,9 @@ def crear_ecuestre(
 
 
 def crear_tipo_de_jya(**kwargs):
+    """
+    Crea un objeto de tipo TipoDeJyA con los datos que recibe por parámetro y lo devuelve.
+    """
     tipo_de_jya = TipoDeJyA(**kwargs)
     db.session.add(tipo_de_jya)
     db.session.commit()
@@ -121,6 +145,9 @@ def crear_tipo_de_jya(**kwargs):
 
 
 def crear_tipo_de_documento(**kwargs):
+    """
+    Crea un objeto de tipo TipoDeDocumento con los datos que recibe por parámetro y lo devuelve.
+    """
     tipo_de_documento = TipoDeDocumento(**kwargs)
     db.session.add(tipo_de_documento)
     db.session.commit()
@@ -128,6 +155,9 @@ def crear_tipo_de_documento(**kwargs):
 
 
 def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id, archivo_externo):
+    """
+    Crea un objeto de tipo Documento con los datos que recibe por parámetro y lo devuelve.
+    """
     documento = Documento(
         nombre=nombre,
         fecha=datetime.now(),
@@ -142,6 +172,9 @@ def crear_documento(nombre, tipo_de_documento_id, url, ecuestre_id, archivo_exte
 
 
 def eliminar_ecuestre(id):
+    """
+    Funcion que, dado un id, elimina el ecuestre con dicho id.
+    """
     ecuestre = Ecuestre.query.get_or_404(id)
     db.session.delete(ecuestre)
     db.session.commit()
@@ -149,6 +182,9 @@ def eliminar_ecuestre(id):
 
 
 def eliminar_tipo_de_jya(tipo_de_jya_id):
+    """
+    Funcion que, dado un id, elimina el tipo de jinete o amazona con dicho id.
+    """
     tipo_de_jya = TipoDeJyA.query.get(tipo_de_jya_id)
     db.session.delete(tipo_de_jya)
     db.session.commit()
@@ -156,6 +192,9 @@ def eliminar_tipo_de_jya(tipo_de_jya_id):
 
 
 def eliminar_documento_ecuestre(documento_id):
+    """
+    Funcion que, dado un id, elimina el documento de ecuestre con dicho id.
+    """
     documento = Documento.query.get(documento_id)
     db.session.delete(documento)
     db.session.commit()
@@ -163,31 +202,49 @@ def eliminar_documento_ecuestre(documento_id):
 
 
 def obtener_ecuestre(ecuestre_id):
+    """
+    Funcion que busca y retorna un ecuestre por su id.
+    """
     ecuestre = Ecuestre.query.get(ecuestre_id)
     return ecuestre
 
 
 def obtener_tipo_de_jya(tipo_de_jya_id):
+    """
+    Funcion que busca y retorna un tipo de jinete o amazona por su id.
+    """
     tipo_de_jya = TipoDeJyA.query.get(tipo_de_jya_id)
     return tipo_de_jya
 
 
 def obtener_documento(documento_id):
+    """
+    Funcion que busca y retorna un documento de ecuestre por su id.
+    """
     documento = Documento.query.get(documento_id)
     return documento
 
 
 def asignar_conductor(ecuestre, conductor):
+    """
+    Agrega un conductor al ecuestre pasado por parámetro.
+    """
     ecuestre.conductores.append(conductor)
     db.session.commit()
     return ecuestre
 
 
 def asignar_entrenador(ecuestre, entrenador):
+    """
+    Agrega un entrenador al ecuestre pasado por parámetro.
+    """
     ecuestre.entrenadores.append(entrenador)
     db.session.commit()
     return ecuestre
 
 
 def guardar_cambios():
+    """
+    Funcion que guarda los cambios en la base de datos.
+    """
     db.session.commit()

@@ -26,8 +26,10 @@ class Pago(db.Model):
     def to_dict(self):
         return {
             'fecha_pago': self.fecha_pago.strftime('%d-%m-%Y') if self.fecha_pago else None,
-            'tipo_pago_nombre': self.tipo_pago.nombre if self.tipo_pago else None,
-            'monto': self.monto,
+            'tipo_pago': self.tipo_pago.nombre if self.tipo_pago else None,
+            'monto': "$" + str(self.monto),
             'descripcion': self.descripcion,  
             'beneficiario': self.miembro.dni if self.miembro and self.miembro.dni else '',
+            'nombre': self.miembro.nombre if self.miembro and self.miembro.nombre else '',
+            'apellido': self.miembro.apellido if self.miembro and self.miembro.apellido else '',
         }

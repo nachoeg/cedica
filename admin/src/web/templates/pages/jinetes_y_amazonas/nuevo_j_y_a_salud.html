@@ -1,38 +1,47 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
 {% extends "layouts/base.html" %}
-{% block title %} Nuevo jinete/amazona {% endblock %}
+{% block title %} {{titulo}} {% endblock %}
 {% block main %}
-    <form method="post" novalidate>
+    {{ navbar_secundaria({
+    'volver': url_for('jinetes_y_amazonas.listar'),
+    })}}
+    <form method="post" class="formulario" novalidate>
         {{ form.csrf_token }}
-        <div>
-            {{ form.certificado_discapacidad.label }}
-            {{ form.certificado_discapacidad }}<br>
-            {% for error in form.certificado_discapacidad.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
+        <div class="formulario-header">
+            <h1> {{titulo}} </h1>
         </div>
-        <div>
-            {{ form.diagnostico.label }}
-            {{ form.diagnostico }}<br>
-            {% for error in form.diagnostico.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.diagnostico_otro.label }}
-            {{ form.diagnostico_otro }}<br>
-            {% for error in form.diagnostico_otro.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.tipo_discapacidad.label }}
-            {{ form.tipo_discapacidad }}<br>
-            {% for error in form.tipo_discapacidad.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.submit() }}
+        <div class="formulario-body">
+            <div>
+                {{ form.certificado_discapacidad.label }}
+                {{ form.certificado_discapacidad }}<br>
+                {% for error in form.certificado_discapacidad.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.diagnostico.label }}
+                {{ form.diagnostico }}<br>
+                {% for error in form.diagnostico.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.diagnostico_otro.label }}
+                {{ form.diagnostico_otro }}<br>
+                {% for error in form.diagnostico_otro.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.tipo_discapacidad.label }}
+                {{ form.tipo_discapacidad }}<br>
+                {% for error in form.tipo_discapacidad.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
         </div>
     </form>
 {% endblock %}

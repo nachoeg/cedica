@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, files_icon, edit_icon, ban_icon, circle_check_icon %}
 
 {% block title %} Listado de Miembros {% endblock %}
 
@@ -17,10 +18,11 @@
     {'id': 'fecha_creacion', 'nombre': 'Fecha de registro', 'ordenar': True}
 ],
 'acciones': [
-    {'nombre': 'Ver', 'funcion': 'verMiembro'},
-    {'nombre': 'Editar', 'funcion': 'editarMiembro', 'condicion': ['activo', True]},
-    {'nombre': 'Desactivar', 'funcion': 'cambiarCondicion', 'condicion': ['activo', True]},
-    {'nombre': 'Activar', 'funcion': 'cambiarCondicion', 'condicion': ['activo', False]},
+    {'nombre': 'Ver', 'funcion': 'verMiembro', 'icono': open_icon},
+    {'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
+    {'nombre': 'Editar', 'funcion': 'editarMiembro', 'condiciones': [{'fila': 'activo', 'valor': True}], 'icono': edit_icon},
+    {'nombre': 'Desactivar', 'funcion': 'cambiarCondicion', 'condiciones': [{'fila': 'activo', 'valor': True}], 'icono': ban_icon},
+    {'nombre': 'Activar', 'funcion': 'cambiarCondicion', 'condiciones': [{'fila': 'activo', 'valor': False}], 'icono': circle_check_icon},
 ],
 'filtros': [
     {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro},
@@ -53,6 +55,10 @@
 
     function editarMiembro(id) {
         window.location.href = `/miembros/${id}/editar`;
+    }
+
+    function verDocumentos(id) {
+        window.location.href = `/miembros/${id}/documentos`;
     }
 </script>
 {% endblock %}

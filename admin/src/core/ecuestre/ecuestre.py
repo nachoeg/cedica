@@ -1,9 +1,14 @@
 from src.core.database import db
 from sqlalchemy import event
 from flask import current_app
+from src.web.handlers.funciones_auxiliares import fechahora_a_fecha
 
 
 class TipoDeJyA(db.Model):
+    """
+    Modelo correspondiente a los tipos de jinetes y amazonas.
+    """
+
     __tablename__ = "tipos_de_jya"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -14,6 +19,10 @@ class TipoDeJyA(db.Model):
 
 
 class TipoDeDocumento(db.Model):
+    """
+    Modelo correspondiente a los tipos de documentos de ecuestres.
+    """
+
     __tablename__ = "tipos_de_documento_ecuestre"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +33,10 @@ class TipoDeDocumento(db.Model):
 
 
 class Documento(db.Model):
+    """
+    Modelo correspondiente a los documentos de ecuestres.
+    """
+
     __tablename__ = "documentos_ecuestre"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -56,6 +69,10 @@ class Documento(db.Model):
 
 
 class Ecuestre(db.Model):
+    """
+    Modelo correspondiente a los ecuestres.
+    """
+
     __tablename__ = "ecuestres"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -102,12 +119,12 @@ class Ecuestre(db.Model):
         return {
             "id": self.id,
             "nombre": self.nombre,
-            "fecha_nacimiento": self.fecha_nacimiento,
+            "fecha_nacimiento": fechahora_a_fecha(self.fecha_nacimiento),
             "sexo": self.sexo,
             "raza": self.raza,
             "pelaje": self.pelaje,
             "es_compra": "Compra" if self.es_compra else "Donación",
-            "fecha_ingreso": self.fecha_ingreso,
+            "fecha_ingreso": fechahora_a_fecha(self.fecha_ingreso),
             "sede": self.sede,
             "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
             "entrenadores": " / ".join(
@@ -147,17 +164,23 @@ conductores_ecuestre = db.Table(
 )
 
 
-# Eliminar archivo asociado en MinIO antes de eliminar el documento de la base de datos
 @event.listens_for(Documento, "before_delete")
 def before_delete(mapper, connection, target):
-    client = current_app.storage.client
-    client.remove_object("grupo17", target.url)
+    """
+    Elimina el archivo asociado en MinIO antes de eliminar el documento de la base de datos.
+    """
+    if not target.archivo_externo:
+        client = current_app.storage.client
+        client.remove_object("grupo17", target.url)
 
 
-# Eliminar archivos asociados en MinIO antes de eliminar el ecuestre de la base de datos
 @event.listens_for(Ecuestre, "before_delete")
 def before_delete_ecuestre(mapper, connection, target):
+    """
+    Elimina los archivos asociados en MinIO antes de eliminar el ecuestre de la base de datos.
+    """
     client = current_app.storage.client
     documentos = Documento.query.filter_by(ecuestre_id=target.id).all()
     for documento in documentos:
-        client.remove_object("grupo17", documento.url)
+        if not documento.archivo_externo:
+            client.remove_object("grupo17", documento.url)

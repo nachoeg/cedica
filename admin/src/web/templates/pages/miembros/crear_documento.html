@@ -6,9 +6,8 @@
 
 {% block main %}
 
-
 {{ navbar_secundaria({
-'volver': url_for('jinetes_y_amazonas.ver_archivos', id=jya),
+'volver': url_for('miembro.miembro_documentos', id=miembro.id)
 })}}
 
 <form novalidate method="POST" class="formulario" enctype="multipart/form-data">
@@ -18,8 +17,8 @@
   </div>
   <div class="formulario-body">
     <div>
-      {{ form.titulo.label }} {{ form.titulo }}
-      {% for error in form.titulo.errors %}
+      {{ form.nombre.label }} {{ form.nombre }}
+      {% for error in form.nombre.errors %}
       <span class="text-red-600">{{ error }}</span>
       {% endfor %}
     </div>

@@ -1,16 +1,22 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
 {% extends "layouts/base.html" %}
 
 {% block title %}{{usuario.alias}} ({{usuario.email}}){% endblock %}
 
 {% block main %}
+  {{ navbar_secundaria({
+    'volver': url_for('usuarios.listado_usuarios')
+  })}}
   <div class="contenedor">
-
+    <div class="contenedor-header">
     {% if usuario.id == session.get('id') %}
-      <h1 class="text-xl">Mis datos</h1>
+      <h1>Mis datos</h1>
     {% else %}
-      <h1 class="text-xl">Datos del usuario</h1>
+      <h1>Datos del usuario</h1>
     {% endif %}
-
+    </div>
+    <div class="contenedor-body">
     <p><strong>Usuario activo:</strong> {{ booleano_a_palabra(usuario.activo) }}</p>
     <p><strong>Alias:</strong> {{ usuario.alias }}</p>
     <p><strong>Email:</strong> {{ usuario.email }}</p>
@@ -26,8 +32,8 @@
     </p>
     <p><strong>Fecha de registro:</strong> {{ fechahora_a_fecha(usuario.creacion) }}</p>
     <p><strong>Última actualización:</strong> {{ fechahora(usuario.ultima_actualizacion) }}</p>
-
-    <div class="flex gap-3">
+    </div>
+    <div class="contenedor-footer">
 
       {% if tiene_permiso(session, 'usuario_editar') or session.get('id') == usuario.id %}
       {% if session.get('id') == usuario.id %}

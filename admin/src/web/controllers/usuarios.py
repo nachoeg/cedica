@@ -8,7 +8,7 @@ from core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)
-from src.web.handlers.funciones_auxiliares import palabra_a_booleano
+from src.web.handlers.funciones_auxiliares import palabra_a_booleano, convertir_a_entero
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
@@ -22,7 +22,7 @@ def listado_usuarios():
     """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     email_filtro = request.args.get("email", "")
     activo_filtro = request.args.get("activo", "")

@@ -1,15 +1,19 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
-{% from "components/pilled_nav.html" import pilled_nav %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from "components/iconos.html" import external_link_icon, delete_icon, edit_icon, download_icon %}
+
 
 {% block title %}Archivos de J&A{% endblock %}
 
 {% block main %}
 
-{{ pilled_nav([
-  {'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
-  {'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
-  ])}}
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.listar'),
+'tabs': [
+{'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
+{'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
+]})}}
 
 {% set configuracion = {
 'encabezados': [
@@ -19,22 +23,23 @@
 {'id': 'tipo_archivo', 'nombre': 'Tipo de archivo'},
 ],
 'acciones': [
-{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['externo', True]},
-{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['externo', False]},
-{'nombre': 'Eliminar', 'funcion': 'eliminarDocumento'},
+{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'icono': external_link_icon, 'condiciones': [{'fila': 'externo', 'valor': True}]},
+{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'icono': download_icon, 'condiciones': [{'fila': 'externo', 'valor': False}]},
+{'nombre': 'Editar', 'funcion': 'editarDocumento', 'icono': edit_icon },
+{'nombre': 'Eliminar', 'funcion': 'eliminarDocumento', 'icono': delete_icon},
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
 {'id': 'tipo', 'nombre': 'Tipo', 'tipo': 'seleccion', 'opciones': tipos_documento, 'valor': tipo_filtro}
 ],
 'subir': {
-  'url': url_for('jinetes_y_amazonas.subir_archivo', id=jya.id),
-  'nombre': 'Subir'
-  },
-  'enlace': {
-  'url': url_for('jinetes_y_amazonas.subir_enlace', id=jya.id),
-  'nombre': 'Enlace'
-  },
+'url': url_for('jinetes_y_amazonas.subir_archivo', id=jya.id),
+'nombre': 'Subir'
+},
+'enlace': {
+'url': url_for('jinetes_y_amazonas.subir_enlace', id=jya.id),
+'nombre': 'Enlace'
+},
 }
 %}
 
@@ -47,8 +52,8 @@
 <script>
 
   function irAlDocumento(id) {
-      window.open(
-        `/jinetes_y_amazonas/documentos/${id}/ir`, '_blank').focus();
+    window.open(
+      `/jinetes_y_amazonas/documentos/${id}/ir`, '_blank').focus();
   }
 
   function descargarDocumento(id) {

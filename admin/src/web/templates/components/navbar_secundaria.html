@@ -1,0 +1,21 @@
+{% from "components/iconos.html" import chevron_left_icon %}
+
+{% macro navbar_secundaria(configuracion) %}
+<nav class="flex gap-2 w-full xs:w-fit transition mb-2 flex-wrap flex-col xs:flex-row">
+  {% if configuracion.volver %}
+  <a href="{{ configuracion.volver }}" class="btn btn-outline gap-0.5 px-2">
+    {{ chevron_left_icon('size-4') }} Volver
+  </a>
+  {% endif %}
+  {% if configuracion.tabs %}
+  {% for tab in configuracion.tabs %}
+  {% set active = tab.url == request.path %}
+  <a class="btn btn-outline gap-1 px-3
+  {% if active %} bg-white dark:bg-neutral-800 {% endif %}" href="{{ tab.url }}" {% if active %} aria-current="page" {%
+    endif %}>
+    {{ tab.nombre }}
+  </a>
+  {% endfor %}
+  {% endif %}
+</nav>
+{% endmacro %}
