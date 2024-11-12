@@ -1,10 +1,10 @@
-{% from "components/iconos.html" import arrow_left_icon %}
+{% from "components/iconos.html" import chevron_left_icon %}
 
 {% macro navbar_secundaria(configuracion) %}
-<nav class="flex gap-x-2 w-fit transition mb-2">
+<nav class="flex gap-2 w-full xs:w-fit transition mb-2 flex-wrap flex-col xs:flex-row">
   {% if configuracion.volver %}
-  <a href="{{ configuracion.volver }}" class="btn btn-outline gap-1 px-3">
-    {{ arrow_left_icon('size-4') }} Volver
+  <a href="{{ configuracion.volver }}" class="btn btn-outline gap-0.5 px-2">
+    {{ chevron_left_icon('size-4') }} Volver
   </a>
   {% endif %}
   {% if configuracion.tabs %}
