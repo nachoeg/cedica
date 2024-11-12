@@ -9,7 +9,7 @@ from wtforms.fields import (
     SelectMultipleField,
 )
 from src.core.forms.validaciones import FechaNoFutura, validar_digitos
-from datetime import date
+from datetime import datetime
 
 
 def posterior_a_fecha_de_nacimiento(form, field):
@@ -44,7 +44,7 @@ class EcuestreForm(FlaskForm):
             DataRequired("Ingrese una fecha de nacimiento"),
             FechaNoFutura(),
         ],
-        default=date.today(),
+        default=datetime.now,
     )
     sexo = SelectField("Sexo", choices=[("M", "Macho"), ("H", "Hembra")])
     raza = StringField(
@@ -70,7 +70,7 @@ class EcuestreForm(FlaskForm):
             DataRequired("Ingrese una fecha de ingreso"),
             posterior_a_fecha_de_nacimiento,
         ],
-        default=date.today(),
+        default=datetime.now,
     )
     sede = SelectField(
         "Sede", choices=[("CASJ", "CASJ"), ("HLP", "HLP"), ("otro", "Otro")]
