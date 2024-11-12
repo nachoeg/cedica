@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon %}
 
 {% block title %} Listado de Pagos {% endblock %}
 
@@ -15,9 +16,9 @@
     {'id': 'apellido', 'nombre': 'Beneficiario (Apellido)'},
 ],
 'acciones': [
-    {'nombre': 'Ver', 'funcion': 'verPago'},
-    {'nombre': 'Editar', 'funcion': 'editarPago'},
-    {'nombre': 'Borrar', 'funcion': 'borrarPago'},
+    {'nombre': 'Ver', 'funcion': 'verPago', 'icono': open_icon},
+    {'nombre': 'Editar', 'funcion': 'editarPago', 'icono': edit_icon},
+    {'nombre': 'Borrar', 'funcion': 'borrarPago', 'icono': delete_icon},
 ],
 'filtros': [
     {'id': 'fecha_inicio', 'nombre': 'Fecha Inicio', 'tipo': 'fecha', 'valor': fecha_inicio},

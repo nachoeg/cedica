@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from "components/iconos.html" import external_link_icon, delete_icon, edit_icon, download_icon %}
+
 
 {% block title %}Archivos de J&A{% endblock %}
 
@@ -21,9 +23,10 @@
 {'id': 'tipo_archivo', 'nombre': 'Tipo de archivo'},
 ],
 'acciones': [
-{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['externo', True]},
-{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['externo', False]},
-{'nombre': 'Eliminar', 'funcion': 'eliminarDocumento'},
+{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'icono': external_link_icon, 'condiciones': [{'fila': 'externo', 'valor': True}]},
+{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'icono': download_icon, 'condiciones': [{'fila': 'externo', 'valor': False}]},
+{'nombre': 'Editar', 'funcion': 'editarDocumento', 'icono': edit_icon },
+{'nombre': 'Eliminar', 'funcion': 'eliminarDocumento', 'icono': delete_icon},
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },

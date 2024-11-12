@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, files_icon %}
 
 {% block title %}Jinetes y Amazonas{% endblock %}
 
@@ -23,10 +24,10 @@
 {'id': 'profesionales_a_cargo', 'nombre': 'Profesionales a cargo'}
 ],
 'acciones': [
-{'nombre': 'Ver', 'funcion': 'verJYA'},
-{'nombre': 'Editar', 'funcion': 'editarJYA'},
-{'nombre': 'Borrar','funcion': 'borrarJYA'},
-{'nombre': 'Documentos', 'funcion': 'verDocumentos'}
+{'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
+{'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
+{'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon},
+{'nombre': 'Borrar','funcion': 'borrarJYA', 'icono': delete_icon},
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -63,7 +64,7 @@
     }
   }
 
-  function verDocumentos(id){
+  function verDocumentos(id) {
     window.location.href = `/jinetes_y_amazonas/${id}/archivos`;
   }
 
