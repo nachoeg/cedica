@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, ValidationError, Length
 from wtforms.fields import (
     BooleanField,
     SelectField,
@@ -8,7 +8,7 @@ from wtforms.fields import (
     SubmitField,
     SelectMultipleField,
 )
-from src.core.forms.validaciones import FechaNoFutura
+from src.core.forms.validaciones import FechaNoFutura, validar_digitos
 from datetime import date
 
 
@@ -31,7 +31,12 @@ class EcuestreForm(FlaskForm):
     """
 
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del ecuestre")]
+        "Nombre",
+        validators=[
+            DataRequired("Ingrese el nombre del ecuestre"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+            validar_digitos,
+        ],
     )
     fecha_nacimiento = DateField(
         "Fecha de nacimiento",
@@ -43,10 +48,20 @@ class EcuestreForm(FlaskForm):
     )
     sexo = SelectField("Sexo", choices=[("M", "Macho"), ("H", "Hembra")])
     raza = StringField(
-        "Raza", validators=[DataRequired("Ingrese la raza del ecuestre")]
+        "Raza",
+        validators=[
+            DataRequired("Ingrese la raza del ecuestre"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+            validar_digitos,
+        ],
     )
     pelaje = StringField(
-        "Pelaje", validators=[DataRequired("Ingrese el pelaje del ecuestre")]
+        "Pelaje",
+        validators=[
+            DataRequired("Ingrese el pelaje del ecuestre"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+            validar_digitos,
+        ],
     )
     es_compra = BooleanField("¿Es compra?")
     fecha_ingreso = DateField(
