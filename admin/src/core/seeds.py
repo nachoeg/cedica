@@ -150,7 +150,8 @@ def run():
         monto=400,
         observaciones="Nada para agregar",
         joa_id=j_y_a1.id,
-        recibio_el_dinero_id = miembro1.id
+        recibio_el_dinero_id=miembro1.id,
+        tiene_deuda=False
     )
     cobro2 = cobros.crear_cobro(
         medio_de_pago="credito",
@@ -158,7 +159,8 @@ def run():
         monto=500,
         observaciones="Queda al día",
         joa_id=j_y_a1.id,
-        recibio_el_dinero_id = miembro1.id
+        recibio_el_dinero_id=miembro1.id,
+        tiene_deuda=True
     )
     cobro3 = cobros.crear_cobro(
         medio_de_pago="debito",
@@ -166,7 +168,8 @@ def run():
         monto=600,
         observaciones="-",
         joa_id=j_y_a3.id,
-        recibio_el_dinero_id = miembro2.id
+        recibio_el_dinero_id=miembro2.id,
+        tiene_deuda=False
     )
 
     ecuestre1 = ecuestre.crear_ecuestre(

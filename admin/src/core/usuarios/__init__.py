@@ -105,7 +105,7 @@ def usuario_por_email(email):
 
 
 def usuario_por_alias(alias):
-    return Usuario.query.filter_by(alias=alias).first()
+    return Usuario.query.filter_by(alias=alias).filter(Usuario.activo.is_(True)).first()
 
 
 def usuario_por_email_y_contraseña(email, contraseña):

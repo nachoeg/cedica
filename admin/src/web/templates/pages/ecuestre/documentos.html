@@ -1,5 +1,6 @@
 {% from "components/tabla.html" import tabla %}
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from "components/iconos.html" import external_link_icon, edit_icon, delete_icon, download_icon %}
 
 {% extends "layouts/base.html" %}
 
@@ -18,16 +19,20 @@
 {% set configuracion = {
 
 'encabezados': [
-{'id': 'id', 'nombre': 'Id'},
 {'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
 {'id': 'fecha', 'nombre': 'Fecha', 'ordenar': True},
 {'id': 'tipo', 'nombre': 'Tipo'},
 ],
 'acciones': [
-{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'condicion': ['archivo_externo', True]},
-{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'condicion': ['archivo_externo', False]},
-{'nombre': 'Editar', 'funcion': 'editarDocumento'} if tiene_permiso(session, 'ecuestre_actualizar') else False,
-{'nombre': 'Eliminar','funcion': 'eliminarDocumento'} if tiene_permiso(session, 'ecuestre_eliminar') else False
+{'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'icono': external_link_icon, 'condiciones': [{'fila':
+'archivo_externo', 'valor': True}]},
+{'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'icono': download_icon, 'condiciones': [{'fila':
+'archivo_externo', 'valor': False}]},
+{'nombre': 'Editar', 'funcion': 'editarDocumento', 'icono': edit_icon } if tiene_permiso(session, 'ecuestre_actualizar')
+else
+False,
+{'nombre': 'Eliminar','funcion': 'eliminarDocumento', 'icono': delete_icon } if tiene_permiso(session,
+'ecuestre_eliminar') else False
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },

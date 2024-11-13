@@ -1,5 +1,7 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, ban_icon, circle_check_icon %}
+
 
 {% block title %}Usuarios{% endblock %}
 
@@ -15,10 +17,12 @@
       {'id': 'roles', 'nombre': 'Roles'},
     ],
     'acciones': [
-      {'nombre': 'Ver', 'funcion': 'verUsuario'},
-      {'nombre': 'Editar', 'funcion': 'editarUsuario'},
-      {'nombre': 'Bloquear','funcion': 'bloquearUsuario'},
-      {'nombre': 'Eliminar','funcion': 'eliminarUsuario'},
+      {'nombre': 'Ver', 'funcion': 'verUsuario', 'icono': open_icon},
+      {'nombre': 'Editar', 'funcion': 'editarPerfil', 'icono': edit_icon, 'condiciones': [{'fila': 'id', 'valor': session.get('id')}]},
+      {'nombre': 'Editar', 'funcion': 'editarUsuario', 'icono': edit_icon, 'condiciones': [{'fila': 'id', 'valor': session.get('id'), 'negar': True}]},
+      {'nombre': 'Bloquear','funcion': 'bloquearUsuario', 'icono': ban_icon, 'condiciones': [{'fila': 'admin_sistema', 'valor': False}, {'fila': 'activo', 'valor': True}]},
+      {'nombre': 'Activar','funcion': 'activarUsuario', 'icono': circle_check_icon, 'condiciones': [{'fila': 'admin_sistema', 'valor': False}, {'fila': 'activo', 'valor': False}]},
+      {'nombre': 'Eliminar','funcion': 'eliminarUsuario', 'icono': delete_icon, 'condiciones': [{'fila': 'admin_sistema', 'valor': False}]},
     ],
     'filtros': [
       {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
@@ -31,9 +35,6 @@
       'url': url_for('usuarios.registrar_usuario'),
       'nombre': 'Registrar usuario'
     },
-
-    'include': 'pages/usuarios/_acciones_usuario.html',
-
   }
 %}
 

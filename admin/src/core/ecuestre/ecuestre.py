@@ -1,6 +1,7 @@
 from src.core.database import db
 from sqlalchemy import event
 from flask import current_app
+from src.web.handlers.funciones_auxiliares import fechahora_a_fecha
 
 
 class TipoDeJyA(db.Model):
@@ -118,12 +119,12 @@ class Ecuestre(db.Model):
         return {
             "id": self.id,
             "nombre": self.nombre,
-            "fecha_nacimiento": self.fecha_nacimiento,
+            "fecha_nacimiento": fechahora_a_fecha(self.fecha_nacimiento),
             "sexo": self.sexo,
             "raza": self.raza,
             "pelaje": self.pelaje,
             "es_compra": "Compra" if self.es_compra else "Donación",
-            "fecha_ingreso": self.fecha_ingreso,
+            "fecha_ingreso": fechahora_a_fecha(self.fecha_ingreso),
             "sede": self.sede,
             "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
             "entrenadores": " / ".join(
@@ -168,8 +169,9 @@ def before_delete(mapper, connection, target):
     """
     Elimina el archivo asociado en MinIO antes de eliminar el documento de la base de datos.
     """
-    client = current_app.storage.client
-    client.remove_object("grupo17", target.url)
+    if not target.archivo_externo:
+        client = current_app.storage.client
+        client.remove_object("grupo17", target.url)
 
 
 @event.listens_for(Ecuestre, "before_delete")
@@ -180,4 +182,5 @@ def before_delete_ecuestre(mapper, connection, target):
     client = current_app.storage.client
     documentos = Documento.query.filter_by(ecuestre_id=target.id).all()
     for documento in documentos:
-        client.remove_object("grupo17", documento.url)
+        if not documento.archivo_externo:
+            client.remove_object("grupo17", documento.url)

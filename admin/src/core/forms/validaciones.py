@@ -3,6 +3,20 @@ from datetime import date
 from src.core.database import db
 
 
+def TipoDeArchivo(permitidos):
+    """
+    Función que devuelve un validador que chequea que el archivo sea de un tipo permitido.
+    """
+
+    def chequear_tipo(form, field):
+        if field.data.filename.split(".")[-1].lower() not in permitidos:
+            raise ValidationError(
+                f"El archivo debe ser de tipo {', '.join(permitidos)}"
+            )
+
+    return chequear_tipo
+
+
 def LimiteDeArchivo(tamanio_en_mb):
     """
     Función que devuelve un validador que chequea que el tamaño del archivo no supere el límite en MB.
@@ -88,3 +102,8 @@ def sin_espacios(form, field):
 #         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
 #     if not validacion:
 #         raise ValidationError("El mail debe contener '@' y '.'")
+
+def validar_digitos(form, field):
+    """Valida que el campo no contenga números."""
+    if any(char.isdigit() for char in field.data):
+        raise ValidationError("Este campo no puede contener números.")

@@ -36,7 +36,7 @@ class Miembro(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)
     usuario = db.relationship('Usuario', backref='miembro', uselist=False)
 
-    fecha_creacion = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.now, nullable=False)
     activo = db.Column(db.Boolean, default=True, nullable=False)
 
     def __repr__(self):

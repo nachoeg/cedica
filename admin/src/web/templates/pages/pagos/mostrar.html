@@ -17,11 +17,12 @@
 
     <div class="contenedor-body">
         <p><strong>Tipo:</strong> {{ pago.tipo_pago.nombre }}</p>
-        <p><strong>Monto:</strong> {{ pago.monto }}</p>
+        <p><strong>Monto:</strong> ${{ pago.monto }}</p>
         <p><strong>Descripción:</strong> {{ pago.descripcion }}</p>
-        <p><strong>Fecha de pago:</strong> {{ pago.fecha_pago }}</p>
+        <p><strong>Fecha de pago:</strong> {{ pago.fecha_pago.strftime('%d/%m/%Y') }}</p>
         {% if beneficiario %}
-        <p><strong>Beneficiario:</strong> {{ beneficiario }}</p>
+        <p><strong> Dni del beneficiario:</strong> {{ beneficiario }}</p>
+        <p><strong> Nombre completo del beneficiario:</strong> {{ nombre }}</p>
         {% endif %}
     </div>
 
