@@ -38,7 +38,7 @@ from core.forms.forms_jinetes import (
 import ulid
 from io import BytesIO
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero, calcular_edad
 
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
@@ -108,8 +108,8 @@ def nuevo_j_y_a():
         nombre = form.nombre.data
         apellido = form.apellido.data
         dni = form.dni.data
-        edad = form.edad.data
         fecha_nacimiento = form.fecha_nacimiento.data
+        edad = calcular_edad(fecha_nacimiento)
         provincia_nacimiento = form.provincia_nacimiento.data
         localidad_nacimiento = form.localidad_nacimiento.data
         domicilio_actual = form.domicilio_actual.data

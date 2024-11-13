@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-
+from datetime import datetime, date
 
 def booleano_a_palabra(bool):
     """Devuelve 'No' si el valor pasado por parámetro es False,
@@ -48,3 +48,17 @@ def convertir_a_entero(valor, valor_predeterminado=1):
         return int(valor)
     except (ValueError, TypeError):
         return valor_predeterminado
+
+
+def calcular_edad(fecha_nacimiento):
+    """
+    Calcula la edad de una persona dada su fecha de nacimiento.
+    """
+    hoy = date.today()
+    
+    edad = hoy.year - fecha_nacimiento.year 
+    - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+    print("calculando edad")
+    print(edad)
+    print("fin calculo de edad")
+    return edad

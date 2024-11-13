@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Length
 from wtforms.fields import (
-    DateTimeField,
+    DateField,
     SelectField,
     IntegerField,
     BooleanField,
@@ -13,15 +13,16 @@ from wtforms.fields import (
 from core.forms.validaciones import Unico
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
+
 class NuevoJYAForm(FlaskForm):
     """
     Formulario utilizado para cargar la información general del jinete o amazona.
     """
-    nombre = StringField('Nombre', validators=[DataRequired('Ingrese el nombre del jinete o la amazona')])
-    apellido = StringField('Apellido', validators=[DataRequired('Ingrese el apellido del jinete o la amazona')])
-    dni = IntegerField('DNI', validators=[Unico(JineteOAmazona, JineteOAmazona.dni)])
+    nombre = StringField('Nombre*', validators=[DataRequired('Ingrese el nombre del jinete o la amazona')])
+    apellido = StringField('Apellido*', validators=[DataRequired('Ingrese el apellido del jinete o la amazona')])
+    dni = IntegerField('DNI*', validators=[Unico(JineteOAmazona, JineteOAmazona.dni), DataRequired('Ingrese el DNI del jinete o la amazona')])
     edad = IntegerField('Edad')
-    fecha_nacimiento =  DateTimeField('Fecha de nacimiento', format='%d/%m/%Y')
+    fecha_nacimiento =  DateField('Fecha de nacimiento')
     provincia_nacimiento = StringField('Provincia de nacimiento', validators=[Length(max=64)])
     localidad_nacimiento = StringField('Localidad de nacimiento', validators=[Length(max=64)])
     domicilio_actual = StringField('Domicilio actual', validators=[Length(max=64)])
@@ -92,7 +93,7 @@ class InfoEscolaridadJYAForm(FlaskForm):
     grado_escuela = StringField("Grado al que asiste", validators=[Length(max=4)])
     observaciones_escuela = StringField("Observaciones", validators=[Length(max=100)])
     profesionales_a_cargo = TextAreaField(
-        "Profesionales a cargo", validators=[Length(max=200)]
+        "Profesionales a cargo*", validators=[Length(max=200), DataRequired('Ingrese al menos un profesional a cargo del jinete o la amazona')]
     )
     submit = SubmitField("Continuar")
 
