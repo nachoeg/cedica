@@ -58,7 +58,4 @@ def calcular_edad(fecha_nacimiento):
     
     edad = hoy.year - fecha_nacimiento.year 
     - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
-    print("calculando edad")
-    print(edad)
-    print("fin calculo de edad")
     return edad
