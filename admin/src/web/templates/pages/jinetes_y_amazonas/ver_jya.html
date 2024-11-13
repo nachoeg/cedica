@@ -42,7 +42,7 @@
     <p><strong>¿Posee certificado de discapacidad?:</strong> {{ jya.certificado_discapacidad }}</p>
     <p><strong>Diagnóstico:</strong> {{ jya.diagnostico.nombre }}</p>
     {% if jya.diagnostico_otro %}
-    <p><strong>Otro:</strong> {{ jya.diagnostico_otro }}</p>
+    <p><strong>Descripción del diagnóstico:</strong> {{ jya.diagnostico_otro }}</p>
     {% endif %}
     <p><strong>Tipo de discapacidad:</strong> {{ jya.tipo_discapacidad }}</p>
     <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_salud', id=jya.id)}}">Editar</a>

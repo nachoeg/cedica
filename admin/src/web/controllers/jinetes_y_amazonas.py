@@ -26,6 +26,7 @@ from src.core.jinetes_y_amazonas import (
     obtener_documento,
     eliminar_documento_j_y_a,
     guardar_cambios,
+    cargar_id_diagnostico_otro
 )
 from core.forms.forms_jinetes import (
     NuevoJYAForm,
@@ -161,6 +162,7 @@ def cargar_info_salud(id: int):
     form.diagnostico.choices = [
         (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
     ]
+    id_otro_diagnostico = cargar_id_diagnostico_otro()
     form.submit.label.text = "Continuar"
 
     if form.validate_on_submit():
@@ -183,6 +185,7 @@ def cargar_info_salud(id: int):
         "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
         titulo="Nuevo jinete/amazona",
+        id_otro_diagnostico=id_otro_diagnostico
     )
 
 
@@ -567,17 +570,28 @@ def editar_info_salud(id: int):
     form.diagnostico.choices = [
         (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
     ]
-
-    if jya.diagnostico is not None:
-        form.diagnostico.data = jya.diagnostico.id
+    id_otro_diagnostico = cargar_id_diagnostico_otro()
+    
     form.submit.label.text = "Guardar"
+
+    if request.method == "GET":
+        if jya.diagnostico is not None:
+            form.diagnostico.data = jya.diagnostico.id
 
     if request.method == "POST":
         if form.validate_on_submit():
             jya.certificado_discapacidad = form.certificado_discapacidad.data
-            jya.diagnostico_id = form.diagnostico.data
-            jya.diagnostico_otro = form.diagnostico_otro.data
-            jya.tipo_discapacidad = form.tipo_discapacidad.data
+            if jya.certificado_discapacidad:
+                jya.diagnostico_id = form.diagnostico.data
+                if jya.diagnostico_id == id_otro_diagnostico:
+                    jya.diagnostico_otro = form.diagnostico_otro.data
+                else:
+                    jya.diagnostico_otro = None
+                jya.tipo_discapacidad = None
+            else:
+                jya.diagnostico_id = None
+                jya.diagnostico_otro = None
+                jya.tipo_discapacidad = form.tipo_discapacidad.data
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
@@ -592,6 +606,7 @@ def editar_info_salud(id: int):
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
+        id_otro_diagnostico=id_otro_diagnostico
     )
 
 

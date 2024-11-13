@@ -18,21 +18,26 @@
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
-            <div>
-                {{ form.diagnostico.label }}
-                {{ form.diagnostico }}<br>
-                {% for error in form.diagnostico.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
+            <div class="diagnostico_div">
+                <div class="diagnosticos_listado">
+                    {{ form.diagnostico.label }}
+                    {{ form.diagnostico }}<br>
+                    {% for error in form.diagnostico.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="diagnostico_otro">
+                    {{ form.diagnostico_otro.label }}
+                    {{ form.diagnostico_otro }}<br>
+                    {% for error in form.diagnostico_otro.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
             </div>
-            <div>
-                {{ form.diagnostico_otro.label }}
-                {{ form.diagnostico_otro }}<br>
-                {% for error in form.diagnostico_otro.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-            <div>
+            <div class="tipo_discapacidad">
+                <p style="color: blue">Como el jinete/amazona <br>
+                    no tiene certificado de discapacidad,<br>
+                    ingrese qué tipo de discapacidad tiene</p>
                 {{ form.tipo_discapacidad.label }}
                 {{ form.tipo_discapacidad }}<br>
                 {% for error in form.tipo_discapacidad.errors %}
@@ -44,4 +49,7 @@
             </div>
         </div>
     </form>
+
+    <p class="id_otro_diagnostico" hidden>{{id_otro_diagnostico}}</p>
+    {% include "pages/jinetes_y_amazonas/_ocultar_mostrar_diagnostico.html" %}
 {% endblock %}

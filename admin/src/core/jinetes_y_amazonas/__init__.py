@@ -294,6 +294,14 @@ def listar_diagnosticos():
     return diagnosticos
 
 
+def cargar_id_diagnostico_otro():
+    """
+        Función que retorna el id del diagnóstico con nombre "Otro"
+    """
+    diagnostico_otro = Diagnostico.query.where(Diagnostico.nombre == "Otro").first()
+
+    return diagnostico_otro.id
+
 def listar_profesores():
     """
     Funcion que retorna los profesores del sistema.
