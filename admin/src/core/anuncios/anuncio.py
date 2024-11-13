@@ -28,10 +28,10 @@ class Anuncio(db.Model):
         def __str__(self):
             return f"{self.value}"
 
-    estado = db.Column(Enum(Estado))
+    estado = db.Column(Enum(Estado), default="borrador")
 
     autor_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    autor = db.relationship('Usuario', back_populates="anuncios")
+    autor = db.relationship('Usuario', back_populates='anuncios')
 
     def to_dict(self):
         """Método que devuelve un diccionario con los datos

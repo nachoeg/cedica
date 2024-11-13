@@ -3,6 +3,7 @@ from src.core import cobros, jinetes_y_amazonas
 from src.core.seeds_usuarios import cargar_usuarios
 from src.core import ecuestre
 from src.core import pago
+from src.core import anuncios
 
 def run():
     
@@ -234,6 +235,8 @@ def run():
     
     for tipo in tipos_de_documento_miembro:
         miembro.crear_tipo_de_documento(tipo=tipo)
+
+    anuncio = anuncios.crear_anuncio("Título", "Copete", "Contenido", 1)
 
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
