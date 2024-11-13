@@ -38,7 +38,7 @@ from core.forms.forms_jinetes import (
 import ulid
 from io import BytesIO
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero, calcular_edad
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
 
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
@@ -58,13 +58,13 @@ def listar():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pag = int(request.args.get("por_pag", 10))
+    cant_por_pag = int(request.args.get("por_pag", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
     profesionales_a_cargo = request.args.get("profesionales_a_cargo", "")
 
-    jinetes = listar_j_y_a(
+    jinetes, cant_resultados = listar_j_y_a(
         nombre_filtro,
         apellido_filtro,
         dni_filtro,
@@ -74,7 +74,7 @@ def listar():
         pagina,
         cant_por_pag,
     )
-    cant_resultados = len(jinetes.items)
+    
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
@@ -103,13 +103,12 @@ def nuevo_j_y_a():
     """
     form = NuevoJYAForm()
     form.submit.label.text = "Continuar"
-
     if form.validate_on_submit():
+        
         nombre = form.nombre.data
         apellido = form.apellido.data
         dni = form.dni.data
         fecha_nacimiento = form.fecha_nacimiento.data
-        edad = calcular_edad(fecha_nacimiento)
         provincia_nacimiento = form.provincia_nacimiento.data
         localidad_nacimiento = form.localidad_nacimiento.data
         domicilio_actual = form.domicilio_actual.data
@@ -128,7 +127,6 @@ def nuevo_j_y_a():
             nombre,
             apellido,
             dni,
-            edad,
             fecha_nacimiento,
             provincia_nacimiento,
             localidad_nacimiento,
@@ -530,7 +528,6 @@ def editar_j_y_a(id: int):
             jya.nombre = form.nombre.data
             jya.apellido = form.apellido.data
             jya.dni = form.dni.data
-            jya.edad = form.edad.data
             jya.fecha_nacimiento = form.fecha_nacimiento.data
             jya.provincia_nacimiento = form.provincia_nacimiento.data
             jya.localidad_nacimiento = form.localidad_nacimiento.data

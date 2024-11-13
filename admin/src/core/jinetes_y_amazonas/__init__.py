@@ -49,11 +49,13 @@ def listar_j_y_a(
     else:
         query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
 
+    cant_resultados = query.count()
+    
     j_y_a_ordenados = query.paginate(
         page=pagina, per_page=cant_por_pag, error_out=False
     )
 
-    return j_y_a_ordenados
+    return j_y_a_ordenados, cant_resultados
 
 
 # función que crea un registro de jinete o amazona
@@ -61,7 +63,6 @@ def crear_j_o_a(
     nombre,
     apellido,
     dni,
-    edad,
     fecha_nacimiento,
     provincia_nacimiento,
     localidad_nacimiento,
@@ -70,7 +71,7 @@ def crear_j_o_a(
     contacto_emer_nombre,
     contacto_emer_telefono,
     becado,
-    porcentaje_beca = "0"
+    porcentaje_beca=0
 ):
     """
     Funcion que crea un registro en la tabla de jinetes y amazonas a partir de los parámetros recibidos,
@@ -81,7 +82,6 @@ def crear_j_o_a(
         nombre=nombre,
         apellido=apellido,
         dni=dni,
-        edad=edad,
         fecha_nacimiento=fecha_nacimiento,
         provincia_nacimiento=provincia_nacimiento,
         localidad_nacimiento=localidad_nacimiento,

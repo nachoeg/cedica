@@ -1,6 +1,7 @@
 from src.core.database import db
 import enum
 from sqlalchemy.types import Enum
+from src.web.handlers.funciones_auxiliares import calcular_edad
 
 
 
@@ -66,16 +67,15 @@ class JineteOAmazona(db.Model):
     nombre = db.Column(db.String(30))
     apellido = db.Column(db.String(30))
     dni = db.Column(db.Integer, unique=True)
-    edad = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
     provincia_nacimiento = db.Column(db.String(50))
     localidad_nacimiento = db.Column(db.String(50))
     domicilio_actual = db.Column(db.String(50))
-    telefono_actual = db.Column(db.BigInteger)
+    telefono_actual = db.Column(db.String(15))
     contacto_emer_nombre = db.Column(db.String(100))
-    contacto_emer_telefono = db.Column(db.BigInteger)
+    contacto_emer_telefono = db.Column(db.String(15))
     becado = db.Column(db.Boolean)
-    porcentaje_beca = db.Column(db.String(100))
+    porcentaje_beca = db.Column(db.Integer)
 
     # información de salud
 
@@ -124,7 +124,7 @@ class JineteOAmazona(db.Model):
     # informacion sobre escolaridad
     nombre_escuela = db.Column(db.String(40))
     direccion_escuela = db.Column(db.String(50))
-    telefono_escuela = db.Column(db.BigInteger)
+    telefono_escuela = db.Column(db.String(15))
     grado_escuela = db.Column(db.String(4))
     observaciones_escuela = db.Column(db.String(100))
 
@@ -189,10 +189,10 @@ class JineteOAmazona(db.Model):
             "dni": self.dni,
             "sede": self.sede,
             "tiene_deuda": ("TIENE DEUDA" if self.tiene_deuda else "-"),
-            "edad": self.edad,
+            "edad": calcular_edad(self.fecha_nacimiento),
             "domicilio_actual": self.domicilio_actual,
             "telefono_actual": self.telefono_actual,
-            "contacto_emergencia": str(self.contacto_emer_telefono)
+            "contacto_emergencia": self.contacto_emer_telefono
             + " ("
             + self.contacto_emer_nombre
             + ")",

@@ -140,17 +140,117 @@ def run():
     for tipo in tipos_de_documento_ecuestre:
         ecuestre.crear_tipo_de_documento(tipo=tipo)
 
-    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 36234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Tatiana", apellido="Tomassi", dni= 36234222, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='La Pampa', localidad_nacimiento='Santa Rosa', domicilio_actual='62 n312',telefono_actual=2214569794, contacto_emer_nombre='Martin',contacto_emer_telefono=2214678864, becado=True, porcentaje_beca="30")
-    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Saul", apellido="Sosa", dni= 36234223, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='Buenos Aires', localidad_nacimiento='La Plata', domicilio_actual='20 n67',telefono_actual=2214569784, contacto_emer_nombre='Jimena',contacto_emer_telefono=2214671264, becado=True, porcentaje_beca="30")
-    j_y_a4 = jinetes_y_amazonas.crear_j_o_a(nombre="Romina", apellido="Rodriguez", dni= 36234224, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Valentina',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a5 = jinetes_y_amazonas.crear_j_o_a(nombre="Quimey", apellido="Quiroga", dni= 36234225, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Paloma',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a6 = jinetes_y_amazonas.crear_j_o_a(nombre="Paula", apellido="Paredes", dni= 36234226, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Valentin',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a7 = jinetes_y_amazonas.crear_j_o_a(nombre="Omar", apellido="Ortega", dni= 36234227, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Carlos',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a8 = jinetes_y_amazonas.crear_j_o_a(nombre="Nicol", apellido="Nivez", dni= 36234228, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Miranda',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a9 = jinetes_y_amazonas.crear_j_o_a(nombre="Mario", apellido="Muccio", dni= 36234229, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Mabel',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a10 = jinetes_y_amazonas.crear_j_o_a(nombre="Lourdes", apellido="Lampa", dni= 36234231, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Pablo',contacto_emer_telefono=2214428864, becado=False)
-    j_y_a11 = jinetes_y_amazonas.crear_j_o_a(nombre="Juan", apellido="Juarez", dni= 36234232, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Juan',contacto_emer_telefono=2214428864, becado=False)
+    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela",
+                                            dni=36234221,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Alvaro',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Tatiana", apellido="Tomassi",
+                                           dni=36234222,
+                                           fecha_nacimiento='1992/09/10',
+                                           provincia_nacimiento='La Pampa',
+                                           localidad_nacimiento='Santa Rosa',
+                                           domicilio_actual='62 n312',
+                                           telefono_actual='2214569794',
+                                           contacto_emer_nombre='Martin',
+                                           contacto_emer_telefono='2214678864',
+                                           becado=True, porcentaje_beca=30)
+    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Saul", apellido="Sosa",
+                                            dni=36234223,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='Buenos Aires',
+                                            localidad_nacimiento='La Plata',
+                                            domicilio_actual='20 n67',
+                                            telefono_actual='2214569784',
+                                            contacto_emer_nombre='Jimena',
+                                            contacto_emer_telefono='2214671264',
+                                            becado=True, porcentaje_beca=30)
+    j_y_a4 = jinetes_y_amazonas.crear_j_o_a(nombre="Romina", apellido="Rodriguez",
+                                            dni=36234224,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Valentina',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a5 = jinetes_y_amazonas.crear_j_o_a(nombre="Quimey", apellido="Quiroga",
+                                            dni=36234225,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Paloma',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a6 = jinetes_y_amazonas.crear_j_o_a(nombre="Paula", apellido="Paredes",
+                                            dni=36234226,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Valentin',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=30)
+    j_y_a7 = jinetes_y_amazonas.crear_j_o_a(nombre="Omar", apellido="Ortega",
+                                            dni=36234227,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Carlos',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=50)
+    j_y_a8 = jinetes_y_amazonas.crear_j_o_a(nombre="Nicol", apellido="Nivez",
+                                            dni=36234228,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Miranda',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=30)
+    j_y_a9 = jinetes_y_amazonas.crear_j_o_a(nombre="Mario", apellido="Muccio",
+                                            dni=36234229,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Mabel',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a10 = jinetes_y_amazonas.crear_j_o_a(nombre="Lourdes",
+                                             apellido="Lampa",
+                                             dni=36234231,
+                                             fecha_nacimiento='1992/09/10',
+                                             provincia_nacimiento='San Luis',
+                                             localidad_nacimiento='San Luis',
+                                             domicilio_actual='12 n122',
+                                             telefono_actual='2214569744',
+                                             contacto_emer_nombre='Pablo',
+                                             contacto_emer_telefono='2214428864',
+                                             becado=False)
+    j_y_a11 = jinetes_y_amazonas.crear_j_o_a(nombre="Juan", apellido="Juarez",
+                                             dni=36234232,
+                                             fecha_nacimiento='1992/09/10',
+                                             provincia_nacimiento='San Luis',
+                                             localidad_nacimiento='San Luis',
+                                             domicilio_actual='12 n122',
+                                             telefono_actual='2214569744',
+                                             contacto_emer_nombre='Juan',
+                                             contacto_emer_telefono='2214428864',
+                                             becado=False)
 
     cobro1 = cobros.crear_cobro(
         medio_de_pago="efectivo",
