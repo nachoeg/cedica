@@ -1,5 +1,6 @@
 from src.core.database import db
 from src.core.contacto.consulta import Consulta
+from sqlalchemy import cast, String
 
 
 def listar_consultas(
@@ -14,7 +15,7 @@ def listar_consultas(
     """
 
     query = Consulta.query.filter(
-        Consulta.estado.ilike(f"%{estado_filtro}%"),
+        cast(Consulta.estado, String).ilike(f"%{estado_filtro}%")
     )
 
     cant_resultados = query.count()
@@ -64,3 +65,8 @@ def guardar_cambios():
     Funcion que guarda los cambios en la base de datos.
     """
     db.session.commit()
+
+def obtener_consulta():
+    """Funcion que busca una consulta por su id"""
+    consulta = Consulta.query.filter_by(id=id).first()
+    return consulta

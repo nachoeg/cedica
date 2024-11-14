@@ -11,9 +11,9 @@ class Consulta(db.Model):
     class Estado(enum.Enum):
         """Clase de tipo enumerativo para gestionar las opciones de estado de las consultas"""
 
-        pendiente = "Pendiente"
-        en_proceso = "En proceso"
-        finalizada = "Finalizada"
+        recibida = "Recibida"
+        leida = "Leida"
+        atendida = "Atendida"
 
         @classmethod
         def listar(self):
@@ -27,8 +27,18 @@ class Consulta(db.Model):
     email = db.Column(db.String(100), nullable=False)
     mensaje = db.Column(db.Text, nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
-    estado = db.Column(db.Enum(Estado), default=Estado.pendiente, nullable=False)
+    estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)
     comentario = db.Column(db.Text, nullable=True)
+    archivado = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return f"<Consulta {self.id} - {self.nombre}>"
+
+    def to_dict(self):
+        return {
+            'titulo': self.nombre,
+            'email': self.email,
+            'mensaje': self.mensaje,
+            'fecha': self.fecha.strftime('%d-%m-%Y'),
+            'estado': self.estado
+        }

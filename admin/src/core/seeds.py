@@ -3,6 +3,7 @@ from src.core import cobros, jinetes_y_amazonas
 from src.core.seeds_usuarios import cargar_usuarios
 from src.core import ecuestre
 from src.core import pago
+from src.core import contacto
 
 def run():
     
@@ -234,6 +235,10 @@ def run():
     
     for tipo in tipos_de_documento_miembro:
         miembro.crear_tipo_de_documento(tipo=tipo)
+
+    contacto1 = contacto.crear_consulta("consulta1", "consulta1@gmail.com", "consulta1")
+    contacto2 = contacto.crear_consulta("consulta2", "consulta2@gmail.com", "consulta2")
+    contacto3 = contacto.crear_consulta("consulta3", "consulta3@gmail.com", "consulta3")
 
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
