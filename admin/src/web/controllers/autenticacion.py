@@ -56,7 +56,7 @@ def ver_perfil():
     del usuario con sesión activa.
     """
     usuario = usuario_por_id(session.get('id'))
-    return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
+    return render_template("pages/usuarios/ver_perfil.html", usuario=usuario)
 
 
 @bp.route('/<int:id>/editar_perfil', methods=['GET', 'POST'])
@@ -73,6 +73,7 @@ def editar_perfil(id):
         if form.validate_on_submit():
             # raise Exception(f'{form.data}')
             actualizar_perfil(usuario, form.email.data, form.alias.data)
+            session['alias'] = usuario.alias
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('autenticacion.ver_perfil'))

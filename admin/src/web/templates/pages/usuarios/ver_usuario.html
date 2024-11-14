@@ -5,33 +5,29 @@
 {% block title %}{{usuario.alias}} ({{usuario.email}}){% endblock %}
 
 {% block main %}
-  {{ navbar_secundaria({
-    'volver': url_for('usuarios.listado_usuarios')
-  })}}
+
+  {{ navbar_secundaria({'volver': url_for('usuarios.listado_usuarios')}) }}
+
   <div class="contenedor">
     <div class="contenedor-header">
-    {% if usuario.id == session.get('id') %}
-      <h1>Mis datos</h1>
-    {% else %}
       <h1>Datos del usuario</h1>
-    {% endif %}
     </div>
     <div class="contenedor-body">
-    <p><strong>Usuario activo:</strong> {{ booleano_a_palabra(usuario.activo) }}</p>
-    <p><strong>Alias:</strong> {{ usuario.alias }}</p>
-    <p><strong>Email:</strong> {{ usuario.email }}</p>
-    <p><strong>Es admin sistema:</strong> {{ booleano_a_palabra(usuario.admin_sistema) }}</p>
-    <p><strong>Roles:</strong>
-      {% if usuario.roles %}
-        {% for rol in usuario.roles %}
-          <strong></strong> <li style="margin-bottom: -1em;  margin-top: -1em;">{{ rol.nombre }} </li>
-        {% endfor %}
-      {% else %}
-        -
-      {% endif %}
-    </p>
-    <p><strong>Fecha de registro:</strong> {{ fechahora_a_fecha(usuario.creacion) }}</p>
-    <p><strong>Última actualización:</strong> {{ fechahora(usuario.ultima_actualizacion) }}</p>
+      <p><strong>Usuario activo:</strong> {{ booleano_a_palabra(usuario.activo) }}</p>
+      <p><strong>Alias:</strong> {{ usuario.alias }}</p>
+      <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <p><strong>Es admin sistema:</strong> {{ booleano_a_palabra(usuario.admin_sistema) }}</p>
+      <p><strong>Roles:</strong>
+        {% if usuario.roles %}
+          {% for rol in usuario.roles %}
+            <strong></strong> <li style="margin-bottom: -1em;  margin-top: -1em;">{{ rol.nombre }} </li>
+          {% endfor %}
+        {% else %}
+          -
+        {% endif %}
+      </p>
+      <p><strong>Fecha de registro:</strong> {{ fechahora_a_fecha(usuario.creacion) }}</p>
+      <p><strong>Última actualización:</strong> {{ fechahora(usuario.ultima_actualizacion) }}</p>
     </div>
     <div class="contenedor-footer">
 
@@ -74,6 +70,8 @@
     </div>
   </div>
 
+  {% include 'pages/usuarios/_acciones_usuario.html' %}
+
 {% endblock %}
 
-{% include 'pages/usuarios/_acciones_usuario.html' %}
+

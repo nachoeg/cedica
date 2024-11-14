@@ -10,7 +10,7 @@
 
 {% block main %}
   {{ navbar_secundaria({
-    'volver': url_for('usuarios.listado_usuarios')
+    'volver': url_for('autenticacion.ver_perfil')
   })}}
 
   {% from "pages/usuarios/_campo_form.html" import render_field %}

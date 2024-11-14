@@ -1,6 +1,7 @@
 from functools import wraps
 from flask import abort, session
-from src.core.usuarios import nombres_permisos, usuario_por_email, usuario_por_id
+from src.core.usuarios import (nombres_permisos, usuario_por_email,
+                               usuario_por_id)
 
 
 def esta_autenticado(session):
