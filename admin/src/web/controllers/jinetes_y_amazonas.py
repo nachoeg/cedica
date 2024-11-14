@@ -122,7 +122,7 @@ def nuevo_j_y_a():
             porcentaje_beca = form.porcentaje_beca.data
         else:
             becado = False
-            porcentaje_beca = None
+            porcentaje_beca = 0
 
         jya_nuevo = crear_j_o_a(
             nombre,
@@ -139,7 +139,8 @@ def nuevo_j_y_a():
             porcentaje_beca
         )
 
-        flash("Nuevo J&A creado. Continúe con la carga de información", "exito")
+        flash("Nuevo J&A creado. \
+              Continúe con la carga de información", "exito")
         return redirect(
             url_for("jinetes_y_amazonas.cargar_info_salud", id=jya_nuevo.id)
         )
@@ -156,20 +157,33 @@ def nuevo_j_y_a():
 @sesion_iniciada_requerida
 def cargar_info_salud(id: int):
     """
-    Controlador que muestra muestra el formulario de alta de la información de salud del jinete o amazona o guarda los datos asociados a él.
+    Controlador que muestra muestra el formulario de alta
+    de la información de salud del jinete o amazona 
+    o guarda los datos asociados a él.
     """
     form = InfoSaludJYAForm()
     form.diagnostico.choices = [
-        (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
+        (diagnostico.id, diagnostico.nombre) 
+        for diagnostico in listar_diagnosticos()
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
     form.submit.label.text = "Continuar"
 
     if form.validate_on_submit():
         certificado_discapacidad = form.certificado_discapacidad.data
-        diagnostico_id = form.diagnostico.data
-        diagnostico_otro = form.diagnostico_otro.data
-        tipo_discapacidad = form.tipo_discapacidad.data
+
+        if certificado_discapacidad:
+            diagnostico_id = form.diagnostico.data
+            if diagnostico_id == id_otro_diagnostico:
+                diagnostico_otro = form.diagnostico_otro.data
+            else:
+                diagnostico_otro = None
+            tipo_discapacidad = None
+        else:
+            diagnostico_id = None
+            diagnostico_otro = None
+            tipo_discapacidad = form.tipo_discapacidad.data
+        
         cargar_informacion_salud(
             id,
             certificado_discapacidad,
