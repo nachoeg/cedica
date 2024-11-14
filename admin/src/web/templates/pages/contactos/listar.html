@@ -2,7 +2,7 @@
 {% from "components/tabla.html" import tabla %}
 {% from "components/iconos.html" import open_icon, edit_icon, delete_icon %}
 
-{% block title %} Listado de Pagos {% endblock %}
+{% block title %} Listado de consultas {% endblock %}
 
 {% block main %}
 
@@ -32,8 +32,8 @@
 
 {% block scripts %}
 <script>
-    function verPago(id) {
-        window.location.href = `/pagos/${id}`;
+    function verContacto(id) {
+        window.location.href = `/contacto/${id}`;
     }
 
     function borrarPago(id) {

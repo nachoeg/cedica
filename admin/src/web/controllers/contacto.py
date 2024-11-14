@@ -45,5 +45,5 @@ def ver(id: int):
     """
     Devuelve la vista de una consulta en particular con el id dado.
     """
-    ecuestre = obtener_consulta(id)
-    return render_template("pages/contactos/ver.html", ecuestre=ecuestre)
+    consulta = obtener_consulta(id)
+    return render_template("pages/contactos/ver.html", consulta=consulta)

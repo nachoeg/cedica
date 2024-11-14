@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('contacto.listar'),
+'tabs': [
+]})}}
+
+<div class="contenedor">
+  <div class="contenedor-header">
+    <h1> Detalles de la consulta </h1>
+  </div>
+  <div class="contenedor-body">
+    <p><strong>Titulo:</strong> {{ consulta.nombre }}</p>
+    <p><strong>Fecha:</strong> {{ consulta.fecha.strftime('%d/%m/%Y') }}</p>
+    <p><strong>Mail:</strong> {{ consulta.email }}</p>
+    <p><strong>Estado:</strong> {{ consulta.estado }}</p>
+    {% if consulta.comentario %}
+        <p><strong>Comentario:</strong> {{ consulta.comentario }}</p>
+    {% endif %}
+  </div>
+</div>
+
+
+
+{% endblock %}

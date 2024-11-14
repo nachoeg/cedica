@@ -66,7 +66,7 @@ def guardar_cambios():
     """
     db.session.commit()
 
-def obtener_consulta():
+def obtener_consulta(id):
     """Funcion que busca una consulta por su id"""
     consulta = Consulta.query.filter_by(id=id).first()
     return consulta
