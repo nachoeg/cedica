@@ -1,8 +1,8 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
-from src.core.usuarios import (actualizar_perfil,
+from src.core.usuarios import (actualizar_perfil, asignar_contraseña,
                                usuario_por_email_y_contraseña, usuario_por_id)
-from core.forms.usuario_forms import (IniciarSesionForm,
+from core.forms.usuario_forms import (IniciarSesionForm, CambiarContraseñaForm,
                                       UsuarioSinContraseñaForm)
 from src.web.handlers.decoradores import (chequear_usuario_sesion,
                                           sesion_iniciada_requerida)
@@ -81,3 +81,23 @@ def editar_perfil(id):
                   Revise los datos ingresados',
                   'error')
     return render_template('pages/usuarios/editar_perfil.html', form=form)
+
+
+@bp.route('/cambiar_contraseña', methods=('GET', 'POST'))
+@sesion_iniciada_requerida
+def cambiar_contraseña():
+    """Devuelve la vista que permite al usuario
+    cambiar su contraseña.
+    """
+    usuario = usuario_por_id(session.get('id'))
+    form = CambiarContraseñaForm(usuario.contraseña)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            contraseña_nueva = form.contraseña_nueva.data
+            asignar_contraseña(usuario, contraseña_nueva)
+            flash('Se ha modificado la contraseña', 'exito')
+            return redirect(url_for('home'))
+        else:
+            flash('No se pudo realizar la operación. \
+                  Revise los datos ingresados.', 'error')
+    return render_template('pages/usuarios/cambiar_contraseña.html', form=form)

@@ -1,15 +1,16 @@
 from flask_wtf import FlaskForm
 from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
-from wtforms.validators import (Email, InputRequired, Length)
-from core.forms.validaciones import Unico, sin_espacios, valor_en_opciones
+from wtforms.validators import (Email, InputRequired, Length, EqualTo)
+from core.forms.validaciones import (Unico, sin_espacios,
+                                     validar_contraseña, valor_en_opciones)
 from core.usuarios import get_roles
 from core.usuarios.usuario import Usuario
 
 
 class IniciarSesionForm(FlaskForm):
     """Clase que hereda de FlaskForm y representa el formulario
-    un usuario sin el campo 'contraseña'.
+    que permite al usuario iniciar sesión con email y contraseña.
     """
     email = EmailField(
         "Email",
@@ -24,7 +25,7 @@ class IniciarSesionForm(FlaskForm):
 
 
 class UsuarioSinContraseñaForm(FlaskForm):
-    """Clase que hereda de FlaskForm y representa el formulario
+    """Clase que hereda de FlaskForm y representa el formulario de
     un usuario sin el campo 'contraseña'.
     """
     email = EmailField("Email", validators=[
@@ -66,3 +67,39 @@ class UsuarioForm(UsuarioSinContraseñaForm):
                     sin_espacios,
                     ]
         )
+
+
+class CambiarContraseñaForm(FlaskForm):
+    """Clase que hereda de FlaskForm y representa el formulario
+    que le permite a un usuario cambiar su contraseña.
+    """
+    contraseña_anterior = PasswordField(
+        "Contraseña anterior",
+        validators=[InputRequired("Debe ingresar su contraseña."),
+                    Length(min=4, max=100, message="La contraseña \
+                           tiene por lo menos %(min)d caracteres."),
+                    sin_espacios,
+                    ]
+        )
+    contraseña_nueva = PasswordField(
+        "Nueva contraseña",
+        validators=[InputRequired("Debe ingresar una contraseña."),
+                    Length(min=4, max=100, message="La contraseña debe \
+                           tener por lo menos %(min)d caracteres."),
+                    sin_espacios,
+                    ]
+        )
+    contraseña_confirmacion = PasswordField(
+        "Reingrese la nueva contraseña",
+        validators=[InputRequired("Debe ingresar de nuevo la contraseña."),
+                    EqualTo('contraseña_nueva', message="Las contraseñas deben coincidir")
+                    ]
+        )
+
+    def __init__(self, contraseña, *args, **kwargs):
+        """Construye los atributos necesarios para la
+        clase CambiarContraseñaForm.
+        """
+        super().__init__(*args, **kwargs)
+        # agrega validación de contraseña contra la que se recibe como parámetro
+        self.contraseña_anterior.validators = [validar_contraseña(contraseña)]

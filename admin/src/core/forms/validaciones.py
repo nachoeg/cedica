@@ -1,5 +1,6 @@
 from wtforms.validators import ValidationError
 from datetime import date
+from src.core.bcrypt import bcrypt
 from src.core.database import db
 
 
@@ -93,6 +94,9 @@ def valor_en_opciones(opciones):
 
 
 def sin_espacios(form, field):
+    """Función que valida que el valor de un campo de formulario
+    no tenga espacios en blanco.
+    """
     if " " in field.data:
         raise ValidationError('No puede contener espacios.')
 
@@ -107,3 +111,14 @@ def validar_digitos(form, field):
     """Valida que el campo no contenga números."""
     if any(char.isdigit() for char in field.data):
         raise ValidationError("Este campo no puede contener números.")
+
+
+def validar_contraseña(contraseña):
+    """Función que valida que la contraseña de un campo de formulario
+    sea la misma que la recibida por parámetro.
+    """
+    def _validar_contraseña(form, field):
+        if not bcrypt.check_password_hash(contraseña, field.data):
+            raise ValidationError("La contraseña ingresada es incorrecta.")
+
+    return _validar_contraseña

@@ -1,0 +1,58 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from 'components/iconos.html' import show_password_icon %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %} Cambiar contraseña {% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+  'volver': url_for('home')
+})}}
+
+{% from "pages/usuarios/_campo_form.html" import render_field %}
+<form method=post class="formulario">
+  <div class="formulario-header">
+    <h1>Cambiar contraseña</h1>
+  </div>
+  {{ form.csrf_token }}
+  <div class="formulario-body">
+    <div>
+      {{ render_field(form.contraseña_anterior) }}
+      <a class="" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_anterior.id }}')">
+        {{show_password_icon('size-20')}}
+      </a>
+    </div>
+    <div>
+      {{ render_field(form.contraseña_nueva) }}
+      <a class="" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_nueva.id }}')">
+        {{show_password_icon('size-20')}}
+      </a>
+    </div>
+    <div>
+      {{ render_field(form.contraseña_confirmacion) }}
+      <a class="" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_confirmacion.id }}')">
+        {{show_password_icon('size-20')}}
+      </a>
+    </div>
+    <div><input type=submit></div>
+  </div>
+</form>
+
+<script>
+  function mostrar_ocultar_contraseña(id) {
+      var x = document.getElementById(id);
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+</script>
+
+{% endblock %}

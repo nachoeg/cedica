@@ -47,6 +47,15 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
     return usuario
 
 
+def asignar_contraseña(usuario, contraseña):
+    """Asigna al usuario que recibe por parámetro la
+    contraseña que también recibe como parámetro.
+    """
+    contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
+    usuario.contraseña = contraseña_hash
+    db.session.commit()
+
+
 def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
     """Modifica los datos del usuario que recibe por parámetro con los
     datos en el resto de los parámetros.
