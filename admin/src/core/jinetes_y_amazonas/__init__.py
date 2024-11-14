@@ -26,7 +26,7 @@ def listar_j_y_a(
     ordenar_por="id",
     orden="asc",
     pagina=1,
-    cant_por_pag=10,
+    cant_por_pag=6,
 ):
     """
     Funcion que devuelve el listado de jinetes y amazonas filtrado a partir de los parámetros recibidos y ordenado según los parámetros recibidos.

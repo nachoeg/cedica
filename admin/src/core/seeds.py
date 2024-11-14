@@ -105,7 +105,7 @@ def run():
         apellido="Gimenez",
         dni="45678901",
         nombre_contacto_emergencia="Pedro",
-        telefono_contacto_emergencia="456789012",
+        telefono_contacto_emergencia="345678902",
         obra_social="OSDE",
         numero_afiliado="456789012",
         condicion_id=1,
@@ -115,6 +115,121 @@ def run():
         profesion_id=11,
         puesto_laboral_id=3,
         usuario_id=4,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Conductor de caballo
+    miembro5 = miembro.crear_miembro(
+        nombre="Gisela",
+        apellido="Gimenez",
+        dni="16543345",
+        nombre_contacto_emergencia="Valeria",
+        telefono_contacto_emergencia="2214566655",
+        obra_social="OSDE",
+        numero_afiliado="345678903",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="giselagimenez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=3,
+        usuario_id=9,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Conductor de caballo
+    miembro6 = miembro.crear_miembro(
+        nombre="Gloria",
+        apellido="Valente",
+        dni="16548875",
+        nombre_contacto_emergencia="Cristian",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="IOMA",
+        numero_afiliado="115678905",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="gloriavalente@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=3,
+        usuario_id=10,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Profesor de equitación
+    miembro7 = miembro.crear_miembro(
+        nombre="Leandro",
+        apellido="Larez",
+        dni="18548875",
+        nombre_contacto_emergencia="Cristian",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="IOMA",
+        numero_afiliado="116789017",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="leandrolarez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=9,
+        usuario_id=11,
+        activo=True
+    )
+
+
+    # Creo un miembro con puesto Profesor de equitación
+    miembro8 = miembro.crear_miembro(
+        nombre="Vanesa",
+        apellido="Velazquez",
+        dni="18548899",
+        nombre_contacto_emergencia="Javier",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="OSESAC",
+        numero_afiliado="345678908",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="vanesavelazquez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=9,
+        usuario_id=12,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Auxiliar de pista
+    miembro8 = miembro.crear_miembro(
+        nombre="Guillermo",
+        apellido="Limbo",
+        dni="18533449",
+        nombre_contacto_emergencia="Lorena",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="IOMA",
+        numero_afiliado="345678902",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="guillermolimbo@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=4,
+        usuario_id=13,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Auxiliar de pista
+    miembro8 = miembro.crear_miembro(
+        nombre="Lucas",
+        apellido="Luquez",
+        dni="184438919",
+        nombre_contacto_emergencia="Sofia",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="Sancor Salud",
+        numero_afiliado="1456789067",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="lucasluquez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=4,
+        usuario_id=14,
         activo=True
     )
 

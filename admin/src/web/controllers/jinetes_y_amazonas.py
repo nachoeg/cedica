@@ -38,8 +38,11 @@ from core.forms.forms_jinetes import (
 
 import ulid
 from io import BytesIO
-from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
+from src.web.handlers.decoradores import (
+    sesion_iniciada_requerida, chequear_permiso
+    )
+from src.web.handlers.funciones_auxiliares import (
+    validar_url, convertir_a_entero)
 
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
@@ -301,16 +304,20 @@ def cargar_info_inst(id: int):
     form.submit.label.text = "Finalizar"
 
     form.profesor_id.choices = [
-        (profesor.id, profesor.nombre) for profesor in listar_profesores()
+        (profesor.id, profesor.nombre + " " + profesor.apellido) 
+        for profesor in listar_profesores()
     ]
     form.conductor_caballo_id.choices = [
-        (conductor.id, conductor.nombre) for conductor in listar_conductores()
+        (conductor.id, conductor.nombre + " " + conductor.apellido) 
+        for conductor in listar_conductores()
     ]
     form.caballo_id.choices = [
-        (caballo.id, caballo.nombre) for caballo in listar_caballos()
+        (caballo.id, caballo.nombre) 
+        for caballo in listar_caballos()
     ]
     form.auxiliar_pista_id.choices = [
-        (auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista()
+        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido) 
+        for auxiliar in listar_auxiliares_pista()
     ]
     if form.validate_on_submit():
         propuesta_de_trabajo = form.propuesta_trabajo.data
@@ -719,42 +726,47 @@ def editar_info_inst(id: int):
     form = InfoInstitucionalJYAForm(obj=jya)
 
     form.profesor_id.choices = [
-        (profesor.id, profesor.nombre) for profesor in listar_profesores()
+        (profesor.id, profesor.nombre + " " + profesor.apellido) 
+        for profesor in listar_profesores()
     ]
-
-    if jya.profesor is not None:
-        form.profesor.data = jya.profesor.id
-
     form.conductor_caballo_id.choices = [
-        (conductor.id, conductor.nombre) for conductor in listar_conductores()
+        (conductor.id, conductor.nombre + " " + conductor.apellido) 
+        for conductor in listar_conductores()
     ]
-
-    if jya.conductor_caballo is not None:
-        form.conductor_caballo_id.data = jya.conductor_caballo.id
-
     form.caballo_id.choices = [
-        (caballo.id, caballo.nombre) for caballo in listar_caballos()
+        (caballo.id, caballo.nombre) 
+        for caballo in listar_caballos()
     ]
-
-    if jya.caballo is not None:
-        form.caballo.data = jya.caballo.id
-
     form.auxiliar_pista_id.choices = [
-        (auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista()
+        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido) 
+        for auxiliar in listar_auxiliares_pista()
     ]
-
-    if jya.auxiliar_pista is not None:
-        form.auxiliar_pista.data = jya.auxiliar_pista.id
 
     form.submit.label.text = "Guardar"
 
+    if request.method == "GET":
+        if jya.propuesta_trabajo is not None:
+            form.propuesta_trabajo.data = jya.propuesta_trabajo
+        
+        if jya.profesor is not None:
+            form.profesor_id.data = jya.profesor.id
+
+        if jya.conductor_caballo is not None:
+            form.conductor_caballo_id.data = jya.conductor_caballo.id
+
+        if jya.caballo is not None:
+            form.caballo_id.data = jya.caballo.id
+
+        if jya.auxiliar_pista is not None:
+            form.auxiliar_pista_id.data = jya.auxiliar_pista.id
+
     if request.method == "POST":
         if form.validate_on_submit():
-            jya.propuesta_de_trabajo = form.propuesta_trabajo.data
+            jya.propuesta_trabajo = form.propuesta_trabajo.data
             jya.condicion = form.condicion.data
             jya.sede = form.sede.data
             jya.profesor_id = form.profesor_id.data
-            jya.conductor_caballo_id = form.profesor_id.data
+            jya.conductor_caballo_id = form.conductor_caballo_id.data
             jya.caballo_id = form.caballo_id.data
             jya.auxiliar_pista_id = form.auxiliar_pista_id.data
             guardar_cambios()
