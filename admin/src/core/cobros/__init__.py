@@ -57,7 +57,6 @@ def crear_cobro(
     observaciones,
     joa_id,
     recibio_el_dinero_id,
-    tiene_deuda
 ):
     """
     Funcion que crea un cobro.
@@ -69,7 +68,6 @@ def crear_cobro(
         observaciones=observaciones,
         joa_id=joa_id,
         recibio_el_dinero_id=recibio_el_dinero_id,
-        tiene_deuda=tiene_deuda
     )
     db.session.add(cobro)
     db.session.commit()
