@@ -31,16 +31,10 @@
     </div>
     <div class="contenedor-footer">
 
-      {% if tiene_permiso(session, 'usuario_editar') or session.get('id') == usuario.id %}
-      {% if session.get('id') == usuario.id %}
-      <a class="btn btn-secondary w-full" href="{{ url_for('autenticacion.editar_perfil', id=usuario.id) }}">
-        Editar
-      </a>
-      {% else %}
+      {% if tiene_permiso(session, 'usuario_editar') %}
       <a class="btn btn-secondary w-full" href="{{ url_for('usuarios.editar_usuario', id=usuario.id) }}">
         Editar
       </a>
-      {% endif %}
       {% endif %}
 
       {% if session.get('id') != usuario.id and not usuario.admin_sistema %}

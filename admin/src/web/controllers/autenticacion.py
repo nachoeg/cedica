@@ -1,5 +1,6 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
+
 from src.core.usuarios import (actualizar_perfil, asignar_contraseña,
                                usuario_por_email_y_contraseña, usuario_por_id)
 from core.forms.usuario_forms import (IniciarSesionForm, CambiarContraseñaForm,
@@ -25,8 +26,6 @@ def iniciar_sesion():
                 flash('Usuario y/o contraseña incorrectos', 'error')
             else:
                 session.clear()
-                # cambiar por session['mail']?
-                session['usuario'] = usuario.email
                 session['id'] = usuario.id
                 session['alias'] = usuario.alias
                 session['es_admin'] = usuario.admin_sistema
@@ -43,7 +42,7 @@ def iniciar_sesion():
 def cerrar_sesion():
     """Cierra la sesión activa.
     """
-    del session['usuario']
+    del session['id']
     session.clear()
     flash('Se ha cerrado la sesión', 'exito')
     return redirect(url_for('home'))
@@ -71,7 +70,6 @@ def editar_perfil(id):
     form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'POST':
         if form.validate_on_submit():
-            # raise Exception(f'{form.data}')
             actualizar_perfil(usuario, form.email.data, form.alias.data)
             session['alias'] = usuario.alias
             flash(f'Se guardaron los cambios al usuario \

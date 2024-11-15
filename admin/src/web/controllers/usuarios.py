@@ -1,6 +1,8 @@
 import math
+
 from flask import (Blueprint, flash, redirect,
                    render_template, request, url_for)
+
 from src.core.usuarios import (actualizar_perfil, actualizar_usuario,
                                crear_usuario, listar_usuarios, nombres_roles,
                                roles_por_usuario, usuario_por_id)
@@ -40,19 +42,18 @@ def listado_usuarios():
     roles = nombres_roles()
     roles.append('Sin rol')
 
-    return render_template(
-        "pages/usuarios/listado_usuarios.html",
-        usuarios=usuarios,
-        cant_resultados=cant_resultados,
-        cant_paginas=cant_paginas,
-        pagina=pagina,
-        orden=orden,
-        ordenar_por=ordenar_por,
-        email_filtro=email_filtro,
-        activo_filtro=activo_filtro,
-        rol_filtro=rol_filtro,
-        roles=roles
-    )
+    return render_template("pages/usuarios/listado_usuarios.html",
+                           usuarios=usuarios,
+                           cant_resultados=cant_resultados,
+                           cant_paginas=cant_paginas,
+                           pagina=pagina,
+                           orden=orden,
+                           ordenar_por=ordenar_por,
+                           email_filtro=email_filtro,
+                           activo_filtro=activo_filtro,
+                           rol_filtro=rol_filtro,
+                           roles=roles
+                           )
 
 
 @bp.route('/registrar_usuario', methods=['GET', 'POST'])
@@ -103,7 +104,6 @@ def editar_usuario(id):
         form.roles.data = [rol.id for rol in roles_por_usuario(id)]
     if request.method == 'POST':
         if form.validate_on_submit():
-            # raise Exception(f'{form.data}')
             if usuario.admin_sistema:
                 actualizar_perfil(usuario, form.email.data, form.alias.data)
             else:

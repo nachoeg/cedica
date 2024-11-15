@@ -1,12 +1,14 @@
 from functools import wraps
+
 from flask import abort, session
-from src.core.usuarios import (nombres_permisos, usuario_por_email,
-                               usuario_por_id)
+
+from src.core.usuarios import (nombres_permisos, usuario_por_id,
+                               usuario_por_id_none)
 
 
 def esta_autenticado(session):
     """Devuelve True si hay un usuario en la sesión actual."""
-    return session.get('usuario') is not None
+    return session.get('id') is not None
 
 
 def sesion_iniciada_requerida(f):
@@ -27,7 +29,7 @@ def tiene_permiso(session, permiso):
     """Devuelve True si el usuario de la sesión tiene el permiso
     pasado por parámetro.
     """
-    usuario = usuario_por_email(session.get('usuario'))
+    usuario = usuario_por_id_none(session.get('id'))
     if usuario is None:
         return False
     if usuario.admin_sistema:

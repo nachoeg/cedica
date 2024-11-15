@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from src.core.bcrypt import bcrypt
 from src.core.database import db
 from core.usuarios.usuario import Permiso, Rol, Usuario
@@ -17,7 +18,7 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     if rol_filtro == '':
         rol_filtro = True
     elif rol_filtro == 'Sin rol':
-        rol_filtro = Rol.id == None
+        rol_filtro = Rol.id.is_(None)
     else:
         rol_filtro = Rol.nombre == rol_filtro
 
@@ -110,9 +111,18 @@ def usuario_por_id(id):
     return usuario
 
 
+def usuario_por_id_none(id):
+    """Devuelve el usuario correspondiente al id pasado por
+    parámetro. Si no lo encuentra devuelve None.
+    """
+    usuario = db.session.execute(
+        db.select(Usuario).where(Usuario.id == id)).scalar_one_or_none()
+    return usuario
+
+
 def usuario_por_email(email):
     """Devuelve el usuario correspondiente al email pasado por
-    parámetro.
+    parámetro. Si no lo encuentra devuelve None.
     """
     usuario = db.session.execute(
         db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
