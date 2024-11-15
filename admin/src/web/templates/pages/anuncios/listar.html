@@ -1,0 +1,28 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %}Anuncios{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('home'),
+})}}
+
+    {% for anuncio in anuncios %}
+        <div class="contenedor">
+        <div class="contenedor-header">
+            <h1>{{ anuncio.titulo }}</h1>
+        </div>
+        <h2>{{ anuncio.copete }}</h2>
+        <div class="contenedor-body">
+            <p>{{ anuncio.contenido }}</p>
+        </div>
+        <div class="contenedor-footer">
+            Estado: {{ anuncio.estado }} Fecha de creación: {{ anuncio.fecha_creacion }} Autor: {{ anuncio.autor }}
+        </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

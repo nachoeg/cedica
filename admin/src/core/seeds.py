@@ -4,6 +4,7 @@ from src.core.seeds_usuarios import cargar_usuarios
 from src.core import ecuestre
 from src.core import pago
 from src.core import anuncios
+from src.core.seeds_anuncios import cargar_anuncios
 
 def run():
     
@@ -237,7 +238,7 @@ def run():
         miembro.crear_tipo_de_documento(tipo=tipo)
 
     anuncio = anuncios.crear_anuncio("Título", "Copete", "Contenido", 1)
-
+    cargar_anuncios()
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
@@ -272,3 +273,4 @@ def cargar_diagnosticos():
     )
     diagnostico18 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno alimentario")
     diagnostico19 = jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
+

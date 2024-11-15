@@ -12,3 +12,10 @@ def crear_anuncio(titulo, copete, contenido, autor_id, estado="borrador"):
     db.session.commit()
 
     return anuncio
+
+
+def listar_anuncios():
+    """Lista todos los anuncios del sistema"""
+    anuncios = Anuncio.query.all()
+    
+    return anuncios
