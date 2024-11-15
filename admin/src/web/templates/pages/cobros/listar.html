@@ -15,8 +15,10 @@
 ],
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verCobro', 'icono': open_icon},
-{'nombre': 'Editar', 'funcion': 'editarCobro', 'icono': edit_icon},
-{'nombre': 'Borrar','funcion': 'borrarCobro', 'icono': delete_icon}
+{'nombre': 'Editar', 'funcion': 'editarCobro', 'icono': edit_icon} if tiene_permiso(session,
+'cobro_actualizar') else False,
+{'nombre': 'Borrar','funcion': 'borrarCobro', 'icono': delete_icon} if tiene_permiso(session,
+'cobro_eliminar') else False
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -28,7 +30,7 @@
 'crear': {
 'url': url_for('cobros.nuevo_cobro'),
 'nombre': 'Crear cobro'
-}
+} if tiene_permiso(session, 'cobro_crear') else False
 }
 %}
 

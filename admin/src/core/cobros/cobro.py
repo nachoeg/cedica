@@ -34,7 +34,6 @@ class Cobro(db.Model):
     medio_de_pago = db.Column(Enum(MedioDePago), nullable="False")
     monto = db.Column(db.Double, nullable=False)
     observaciones = db.Column(db.String(100))
-    tiene_deuda = db.Column(db.Boolean)
     recibio_el_dinero_id = db.Column(
         db.Integer, db.ForeignKey("miembro.id"), nullable=False
     )
@@ -70,5 +69,4 @@ class Cobro(db.Model):
         return f'<Cobro #{self.id},\
         fecha de pago={self.fecha_pago},\
         medio de pago: {self.medio_de_pago},\
-        observaciones: "{self.observaciones},\
-        deuda: "{self.tiene_deuda}">'
+        observaciones: "{self.observaciones}">'
