@@ -89,7 +89,6 @@ def nuevo_cobro():
         observaciones = form.observaciones.data
         joa_id = form.joa.data
         recibio_el_dinero_id = form.recibio_el_dinero.data
-        tiene_deuda = form.tiene_deuda.data
 
         crear_cobro(
             fecha_pago,
@@ -98,7 +97,6 @@ def nuevo_cobro():
             observaciones,
             joa_id,
             recibio_el_dinero_id,
-            tiene_deuda
         )
 
         flash("Cobro guardado con éxito", "exito")
@@ -137,7 +135,6 @@ def editar_cobro(id: int):
         form.joa.data = cobro.joa.id
         form.medio_de_pago.data = cobro.medio_de_pago.name
         form.recibio_el_dinero.data = cobro.recibio_el_dinero.id
-        form.tiene_deuda.data = cobro.tiene_deuda
 
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
@@ -146,7 +143,6 @@ def editar_cobro(id: int):
         cobro.observaciones = form.observaciones.data
         cobro.joa_id = form.joa.data
         cobro.recibio_el_dinero_id = form.recibio_el_dinero.data
-        cobro.tiene_deuda = form.tiene_deuda.data
 
         guardar_cambios()
 

@@ -46,13 +46,6 @@
         {% endfor %}
     </div>
     <div>
-        {{ form.tiene_deuda.label }}
-        {{ form.tiene_deuda }}<br>
-        {% for error in form.tiene_deuda.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-    </div>
-    <div>
         {{ form.submit() }}
     </div>
     </div>

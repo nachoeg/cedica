@@ -14,7 +14,6 @@ class CobroForm(FlaskForm):
     observaciones = StringField('Observaciones', validators=[Length(max=64)])
     joa = SelectField(u'Jinete o Amazona*', coerce=int)
     recibio_el_dinero = SelectField(u'Recibio el dinero*', coerce=int)
-    tiene_deuda = BooleanField(u'¿Tiene deuda?', default=False)
     submit = SubmitField('Aceptar')
 
     def validate_fecha_pago(self, fecha_pago):

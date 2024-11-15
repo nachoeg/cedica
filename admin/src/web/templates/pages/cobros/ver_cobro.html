@@ -21,7 +21,6 @@
     <p><strong>Monto:</strong> {{ cobro.monto }}</p>
     <p><strong>Recibió el dinero: </strong>{{ cobro.recibio_el_dinero.nombre }} {{ cobro.recibio_el_dinero.apellido }}</p>
     <p><strong>Observaciones: </strong> {{ cobro.observaciones }}</p>
-    <p><strong>Pago incompleto:</strong> {{ booleano_a_palabra(cobro.tiene_deuda) }}</p>
   </div>
   <div class="contenedor-footer">
     {% if tiene_permiso(session, 'cobro_actualizar') %}
