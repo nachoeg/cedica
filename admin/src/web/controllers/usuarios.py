@@ -1,7 +1,7 @@
 import math
 from flask import (Blueprint, flash, redirect,
                    render_template, request, url_for)
-from src.core.usuarios import (actualizar_usuario, crear_usuario,
+from src.core.usuarios import (actualizar_perfil, actualizar_usuario, crear_usuario,
                                listar_usuarios, nombres_roles, 
                                roles_por_usuario, usuario_por_id)
 from core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
@@ -102,8 +102,11 @@ def editar_usuario(id):
     if request.method == 'POST':
         if form.validate_on_submit():
             # raise Exception(f'{form.data}')
-            actualizar_usuario(usuario, form.email.data, form.alias.data,
-                               form.admin_sistema.data, form.roles.data)
+            if usuario.admin_sistema:
+                actualizar_perfil(usuario, form.email.data, form.alias.data)
+            else:
+                actualizar_usuario(usuario, form.email.data, form.alias.data,
+                                   form.admin_sistema.data, form.roles.data)
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('usuarios.listado_usuarios'))
@@ -111,7 +114,8 @@ def editar_usuario(id):
             flash('No se pudo actualizar el registro. \
                   Revise los datos ingresados',
                   'error')
-    return render_template('pages/usuarios/editar_usuario.html', form=form)
+    return render_template('pages/usuarios/editar_usuario.html',
+                           form=form, usuario=usuario)
 
 
 @bp.route('/<int:id>/bloquear', methods=['GET'])

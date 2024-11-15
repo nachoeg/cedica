@@ -35,6 +35,7 @@ class UsuarioSinContraseñaForm(FlaskForm):
         Unico(Usuario, Usuario.email, ilike=True, message="El mail ingresado ya existe."),
         ])
     alias = StringField("Alias", validators=[
+        InputRequired("Debe ingresar un alias."),
         Length(max=100, message="No puedo tener más de %(max)d caracteres."),
         Unico(Usuario, Usuario.alias, ilike=True, message="El alias ingresado ya existe."),
         sin_espacios,

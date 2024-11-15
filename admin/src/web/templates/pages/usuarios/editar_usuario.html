@@ -11,9 +11,7 @@
 
 {% block main %}
 
-{{ navbar_secundaria({
-  'volver': url_for('usuarios.listado_usuarios')
-})}}
+{{ navbar_secundaria({'volver': url_for('usuarios.listado_usuarios')}) }}
 
 {% from "pages/usuarios/_campo_form.html" import render_field %}
 {% from "pages/usuarios/_select_multi_checkbox.html" import select_multi_checkbox %}
@@ -25,8 +23,10 @@
   <div class="formulario-body">
     <div>{{ render_field(form.email, type="email") }}</div>
     <div>{{ render_field(form.alias) }}</div>
+    {% if not usuario.admin_sistema %}
     <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
     <div>{{ select_multi_checkbox(form.roles) }}</div>
+    {% endif %}
     <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
     <div><input type=submit></div>
   </div>

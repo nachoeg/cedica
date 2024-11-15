@@ -33,7 +33,7 @@ class Usuario(db.Model):
             "activo": booleano_a_palabra(self.activo),
             "creacion": fechahora_a_fecha(self.creacion),
             "admin_sistema": booleano_a_palabra(self.admin_sistema),
-            "roles": "".join(("" + rol.nombre + ". ") for rol in self.roles),
+            "roles": "".join((rol.nombre + ". ") for rol in self.roles) if self.roles else "-",
         }
 
     def __repr__(self):

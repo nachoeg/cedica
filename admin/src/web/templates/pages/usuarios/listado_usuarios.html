@@ -17,8 +17,7 @@
       {'id': 'roles', 'nombre': 'Roles'},
     ],
     'acciones': [
-      {'nombre': 'Ver', 'funcion': 'verUsuario', 'icono': open_icon},
-      {'nombre': 'Editar', 'funcion': 'editarPerfil', 'icono': edit_icon, 'condiciones': [{'fila': 'id', 'valor': session.get('id')}]},
+      {'nombre': 'Ver', 'funcion': 'verUsuario', 'icono': open_icon, 'condiciones': [{'fila': 'id', 'valor': session.get('id'), 'negar': True}]},
       {'nombre': 'Editar', 'funcion': 'editarUsuario', 'icono': edit_icon, 'condiciones': [{'fila': 'id', 'valor': session.get('id'), 'negar': True}]},
       {'nombre': 'Bloquear','funcion': 'bloquearUsuario', 'icono': ban_icon, 'condiciones': [{'fila': 'admin_sistema', 'valor': False}, {'fila': 'activo', 'valor': True}]},
       {'nombre': 'Activar','funcion': 'activarUsuario', 'icono': circle_check_icon, 'condiciones': [{'fila': 'admin_sistema', 'valor': False}, {'fila': 'activo', 'valor': False}]},

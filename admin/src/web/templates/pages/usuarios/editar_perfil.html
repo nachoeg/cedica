@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block main %}
-  {{ navbar_secundaria({
-    'volver': url_for('autenticacion.ver_perfil')
-  })}}
+  {{ navbar_secundaria({'volver': url_for('autenticacion.ver_perfil')}) }}
 
   {% from "pages/usuarios/_campo_form.html" import render_field %}
   <form method=post class="formulario">
