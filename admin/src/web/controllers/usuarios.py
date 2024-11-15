@@ -1,14 +1,15 @@
 import math
 from flask import (Blueprint, flash, redirect,
                    render_template, request, url_for)
-from src.core.usuarios import (actualizar_perfil, actualizar_usuario, crear_usuario,
-                               listar_usuarios, nombres_roles, 
+from src.core.usuarios import (actualizar_perfil, actualizar_usuario,
+                               crear_usuario, listar_usuarios, nombres_roles,
                                roles_por_usuario, usuario_por_id)
 from core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)
-from src.web.handlers.funciones_auxiliares import palabra_a_booleano, convertir_a_entero
+from src.web.handlers.funciones_auxiliares import (palabra_a_booleano,
+                                                   convertir_a_entero)
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
@@ -37,6 +38,7 @@ def listado_usuarios():
     cant_paginas = math.ceil(cant_resultados / cant_por_pagina)
 
     roles = nombres_roles()
+    roles.append('Sin rol')
 
     return render_template(
         "pages/usuarios/listado_usuarios.html",
@@ -80,7 +82,7 @@ def registrar_usuario():
 @chequear_permiso('usuario_mostrar')
 @sesion_iniciada_requerida
 def ver_usuario(id):
-    """Devuelve la vista de los datos del usuario 
+    """Devuelve la vista de los datos del usuario
     cuyo id recibe como parámetro.
     """
     usuario = usuario_por_id(id)

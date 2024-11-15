@@ -11,15 +11,21 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     de usuarios, filtrado y ordenado, y la cantidad total de
     usuarios que genera la consulta.
     """
+    email_filtro = Usuario.email.ilike(f"%{email_filtro}%")
+    activo_filtro = (Usuario.activo == activo_filtro 
+                     if activo_filtro != '' else True)
+    if rol_filtro == '':
+        rol_filtro = True
+    elif rol_filtro == 'Sin rol':
+        rol_filtro = Rol.id == None
+    else:
+        rol_filtro = Rol.nombre == rol_filtro
+
     usuarios = db.paginate(
-        db.select(
-            Usuario).distinct().join(
-                Usuario.roles, isouter=True).where(
-                    Usuario.email.ilike(f"%{email_filtro}%"),
-                    (Usuario.activo == activo_filtro) if activo_filtro != '' else True,
-                    (Rol.nombre == rol_filtro) if rol_filtro != '' else True,
-                    ).order_by(getattr(getattr(
-                        Usuario, ordenar_por), orden)()),
+        db.select(Usuario).distinct().join(
+            Usuario.roles, isouter=True
+            ).where(email_filtro, activo_filtro, rol_filtro
+                    ).order_by(getattr(getattr(Usuario, ordenar_por), orden)()),
         page=pagina,
         per_page=cant_por_pagina,
         error_out=False)
@@ -35,6 +41,7 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
     parámetro y lo devuelve.
     """
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
+    email = email.lower()
     usuario = Usuario(email=email, contraseña=contraseña_hash, 
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
@@ -62,7 +69,7 @@ def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
 
     Parámetros:
     """
-    usuario.email = email
+    usuario.email = email.lower()
     usuario.alias = alias
     usuario.admin_sistema = admin_sistema
     if admin_sistema:
@@ -79,7 +86,7 @@ def actualizar_perfil(usuario, email, alias):
 
     Parámetros:
     """
-    usuario.email = email
+    usuario.email = email.lower()
     usuario.alias = alias
     db.session.commit()
 

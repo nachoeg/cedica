@@ -18,7 +18,7 @@
 {% from "pages/usuarios/_campo_form.html" import render_field %}
 <form method=post class="formulario">
   <div class="formulario-header">
-    <h1>Cambiar contraseña</h1>
+    <h1>Cambiar contraseña de {{ session.get('alias') }}</h1>
   </div>
   {{ form.csrf_token }}
   <div class="formulario-body">
