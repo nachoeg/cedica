@@ -26,6 +26,7 @@ from src.core.jinetes_y_amazonas import (
     obtener_documento,
     eliminar_documento_j_y_a,
     guardar_cambios,
+    cargar_id_diagnostico_otro
 )
 from core.forms.forms_jinetes import (
     NuevoJYAForm,
@@ -37,8 +38,11 @@ from core.forms.forms_jinetes import (
 
 import ulid
 from io import BytesIO
-from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-from src.web.handlers.funciones_auxiliares import validar_url
+from src.web.handlers.decoradores import (
+    sesion_iniciada_requerida, chequear_permiso
+    )
+from src.web.handlers.funciones_auxiliares import (
+    validar_url, convertir_a_entero)
 
 
 bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
@@ -57,14 +61,14 @@ def listar():
     """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
-    cant_por_pag = int(request.args.get("por_pag", 10))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
+    cant_por_pag = int(request.args.get("por_pag", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
     profesionales_a_cargo = request.args.get("profesionales_a_cargo", "")
 
-    jinetes = listar_j_y_a(
+    jinetes, cant_resultados = listar_j_y_a(
         nombre_filtro,
         apellido_filtro,
         dni_filtro,
@@ -74,7 +78,7 @@ def listar():
         pagina,
         cant_por_pag,
     )
-    cant_resultados = len(jinetes.items)
+    
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
@@ -103,12 +107,11 @@ def nuevo_j_y_a():
     """
     form = NuevoJYAForm()
     form.submit.label.text = "Continuar"
-
     if form.validate_on_submit():
+        
         nombre = form.nombre.data
         apellido = form.apellido.data
         dni = form.dni.data
-        edad = form.edad.data
         fecha_nacimiento = form.fecha_nacimiento.data
         provincia_nacimiento = form.provincia_nacimiento.data
         localidad_nacimiento = form.localidad_nacimiento.data
@@ -122,13 +125,12 @@ def nuevo_j_y_a():
             porcentaje_beca = form.porcentaje_beca.data
         else:
             becado = False
-            porcentaje_beca = None
+            porcentaje_beca = 0
 
         jya_nuevo = crear_j_o_a(
             nombre,
             apellido,
             dni,
-            edad,
             fecha_nacimiento,
             provincia_nacimiento,
             localidad_nacimiento,
@@ -140,7 +142,8 @@ def nuevo_j_y_a():
             porcentaje_beca
         )
 
-        flash("Nuevo J&A creado. Continúe con la carga de información", "exito")
+        flash("Nuevo J&A creado. \
+              Continúe con la carga de información", "exito")
         return redirect(
             url_for("jinetes_y_amazonas.cargar_info_salud", id=jya_nuevo.id)
         )
@@ -157,19 +160,33 @@ def nuevo_j_y_a():
 @sesion_iniciada_requerida
 def cargar_info_salud(id: int):
     """
-    Controlador que muestra muestra el formulario de alta de la información de salud del jinete o amazona o guarda los datos asociados a él.
+    Controlador que muestra muestra el formulario de alta
+    de la información de salud del jinete o amazona 
+    o guarda los datos asociados a él.
     """
     form = InfoSaludJYAForm()
     form.diagnostico.choices = [
-        (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
+        (diagnostico.id, diagnostico.nombre) 
+        for diagnostico in listar_diagnosticos()
     ]
+    id_otro_diagnostico = cargar_id_diagnostico_otro()
     form.submit.label.text = "Continuar"
 
     if form.validate_on_submit():
         certificado_discapacidad = form.certificado_discapacidad.data
-        diagnostico_id = form.diagnostico.data
-        diagnostico_otro = form.diagnostico_otro.data
-        tipo_discapacidad = form.tipo_discapacidad.data
+
+        if certificado_discapacidad:
+            diagnostico_id = form.diagnostico.data
+            if diagnostico_id == id_otro_diagnostico:
+                diagnostico_otro = form.diagnostico_otro.data
+            else:
+                diagnostico_otro = None
+            tipo_discapacidad = None
+        else:
+            diagnostico_id = None
+            diagnostico_otro = None
+            tipo_discapacidad = form.tipo_discapacidad.data
+        
         cargar_informacion_salud(
             id,
             certificado_discapacidad,
@@ -185,6 +202,7 @@ def cargar_info_salud(id: int):
         "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
         titulo="Nuevo jinete/amazona",
+        id_otro_diagnostico=id_otro_diagnostico
     )
 
 
@@ -286,16 +304,20 @@ def cargar_info_inst(id: int):
     form.submit.label.text = "Finalizar"
 
     form.profesor_id.choices = [
-        (profesor.id, profesor.nombre) for profesor in listar_profesores()
+        (profesor.id, profesor.nombre + " " + profesor.apellido) 
+        for profesor in listar_profesores()
     ]
     form.conductor_caballo_id.choices = [
-        (conductor.id, conductor.nombre) for conductor in listar_conductores()
+        (conductor.id, conductor.nombre + " " + conductor.apellido) 
+        for conductor in listar_conductores()
     ]
     form.caballo_id.choices = [
-        (caballo.id, caballo.nombre) for caballo in listar_caballos()
+        (caballo.id, caballo.nombre) 
+        for caballo in listar_caballos()
     ]
     form.auxiliar_pista_id.choices = [
-        (auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista()
+        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido) 
+        for auxiliar in listar_auxiliares_pista()
     ]
     if form.validate_on_submit():
         propuesta_de_trabajo = form.propuesta_trabajo.data
@@ -434,7 +456,7 @@ def ver_archivos(id: int):
     jya = encontrar_jya(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")
@@ -530,7 +552,6 @@ def editar_j_y_a(id: int):
             jya.nombre = form.nombre.data
             jya.apellido = form.apellido.data
             jya.dni = form.dni.data
-            jya.edad = form.edad.data
             jya.fecha_nacimiento = form.fecha_nacimiento.data
             jya.provincia_nacimiento = form.provincia_nacimiento.data
             jya.localidad_nacimiento = form.localidad_nacimiento.data
@@ -570,17 +591,28 @@ def editar_info_salud(id: int):
     form.diagnostico.choices = [
         (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
     ]
-
-    if jya.diagnostico is not None:
-        form.diagnostico.data = jya.diagnostico.id
+    id_otro_diagnostico = cargar_id_diagnostico_otro()
+    
     form.submit.label.text = "Guardar"
+
+    if request.method == "GET":
+        if jya.diagnostico is not None:
+            form.diagnostico.data = jya.diagnostico.id
 
     if request.method == "POST":
         if form.validate_on_submit():
             jya.certificado_discapacidad = form.certificado_discapacidad.data
-            jya.diagnostico_id = form.diagnostico.data
-            jya.diagnostico_otro = form.diagnostico_otro.data
-            jya.tipo_discapacidad = form.tipo_discapacidad.data
+            if jya.certificado_discapacidad:
+                jya.diagnostico_id = form.diagnostico.data
+                if jya.diagnostico_id == id_otro_diagnostico:
+                    jya.diagnostico_otro = form.diagnostico_otro.data
+                else:
+                    jya.diagnostico_otro = None
+                jya.tipo_discapacidad = None
+            else:
+                jya.diagnostico_id = None
+                jya.diagnostico_otro = None
+                jya.tipo_discapacidad = form.tipo_discapacidad.data
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
@@ -595,6 +627,7 @@ def editar_info_salud(id: int):
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
+        id_otro_diagnostico=id_otro_diagnostico
     )
 
 
@@ -693,42 +726,47 @@ def editar_info_inst(id: int):
     form = InfoInstitucionalJYAForm(obj=jya)
 
     form.profesor_id.choices = [
-        (profesor.id, profesor.nombre) for profesor in listar_profesores()
+        (profesor.id, profesor.nombre + " " + profesor.apellido) 
+        for profesor in listar_profesores()
     ]
-
-    if jya.profesor is not None:
-        form.profesor.data = jya.profesor.id
-
     form.conductor_caballo_id.choices = [
-        (conductor.id, conductor.nombre) for conductor in listar_conductores()
+        (conductor.id, conductor.nombre + " " + conductor.apellido) 
+        for conductor in listar_conductores()
     ]
-
-    if jya.conductor_caballo is not None:
-        form.conductor_caballo_id.data = jya.conductor_caballo.id
-
     form.caballo_id.choices = [
-        (caballo.id, caballo.nombre) for caballo in listar_caballos()
+        (caballo.id, caballo.nombre) 
+        for caballo in listar_caballos()
     ]
-
-    if jya.caballo is not None:
-        form.caballo.data = jya.caballo.id
-
     form.auxiliar_pista_id.choices = [
-        (auxiliar.id, auxiliar.nombre) for auxiliar in listar_auxiliares_pista()
+        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido) 
+        for auxiliar in listar_auxiliares_pista()
     ]
-
-    if jya.auxiliar_pista is not None:
-        form.auxiliar_pista.data = jya.auxiliar_pista.id
 
     form.submit.label.text = "Guardar"
 
+    if request.method == "GET":
+        if jya.propuesta_trabajo is not None:
+            form.propuesta_trabajo.data = jya.propuesta_trabajo
+        
+        if jya.profesor is not None:
+            form.profesor_id.data = jya.profesor.id
+
+        if jya.conductor_caballo is not None:
+            form.conductor_caballo_id.data = jya.conductor_caballo.id
+
+        if jya.caballo is not None:
+            form.caballo_id.data = jya.caballo.id
+
+        if jya.auxiliar_pista is not None:
+            form.auxiliar_pista_id.data = jya.auxiliar_pista.id
+
     if request.method == "POST":
         if form.validate_on_submit():
-            jya.propuesta_de_trabajo = form.propuesta_trabajo.data
+            jya.propuesta_trabajo = form.propuesta_trabajo.data
             jya.condicion = form.condicion.data
             jya.sede = form.sede.data
             jya.profesor_id = form.profesor_id.data
-            jya.conductor_caballo_id = form.profesor_id.data
+            jya.conductor_caballo_id = form.conductor_caballo_id.data
             jya.caballo_id = form.caballo_id.data
             jya.auxiliar_pista_id = form.auxiliar_pista_id.data
             guardar_cambios()

@@ -1,0 +1,43 @@
+{% macro tooltip_on_top(mensaje) %}
+<div class="hs-tooltip inline-block">
+  {{caller()}}
+  <span
+    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+    role="tooltip">
+    {{mensaje}}
+  </span>
+</div>
+{% endmacro %}
+
+{% macro tooltip_on_left(mensaje) %}
+<div class="hs-tooltip [--placement:left] inline-block">
+  {{caller()}}
+  <span
+    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+    role="tooltip">
+    {{mensaje}}
+  </span>
+</div>
+{% endmacro %}
+
+{% macro tooltip_on_right(mensaje) %}
+<div class="hs-tooltip [--placement:right] inline-block">
+  {{caller()}}
+  <span
+    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+    role="tooltip">
+    {{mensaje}}
+  </span>
+</div>
+{% endmacro %}
+
+{% macro tooltip_on_bottom(mensaje) %}
+<div class="hs-tooltip [--placement:bottom] inline-block">
+  {{caller()}}
+  <span
+    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+    role="tooltip">
+    {{mensaje}}
+  </span>
+</div>
+{% endmacro %}

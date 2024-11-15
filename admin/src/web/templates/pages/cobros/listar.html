@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon %}
 
 {% block title %}Cobros{% endblock %}
 
@@ -13,9 +14,11 @@
 {'id': 'recibio_el_dinero', 'nombre': 'Recibió el dinero'}
 ],
 'acciones': [
-{'nombre': 'Ver', 'funcion': 'verCobro'},
-{'nombre': 'Editar', 'funcion': 'editarCobro'},
-{'nombre': 'Borrar','funcion': 'borrarCobro'}
+{'nombre': 'Ver', 'funcion': 'verCobro', 'icono': open_icon},
+{'nombre': 'Editar', 'funcion': 'editarCobro', 'icono': edit_icon} if tiene_permiso(session,
+'cobro_actualizar') else False,
+{'nombre': 'Borrar','funcion': 'borrarCobro', 'icono': delete_icon} if tiene_permiso(session,
+'cobro_eliminar') else False
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -27,7 +30,7 @@
 'crear': {
 'url': url_for('cobros.nuevo_cobro'),
 'nombre': 'Crear cobro'
-}
+} if tiene_permiso(session, 'cobro_crear') else False
 }
 %}
 

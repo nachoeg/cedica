@@ -31,7 +31,7 @@ from src.core.usuarios import usuario_por_alias
 from os import fstat
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 import ulid
-from src.web.handlers.funciones_auxiliares import validar_url
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
 
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
@@ -46,7 +46,7 @@ def miembro_listar():
     asc y desc por nombre, apellido y fecha de creacion"""
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
@@ -134,13 +134,17 @@ def miembro_crear():
             domicilio_id = nuevo_domicilio.id
 
         if alias:
-            usuario = usuario_por_alias(alias_usuario)
+            usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
             if usuario:
-                usuario_id = usuario.id
-                alias_usuario = usuario_id
+                if usuario.miembro:  # Si el usuario ya está asignado a un miembro
+                    flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
+                    return render_template("pages/miembros/crear.html", form=form)
+                else:
+                    # Si el usuario existe pero no está asignado a ningún miembro
+                    usuario_id = usuario.id
             else:
                 flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
-                return redirect(url_for('miembro.miembro_crear'))
+                return render_template("pages/miembros/crear.html", form=form)
         else:
             usuario_id = None
 
@@ -180,9 +184,6 @@ def miembro_editar(id: int):
     form.piso.data = miembro.domicilio.piso
     form.dpto.data = miembro.domicilio.dpto
     form.localidad.data = miembro.domicilio.localidad
-    if miembro.usuario != None:
-        form.alias.data = miembro.usuario.alias 
-    
     form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
     form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
     form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
@@ -215,20 +216,28 @@ def miembro_editar(id: int):
             nuevo_domicilio = crear_domicilio(calle=form.calle.data, numero=form.numero.data, piso=form.piso.data, dpto=form.dpto.data, localidad=form.localidad.data)
             miembro.domicilio_id = nuevo_domicilio.id
 
-        alias_usuario = form.alias.data
-        if alias_usuario:
-            usuario = usuario_por_alias(alias_usuario)
+        alias = form.alias.data
+        if alias:
+            usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
             if usuario:
-                usuario_id = usuario.id
-                alias_usuario = usuario_id
+                if usuario.miembro:  # Si el usuario ya está asignado a un miembro
+                    flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
+                    return render_template("pages/miembros/crear.html", form=form)
+                else:
+                    # Si el usuario existe pero no está asignado a ningún miembro
+                    miembro.usuario_id = usuario.id
             else:
-                flash(f"No se encontró ningún usuario con el alias {alias_usuario}.", 'danger')
-                return render_template("pages/miembros/crear.html", form=form)
-        else:
-            miembro.usuario_id = None      
+                flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
+                return render_template("pages/miembros/crear.html", form=form)  
+        elif alias == "":
+            miembro.usuario_id = None
 
         guardar_cambios()
+        flash("Miembro editado con éxito.", 'success')
         return redirect(url_for("miembro.miembro_listar")) 
+
+    if miembro.usuario != None:
+        form.alias.data = miembro.usuario.alias 
 
     return render_template("pages/miembros/crear.html", form=form, titulo="Editar miembro")    
 
@@ -257,7 +266,7 @@ def miembro_documentos(id: int):
     miembro = miembro_por_id(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")

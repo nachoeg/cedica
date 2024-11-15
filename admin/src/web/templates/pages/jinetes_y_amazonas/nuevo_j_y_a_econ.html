@@ -18,7 +18,7 @@
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
-            <div>
+            <div class="tipo_asignacion_familiar">
                 {{ form.tipo_asignacion_familiar.label }}
                 {{ form.tipo_asignacion_familiar }}<br>
                 {% for error in form.tipo_asignacion_familiar.errors %}
@@ -32,7 +32,7 @@
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
-            <div>
+            <div class="tipo_pension">
                 {{ form.tipo_pension.label }}
                 {{ form.tipo_pension }}<br>
                 {% for error in form.tipo_pension.errors %}
@@ -72,4 +72,7 @@
             </div>
         </div>
     </form>
+
+    {% include "pages/jinetes_y_amazonas/_ocultar_mostrar_economica.html" %}
+
 {% endblock %}

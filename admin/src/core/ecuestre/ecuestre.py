@@ -1,6 +1,7 @@
 from src.core.database import db
 from sqlalchemy import event
 from flask import current_app
+from src.web.handlers.funciones_auxiliares import fechahora_a_fecha
 
 
 class TipoDeJyA(db.Model):
@@ -118,12 +119,12 @@ class Ecuestre(db.Model):
         return {
             "id": self.id,
             "nombre": self.nombre,
-            "fecha_nacimiento": self.fecha_nacimiento,
+            "fecha_nacimiento": fechahora_a_fecha(self.fecha_nacimiento),
             "sexo": self.sexo,
             "raza": self.raza,
             "pelaje": self.pelaje,
             "es_compra": "Compra" if self.es_compra else "Donación",
-            "fecha_ingreso": self.fecha_ingreso,
+            "fecha_ingreso": fechahora_a_fecha(self.fecha_ingreso),
             "sede": self.sede,
             "tipo_de_jya": self.tipo_de_jya.tipo if self.tipo_de_jya else None,
             "entrenadores": " / ".join(

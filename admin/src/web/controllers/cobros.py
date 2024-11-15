@@ -14,6 +14,7 @@ from core.forms.cobro_forms import CobroForm
 from src.web.handlers.decoradores import (
     sesion_iniciada_requerida,
     chequear_permiso)
+from src.web.handlers.funciones_auxiliares import convertir_a_entero
 
 bp = Blueprint("cobros", __name__, url_prefix="/cobros")
 
@@ -27,7 +28,7 @@ def listar():
     """
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
-    pagina = int(request.args.get("pagina", 1))
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pag = int(request.args.get("por_pag", 6))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
@@ -89,7 +90,6 @@ def nuevo_cobro():
         observaciones = form.observaciones.data
         joa_id = form.joa.data
         recibio_el_dinero_id = form.recibio_el_dinero.data
-        tiene_deuda = form.tiene_deuda.data
 
         crear_cobro(
             fecha_pago,
@@ -98,7 +98,6 @@ def nuevo_cobro():
             observaciones,
             joa_id,
             recibio_el_dinero_id,
-            tiene_deuda
         )
 
         flash("Cobro guardado con éxito", "exito")
@@ -137,7 +136,6 @@ def editar_cobro(id: int):
         form.joa.data = cobro.joa.id
         form.medio_de_pago.data = cobro.medio_de_pago.name
         form.recibio_el_dinero.data = cobro.recibio_el_dinero.id
-        form.tiene_deuda.data = cobro.tiene_deuda
 
     if request.method == "POST" and form.validate_on_submit():
         cobro.fecha_pago = form.fecha_pago.data
@@ -146,7 +144,6 @@ def editar_cobro(id: int):
         cobro.observaciones = form.observaciones.data
         cobro.joa_id = form.joa.data
         cobro.recibio_el_dinero_id = form.recibio_el_dinero.data
-        cobro.tiene_deuda = form.tiene_deuda.data
 
         guardar_cambios()
 

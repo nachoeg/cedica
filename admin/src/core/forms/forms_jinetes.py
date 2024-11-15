@@ -1,46 +1,81 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, SubmitField, ValidationError
+from wtforms.validators import DataRequired, Length, Optional
 from wtforms.fields import (
-    DateTimeField,
+    DateField,
     SelectField,
     IntegerField,
     BooleanField,
     TextAreaField,
     SelectMultipleField,
 )
-
+import math
 from core.forms.validaciones import Unico
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
+
+def validar_telefono(form, field):
+    try:
+        numero = field.data
+        num = int(numero)
+        print(type(num))
+        if math.log10(num)+1 < 7 or math.log10(num)+1 > 15:
+            raise Exception()
+    except ValueError:
+        raise ValidationError('El número de teléfono sólo puede contener\
+                               caracteres numéricos.')
+    except Exception:
+        raise ValidationError('El número de teléfono \
+                              debe contener entre 7 y 15 digitos')
+
+
 class NuevoJYAForm(FlaskForm):
     """
-    Formulario utilizado para cargar la información general del jinete o amazona.
+    Formulario utilizado para cargar
+    la información general del jinete o amazona.
     """
-    nombre = StringField('Nombre', validators=[DataRequired('Ingrese el nombre del jinete o la amazona')])
-    apellido = StringField('Apellido', validators=[DataRequired('Ingrese el apellido del jinete o la amazona')])
-    dni = IntegerField('DNI', validators=[Unico(JineteOAmazona, JineteOAmazona.dni)])
+    nombre = StringField('Nombre*', validators=[DataRequired('Ingrese \
+                                    el nombre del jinete o la amazona')])
+    apellido = StringField('Apellido*', validators=[DataRequired('Ingrese\
+                                    el apellido del jinete o la amazona')])
+    dni = IntegerField('DNI*', validators=[
+        Unico(JineteOAmazona, JineteOAmazona.dni),
+        DataRequired('Ingrese el DNI del jinete o la amazona')])
     edad = IntegerField('Edad')
-    fecha_nacimiento =  DateTimeField('Fecha de nacimiento', format='%d/%m/%Y')
-    provincia_nacimiento = StringField('Provincia de nacimiento', validators=[Length(max=64)])
-    localidad_nacimiento = StringField('Localidad de nacimiento', validators=[Length(max=64)])
-    domicilio_actual = StringField('Domicilio actual', validators=[Length(max=64)])
-    telefono_actual = IntegerField('Telefono actual')
-    contacto_emer_nombre = StringField('Nombre de contacto de emergencia', validators=[Length(max=64)])
-    contacto_emer_telefono = IntegerField('Telefono de contacto de emergencia')
+    fecha_nacimiento = DateField('Fecha de nacimiento*',
+                                 validators=[
+                                    DataRequired('Ingrese\
+                                    la fecha de nacimiento\
+                                    del jinete o la amazona')])
+    provincia_nacimiento = StringField('Provincia de nacimiento',
+                                       validators=[Length(max=64)])
+    localidad_nacimiento = StringField('Localidad de nacimiento',
+                                       validators=[Length(max=64)])
+    domicilio_actual = StringField('Domicilio actual',
+                                   validators=[Length(max=64)])
+    telefono_actual = StringField('Telefono actual',
+                                  validators=[Optional(), validar_telefono])
+    contacto_emer_nombre = StringField('Nombre de contacto de emergencia',
+                                       validators=[Length(max=64)])
+    contacto_emer_telefono = StringField('Telefono de contacto de emergencia',
+                                         validators=[Optional(),
+                                                     validar_telefono])
     becado = BooleanField('¿Tiene beca?')
-    porcentaje_beca = StringField('Porcentaje de beca', validators=[Length(max=64)])
+    porcentaje_beca = IntegerField('Porcentaje de beca', [Optional()])
     submit = SubmitField('Continuar')
 
 
 class InfoSaludJYAForm(FlaskForm):
     """
-    Formulario utilizado para cargar la información de salud del jinete o amazona.
+    Formulario utilizado para 
+    cargar la información de salud del jinete o amazona.
     """
 
-    certificado_discapacidad = BooleanField("¿Tiene certificado de discapacidad?")
+    certificado_discapacidad = BooleanField("¿Tiene certificado\
+                                             de discapacidad?")
     diagnostico = SelectField("Diagnóstico", coerce=int)
-    diagnostico_otro = StringField("Otro diagnóstico", validators=[Length(max=64)])
+    diagnostico_otro = StringField("Otro diagnóstico",
+                                   validators=[Length(max=64)])
     tipo_discapacidad = SelectField(
         "Tipo de discapacidad",
         choices=[
@@ -55,7 +90,8 @@ class InfoSaludJYAForm(FlaskForm):
 
 class InfoEconomicaJYAForm(FlaskForm):
     """
-    Formulario utilizado para cargar la información económica del jinete o amazona.
+    Formulario utilizado para cargar
+    la información económica del jinete o amazona.
     """
 
     asignacion_familiar = BooleanField("¿Recibe asignación familiar?")
@@ -83,23 +119,34 @@ class InfoEconomicaJYAForm(FlaskForm):
 
 class InfoEscolaridadJYAForm(FlaskForm):
     """
-    Formulario utilizado para cargar la información relacionada a la escolaridad del jinete o amazona.
+    Formulario utilizado para cargar
+    la información relacionada a la escolaridad del jinete o amazona.
     """
 
-    nombre_escuela = StringField("Nombre de escuela", validators=[Length(max=40)])
-    direccion_escuela = StringField("Direccion de escuela", validators=[Length(max=50)])
-    telefono_escuela = IntegerField("Telefono de la escuela")
-    grado_escuela = StringField("Grado al que asiste", validators=[Length(max=4)])
-    observaciones_escuela = StringField("Observaciones", validators=[Length(max=100)])
+    nombre_escuela = StringField("Nombre de escuela",
+                                 validators=[Length(max=40)])
+    direccion_escuela = StringField("Direccion de escuela",
+                                    validators=[Length(max=50)])
+    telefono_escuela = StringField("Telefono de la escuela",
+                                   validators=[Optional(), validar_telefono])
+    grado_escuela = StringField("Grado al que asiste",
+                                validators=[Length(max=4)])
+    observaciones_escuela = StringField("Observaciones",
+                                        validators=[Length(max=100)])
     profesionales_a_cargo = TextAreaField(
-        "Profesionales a cargo", validators=[Length(max=200)]
+        "Profesionales a cargo*", validators=[
+                                    Length(max=200),
+                                    DataRequired('Ingrese al menos\
+                                        un profesional a cargo\
+                                        del jinete o la amazona')]
     )
     submit = SubmitField("Continuar")
 
 
 class InfoInstitucionalJYAForm(FlaskForm):
     """
-    Formulario utilizado para cargar la información institucional relacionada al jinete o amazona.
+    Formulario utilizado para cargar
+    la información institucional relacionada al jinete o amazona.
     """
 
     propuesta_trabajo = SelectField(

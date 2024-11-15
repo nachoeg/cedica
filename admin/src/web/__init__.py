@@ -48,6 +48,7 @@ def create_app(env="development", static_folder="../../static"):
     app.register_error_handler(401, error.no_autorizado)
     app.register_error_handler(403, error.prohibido)
 
+    app.jinja_env.add_extension('jinja2.ext.loopcontrols')
     app.jinja_env.globals.update(esta_autenticado=esta_autenticado)
     app.jinja_env.globals.update(tiene_permiso=tiene_permiso)
     app.jinja_env.globals.update(booleano_a_palabra=booleano_a_palabra)

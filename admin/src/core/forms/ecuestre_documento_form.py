@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 from wtforms.fields import (
     FileField,
     SelectField,
@@ -16,7 +16,11 @@ class SubirArchivoForm(FlaskForm):
     """
 
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+        "Nombre",
+        validators=[
+            DataRequired("Ingrese el nombre del documento"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+        ],
     )
     archivo = FileField(
         "Archivo",
@@ -36,7 +40,11 @@ class EditarArchivoForm(FlaskForm):
     """
 
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+        "Nombre",
+        validators=[
+            DataRequired("Ingrese el nombre del documento"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+        ],
     )
     tipo_de_documento_id = SelectField("Tipo", coerce=int)
     submit = SubmitField("Guardar")
@@ -48,8 +56,18 @@ class EnlaceForm(FlaskForm):
     """
 
     nombre = StringField(
-        "Nombre", validators=[DataRequired("Ingrese el nombre del documento")]
+        "Nombre",
+        validators=[
+            DataRequired("Ingrese el nombre del documento"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+        ],
     )
-    url = StringField("Enlace", validators=[DataRequired("Ingrese el enlace")])
+    url = StringField(
+        "Enlace",
+        validators=[
+            DataRequired("Ingrese el enlace"),
+            Length(max=100, message="No puede tener más de %(max)d caracteres."),
+        ],
+    )
     tipo_de_documento_id = SelectField("Tipo", coerce=int)
     submit = SubmitField("Guardar")

@@ -156,7 +156,8 @@
         <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
-
+    <p class="text-gray-600 text-xs italic"> Puede relacionar un miembro con un usuario del sistema ingresando el alias en el siguiente campo. </p>
+    <p class="text-gray-600 text-xs italic"> El alias debe corresponder a un usuario activo del sistema y que no este relacionado a otro miembro del equipo. </p>
     <div class="text-red-600">
         {{ form.alias.label }}
         {{ form.alias }}
