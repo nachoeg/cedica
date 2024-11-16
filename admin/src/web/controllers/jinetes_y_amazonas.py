@@ -40,7 +40,7 @@ from src.web.handlers.decoradores import (
     sesion_iniciada_requerida, chequear_permiso
     )
 from src.web.handlers.funciones_auxiliares import (
-    validar_url, convertir_a_entero)
+    validar_url, convertir_a_entero, calcular_edad)
 
 
 bp = Blueprint("jinetes_y_amazonas", __name__,
@@ -73,7 +73,7 @@ def listar():
         pagina,
         cant_por_pag,
     )
-    
+
     cant_paginas = cant_resultados // cant_por_pag
     if cant_resultados % cant_por_pag != 0:
         cant_paginas += 1
@@ -157,12 +157,12 @@ def nuevo_j_y_a():
 def cargar_info_salud(id: int):
     """
     Controlador que muestra muestra el formulario de alta
-    de la información de salud del jinete o amazona 
+    de la información de salud del jinete o amazona
     o guarda los datos asociados a él.
     """
     form = InfoSaludJYAForm()
     form.diagnostico.choices = [
-        (diagnostico.id, diagnostico.nombre) 
+        (diagnostico.id, diagnostico.nombre)
         for diagnostico in listar_diagnosticos()
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
@@ -315,7 +315,7 @@ def cargar_info_inst(id: int):
         for conductor in listar_conductores()
     ]
     form.caballo_id.choices = [
-        (caballo.id, caballo.nombre) 
+        (caballo.id, caballo.nombre)
         for caballo in listar_caballos()
     ]
     form.auxiliar_pista_id.choices = [
@@ -363,7 +363,9 @@ def ver(id: int):
     """
     jya = encontrar_jya(id)
 
-    return render_template("pages/jinetes_y_amazonas/ver_jya.html", jya=jya)
+    return render_template("pages/jinetes_y_amazonas/ver_jya.html",
+                           jya=jya,
+                           edad=calcular_edad(jya.fecha_nacimiento))
 
 
 @bp.get("/<int:id>/eliminar/")
@@ -439,7 +441,7 @@ def subir_enlace(id: int):
             url = validar_url(form.url.data)
             tipo_archivo = form.tipo_de_documento_id.data
             cargar_archivo(jya_id,
-                           titulo, 
+                           titulo,
                            tipo_archivo,
                            url,
                            archivo_externo=True)
@@ -530,7 +532,8 @@ def descargar_archivo(archivo_id: int):
     cliente = current_app.storage.client
     archivo = cliente.get_object("grupo17", documento.url)
     archivo_bytes = BytesIO(archivo.read())
-    extension = f".{documento.url.split('.')[-1]}" if "." in documento.url else ""
+    extension = (
+        f".{documento.url.split('.')[-1]}"if "." in documento.url else "")
 
     return send_file(
         archivo_bytes,
@@ -564,6 +567,8 @@ def editar_j_y_a(id: int):
     jya = encontrar_jya(id)
     form = NuevoJYAForm(obj=jya)
     form.submit.label.text = "Guardar"
+    if request.method == "GET":
+        form.edad.data = calcular_edad(form.fecha_nacimiento.data)
     if request.method == "POST":
         if form.validate_on_submit():
             jya.nombre = form.nombre.data
@@ -581,7 +586,7 @@ def editar_j_y_a(id: int):
             if jya.becado:
                 jya.porcentaje_beca = form.porcentaje_beca.data
             else:
-                jya.porcentaje_beca = "0%"
+                jya.porcentaje_beca = 0
 
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
@@ -592,8 +597,8 @@ def editar_j_y_a(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a.html",
         form=form,
-        titulo="Editar jinete/amazona " + str(jya.nombre) +
-        + " " + str(jya.apellido),
+        titulo="Editar J/A " + str(jya.nombre) +
+        " " + str(jya.apellido)
     )
 
 
@@ -643,7 +648,7 @@ def editar_info_salud(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
-        titulo="Editar información de salud - Jinete/Amazona "
+        titulo="Editar información de salud - J/A "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
@@ -693,7 +698,7 @@ def editar_info_econ(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
-        titulo="Editar información económica - Jinete/Amazona "
+        titulo="Editar información económica - J/A "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
@@ -730,7 +735,7 @@ def editar_info_esc(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
         form=form,
-        titulo="Editar información sobre escolaridad - Jinete/Amazona "
+        titulo="Editar información sobre escolaridad - J/A "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
@@ -757,7 +762,7 @@ def editar_info_inst(id: int):
         for conductor in listar_conductores()
     ]
     form.caballo_id.choices = [
-        (caballo.id, caballo.nombre) 
+        (caballo.id, caballo.nombre)
         for caballo in listar_caballos()
     ]
     form.auxiliar_pista_id.choices = [
@@ -769,7 +774,10 @@ def editar_info_inst(id: int):
 
     if request.method == "GET":
         if jya.propuesta_trabajo is not None:
-            form.propuesta_trabajo.data = jya.propuesta_trabajo
+            form.propuesta_trabajo.data = jya.propuesta_trabajo.name
+
+        if jya.condicion is not None:
+            form.condicion.data = jya.condicion.name
 
         if jya.profesor is not None:
             form.profesor_id.data = jya.profesor.id
@@ -801,7 +809,7 @@ def editar_info_inst(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
-        titulo="Editar información institucional - Jinete/Amazona "
+        titulo="Editar información institucional - J/A "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),

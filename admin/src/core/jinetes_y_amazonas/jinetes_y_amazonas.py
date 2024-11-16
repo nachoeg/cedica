@@ -192,7 +192,7 @@ class JineteOAmazona(db.Model):
             "tiene_deuda": ("TIENE DEUDA" if self.tiene_deuda else "-"),
             "edad": calcular_edad(self.fecha_nacimiento),
             "profesionales_a_cargo": (
-                self.profesionales_a_cargo 
+                self.profesionales_a_cargo
                 if self.profesionales_a_cargo else "-"),
         }
 

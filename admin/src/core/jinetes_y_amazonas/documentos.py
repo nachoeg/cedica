@@ -41,7 +41,7 @@ class Archivo_JYA(db.Model):
             "id": self.id,
             "titulo": self.titulo,
             "fecha_subida": fechahora_a_fecha(self.fecha_subida),
-            "tipo_archivo": self.tipo_archivo.value 
+            "tipo_archivo": self.tipo_archivo.value
             if self.tipo_archivo else None,
         }
 

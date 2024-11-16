@@ -77,7 +77,7 @@ class NuevoJYAForm(FlaskForm):
 
 class InfoSaludJYAForm(FlaskForm):
     """
-    Formulario utilizado para 
+    Formulario utilizado para
     cargar la información de salud del jinete o amazona.
     """
 
@@ -176,7 +176,7 @@ class InfoInstitucionalJYAForm(FlaskForm):
     sede = SelectField(
         "Sede", choices=[("CASJ", "CASJ"), ("HLP", "HLP"), ("otro", "Otro")]
     )
-    profesor_id = SelectField("Profesor", choices=[])
+    profesor_id = SelectField("Profesor/Terapeuta", choices=[])
     conductor_caballo_id = SelectField("Conductor del caballo", choices=[])
     caballo_id = SelectField("Caballo asignado", choices=[])
     auxiliar_pista_id = SelectField("Auxiliar de pista", choices=[])
