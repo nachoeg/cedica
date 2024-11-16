@@ -1,8 +1,7 @@
-from src.core.database import db
 import enum
 from sqlalchemy.types import Enum
+from src.core.database import db
 from src.web.handlers.funciones_auxiliares import calcular_edad
-
 
 
 class Diagnostico(db.Model):
@@ -165,13 +164,16 @@ class JineteOAmazona(db.Model):
     profesor = db.relationship("Miembro", foreign_keys=[profesor_id])
 
     conductor_caballo_id = db.Column(db.Integer, db.ForeignKey("miembro.id"))
-    conductor_caballo = db.relationship("Miembro", foreign_keys=[conductor_caballo_id])
+    conductor_caballo = db.relationship("Miembro",
+                                        foreign_keys=[conductor_caballo_id])
 
     caballo_id = db.Column(db.Integer, db.ForeignKey("ecuestres.id"))
-    caballo = db.relationship("Ecuestre", foreign_keys=[caballo_id])
+    caballo = db.relationship("Ecuestre",
+                              foreign_keys=[caballo_id])
 
     auxiliar_pista_id = db.Column(db.Integer, db.ForeignKey("miembro.id"))
-    auxiliar_pista = db.relationship("Miembro", foreign_keys=[auxiliar_pista_id])
+    auxiliar_pista = db.relationship("Miembro",
+                                     foreign_keys=[auxiliar_pista_id])
 
     documentos = db.relationship("Archivo_JYA", back_populates="jya")
     # TODO armar tabla de familiares a cargo
@@ -195,6 +197,5 @@ class JineteOAmazona(db.Model):
         }
 
     def __repr__(self):
-        return f"<Jinete-Amazona #{self.id} nombre:{self.nombre}, apellido: {self.apellido}>"
-
-
+        return f"<Jinete-Amazona #{self.id}\
+          nombre:{self.nombre}, apellido: {self.apellido}>"
