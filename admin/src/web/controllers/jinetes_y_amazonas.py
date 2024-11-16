@@ -1,9 +1,11 @@
-from src.core.forms.forms_documentos_jya import SubirArchivoForm
-from src.core.forms.forms_documentos_jya import EnlaceForm
+import ulid
+from io import BytesIO
+from os import fstat
 from flask import render_template, request, redirect, url_for, send_file, flash
 from flask import Blueprint
 from flask import current_app
-from os import fstat
+from src.core.forms.forms_documentos_jya import SubirArchivoForm
+from src.core.forms.forms_documentos_jya import EnlaceForm
 from src.core.jinetes_y_amazonas import (
     listar_j_y_a,
     crear_j_o_a,
@@ -14,7 +16,6 @@ from src.core.jinetes_y_amazonas import (
     eliminar_jya,
     encontrar_jya,
     cargar_archivo,
-    encontrar_archivos_de_jya,
     encontrar_archivo,
     listar_documentos,
     listar_tipos_de_documentos,
@@ -35,9 +36,6 @@ from core.forms.forms_jinetes import (
     InfoEscolaridadJYAForm,
     InfoInstitucionalJYAForm,
 )
-
-import ulid
-from io import BytesIO
 from src.web.handlers.decoradores import (
     sesion_iniciada_requerida, chequear_permiso
     )
@@ -45,11 +43,8 @@ from src.web.handlers.funciones_auxiliares import (
     validar_url, convertir_a_entero)
 
 
-bp = Blueprint("jinetes_y_amazonas", __name__, url_prefix="/jinetes_y_amazonas")
-
-"""
-    Retorna los jinetes y amazonas
-"""
+bp = Blueprint("jinetes_y_amazonas", __name__,
+               url_prefix="/jinetes_y_amazonas")
 
 
 @bp.get("/")
@@ -103,12 +98,13 @@ def listar():
 @sesion_iniciada_requerida
 def nuevo_j_y_a():
     """
-    Controlador que muestra el formulario de alta de un jinete o amazona o guarda los datos ingresados en él.
+    Controlador que muestra el formulario de alta
+    de un jinete o amazona o guarda los datos ingresados en él.
     """
     form = NuevoJYAForm()
     form.submit.label.text = "Continuar"
     if form.validate_on_submit():
-        
+
         nombre = form.nombre.data
         apellido = form.apellido.data
         dni = form.dni.data
@@ -186,7 +182,7 @@ def cargar_info_salud(id: int):
             diagnostico_id = None
             diagnostico_otro = None
             tipo_discapacidad = form.tipo_discapacidad.data
-        
+
         cargar_informacion_salud(
             id,
             certificado_discapacidad,
@@ -211,7 +207,9 @@ def cargar_info_salud(id: int):
 @sesion_iniciada_requerida
 def cargar_info_econ(id: int):
     """
-    Controlador que muestra el formulario de carga de la información económica del jinete o amazona, o guarda los datos ingrsados en él.
+    Controlador que muestra el formulario de carga
+    de la información económica del jinete o amazona,
+    o guarda los datos ingrsados en él.
     """
     form = InfoEconomicaJYAForm()
     form.submit.label.text = "Continuar"
@@ -224,7 +222,7 @@ def cargar_info_econ(id: int):
         else:
             asignacion_familiar = False
             tipo_asignacion_familiar = None
-        
+
         beneficiario_pension = form.beneficiario_pension.data
 
         if beneficiario_pension:
@@ -263,7 +261,9 @@ def cargar_info_econ(id: int):
 @sesion_iniciada_requerida
 def cargar_info_esc(id: int):
     """
-    Controlador que muestra el formulario para la carga de información de escolaridad del jinete o amazona, o guarda los datos cargados en él.
+    Controlador que muestra el formulario
+    para la carga de información de escolaridad del jinete o amazona,
+    o guarda los datos cargados en él.
     """
     form = InfoEscolaridadJYAForm()
     form.submit.label.text = "Continuar"
@@ -284,7 +284,8 @@ def cargar_info_esc(id: int):
             observaciones_escuela,
             profesionales_a_cargo,
         )
-        flash("Informacion de escolaridad guardada. Continúe con la carga.", "exito")
+        flash("Informacion de escolaridad guardada.\
+               Continúe con la carga.", "exito")
         return redirect(url_for("jinetes_y_amazonas.cargar_info_inst", id=id))
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
@@ -298,17 +299,19 @@ def cargar_info_esc(id: int):
 @sesion_iniciada_requerida
 def cargar_info_inst(id: int):
     """
-    Controlador que muestra el formulario para la carga de información institucional del jinete o amazona, o guarda los datos cargados en él.
+    Controlador que muestra el formulario
+    para la carga de información institucional del jinete o amazona,
+    o guarda los datos cargados en él.
     """
     form = InfoInstitucionalJYAForm()
     form.submit.label.text = "Finalizar"
 
     form.profesor_id.choices = [
-        (profesor.id, profesor.nombre + " " + profesor.apellido) 
+        (profesor.id, profesor.nombre + " " + profesor.apellido)
         for profesor in listar_profesores()
     ]
     form.conductor_caballo_id.choices = [
-        (conductor.id, conductor.nombre + " " + conductor.apellido) 
+        (conductor.id, conductor.nombre + " " + conductor.apellido)
         for conductor in listar_conductores()
     ]
     form.caballo_id.choices = [
@@ -316,7 +319,7 @@ def cargar_info_inst(id: int):
         for caballo in listar_caballos()
     ]
     form.auxiliar_pista_id.choices = [
-        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido) 
+        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido)
         for auxiliar in listar_auxiliares_pista()
     ]
     if form.validate_on_submit():
@@ -340,7 +343,8 @@ def cargar_info_inst(id: int):
             auxiliar_pista_id,
         )
 
-        flash("Información institucional guardada. Continúe con la carga.", "exito")
+        flash("Información institucional guardada.\
+              Continúe con la carga.", "exito")
         return redirect(url_for("jinetes_y_amazonas.listar"))
 
     return render_template(
@@ -367,7 +371,8 @@ def ver(id: int):
 @sesion_iniciada_requerida
 def eliminar(id: int):
     """
-    Controlador que elimina un jinete o amazona y redirige al listado de jinetes y amazonas
+    Controlador que elimina un jinete o amazona
+    y redirige al listado de jinetes y amazonas
     """
     eliminar_jya(id)
 
@@ -380,7 +385,8 @@ def eliminar(id: int):
 @sesion_iniciada_requerida
 def subir_archivo(id: int):
     """
-    Controlador que muestra el formulario para el alta de un archivo en el sistema.
+    Controlador que muestra el formulario
+    para el alta de un archivo en el sistema.
     """
 
     form = SubirArchivoForm()
@@ -395,17 +401,19 @@ def subir_archivo(id: int):
             tamaño = fstat(archivo.fileno()).st_size
             url = f"jinetes_y_amazonas/{ulid.new()}-{archivo.filename}"
             cliente.put_object(
-                "grupo17", url, archivo, tamaño, content_type=archivo.content_type
+                "grupo17", url, archivo,
+                tamaño, content_type=archivo.content_type
             )
             print(url)
-            cargar_archivo(jya_id, titulo, tipo_archivo, url, archivo_externo=False)
+            cargar_archivo(jya_id, titulo,
+                           tipo_archivo, url, archivo_externo=False)
             flash("Archivo subido con éxito", "exito")
 
             return redirect(url_for("jinetes_y_amazonas.ver_archivos", id=id))
         else:
             flash("Error al subir el archivo", "error")
     return render_template(
-        "pages/jinetes_y_amazonas/documentos.html",
+        "pages/jinetes_y_amazonas/crear_documento.html",
         form=form,
         jya=id,
         titulo="Subir archivo",
@@ -418,7 +426,8 @@ def subir_archivo(id: int):
 @sesion_iniciada_requerida
 def subir_enlace(id: int):
     """
-    Controlador que muestra el formulario para el alta de un archivo externo en el sistema (enlace a un archivo externo).
+    Controlador que muestra el formulario para el alta
+    de un archivo externo en el sistema (enlace a un archivo externo).
     """
 
     form = EnlaceForm()
@@ -429,7 +438,11 @@ def subir_enlace(id: int):
             jya_id = id
             url = validar_url(form.url.data)
             tipo_archivo = form.tipo_de_documento_id.data
-            cargar_archivo(jya_id, titulo, tipo_archivo, url, archivo_externo=True)
+            cargar_archivo(jya_id,
+                           titulo, 
+                           tipo_archivo,
+                           url,
+                           archivo_externo=True)
 
             flash("Enlace a documento subido con exito", "exito")
             return redirect(url_for("jinetes_y_amazonas.ver_archivos", id=id))
@@ -437,7 +450,7 @@ def subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/jinetes_y_amazonas/documentos.html",
+        "pages/jinetes_y_amazonas/crear_documento.html",
         form=form,
         jya=id,
         titulo="Subir enlace",
@@ -450,9 +463,9 @@ def subir_enlace(id: int):
 @sesion_iniciada_requerida
 def ver_archivos(id: int):
     """
-    Controlador que devuelve el listado de archivos asociados a un jinete o amazona.
+    Controlador que devuelve el listado
+    de archivos asociados a un jinete o amazona.
     """
-    archivos = encontrar_archivos_de_jya(id)
     jya = encontrar_jya(id)
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
@@ -478,7 +491,7 @@ def ver_archivos(id: int):
         cant_paginas += 1
 
     return render_template(
-        "pages/jinetes_y_amazonas/ver_documentos.html",
+        "pages/jinetes_y_amazonas/listar_documentos.html",
         jya=jya,
         documentos=documentos,
         cant_resultados=cant_resultados,
@@ -497,11 +510,13 @@ def ver_archivos(id: int):
 @sesion_iniciada_requerida
 def editar_archivo(jya_id: int, archivo_id: int):
     """
-    Controlador que muestra el formulario para la edición de un archivo o enlace.
+    Controlador que muestra el formulario
+    para la edición de un archivo o enlace.
     """
     archivo = encontrar_archivo(archivo_id)
     flash("Funcionalidad no implementada", "error")
-    return render_template("pages/jinetes_y_amazonas/documentos.html", jya=archivo.jya)
+    return render_template("pages/jinetes_y_amazonas/documentos.html",
+                           jya=archivo.jya)
 
 
 @bp.get("/descargar_archivo/<int:archivo_id>")
@@ -529,7 +544,8 @@ def descargar_archivo(archivo_id: int):
 @sesion_iniciada_requerida
 def eliminar_documento(id: int):
     """
-    Controlador que permite la eliminación de un documento y redirige a la vista de listado de archivos.
+    Controlador que permite la eliminación de un documento y
+    redirige a la vista de listado de archivos.
     """
     doc = eliminar_documento_j_y_a(id)
     flash("Documento eliminado con éxito")
@@ -542,7 +558,8 @@ def eliminar_documento(id: int):
 @sesion_iniciada_requerida
 def editar_j_y_a(id: int):
     """
-    Controlador que muestra permite editar la información general del jinete o amazona.
+    Controlador que muestra permite editar
+    la información general del jinete o amazona.
     """
     jya = encontrar_jya(id)
     form = NuevoJYAForm(obj=jya)
@@ -575,7 +592,8 @@ def editar_j_y_a(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a.html",
         form=form,
-        titulo="Editar jinete/amazona " + str(jya.nombre) + " " + str(jya.apellido),
+        titulo="Editar jinete/amazona " + str(jya.nombre) +
+        + " " + str(jya.apellido),
     )
 
 
@@ -584,15 +602,17 @@ def editar_j_y_a(id: int):
 @sesion_iniciada_requerida
 def editar_info_salud(id: int):
     """
-    Controlador que muestra permite editar la información de salud del jinete o amazona.
+    Controlador que muestra permite editar
+    la información de salud del jinete o amazona.
     """
     jya = encontrar_jya(id)
     form = InfoSaludJYAForm(obj=jya)
     form.diagnostico.choices = [
-        (diagnostico.id, diagnostico.nombre) for diagnostico in listar_diagnosticos()
+        (diagnostico.id, diagnostico.nombre)
+        for diagnostico in listar_diagnosticos()
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
-    
+
     form.submit.label.text = "Guardar"
 
     if request.method == "GET":
@@ -636,7 +656,8 @@ def editar_info_salud(id: int):
 @sesion_iniciada_requerida
 def editar_info_econ(id: int):
     """
-    Controlador que muestra permite editar la información economica del jinete o amazona.
+    Controlador que muestra permite editar
+    la información economica del jinete o amazona.
     """
     jya = encontrar_jya(id)
     form = InfoEconomicaJYAForm(obj=jya)
@@ -645,7 +666,7 @@ def editar_info_econ(id: int):
     if request.method == "POST":
         if form.validate_on_submit():
             jya.asignacion_familiar = form.asignacion_familiar.data
-        
+
             if jya.asignacion_familiar:
                 jya.tipo_asignacion_familiar = form.tipo_asignacion_familiar.data
             else:
@@ -658,7 +679,7 @@ def editar_info_econ(id: int):
             else:
                 jya.beneficiario_pension = False
                 jya.tipo_pension = None
-            
+
             jya.obra_social = form.obra_social.data
             jya.num_afiliado = form.num_afiliado.data
             jya.posee_curatela = form.posee_curatela.data
@@ -684,7 +705,8 @@ def editar_info_econ(id: int):
 @sesion_iniciada_requerida
 def editar_info_esc(id: int):
     """
-    Controlador que muestra permite editar la información sobre escolaridad del jinete o amazona.
+    Controlador que muestra permite editar
+    la información sobre escolaridad del jinete o amazona.
     """
     jya = encontrar_jya(id)
     form = InfoEscolaridadJYAForm(obj=jya)
@@ -720,17 +742,18 @@ def editar_info_esc(id: int):
 @sesion_iniciada_requerida
 def editar_info_inst(id: int):
     """
-    Controlador que muestra permite editar la información institucional relacionada al jinete o amazona.
+    Controlador que muestra permite editar
+    la información institucional relacionada al jinete o amazona.
     """
     jya = encontrar_jya(id)
     form = InfoInstitucionalJYAForm(obj=jya)
 
     form.profesor_id.choices = [
-        (profesor.id, profesor.nombre + " " + profesor.apellido) 
+        (profesor.id, profesor.nombre + " " + profesor.apellido)
         for profesor in listar_profesores()
     ]
     form.conductor_caballo_id.choices = [
-        (conductor.id, conductor.nombre + " " + conductor.apellido) 
+        (conductor.id, conductor.nombre + " " + conductor.apellido)
         for conductor in listar_conductores()
     ]
     form.caballo_id.choices = [
@@ -738,7 +761,7 @@ def editar_info_inst(id: int):
         for caballo in listar_caballos()
     ]
     form.auxiliar_pista_id.choices = [
-        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido) 
+        (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido)
         for auxiliar in listar_auxiliares_pista()
     ]
 
@@ -747,7 +770,7 @@ def editar_info_inst(id: int):
     if request.method == "GET":
         if jya.propuesta_trabajo is not None:
             form.propuesta_trabajo.data = jya.propuesta_trabajo
-        
+
         if jya.profesor is not None:
             form.profesor_id.data = jya.profesor.id
 
