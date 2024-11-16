@@ -14,11 +14,11 @@ from core.forms.validaciones import Unico
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 
 
-def validar_telefono(form, field):
+def validar_telefono(form, campo):
     try:
-        numero = field.data
+        numero = campo.data
         num = int(numero)
-        print(type(num))
+
         if math.log10(num)+1 < 7 or math.log10(num)+1 > 15:
             raise Exception()
     except ValueError:
@@ -29,15 +29,22 @@ def validar_telefono(form, field):
                               debe contener entre 7 y 15 digitos')
 
 
+def validar_cadena_caracteres(form, campo):
+    if any(caracter.isdigit() for caracter in campo.data):
+        raise ValidationError('Este campo no puede contener números')
+
+
 class NuevoJYAForm(FlaskForm):
     """
     Formulario utilizado para cargar
     la información general del jinete o amazona.
     """
     nombre = StringField('Nombre*', validators=[DataRequired('Ingrese \
-                                    el nombre del jinete o la amazona')])
+                                    el nombre del jinete o la amazona'),
+                                                validar_cadena_caracteres])
     apellido = StringField('Apellido*', validators=[DataRequired('Ingrese\
-                                    el apellido del jinete o la amazona')])
+                                    el apellido del jinete o la amazona'),
+                                                    validar_cadena_caracteres])
     dni = IntegerField('DNI*', validators=[
         Unico(JineteOAmazona, JineteOAmazona.dni),
         DataRequired('Ingrese el DNI del jinete o la amazona')])
@@ -48,15 +55,18 @@ class NuevoJYAForm(FlaskForm):
                                     la fecha de nacimiento\
                                     del jinete o la amazona')])
     provincia_nacimiento = StringField('Provincia de nacimiento',
-                                       validators=[Length(max=64)])
+                                       validators=[Length(max=64),
+                                                   validar_cadena_caracteres])
     localidad_nacimiento = StringField('Localidad de nacimiento',
-                                       validators=[Length(max=64)])
+                                       validators=[Length(max=64),
+                                                   validar_cadena_caracteres])
     domicilio_actual = StringField('Domicilio actual',
                                    validators=[Length(max=64)])
     telefono_actual = StringField('Telefono actual',
                                   validators=[Optional(), validar_telefono])
     contacto_emer_nombre = StringField('Nombre de contacto de emergencia',
-                                       validators=[Length(max=64)])
+                                       validators=[Length(max=64),
+                                                   validar_cadena_caracteres])
     contacto_emer_telefono = StringField('Telefono de contacto de emergencia',
                                          validators=[Optional(),
                                                      validar_telefono])
@@ -138,7 +148,8 @@ class InfoEscolaridadJYAForm(FlaskForm):
                                     Length(max=200),
                                     DataRequired('Ingrese al menos\
                                         un profesional a cargo\
-                                        del jinete o la amazona')]
+                                        del jinete o la amazona'),
+                                    validar_cadena_caracteres]
     )
     submit = SubmitField("Continuar")
 

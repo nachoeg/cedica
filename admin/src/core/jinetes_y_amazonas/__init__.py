@@ -32,13 +32,13 @@ def listar_j_y_a(
     Funcion que devuelve el listado de jinetes y amazonas filtrado a partir de los parámetros recibidos y ordenado según los parámetros recibidos.
     """
     query = JineteOAmazona.query.filter(
-        JineteOAmazona.nombre.ilike(f"%{nombre_filtro}"),
-        JineteOAmazona.apellido.ilike(f"%{apellido_filtro}"),
+        JineteOAmazona.nombre.ilike(f"%{nombre_filtro}%"),
+        JineteOAmazona.apellido.ilike(f"%{apellido_filtro}%"),
     )
-
+    
     if profesional_filtro != "":
         query = query.filter(
-            JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}")
+            JineteOAmazona.profesionales_a_cargo.ilike(f"%{profesional_filtro}%")
         )
 
     if dni_filtro != "":
