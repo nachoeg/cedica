@@ -24,10 +24,12 @@ from src.core.jinetes_y_amazonas import (
     listar_conductores,
     listar_auxiliares_pista,
     listar_caballos,
+    listar_dias,
     obtener_documento,
     eliminar_documento_j_y_a,
     guardar_cambios,
-    cargar_id_diagnostico_otro
+    cargar_id_diagnostico_otro,
+    obtener_dia
 )
 from core.forms.forms_jinetes import (
     NuevoJYAForm,
@@ -322,6 +324,10 @@ def cargar_info_inst(id: int):
         (auxiliar.id, auxiliar.nombre + " " + auxiliar.apellido)
         for auxiliar in listar_auxiliares_pista()
     ]
+    form.dias.choices = [
+        (dia.id, dia.nombre)
+        for dia in listar_dias()
+    ]
     if form.validate_on_submit():
         propuesta_de_trabajo = form.propuesta_trabajo.data
         condicion = form.condicion.data
@@ -330,7 +336,10 @@ def cargar_info_inst(id: int):
         conductor_caballo_id = form.profesor_id.data
         caballo_id = form.caballo_id.data
         auxiliar_pista_id = form.auxiliar_pista_id.data
-        dias = form.dias.data
+        dias = [
+                obtener_dia(dia)
+                for dia in form.dias.data
+            ]
         cargar_informacion_institucional(
             id,
             propuesta_de_trabajo,
@@ -362,7 +371,7 @@ def ver(id: int):
     Controlador que permite visualizar la información de un jinete o amazona.
     """
     jya = encontrar_jya(id)
-
+    
     return render_template("pages/jinetes_y_amazonas/ver_jya.html",
                            jya=jya,
                            edad=calcular_edad(jya.fecha_nacimiento))
@@ -770,6 +779,11 @@ def editar_info_inst(id: int):
         for auxiliar in listar_auxiliares_pista()
     ]
 
+    form.dias.choices = [
+        (dia.id, dia.nombre)
+        for dia in listar_dias()
+    ]
+
     form.submit.label.text = "Guardar"
 
     if request.method == "GET":
@@ -791,6 +805,8 @@ def editar_info_inst(id: int):
         if jya.auxiliar_pista is not None:
             form.auxiliar_pista_id.data = jya.auxiliar_pista.id
 
+        form.dias.data = [dia.id for dia in jya.dias_asignados]
+
     if request.method == "POST":
         if form.validate_on_submit():
             jya.propuesta_trabajo = form.propuesta_trabajo.data
@@ -800,6 +816,10 @@ def editar_info_inst(id: int):
             jya.conductor_caballo_id = form.conductor_caballo_id.data
             jya.caballo_id = form.caballo_id.data
             jya.auxiliar_pista_id = form.auxiliar_pista_id.data
+            jya.dias_asignados = [
+                obtener_dia(dia)
+                for dia in form.dias.data
+            ]
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
             return redirect(url_for("jinetes_y_amazonas.ver", id=id))

@@ -18,6 +18,17 @@ class Diagnostico(db.Model):
         return f"Diagnostico: {self.value}"
 
 
+class Dia(db.Model):
+    """
+    Tabla de días de la semana
+    """
+
+    __tablename__ = "dias"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(9))
+
+
 class Familiar(db.Model):
     """
     Modelo correspondiente a los familiares de J&A.
@@ -175,13 +186,15 @@ class JineteOAmazona(db.Model):
     auxiliar_pista = db.relationship("Miembro",
                                      foreign_keys=[auxiliar_pista_id])
 
+    # Relacion con los días
+    dias_asignados = db.relationship(
+        "Dia",
+        secondary="dias_por_jinete",
+        lazy=True,
+        backref=db.backref("dias_por_jinetes", lazy=True)
+    )
+
     documentos = db.relationship("Archivo_JYA", back_populates="jya")
-    # TODO armar tabla de familiares a cargo
-    # familiares a cargo
-    # acá voy a tener que tener una tabla de familiares? es muchos a muchos
-    # TODO armar tabla de dias de asistencia
-    # dias
-    # acá voy a tener que tener una tabla de dias? es muchos a muchos
 
     def to_dict(self):
         return {
@@ -199,3 +212,15 @@ class JineteOAmazona(db.Model):
     def __repr__(self):
         return f"<Jinete-Amazona #{self.id}\
           nombre:{self.nombre}, apellido: {self.apellido}>"
+
+    # Tabla intermedia para almacenar los días que asiste
+    # cada jinete a la institución
+    dias = db.Table(
+        "dias_por_jinete",
+        db.Column(
+            "jinete_id", db.Integer, db.ForeignKey("jinetesyamazonas.id"),
+            primary_key=True
+        ),
+        db.Column("dia_id", db.Integer, db.ForeignKey("dias.id"),
+                  primary_key=True),
+    )

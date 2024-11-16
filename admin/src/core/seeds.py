@@ -43,6 +43,7 @@ def run():
     cargar_usuarios()
 
     cargar_diagnosticos()
+    cargar_dias()
 
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
@@ -458,34 +459,35 @@ def run():
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
-    diagnostico1 = jinetes_y_amazonas.crear_diagnostico(nombre="ECNE")
-    diagnostico2 = jinetes_y_amazonas.crear_diagnostico(nombre="Lesión post traumática")
-    diagnostico3 = jinetes_y_amazonas.crear_diagnostico(nombre="Mielomeningocele")
-    diagnostico4 = jinetes_y_amazonas.crear_diagnostico(nombre="Esclerosis múltiple")
-    diagnostico5 = jinetes_y_amazonas.crear_diagnostico(nombre="Escoliosis leve")
-    diagnostico6 = jinetes_y_amazonas.crear_diagnostico(nombre="Secuelas de ACV")
-    diagnostico7 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Discapacidad intelectual"
-    )
-    diagnostico8 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno del espectro autista"
-    )
-    diagnostico9 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno del aprendizaje"
-    )
-    diagnostico10 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno por déficit de atención/hiperactividad"
-    )
-    diagnostico11 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno de la comunicación"
-    )
-    diagnostico12 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de ansiedad")
-    diagnostico13 = jinetes_y_amazonas.crear_diagnostico(nombre="Síndrome de Down")
-    diagnostico14 = jinetes_y_amazonas.crear_diagnostico(nombre="Retraso madurativo")
-    diagnostico15 = jinetes_y_amazonas.crear_diagnostico(nombre="Psicosis")
-    diagnostico16 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de conducta")
-    diagnostico17 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno del ánimo y afectivos"
-    )
-    diagnostico18 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno alimentario")
-    diagnostico19 = jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
+    jinetes_y_amazonas.crear_diagnostico(nombre="ECNE")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Lesión post traumática")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Mielomeningocele")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Esclerosis múltiple")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Escoliosis leve")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Secuelas de ACV")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Discapacidad intelectual")
+    jinetes_y_amazonas.crear_diagnostico(
+        nombre="Trastorno del espectro autista")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno del aprendizaje")
+    jinetes_y_amazonas.crear_diagnostico(
+        nombre="Trastorno por déficit de atención/hiperactividad")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de la comunicación")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de ansiedad")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Síndrome de Down")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Retraso madurativo")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Psicosis")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de conducta")
+    jinetes_y_amazonas.crear_diagnostico(
+        nombre="Trastorno del ánimo y afectivos")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno alimentario")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
+
+
+def cargar_dias():
+    jinetes_y_amazonas.crear_dia(nombre="Lunes")
+    jinetes_y_amazonas.crear_dia(nombre="Martes")
+    jinetes_y_amazonas.crear_dia(nombre="Miércoles")
+    jinetes_y_amazonas.crear_dia(nombre="Jueves")
+    jinetes_y_amazonas.crear_dia(nombre="Viernes")
+    jinetes_y_amazonas.crear_dia(nombre="Sábado")
+    jinetes_y_amazonas.crear_dia(nombre="Domingo")

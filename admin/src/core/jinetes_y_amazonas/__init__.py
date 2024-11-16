@@ -1,6 +1,6 @@
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (
-    JineteOAmazona, Diagnostico)
+    JineteOAmazona, Diagnostico, Dia)
 from src.core.jinetes_y_amazonas.documentos import Archivo_JYA, TipoArchivo
 from src.core.miembro.miembro import Miembro
 from src.core.miembro.extras import PuestoLaboral
@@ -18,7 +18,17 @@ def crear_diagnostico(**kwargs):
     return diagnostico
 
 
-# funcion que lista todos los jinetes o amazonas del sistema
+def crear_dia(**kwargs):
+    """
+    Función que crea un día de la semana
+    """
+    dia = Dia(**kwargs)
+    db.session.add(dia)
+    db.session.commit()
+
+    return dia
+
+
 def listar_j_y_a(
     nombre_filtro="",
     apellido_filtro="",
@@ -193,7 +203,7 @@ def cargar_informacion_institucional(
     jya.propuesta_de_trabajo = propuesta_de_trabajo
     jya.condicion = condicion
     jya.sede = sede
-    # jya.dias = dias
+    jya.dias_asignados = dias
     jya.profesor_id = profesor_id
     jya.conductor_caballo_id = conductor_caballo_id
     jya.caballo_id = caballo_id
@@ -363,6 +373,24 @@ def listar_caballos():
     caballos = Ecuestre.query.all()
 
     return caballos
+
+
+def listar_dias():
+    """
+    Función que retorna el listado de días.
+    """
+    dias = Dia.query.all()
+
+    return dias
+
+
+def obtener_dia(dia_id):
+    """
+    Función que retorna un día a partir del id
+    """
+    dia = Dia.query.get_or_404(dia_id)
+
+    return dia
 
 
 def obtener_documento(doc_id):

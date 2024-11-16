@@ -119,7 +119,7 @@ class InfoEconomicaJYAForm(FlaskForm):
         choices=[("provincial", "Provincial"), ("nacional", "Nacional")],
     )
     obra_social = StringField("Obra social", validators=[Length(max=64)])
-    num_afiliado = IntegerField("Numero de afiliado")
+    num_afiliado = IntegerField("Numero de afiliado", validators=[Optional()])
     posee_curatela = BooleanField("¿Posee curatela?")
     observaciones_obra_social = StringField(
         "Observaciones", validators=[Length(max=64)]
@@ -180,16 +180,5 @@ class InfoInstitucionalJYAForm(FlaskForm):
     conductor_caballo_id = SelectField("Conductor del caballo", choices=[])
     caballo_id = SelectField("Caballo asignado", choices=[])
     auxiliar_pista_id = SelectField("Auxiliar de pista", choices=[])
-    dias = SelectMultipleField(
-        "Dias",
-        choices=[
-            ("lun", "Lunes"),
-            ("mar", "Martes"),
-            ("mie", "Miercoles"),
-            ("jue", "Jueves"),
-            ("vie", "Viernes"),
-            ("sab", "Sabado"),
-            ("dom", "Domingo"),
-        ],
-    )
+    dias = SelectMultipleField("Dias", coerce=int)
     submit = SubmitField("Finalizar carga")
