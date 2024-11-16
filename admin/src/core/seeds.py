@@ -45,6 +45,7 @@ def run():
     cargar_usuarios()
 
     cargar_diagnosticos()
+    cargar_dias()
 
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
@@ -107,7 +108,7 @@ def run():
         apellido="Gimenez",
         dni="45678901",
         nombre_contacto_emergencia="Pedro",
-        telefono_contacto_emergencia="456789012",
+        telefono_contacto_emergencia="345678902",
         obra_social="OSDE",
         numero_afiliado="456789012",
         condicion_id=1,
@@ -117,6 +118,121 @@ def run():
         profesion_id=11,
         puesto_laboral_id=3,
         usuario_id=4,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Conductor de caballo
+    miembro5 = miembro.crear_miembro(
+        nombre="Gisela",
+        apellido="Gimenez",
+        dni="16543345",
+        nombre_contacto_emergencia="Valeria",
+        telefono_contacto_emergencia="2214566655",
+        obra_social="OSDE",
+        numero_afiliado="345678903",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="giselagimenez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=3,
+        usuario_id=9,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Conductor de caballo
+    miembro6 = miembro.crear_miembro(
+        nombre="Gloria",
+        apellido="Valente",
+        dni="16548875",
+        nombre_contacto_emergencia="Cristian",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="IOMA",
+        numero_afiliado="115678905",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="gloriavalente@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=3,
+        usuario_id=10,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Profesor de equitación
+    miembro7 = miembro.crear_miembro(
+        nombre="Leandro",
+        apellido="Larez",
+        dni="18548875",
+        nombre_contacto_emergencia="Cristian",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="IOMA",
+        numero_afiliado="116789017",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="leandrolarez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=9,
+        usuario_id=11,
+        activo=True
+    )
+
+
+    # Creo un miembro con puesto Profesor de equitación
+    miembro8 = miembro.crear_miembro(
+        nombre="Vanesa",
+        apellido="Velazquez",
+        dni="18548899",
+        nombre_contacto_emergencia="Javier",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="OSESAC",
+        numero_afiliado="345678908",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="vanesavelazquez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=9,
+        usuario_id=12,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Auxiliar de pista
+    miembro8 = miembro.crear_miembro(
+        nombre="Guillermo",
+        apellido="Limbo",
+        dni="18533449",
+        nombre_contacto_emergencia="Lorena",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="IOMA",
+        numero_afiliado="345678902",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="guillermolimbo@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=4,
+        usuario_id=13,
+        activo=True
+    )
+
+    # Creo un miembro con puesto Auxiliar de pista
+    miembro8 = miembro.crear_miembro(
+        nombre="Lucas",
+        apellido="Luquez",
+        dni="184438919",
+        nombre_contacto_emergencia="Sofia",
+        telefono_contacto_emergencia="2214511155",
+        obra_social="Sancor Salud",
+        numero_afiliado="1456789067",
+        condicion_id=1,
+        domicilio_id=domicilio2.id,
+        email="lucasluquez@mail.com",
+        telefono="2214567766",
+        profesion_id=11,
+        puesto_laboral_id=4,
+        usuario_id=14,
         activo=True
     )
 
@@ -142,9 +258,117 @@ def run():
     for tipo in tipos_de_documento_ecuestre:
         ecuestre.crear_tipo_de_documento(tipo=tipo)
 
-    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela", dni= 36234221, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='San Luis', localidad_nacimiento='San Luis', domicilio_actual='12 n122',telefono_actual=2214569744, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214428864, becado=True, porcentaje_beca="25")
-    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Valeria", apellido="Vazquez", dni= 36234222, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='La Pampa', localidad_nacimiento='Santa Rosa', domicilio_actual='62 n312',telefono_actual=2214569794, contacto_emer_nombre='Alvaro',contacto_emer_telefono=2214678864, becado=True, porcentaje_beca="30")
-    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Veronica", apellido="Vim", dni= 36234223, edad= 32, fecha_nacimiento='1992/09/10 13:19:38', provincia_nacimiento='Buenos Aires', localidad_nacimiento='La Plata', domicilio_actual='20 n67',telefono_actual=2214569784, contacto_emer_nombre='Jimena',contacto_emer_telefono=2214671264, becado=True, porcentaje_beca="30")
+    j_y_a1 = jinetes_y_amazonas.crear_j_o_a(nombre="Victor", apellido="Varela",
+                                            dni=36234221,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Alvaro',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Tatiana", apellido="Tomassi",
+                                           dni=36234222,
+                                           fecha_nacimiento='1992/09/10',
+                                           provincia_nacimiento='La Pampa',
+                                           localidad_nacimiento='Santa Rosa',
+                                           domicilio_actual='62 n312',
+                                           telefono_actual='2214569794',
+                                           contacto_emer_nombre='Martin',
+                                           contacto_emer_telefono='2214678864',
+                                           becado=True, porcentaje_beca=30)
+    j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Saul", apellido="Sosa",
+                                            dni=36234223,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='Buenos Aires',
+                                            localidad_nacimiento='La Plata',
+                                            domicilio_actual='20 n67',
+                                            telefono_actual='2214569784',
+                                            contacto_emer_nombre='Jimena',
+                                            contacto_emer_telefono='2214671264',
+                                            becado=True, porcentaje_beca=30)
+    j_y_a4 = jinetes_y_amazonas.crear_j_o_a(nombre="Romina", apellido="Rodriguez",
+                                            dni=36234224,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Valentina',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a5 = jinetes_y_amazonas.crear_j_o_a(nombre="Quimey", apellido="Quiroga",
+                                            dni=36234225,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Paloma',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a6 = jinetes_y_amazonas.crear_j_o_a(nombre="Paula", apellido="Paredes",
+                                            dni=36234226,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Valentin',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=30)
+    j_y_a7 = jinetes_y_amazonas.crear_j_o_a(nombre="Omar", apellido="Ortega",
+                                            dni=36234227,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Carlos',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=50)
+    j_y_a8 = jinetes_y_amazonas.crear_j_o_a(nombre="Nicol", apellido="Nivez",
+                                            dni=36234228,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Miranda',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=30)
+    j_y_a9 = jinetes_y_amazonas.crear_j_o_a(nombre="Mario", apellido="Muccio",
+                                            dni=36234229,
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='San Luis',
+                                            localidad_nacimiento='San Luis',
+                                            domicilio_actual='12 n122',
+                                            telefono_actual='2214569744',
+                                            contacto_emer_nombre='Mabel',
+                                            contacto_emer_telefono='2214428864',
+                                            becado=True, porcentaje_beca=25)
+    j_y_a10 = jinetes_y_amazonas.crear_j_o_a(nombre="Lourdes",
+                                             apellido="Lampa",
+                                             dni=36234231,
+                                             fecha_nacimiento='1992/09/10',
+                                             provincia_nacimiento='San Luis',
+                                             localidad_nacimiento='San Luis',
+                                             domicilio_actual='12 n122',
+                                             telefono_actual='2214569744',
+                                             contacto_emer_nombre='Pablo',
+                                             contacto_emer_telefono='2214428864',
+                                             becado=False)
+    j_y_a11 = jinetes_y_amazonas.crear_j_o_a(nombre="Juan", apellido="Juarez",
+                                             dni=36234232,
+                                             fecha_nacimiento='1992/09/10',
+                                             provincia_nacimiento='San Luis',
+                                             localidad_nacimiento='San Luis',
+                                             domicilio_actual='12 n122',
+                                             telefono_actual='2214569744',
+                                             contacto_emer_nombre='Juan',
+                                             contacto_emer_telefono='2214428864',
+                                             becado=False)
 
     cobro1 = cobros.crear_cobro(
         medio_de_pago="efectivo",
@@ -153,7 +377,6 @@ def run():
         observaciones="Nada para agregar",
         joa_id=j_y_a1.id,
         recibio_el_dinero_id=miembro1.id,
-        tiene_deuda=False
     )
     cobro2 = cobros.crear_cobro(
         medio_de_pago="credito",
@@ -162,7 +385,6 @@ def run():
         observaciones="Queda al día",
         joa_id=j_y_a1.id,
         recibio_el_dinero_id=miembro1.id,
-        tiene_deuda=True
     )
     cobro3 = cobros.crear_cobro(
         medio_de_pago="debito",
@@ -171,7 +393,6 @@ def run():
         observaciones="-",
         joa_id=j_y_a3.id,
         recibio_el_dinero_id=miembro2.id,
-        tiene_deuda=False
     )
 
     ecuestre1 = ecuestre.crear_ecuestre(
@@ -242,35 +463,35 @@ def run():
 
 # función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
-    diagnostico1 = jinetes_y_amazonas.crear_diagnostico(nombre="ECNE")
-    diagnostico2 = jinetes_y_amazonas.crear_diagnostico(nombre="Lesión post traumática")
-    diagnostico3 = jinetes_y_amazonas.crear_diagnostico(nombre="Mielomeningocele")
-    diagnostico4 = jinetes_y_amazonas.crear_diagnostico(nombre="Esclerosis múltiple")
-    diagnostico5 = jinetes_y_amazonas.crear_diagnostico(nombre="Escoliosis leve")
-    diagnostico6 = jinetes_y_amazonas.crear_diagnostico(nombre="Secuelas de ACV")
-    diagnostico7 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Discapacidad intelectual"
-    )
-    diagnostico8 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno del espectro autista"
-    )
-    diagnostico9 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno del aprendizaje"
-    )
-    diagnostico10 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno por déficit de atención/hiperactividad"
-    )
-    diagnostico11 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno de la comunicación"
-    )
-    diagnostico12 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de ansiedad")
-    diagnostico13 = jinetes_y_amazonas.crear_diagnostico(nombre="Síndrome de Down")
-    diagnostico14 = jinetes_y_amazonas.crear_diagnostico(nombre="Retraso madurativo")
-    diagnostico15 = jinetes_y_amazonas.crear_diagnostico(nombre="Psicosis")
-    diagnostico16 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de conducta")
-    diagnostico17 = jinetes_y_amazonas.crear_diagnostico(
-        nombre="Trastorno del ánimo y afectivos"
-    )
-    diagnostico18 = jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno alimentario")
-    diagnostico19 = jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
+    jinetes_y_amazonas.crear_diagnostico(nombre="ECNE")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Lesión post traumática")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Mielomeningocele")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Esclerosis múltiple")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Escoliosis leve")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Secuelas de ACV")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Discapacidad intelectual")
+    jinetes_y_amazonas.crear_diagnostico(
+        nombre="Trastorno del espectro autista")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno del aprendizaje")
+    jinetes_y_amazonas.crear_diagnostico(
+        nombre="Trastorno por déficit de atención/hiperactividad")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de la comunicación")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de ansiedad")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Síndrome de Down")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Retraso madurativo")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Psicosis")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno de conducta")
+    jinetes_y_amazonas.crear_diagnostico(
+        nombre="Trastorno del ánimo y afectivos")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Trastorno alimentario")
+    jinetes_y_amazonas.crear_diagnostico(nombre="Otro")
 
+
+def cargar_dias():
+    jinetes_y_amazonas.crear_dia(nombre="Lunes")
+    jinetes_y_amazonas.crear_dia(nombre="Martes")
+    jinetes_y_amazonas.crear_dia(nombre="Miércoles")
+    jinetes_y_amazonas.crear_dia(nombre="Jueves")
+    jinetes_y_amazonas.crear_dia(nombre="Viernes")
+    jinetes_y_amazonas.crear_dia(nombre="Sábado")
+    jinetes_y_amazonas.crear_dia(nombre="Domingo")

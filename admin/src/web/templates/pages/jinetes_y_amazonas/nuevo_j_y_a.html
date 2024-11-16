@@ -11,6 +11,7 @@
         <h1> {{titulo}} </h1>
     </div>
     <div class="formulario-body">
+        <p class="text-gray-600 text-xs italic">Los campos con * son obligatorios </p>
         <div>
             {{ form.nombre.label }}
             {{ form.nombre }}<br>
@@ -33,16 +34,16 @@
             {% endfor %}
         </div>
         <div>
-            {{ form.edad.label }}
-            {{ form.edad }}<br>
-            {% for error in form.edad.errors %}
+            {{ form.fecha_nacimiento.label }}
+            {{ form.fecha_nacimiento }}<br>
+            {% for error in form.fecha_nacimiento.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.fecha_nacimiento.label }}
-            {{ form.fecha_nacimiento }}<br>
-            {% for error in form.fecha_nacimiento.errors %}
+            {{ form.edad.label }}
+            {{ form.edad }}<br>
+            {% for error in form.edad.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
@@ -88,14 +89,14 @@
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
+        <div id="tiene_beca">
             {{ form.becado.label }}
             {{ form.becado }}<br>
             {% for error in form.becado.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
+        <div id="porcentaje_beca">
             {{ form.porcentaje_beca.label }}
             {{ form.porcentaje_beca }}<br>
             {% for error in form.porcentaje_beca.errors %}
@@ -107,4 +108,7 @@
         </div>
     </div>
 </form>
+
+{% include "pages/jinetes_y_amazonas/_ocultar_mostrar_beca.html" %}
+
 {% endblock %}

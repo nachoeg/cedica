@@ -22,8 +22,7 @@ Trabajo integrador de la materia Proyecto de Software en la Facultad de Informá
     Con cada nuevo cobro que se le carga a un J&A, se tiene que volver a marcar si tiene deuda o no. Esta información se puede ver en el listado
     de J&A y en la visualización de cada J&A.
 
-    Con cada nuevo cobro cargado en el sistema, se sobreescribe el valor de la variable "tiene_deuda" de J&A, por lo que el valor válido
-    siempre será el correspondiente al último cobro cargado (independientemente de la fecha de cobro que se haya ingresado al hacer el alta del cobro).
+    La deuda del jinete o amazona no se carga desde el módulo de cobros sino desde el listado de Jinetes y Amazonas
 
 ### Listados:
     Los listados en el sistema se muestran en tablas. Los campos por los cuales se deben ordenar las filas de la tabla tienen, junto al encabezado de columna, 

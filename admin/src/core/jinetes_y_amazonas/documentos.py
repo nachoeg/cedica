@@ -1,10 +1,11 @@
-from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
-from src.core.database import db
 from datetime import datetime
 import enum
 from sqlalchemy.types import Enum
 from sqlalchemy import event
 from flask import current_app
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
+from src.web.handlers.funciones_auxiliares import fechahora_a_fecha
+from src.core.database import db
 
 
 class TipoArchivo(enum.Enum):
@@ -39,17 +40,20 @@ class Archivo_JYA(db.Model):
         return {
             "id": self.id,
             "titulo": self.titulo,
-            "fecha_subida": self.fecha_subida,
-            "tipo_archivo": self.tipo_archivo.value if self.tipo_archivo else None,
+            "fecha_subida": fechahora_a_fecha(self.fecha_subida),
+            "tipo_archivo": self.tipo_archivo.value
+            if self.tipo_archivo else None,
         }
 
     def __repr__(self):
-        return f"<Archivo #{self.id} titulo: {self.titulo} tipo de archivo_ {self.tipo_archivo}"
+        return f"<Archivo #{self.id} titulo: {self.titulo}\
+          tipo de archivo: {self.tipo_archivo}"
 
 
 @event.listens_for(Archivo_JYA, "before_delete")
 def antes_de_eliminar(mapper, connection, target):
-    """Eliminar archivo asociado en MinIO antes de eliminar el documento de la base de datos."""
+    """Eliminar archivo asociado en MinIO
+    antes de eliminar el documento de la base de datos."""
     if not target.externo:
         client = current_app.storage.client
         client.remove_object("grupo17", target.url)
@@ -57,7 +61,8 @@ def antes_de_eliminar(mapper, connection, target):
 
 @event.listens_for(JineteOAmazona, "before_delete")
 def antes_de_eliminar_jinete_y_amazona(mapper, connection, target):
-    """Eliminar archivos asociados en MinIO antes de eliminar el jinete/amazona de la base de datos."""
+    """Eliminar archivos asociados en MinIO
+    antes de eliminar el jinete/amazona de la base de datos."""
     client = current_app.storage.client
     documentos = Archivo_JYA.query.filter_by(jya_id=target.id).all()
     for documento in documentos:
