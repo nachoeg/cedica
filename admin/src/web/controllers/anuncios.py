@@ -4,7 +4,8 @@ from src.web.handlers.decoradores import (
     sesion_iniciada_requerida,
     chequear_permiso)
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
-from src.core.anuncios import listar_anuncios
+from src.core.anuncios import listar_anuncios, crear_anuncio
+from core.forms.anuncios_forms import AnuncioForm
 
 bp = Blueprint("anuncios", __name__, url_prefix="/anuncios")
 
@@ -31,3 +32,31 @@ def listar():
         cant_paginas=cant_paginas,
         pagina=pagina,
     )
+
+
+@bp.route("/nuevo_anuncio", methods=["GET","POST"])
+@sesion_iniciada_requerida
+def nuevo_anuncio():
+    """
+    Controlador para crear un nuevo anuncio.
+    """
+    form = AnuncioForm()
+    print(request)
+    if form.validate_on_submit():
+        titulo = form.titulo.data
+        copete = form.copete.data
+        contenido = form.contenido.data
+        print(request)
+        # crear_anuncio(titulo, copete, contenido, )
+        return redirect(url_for("home"))
+    
+    return render_template("pages/anuncios/crear.html",
+                           form=form, titulo="Crear anuncio")
+
+
+def ver_anuncio():
+    """
+    Controlador que permite ver un anuncio.
+    """
+
+    return render_template("pages/anuncios/ver.html")
