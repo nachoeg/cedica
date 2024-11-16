@@ -1,0 +1,50 @@
+<script>
+
+  function mostrar_ocultar_asignacion() {
+    var recibe_asignacion = document.getElementById("asignacion_familiar").checked;
+    var tipo_asignacion = document.getElementsByClassName("tipo_asignacion_familiar");
+    
+    if (recibe_asignacion === false) {
+      for (i = 0; i < tipo_asignacion.length; i++) {
+        tipo_asignacion[i].style.display = 'none';
+      }
+    } 
+    else {
+      for (i = 0; i < tipo_asignacion.length; i++) {
+        tipo_asignacion[i].style.display = 'block';
+      }
+    }
+  };
+
+  function mostrar_ocultar_pension() {
+    var recibe_pension = document.getElementById("beneficiario_pension").checked;
+    var tipo_pension = document.getElementsByClassName("tipo_pension");
+    
+    if (recibe_pension === false) {
+      for (i = 0; i < tipo_pension.length; i++) {
+        tipo_pension[i].style.display = 'none';
+      }
+    } 
+    else {
+      for (i = 0; i < tipo_pension.length; i++) {
+        tipo_pension[i].style.display = 'block';
+      }
+    }
+  };
+
+
+  mostrar_ocultar_asignacion();
+
+  document.getElementById("asignacion_familiar").addEventListener("change", function(){
+    mostrar_ocultar_asignacion();
+  })
+
+  mostrar_ocultar_pension();
+
+  document.getElementById("beneficiario_pension").addEventListener("change", function(){
+    mostrar_ocultar_pension();
+  })
+
+
+
+</script>

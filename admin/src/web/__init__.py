@@ -10,7 +10,8 @@ from src.core.config import config
 from src.core import seeds
 from src.web.handlers.funciones_auxiliares import (booleano_a_palabra,
                                                    fechahora,
-                                                   fechahora_a_fecha)
+                                                   fechahora_a_fecha,
+                                                   mostrar_dato)
 from src.web.controllers.miembro import bp as miembro_bp
 from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
@@ -55,6 +56,7 @@ def create_app(env="development", static_folder="../../static"):
     app.jinja_env.globals.update(fechahora_a_fecha=fechahora_a_fecha)
     app.jinja_env.globals.update(fechahora=fechahora)
     app.jinja_env.globals.update(documento_url=helpers_jya.archivo_url)
+    app.jinja_env.globals.update(mostrar_dato=mostrar_dato)
 
     @app.cli.command(name="reset-db")
     def reset_db():

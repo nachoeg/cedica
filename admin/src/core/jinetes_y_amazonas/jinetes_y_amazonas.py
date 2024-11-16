@@ -1,7 +1,7 @@
-from src.core.database import db
 import enum
 from sqlalchemy.types import Enum
-
+from src.core.database import db
+from src.web.handlers.funciones_auxiliares import calcular_edad
 
 
 class Diagnostico(db.Model):
@@ -16,6 +16,17 @@ class Diagnostico(db.Model):
 
     def __repr__(self):
         return f"Diagnostico: {self.value}"
+
+
+class Dia(db.Model):
+    """
+    Tabla de días de la semana
+    """
+
+    __tablename__ = "dias"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(9))
 
 
 class Familiar(db.Model):
@@ -66,16 +77,15 @@ class JineteOAmazona(db.Model):
     nombre = db.Column(db.String(30))
     apellido = db.Column(db.String(30))
     dni = db.Column(db.Integer, unique=True)
-    edad = db.Column(db.Integer)
     fecha_nacimiento = db.Column(db.DateTime)
     provincia_nacimiento = db.Column(db.String(50))
     localidad_nacimiento = db.Column(db.String(50))
     domicilio_actual = db.Column(db.String(50))
-    telefono_actual = db.Column(db.BigInteger)
+    telefono_actual = db.Column(db.String(15))
     contacto_emer_nombre = db.Column(db.String(100))
-    contacto_emer_telefono = db.Column(db.BigInteger)
+    contacto_emer_telefono = db.Column(db.String(15))
     becado = db.Column(db.Boolean)
-    porcentaje_beca = db.Column(db.String(100))
+    porcentaje_beca = db.Column(db.Integer)
 
     # información de salud
 
@@ -124,7 +134,7 @@ class JineteOAmazona(db.Model):
     # informacion sobre escolaridad
     nombre_escuela = db.Column(db.String(40))
     direccion_escuela = db.Column(db.String(50))
-    telefono_escuela = db.Column(db.BigInteger)
+    telefono_escuela = db.Column(db.String(15))
     grado_escuela = db.Column(db.String(4))
     observaciones_escuela = db.Column(db.String(100))
 
@@ -165,21 +175,26 @@ class JineteOAmazona(db.Model):
     profesor = db.relationship("Miembro", foreign_keys=[profesor_id])
 
     conductor_caballo_id = db.Column(db.Integer, db.ForeignKey("miembro.id"))
-    conductor_caballo = db.relationship("Miembro", foreign_keys=[conductor_caballo_id])
+    conductor_caballo = db.relationship("Miembro",
+                                        foreign_keys=[conductor_caballo_id])
 
     caballo_id = db.Column(db.Integer, db.ForeignKey("ecuestres.id"))
-    caballo = db.relationship("Ecuestre", foreign_keys=[caballo_id])
+    caballo = db.relationship("Ecuestre",
+                              foreign_keys=[caballo_id])
 
     auxiliar_pista_id = db.Column(db.Integer, db.ForeignKey("miembro.id"))
-    auxiliar_pista = db.relationship("Miembro", foreign_keys=[auxiliar_pista_id])
+    auxiliar_pista = db.relationship("Miembro",
+                                     foreign_keys=[auxiliar_pista_id])
+
+    # Relacion con los días
+    dias_asignados = db.relationship(
+        "Dia",
+        secondary="dias_por_jinete",
+        lazy=True,
+        backref=db.backref("dias_por_jinetes", lazy=True)
+    )
 
     documentos = db.relationship("Archivo_JYA", back_populates="jya")
-    # TODO armar tabla de familiares a cargo
-    # familiares a cargo
-    # acá voy a tener que tener una tabla de familiares? es muchos a muchos
-    # TODO armar tabla de dias de asistencia
-    # dias
-    # acá voy a tener que tener una tabla de dias? es muchos a muchos
 
     def to_dict(self):
         return {
@@ -187,24 +202,25 @@ class JineteOAmazona(db.Model):
             "nombre": self.nombre,
             "apellido": self.apellido,
             "dni": self.dni,
-            "sede": self.sede,
             "tiene_deuda": ("TIENE DEUDA" if self.tiene_deuda else "-"),
-            "edad": self.edad,
-            "domicilio_actual": self.domicilio_actual,
-            "telefono_actual": self.telefono_actual,
-            "contacto_emergencia": str(self.contacto_emer_telefono)
-            + " ("
-            + self.contacto_emer_nombre
-            + ")",
-            "porcentaje_beca": (
-                str(self.porcentaje_beca) + "%" if self.becado else "-"
-            ),
-            "propuesta_trabajo": self.propuesta_trabajo,
-            "condicion": self.condicion,
-            "profesionales_a_cargo": self.profesionales_a_cargo,
+            "edad": calcular_edad(self.fecha_nacimiento),
+            "profesionales_a_cargo": (
+                self.profesionales_a_cargo
+                if self.profesionales_a_cargo else "-"),
         }
 
     def __repr__(self):
-        return f"<Jinete-Amazona #{self.id} nombre:{self.nombre}, apellido: {self.apellido}>"
+        return f"<Jinete-Amazona #{self.id}\
+          nombre:{self.nombre}, apellido: {self.apellido}>"
 
-
+    # Tabla intermedia para almacenar los días que asiste
+    # cada jinete a la institución
+    dias = db.Table(
+        "dias_por_jinete",
+        db.Column(
+            "jinete_id", db.Integer, db.ForeignKey("jinetesyamazonas.id"),
+            primary_key=True
+        ),
+        db.Column("dia_id", db.Integer, db.ForeignKey("dias.id"),
+                  primary_key=True),
+    )
