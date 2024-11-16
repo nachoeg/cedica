@@ -187,21 +187,11 @@ class JineteOAmazona(db.Model):
             "nombre": self.nombre,
             "apellido": self.apellido,
             "dni": self.dni,
-            "sede": self.sede,
             "tiene_deuda": ("TIENE DEUDA" if self.tiene_deuda else "-"),
             "edad": calcular_edad(self.fecha_nacimiento),
-            "domicilio_actual": self.domicilio_actual,
-            "telefono_actual": self.telefono_actual,
-            "contacto_emergencia": self.contacto_emer_telefono
-            + " ("
-            + self.contacto_emer_nombre
-            + ")",
-            "porcentaje_beca": (
-                str(self.porcentaje_beca) + "%" if self.becado else "-"
-            ),
-            "propuesta_trabajo": self.propuesta_trabajo,
-            "condicion": self.condicion,
-            "profesionales_a_cargo": self.profesionales_a_cargo,
+            "profesionales_a_cargo": (
+                self.profesionales_a_cargo 
+                if self.profesionales_a_cargo else "-"),
         }
 
     def __repr__(self):

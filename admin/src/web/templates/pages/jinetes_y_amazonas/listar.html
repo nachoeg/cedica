@@ -8,22 +8,14 @@
 
 {% set configuracion = {
 'encabezados': [
-{'id': 'id', 'nombre': 'Id'},
 {'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
 {'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
 {'id': 'dni', 'nombre': 'DNI'},
-{'id': 'sede', 'nombre': 'Sede'},
 {'id': 'tiene_deuda', 'nombre': 'Deuda'},
-{'id': 'edad', 'nombre': 'Edad'},
-{'id': 'domicilio_actual', 'nombre': 'Dirección'},
-{'id': 'telefono_actual', 'nombre': 'Telefono'},
-{'id': 'contacto_emergencia', 'nombre': 'Contacto de emergencia'},
-{'id': 'porcentaje_beca', 'nombre': 'Porcentaje de beca'},
-{'id': 'propuesta_trabajo', 'nombre': 'Propuesta de trabajo'},
-{'id': 'condicion', 'nombre': 'Condición'},
 {'id': 'profesionales_a_cargo', 'nombre': 'Profesionales a cargo'}
 ],
 'acciones': [
+{'nombre': 'Tiene deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': edit_icon},
 {'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
 {'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
 {'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon},
@@ -66,6 +58,12 @@
 
   function verDocumentos(id) {
     window.location.href = `/jinetes_y_amazonas/${id}/archivos`;
+  }
+
+  function cambiar_tiene_deuda(id) {
+    if (confirm('¿Está seguro de que desea marcar deuda a este jinete/amazona?')) {
+      
+    }
   }
 
 </script>
