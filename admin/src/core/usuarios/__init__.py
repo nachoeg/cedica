@@ -13,7 +13,7 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     usuarios que genera la consulta.
     """
     email_filtro = Usuario.email.ilike(f"%{email_filtro}%")
-    activo_filtro = (Usuario.activo == activo_filtro 
+    activo_filtro = (Usuario.activo == activo_filtro
                      if activo_filtro != '' else True)
     if rol_filtro == '':
         rol_filtro = True
@@ -22,14 +22,13 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     else:
         rol_filtro = Rol.nombre == rol_filtro
 
-    usuarios = db.paginate(
-        db.select(Usuario).distinct().join(
-            Usuario.roles, isouter=True
-            ).where(email_filtro, activo_filtro, rol_filtro
-                    ).order_by(getattr(getattr(Usuario, ordenar_por), orden)()),
-        page=pagina,
-        per_page=cant_por_pagina,
-        error_out=False)
+    usuarios = db.paginate(db.select(Usuario).distinct().join(
+        Usuario.roles, isouter=True).where(
+            email_filtro, activo_filtro, rol_filtro).order_by(
+                getattr(getattr(Usuario, ordenar_por), orden)()),
+                           page=pagina,
+                           per_page=cant_por_pagina,
+                           error_out=False)
     total = usuarios.total
     # usuarios = [usuario.to_dict() for usuario in usuarios.items]
 
@@ -43,7 +42,7 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
     """
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
     email = email.lower()
-    usuario = Usuario(email=email, contraseña=contraseña_hash, 
+    usuario = Usuario(email=email, contraseña=contraseña_hash,
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
     if not admin_sistema:

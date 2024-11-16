@@ -1,6 +1,6 @@
 import math
 
-from flask import (Blueprint, flash, redirect,
+from flask import (Blueprint, current_app, flash, redirect,
                    render_template, request, url_for)
 
 from src.core.usuarios import (actualizar_perfil, actualizar_usuario,
@@ -23,10 +23,12 @@ def listado_usuarios():
     """Devuelve la vista de usuarios en la base de datos
     Los datos se envían paginados, filtrados y ordenados.
     """
+    cant_filas = current_app.config.get("TABLA_CANT_FILAS")
+
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     email_filtro = request.args.get("email", "")
     activo_filtro = request.args.get("activo", "")
     rol_filtro = request.args.get("rol", "")
