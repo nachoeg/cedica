@@ -60,9 +60,14 @@
     window.location.href = `/jinetes_y_amazonas/descargar_archivo/${id}`;
   }
 
+
+  function editarDocumento(id){
+    window.location.href = `/jinetes_y_amazonas/editar_archivo/${id}`;
+  }
+
   function eliminarDocumento(id) {
     if (confirm('¿Está seguro que desea borrar este documento?')) {
-      window.location.href = `/jinetes_y_amazonas/eliminar_documento/${id}`;
+      window.location.href = `/jinetes_y_amazonas/eliminar_archivo/${id}`;
     }
   }
 

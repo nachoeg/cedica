@@ -457,8 +457,10 @@ def run():
         miembro.crear_tipo_de_documento(tipo=tipo)
 
 
-# función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
+    """
+    Función que carga todos los diagnósticos que se deben mostrar en el sistema
+    """
     jinetes_y_amazonas.crear_diagnostico(nombre="ECNE")
     jinetes_y_amazonas.crear_diagnostico(nombre="Lesión post traumática")
     jinetes_y_amazonas.crear_diagnostico(nombre="Mielomeningocele")

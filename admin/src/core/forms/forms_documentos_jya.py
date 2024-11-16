@@ -20,7 +20,7 @@ class SubirArchivoForm(FlaskForm):
         "Archivo",
         validators=[
             DataRequired("Seleccione un archivo"),
-            LimiteDeArchivo(tamanio_en_mb=100),
+            LimiteDeArchivo(tamanio_en_mb=2),
             TipoDeArchivo(permitidos=["pdf", "doc", "xls", "jpeg"]),
         ],
     )

@@ -415,7 +415,7 @@ def subir_archivo(id: int):
                 "grupo17", url, archivo,
                 tamaño, content_type=archivo.content_type
             )
-            print(url)
+
             cargar_archivo(jya_id, titulo,
                            tipo_archivo, url, archivo_externo=False)
             flash("Archivo subido con éxito", "exito")
@@ -516,19 +516,44 @@ def ver_archivos(id: int):
     )
 
 
-@bp.get("/<int:jya_id>/archivos/<int:archivo_id>/editar/")
+@bp.route("/editar_archivo/<int:id>", methods=["GET", "POST"])
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
-def editar_archivo(jya_id: int, archivo_id: int):
+def editar_archivo(id: int):
     """
     Controlador que muestra el formulario
     para la edición de un archivo o enlace.
     """
-    archivo = encontrar_archivo(archivo_id)
-    flash("Funcionalidad no implementada", "error")
-    return render_template("pages/jinetes_y_amazonas/documentos.html",
-                           jya=archivo.jya)
+    archivo = obtener_documento(id)
+    if archivo.externo:
+        form = EnlaceForm(obj=archivo)
+    else:
+        form = SubirArchivoForm(obj=archivo)
 
+    if request.method == "GET":
+        form.tipo_de_documento_id.data = archivo.tipo_archivo.name
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            archivo.titulo = form.titulo.data
+            archivo.url = validar_url(form.url.data)
+            archivo.tipo_archivo = form.tipo_de_documento_id.data
+
+            guardar_cambios()
+            flash("El documento ha sido editado con éxito", "exito")
+            return redirect(url_for("jinetes_y_amazonas.ver_archivos",
+                                    id=archivo.jya_id))
+
+        else:
+            flash("Error al editar el documento", "error")
+
+    return render_template(
+        "pages/jinetes_y_amazonas/crear_documento.html",
+        form=form,
+        jya=archivo.jya_id,
+        titulo="Editar documento",
+        subir_enlace=archivo.externo,
+    )
 
 @bp.get("/descargar_archivo/<int:archivo_id>")
 @chequear_permiso("jya_mostrar")
@@ -551,7 +576,18 @@ def descargar_archivo(archivo_id: int):
     )
 
 
-@bp.get("/eliminar_documento/<int:id>")
+@bp.get("/documentos/<int:documento_id>/ir/")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ir_documento(documento_id: int):
+    """
+    Redirige a la URL del documento con el id dado.
+    """
+    documento = obtener_documento(documento_id)
+    return redirect(documento.url)
+
+
+@bp.get("/eliminar_archivo/<int:id>")
 @chequear_permiso("jya_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id: int):
