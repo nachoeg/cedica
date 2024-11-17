@@ -66,13 +66,15 @@ class Unico(object):
             return
         if self.ilike:
             check = (
-                db.session.execute(db.select(self.model).where(self.field.ilike(field.data)))
+                db.session.execute(db.select(self.model).where(
+                    self.field.ilike(field.data)))
                 .scalars()
                 .all()
             )
         else:
             check = (
-                db.session.execute(db.select(self.model).where(self.field == field.data))
+                db.session.execute(db.select(self.model).where(
+                    self.field == field.data))
                 .scalars()
                 .all()
             )
@@ -100,12 +102,6 @@ def sin_espacios(form, field):
     if " " in field.data:
         raise ValidationError('No puede contener espacios.')
 
-
-# def validar_email(form, field):
-#     validacion = re.match(
-#         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
-#     if not validacion:
-#         raise ValidationError("El mail debe contener '@' y '.'")
 
 def validar_digitos(form, field):
     """Valida que el campo no contenga números."""

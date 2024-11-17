@@ -1,10 +1,11 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 
+from core.forms.autenticacion_forms import (IniciarSesionForm,
+                                            CambiarContraseñaForm)
 from src.core.usuarios import (actualizar_perfil, asignar_contraseña,
                                usuario_por_email_y_contraseña, usuario_por_id)
-from core.forms.usuario_forms import (IniciarSesionForm, CambiarContraseñaForm,
-                                      UsuarioSinContraseñaForm)
+from core.forms.usuario_forms import (UsuarioSinContraseñaForm)
 from src.web.handlers.decoradores import (chequear_usuario_sesion,
                                           sesion_iniciada_requerida)
 
@@ -51,7 +52,7 @@ def cerrar_sesion():
 @bp.route('/perfil', methods=['GET'])
 @sesion_iniciada_requerida
 def ver_perfil():
-    """Devuelve la vista de datos del perfil 
+    """Devuelve la vista de datos del perfil
     del usuario con sesión activa.
     """
     usuario = usuario_por_id(session.get('id'))

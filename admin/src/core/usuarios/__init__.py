@@ -123,6 +123,7 @@ def usuario_por_email(email):
     """Devuelve el usuario correspondiente al email pasado por
     parámetro. Si no lo encuentra devuelve None.
     """
+    email = email.lower()
     usuario = db.session.execute(
         db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
 
