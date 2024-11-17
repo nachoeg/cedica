@@ -1,5 +1,5 @@
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
-{% from 'components/iconos.html' import show_password_icon %}
+{% from 'components/iconos.html' import show_password_icon, eye_icon, eye_off_icon %}
 
 {% extends "layouts/base.html" %}
 
@@ -11,10 +11,6 @@
 
 {% block main %}
 
-{{ navbar_secundaria({
-  'volver': url_for('home')
-})}}
-
 {% from "pages/usuarios/_campo_form.html" import render_field %}
 <form method=post class="formulario">
   <div class="formulario-header">
@@ -22,23 +18,27 @@
   </div>
   {{ form.csrf_token }}
   <div class="formulario-body">
+    <p class="text-gray-600 text-xs italic">* Campos obligatorios</p>
     <div>
       {{ render_field(form.contraseña_anterior) }}
-      <a class="" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_anterior.id }}')">
-        {{show_password_icon('size-20')}}
-      </a>
+      <div class="text-gray-800 text-xs p-1.5">
+        <input type="checkbox" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_anterior.id }}')">
+         Mostrar
+      </div>
     </div>
     <div>
       {{ render_field(form.contraseña_nueva) }}
-      <a class="" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_nueva.id }}')">
-        {{show_password_icon('size-20')}}
-      </a>
+      <div class="text-gray-800 text-xs p-1.5">
+        <input type="checkbox" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_nueva.id }}')">
+         Mostrar
+      </div>
     </div>
     <div>
       {{ render_field(form.contraseña_confirmacion) }}
-      <a class="" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_confirmacion.id }}')">
-        {{show_password_icon('size-20')}}
-      </a>
+      <div class="text-gray-800 text-xs p-1.5">
+        <input type="checkbox" onclick="mostrar_ocultar_contraseña('{{ form.contraseña_confirmacion.id }}')">
+         Mostrar
+      </div>
     </div>
     <div><input type=submit></div>
   </div>
