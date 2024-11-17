@@ -6,30 +6,29 @@
 
 {% block head %}
 {{ super() }}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block main %}
 
-{{ navbar_secundaria({
-  'volver': url_for('usuarios.listado_usuarios')
-})}}
+{{ navbar_secundaria({'volver': url_for('usuarios.listado_usuarios')}) }}
 
 {% from "pages/usuarios/_campo_form.html" import render_field %}
+{% from "pages/usuarios/_select_multi_checkbox.html" import select_multi_checkbox %}
 <form method=post class="formulario">
   <div class="formulario-header">
     <h1>Editar usuario</h1>
   </div>
   {{ form.csrf_token }}
   <div class="formulario-body">
-    <dl>
-      {{ render_field(form.email, type="email") }}
-      {{ render_field(form.alias) }}
-      <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
-      <div class="roles">{{ render_field(form.roles, id="roles", type="checkbox") }}</div>
-      <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
-    </dl>
-    <p><input type=submit>
+    <p class="text-gray-600 text-xs italic">* Campos obligatorios</p>
+    <div>{{ render_field(form.email, type="email") }}</div>
+    <div>{{ render_field(form.alias) }}</div>
+    {% if not usuario.admin_sistema %}
+    <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
+    <div>{{ select_multi_checkbox(form.roles) }}</div>
+    {% endif %}
+    <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
+    <div><input type=submit></div>
   </div>
 </form>
 

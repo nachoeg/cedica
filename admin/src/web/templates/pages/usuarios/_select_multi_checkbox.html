@@ -1,0 +1,16 @@
+{% macro select_multi_checkbox(field) %}
+  <ul class={{field.id}}>{{ field.label }}
+    {% for  value, label, checked, render_kw in field.iter_choices() %}
+    <li><input type="checkbox" name={{field.name}} value={{value}} id="{{field.id}}-{{value}}" {% if checked %}checked{% endif %}>
+      <label>{{ label }}</label>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li class="text-red-600">{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}
