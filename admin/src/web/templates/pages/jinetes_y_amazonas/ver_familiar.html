@@ -1,0 +1,35 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %}Familiar de {{ jya.nombre }} {{ jya.apellido }}{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.ver_familiares', id=jya.id),
+})}}
+
+<div class="contenedor">
+  <div class="contenedor-header">
+    <h1>Familiar de {{ jya.nombre }} {{ jya.apellido }}</h1>
+  </div>
+  <div class="contenedor-body">
+    <p><strong>Nombre:</strong> {{ familiar.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ familiar.apellido }}</strong>
+    <p><strong>Relación con {{ jya.nombre }} {{ jya.apellido }}:</strong> {{ familiar.parentesco }}</p>
+    <p><strong>DNI:</strong> {{ familiar.dni }}</p>
+    <p><strong>Domicilio: </strong>{{ familiar.domicilio_actual }}</p>
+    <p><strong>Telefono: </strong> {{ familiar.telefono_actual }}</p>
+    <p><strong>Email:</strong> {{ familiar.email }}</p>
+    <p><strong>Nivel de escolaridad:</strong> {{ familiar.nivel_escolaridad }}</p>
+    <p><strong>Ocupación:</strong> {{ familiar.ocupacion }}</p>
+  </div>
+  <div class="contenedor-footer">
+    {% if tiene_permiso(session, 'jya_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{ url_for('jinetes_y_amazonas.editar_familiar', id=familiar.id) }}">Editar</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

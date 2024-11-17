@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError
-from wtforms.validators import DataRequired, Length, Optional
+from wtforms.validators import (
+    DataRequired, Length, Optional, Email)
 from wtforms.fields import (
     DateField,
     SelectField,
@@ -8,6 +9,7 @@ from wtforms.fields import (
     BooleanField,
     TextAreaField,
     SelectMultipleField,
+    EmailField
 )
 import math
 from core.forms.validaciones import Unico
@@ -182,3 +184,30 @@ class InfoInstitucionalJYAForm(FlaskForm):
     auxiliar_pista_id = SelectField("Auxiliar de pista", choices=[])
     dias = SelectMultipleField("Dias", coerce=int)
     submit = SubmitField("Finalizar carga")
+
+
+class FamiliarForm(FlaskForm):
+    parentesco = StringField("Parentesco", validators=[Length(max=40)])
+    nombre = StringField("Nombre*", validators=[
+        DataRequired("Debe ingresar un nombre"), Length(max=30)])
+    apellido = StringField("Apellido*", validators=[
+        DataRequired("Debe ingresar un apellido"), Length(max=30)])
+    dni = IntegerField("DNI*", validators=[DataRequired("Debe ingresar un DNI")])
+    domicilio_actual = StringField("Domicilio", validators=[Length(max=60)])
+    telefono_actual = StringField('Telefono actual*',
+                                  validators=[
+                                    DataRequired("Debe ingresar un teléfono"),
+                                    validar_telefono])
+    email = EmailField(
+        "Email",
+        validators=[
+            Optional(),
+            Email("El mail debe contener '@' y '.'"),
+        ])
+    nivel_escolaridad = SelectField("Nivel de escolaridad",
+                                    choices=[("pri", "Primario"),
+                                             ("sec", "Secundario"),
+                                             ("ter", "Terciario"),
+                                             ("uni", "Universitario")])
+    ocupacion = StringField("Ocupacion", validators=[Length(max=40)])
+    submit = SubmitField("Aceptar")

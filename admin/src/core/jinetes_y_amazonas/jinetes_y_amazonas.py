@@ -37,10 +37,10 @@ class Familiar(db.Model):
     __tablename__ = "familiares"
 
     class NivelEscolaridad(enum.Enum):
-        primario = "Primario"
-        secundario = "Secundario"
-        terciario = "Terciario"
-        universitario = "Universitario"
+        pri = "Primario"
+        sec = "Secundario"
+        ter = "Terciario"
+        uni = "Universitario"
 
         def __str__(self):
             return f"{self.value}"
@@ -48,22 +48,32 @@ class Familiar(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     jya_id = db.Column(db.Integer, db.ForeignKey("jinetesyamazonas.id"))
-    jya = db.relationship("JineteOAmazona", cascade="all,delete")
+    jya = db.relationship("JineteOAmazona",
+                          cascade="all,delete",
+                          back_populates="familiares")
 
     parentesco = db.Column(db.String(40))
     nombre = db.Column(db.String(30))
     apellido = db.Column(db.String(30))
     dni = db.Column(db.Integer)
     domicilio_actual = db.Column(db.String(60))
-    celular_actual = db.Column(db.BigInteger)
+    telefono_actual = db.Column(db.String(15))
     email = db.Column(db.String(20))
     nivel_escolaridad = db.Column(Enum(NivelEscolaridad))
     ocupacion = db.Column(db.String(40))
 
     def __repr__(self):
-        return f"Familiar: {self.nombre}"
+        return f"Familiar: {self.nombre} J/A relacionado:\
+            {self.jya.nombre} {self.jya.apellido}"
 
-
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "apellido": self.apellido,
+            "telefono": self.telefono_actual,
+        }
+    
 class JineteOAmazona(db.Model):
     """
     Modelo correspondiente a los J&A.
@@ -195,6 +205,7 @@ class JineteOAmazona(db.Model):
     )
 
     documentos = db.relationship("Archivo_JYA", back_populates="jya")
+    familiares = db.relationship("Familiar", back_populates="jya")
 
     def to_dict(self):
         return {

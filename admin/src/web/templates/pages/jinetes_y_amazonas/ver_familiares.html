@@ -1,0 +1,59 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from "components/iconos.html" import open_icon, edit_icon %}
+
+
+{% block title %}Familiares de {{ jya.nombre }} {{ jya.apellido }}{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+  'volver': url_for('jinetes_y_amazonas.listar'),
+  'tabs': [
+  {'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
+  {'nombre':'Salud', 'url': url_for('jinetes_y_amazonas.ver_salud', id=jya.id)},
+  {'nombre':'Económica', 'url': url_for('jinetes_y_amazonas.ver_economica', id=jya.id)},
+  {'nombre':'Escolaridad', 'url': url_for('jinetes_y_amazonas.ver_escolaridad', id=jya.id)},
+  {'nombre':'Trabajo Institucional', 'url': url_for('jinetes_y_amazonas.ver_institucional', id=jya.id)},
+  {'nombre':'Familiares', 'url': url_for('jinetes_y_amazonas.ver_familiares', id=jya.id)},
+  {'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
+  ]})}}
+
+{% set configuracion = {
+'encabezados': [
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
+{'id': 'telefono', 'nombre': 'Teléfono'},
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'verFamiliar', 'icono': open_icon},
+{'nombre': 'Editar', 'funcion': 'editarFamiliar', 'icono': edit_icon },
+],
+'crear': {
+'url': url_for('jinetes_y_amazonas.nuevo_familiar', jya_id=jya.id),
+'nombre': 'Crear familiar'
+}
+}
+%}
+
+{{ tabla(configuracion, familiares, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verFamiliar(id) {
+    window.open(
+      `/jinetes_y_amazonas/familiar/${id}`, '_blank').focus();
+  }
+
+  function editarFamiliar(id){
+    window.location.href = `/jinetes_y_amazonas/editar_familiar/${id}`;
+  }
+
+</script>
+
+{% endblock %}
