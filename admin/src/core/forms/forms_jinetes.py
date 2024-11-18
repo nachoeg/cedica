@@ -271,10 +271,10 @@ class FamiliarForm(FlaskForm):
             Email("El mail debe contener '@' y '.'"),
         ])
     nivel_escolaridad = SelectField("Nivel de escolaridad",
-                                    choices=[("pri", "Primario"),
-                                             ("sec", "Secundario"),
-                                             ("ter", "Terciario"),
-                                             ("uni", "Universitario")])
+                                    choices=[('pri', 'Primario'),
+                                             ('sec', 'Secundario'),
+                                             ('ter', 'Terciario'),
+                                             ('uni', 'Universitario')])
     ocupacion = StringField(
             "Ocupacion",
             validators=[Length(max=40,
