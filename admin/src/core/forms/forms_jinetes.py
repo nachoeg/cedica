@@ -19,6 +19,11 @@ from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (Familiar,
 
 
 def validar_telefono(form, campo):
+    """
+    Función que, dado un string que se utilizará como número
+    de teléfono, valida que contenga solo digitos
+    y que su longitud sea entre 7 y 15 digitos.
+    """
     try:
         numero = campo.data
         num = int(numero)
@@ -34,6 +39,10 @@ def validar_telefono(form, campo):
 
 
 def validar_cadena_caracteres(form, campo):
+    """
+    Funcion que, dado un campo de tipo string,
+    evalúa si el mismo tiene dígitos numéricos.
+    """
     if any(caracter.isdigit() for caracter in campo.data):
         raise ValidationError('Este campo no puede contener números')
 
