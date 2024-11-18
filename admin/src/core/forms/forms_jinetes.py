@@ -12,8 +12,10 @@ from wtforms.fields import (
     EmailField
 )
 import math
+from src.core.database import db
 from core.forms.validaciones import Unico
-from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (Familiar,
+                                                            JineteOAmazona)
 
 
 def validar_telefono(form, campo):
@@ -186,13 +188,28 @@ class InfoInstitucionalJYAForm(FlaskForm):
     submit = SubmitField("Finalizar carga")
 
 
+def unico_por_jya(id):
+
+    def _unico_por_jya(form, field):
+        if field.object_data == field.data:
+            return
+        check = (db.session.execute(
+            db.select(Familiar).where(
+                Familiar.jya_id == id, Familiar.dni == field.data)
+                )).scalars().all()
+        if check:
+            raise ValidationError("Este familiar ya fue ingresado")
+
+    return _unico_por_jya
+
+
 class FamiliarForm(FlaskForm):
     parentesco = StringField("Parentesco", validators=[Length(max=40)])
     nombre = StringField("Nombre*", validators=[
         DataRequired("Debe ingresar un nombre"), Length(max=30)])
     apellido = StringField("Apellido*", validators=[
         DataRequired("Debe ingresar un apellido"), Length(max=30)])
-    dni = IntegerField("DNI*", validators=[DataRequired("Debe ingresar un DNI")])
+    dni = IntegerField("DNI*")
     domicilio_actual = StringField("Domicilio", validators=[Length(max=60)])
     telefono_actual = StringField('Telefono actual*',
                                   validators=[
@@ -211,3 +228,12 @@ class FamiliarForm(FlaskForm):
                                              ("uni", "Universitario")])
     ocupacion = StringField("Ocupacion", validators=[Length(max=40)])
     submit = SubmitField("Aceptar")
+
+    def __init__(self, id, *args, **kwargs):
+        """Construye los atributos necesarios para la
+        clase FamiliarForm.
+        """
+        super().__init__(*args, **kwargs)
+        # validador de dato único contra el id que recibe
+        self.dni.validators = [DataRequired("Debe ingresar un DNI"),
+                               unico_por_jya(id)]

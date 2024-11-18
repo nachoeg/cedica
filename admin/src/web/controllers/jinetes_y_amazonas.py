@@ -940,7 +940,7 @@ def nuevo_familiar(jya_id: int):
     """
     Controlador para la carga de un familiar de jinete/amazona
     """
-    form = FamiliarForm()
+    form = FamiliarForm(jya_id)
     jya = encontrar_jya(jya_id)
 
     if request.method == "POST":
