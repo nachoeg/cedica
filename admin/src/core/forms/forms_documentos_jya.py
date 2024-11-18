@@ -41,6 +41,7 @@ class SubirArchivoForm(FlaskForm):
             ("evaluacion", "Evaluación"),
             ("planificacion", "Planificación"),
             ("evolucion", "Evolución"),
+            ("cronica", "Crónica"),
             ("documental", "Documental"),
         ],
     )

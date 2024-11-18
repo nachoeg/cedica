@@ -10,10 +10,10 @@ from src.core.database import db
 
 class TipoArchivo(enum.Enum):
     entrevista = "Entrevista"
-    evaluacion = "Evaluacion"
-    planificacion = "Planificacion"
+    evaluacion = "Evaluación"
+    planificacion = "Planificación"
     evolucion = "Evolución"
-    cronica = "Cronica"
+    cronica = "Crónica"
     documental = "Documental"
 
     @classmethod
