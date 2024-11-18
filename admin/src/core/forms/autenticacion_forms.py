@@ -27,11 +27,6 @@ class CambiarContraseñaForm(FlaskForm):
     """
     contraseña_anterior = PasswordField(
         "Contraseña anterior",
-        validators=[InputRequired("Debe ingresar su contraseña."),
-                    Length(min=4, max=100, message="La contraseña \
-                           tiene por lo menos %(min)d caracteres."),
-                    sin_espacios,
-                    ]
         )
     contraseña_nueva = PasswordField(
         "Nueva contraseña",
@@ -55,4 +50,10 @@ class CambiarContraseñaForm(FlaskForm):
         """
         super().__init__(*args, **kwargs)
         # validación de contraseña contra la que se recibe como parámetro
-        self.contraseña_anterior.validators = [validar_contraseña(contraseña)]
+        self.contraseña_anterior.validators = [
+            InputRequired("Debe ingresar su contraseña."),
+            Length(min=4, max=100, message="La contraseña \
+                   tiene por lo menos %(min)d caracteres."),
+            sin_espacios,
+            validar_contraseña(contraseña)
+            ]
