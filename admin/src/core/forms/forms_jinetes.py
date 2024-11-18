@@ -274,7 +274,8 @@ class FamiliarForm(FlaskForm):
                                     choices=[('pri', 'Primario'),
                                              ('sec', 'Secundario'),
                                              ('ter', 'Terciario'),
-                                             ('uni', 'Universitario')])
+                                             ('uni', 'Universitario')],
+                                    render_kw={"placeholder": "Seleccionar"})
     ocupacion = StringField(
             "Ocupacion",
             validators=[Length(max=40,
