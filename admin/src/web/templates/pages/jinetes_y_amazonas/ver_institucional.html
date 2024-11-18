@@ -35,7 +35,9 @@
         {{ dia.nombre }}</br>
       {% endfor %}
     </p>
-    <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_inst', id=jya.id)}}">Editar</a>
-  </div>
+    {% if tiene_permiso(session, 'jya_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_inst', id=jya.id)}}">Editar</a>
+    {% endif %}
+    </div>
 
   {% endblock %}

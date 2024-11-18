@@ -15,11 +15,14 @@
 {'id': 'profesionales_a_cargo', 'nombre': 'Profesionales a cargo'}
 ],
 'acciones': [
-{'nombre': 'Tiene deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon},
+{'nombre': 'Tiene deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon}
+if tiene_permiso(session,'jya_actualizar') else False,
 {'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
 {'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
-{'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon},
-{'nombre': 'Borrar','funcion': 'borrarJYA', 'icono': delete_icon},
+{'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon}
+if tiene_permiso(session,'jya_actualizar') else False,
+{'nombre': 'Borrar','funcion': 'borrarJYA', 'icono': delete_icon}
+if tiene_permiso(session, 'jya_eliminar') else False,
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },

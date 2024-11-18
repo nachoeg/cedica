@@ -40,7 +40,9 @@
     {% if jya.becado %}
       <p><strong>Porcentaje de beca:</strong> {{ jya.porcentaje_beca }}%</p>
     {% endif %}
-    <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_j_y_a', id=jya.id)}}">Editar</a>
+    {% if tiene_permiso(session, 'jya_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_j_y_a', id=jya.id)}}">Editar</a>
+    {% endif %}
   </div>
 
   {% endblock %}

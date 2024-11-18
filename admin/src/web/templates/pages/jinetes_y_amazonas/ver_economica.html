@@ -34,7 +34,9 @@
     <p><strong>Numero de afiliado:</strong> {{ mostrar_dato(jya.num_afiliado) }}</p>
     <p><strong>¿Posee curatela?:</strong> {{ booleano_a_palabra(jya.posee_curatela) if jya.posee_curatela is not none else "-sin datos-" }}</p>
     <p><strong>Observaciones:</strong> {{ mostrar_dato(jya.observaciones_obra_social) }}</p>
-    <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_econ', id=jya.id)}}">Editar</a>
-  </div>
+    {% if tiene_permiso(session, 'jya_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_econ', id=jya.id)}}">Editar</a>
+    {% endif %}
+    </div>
 
   {% endblock %}
