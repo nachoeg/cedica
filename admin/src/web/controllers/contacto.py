@@ -49,3 +49,10 @@ def ver(id: int):
     consulta = obtener_consulta(id)
     return render_template("pages/contactos/ver.html", consulta=consulta)
 
+@bp.route('/<int:id>/eliminar', methods=['GET'])
+def eliminar(id):
+    """Permite eliminar una consulta del sistema, 
+    toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
+    eliminar_consulta(id)
+    flash("Consulta eliminado con exito.", 'success')
+    return redirect(url_for('contacto.listar'))
