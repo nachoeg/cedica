@@ -1,5 +1,5 @@
 from src.core.database import db
-from src.core.contacto.consulta import Consulta
+from src.core.contacto.consulta import Consulta, Estado
 from sqlalchemy import cast, String
 
 
@@ -33,7 +33,7 @@ def listar_estados_consultas():
     """
     Retorna los estados de las consultas.
     """
-    return Consulta.Estado.listar()
+    return Estado.listar()
 
 
 def crear_consulta(nombre, email, mensaje):
