@@ -1,6 +1,6 @@
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (
-    JineteOAmazona, Diagnostico, Dia)
+    JineteOAmazona, Diagnostico, Dia, Familiar, TipoDeDiscapacidad)
 from src.core.jinetes_y_amazonas.documentos import Archivo_JYA, TipoArchivo
 from src.core.miembro.miembro import Miembro
 from src.core.miembro.extras import PuestoLaboral
@@ -27,6 +27,17 @@ def crear_dia(**kwargs):
     db.session.commit()
 
     return dia
+
+
+def crear_tipo_discapacidad(**kwargs):
+    """
+    Funcion que crea un tipo de discapacidad.
+    """
+    tipo_de_discapacidad = TipoDeDiscapacidad(**kwargs)
+    db.session.add(tipo_de_discapacidad)
+    db.session.commit()
+
+    return tipo_de_discapacidad
 
 
 def listar_j_y_a(
@@ -278,7 +289,7 @@ def listar_documentos(
     ordenar_por="id",
     orden="asc",
     pagina=1,
-    cant_por_pagina=10,
+    cant_por_pagina=6,
 ):
     """
     Funcion que, dado un jinete y determinados filtros,
@@ -393,11 +404,13 @@ def obtener_dia(dia_id):
     return dia
 
 
-def obtener_documento(doc_id):
+def listar_tipos_de_discapacidad():
     """
-    Funcion que busca un documento a partir del id del documento.
+    Función que retorna el listado de los tipos de discapacidad.
     """
-    return Archivo_JYA.query.get_or_404(doc_id)
+    tipos = TipoDeDiscapacidad.query.all()
+
+    return tipos
 
 
 def eliminar_documento_j_y_a(doc_id):
@@ -409,3 +422,82 @@ def eliminar_documento_j_y_a(doc_id):
     db.session.commit()
 
     return documento
+
+
+def crear_familiar(
+                jya_id,
+                nombre,
+                apellido,
+                parentesco,
+                dni,
+                domicilio,
+                telefono,
+                email,
+                nivel_escolaridad,
+                ocupacion):
+    """
+    Función que crea un familiar de un jinete y amazona
+    y la guarda en la base de datos
+    """
+
+    familiar = Familiar(
+        jya_id=jya_id,
+        nombre=nombre,
+        apellido=apellido,
+        parentesco=parentesco,
+        dni=dni,
+        domicilio_actual=domicilio,
+        telefono_actual=telefono,
+        email=email,
+        nivel_escolaridad=nivel_escolaridad,
+        ocupacion=ocupacion
+    )
+    db.session.add(familiar)
+    db.session.commit()
+
+    return familiar
+
+
+def encontrar_familiar(id):
+    """
+    Funcion que retorna el familiar de un jinete/amazona
+    dado el id del familiar
+    """
+    familiar = Familiar.query.get_or_404(id)
+
+    return familiar
+
+
+def listar_familiares(jya_id,
+                      ordenar_por="id",
+                      orden="asc",
+                      pagina=1,
+                      cant_por_pagina=6):
+    """
+    Funcion que retorna todos los familiares de un jinete/amazona
+    dado el id del jinete/amazona
+    """
+    query = Familiar.query.filter(
+        Familiar.jya_id == jya_id
+    )
+
+    cant_resultados = query.count()
+
+    if orden == "asc":
+        query = query.order_by(getattr(Familiar, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(Familiar, ordenar_por).desc())
+
+    familiares = query.paginate(page=pagina,
+                                per_page=cant_por_pagina, error_out=False)
+
+    return familiares, cant_resultados
+
+
+def obtener_tipo_discapacidad(tipo_id):
+    """
+    Funcion que retorna un tipo de discapacidad a partir del id
+    """
+    tipo = TipoDeDiscapacidad.query.get_or_404(tipo_id)
+
+    return tipo

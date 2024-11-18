@@ -9,15 +9,19 @@
 {% block main %}
 
 {{ navbar_secundaria({
-'volver': url_for('jinetes_y_amazonas.listar'),
-'tabs': [
+  'volver': url_for('jinetes_y_amazonas.listar'),
+  'tabs': [
 {'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
+{'nombre':'Salud', 'url': url_for('jinetes_y_amazonas.ver_salud', id=jya.id)},
+{'nombre':'Económica', 'url': url_for('jinetes_y_amazonas.ver_economica', id=jya.id)},
+{'nombre':'Escolaridad', 'url': url_for('jinetes_y_amazonas.ver_escolaridad', id=jya.id)},
+{'nombre':'Familiares', 'url': url_for('jinetes_y_amazonas.ver_familiares', id=jya.id)},
+{'nombre':'Trabajo Institucional', 'url': url_for('jinetes_y_amazonas.ver_institucional', id=jya.id)},
 {'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
 ]})}}
 
 {% set configuracion = {
 'encabezados': [
-{'id': 'id', 'nombre': 'Id'},
 {'id': 'titulo', 'nombre': 'Titulo', 'ordenar': True},
 {'id': 'fecha_subida', 'nombre': 'Fecha de subida', 'ordenar': True},
 {'id': 'tipo_archivo', 'nombre': 'Tipo de archivo'},
@@ -25,8 +29,10 @@
 'acciones': [
 {'nombre': 'Ir al documento', 'funcion': 'irAlDocumento', 'icono': external_link_icon, 'condiciones': [{'fila': 'externo', 'valor': True}]},
 {'nombre': 'Descargar', 'funcion': 'descargarDocumento', 'icono': download_icon, 'condiciones': [{'fila': 'externo', 'valor': False}]},
-{'nombre': 'Editar', 'funcion': 'editarDocumento', 'icono': edit_icon },
-{'nombre': 'Eliminar', 'funcion': 'eliminarDocumento', 'icono': delete_icon},
+{'nombre': 'Editar', 'funcion': 'editarDocumento', 'icono': edit_icon } if tiene_permiso(session,
+'jya_actualizar') else False,
+{'nombre': 'Eliminar', 'funcion': 'eliminarDocumento', 'icono': delete_icon}
+if tiene_permiso(session, 'jya_eliminar') else False,
 ],
 'filtros': [
 {'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
@@ -60,9 +66,14 @@
     window.location.href = `/jinetes_y_amazonas/descargar_archivo/${id}`;
   }
 
+
+  function editarDocumento(id){
+    window.location.href = `/jinetes_y_amazonas/editar_archivo/${id}`;
+  }
+
   function eliminarDocumento(id) {
     if (confirm('¿Está seguro que desea borrar este documento?')) {
-      window.location.href = `/jinetes_y_amazonas/eliminar_documento/${id}`;
+      window.location.href = `/jinetes_y_amazonas/eliminar_archivo/${id}`;
     }
   }
 

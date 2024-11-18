@@ -25,11 +25,15 @@ from src.core.jinetes_y_amazonas import (
     listar_auxiliares_pista,
     listar_caballos,
     listar_dias,
-    obtener_documento,
     eliminar_documento_j_y_a,
     guardar_cambios,
     cargar_id_diagnostico_otro,
-    obtener_dia
+    obtener_dia,
+    crear_familiar,
+    encontrar_familiar,
+    listar_familiares,
+    obtener_tipo_discapacidad,
+    listar_tipos_de_discapacidad
 )
 from core.forms.forms_jinetes import (
     NuevoJYAForm,
@@ -37,6 +41,7 @@ from core.forms.forms_jinetes import (
     InfoEconomicaJYAForm,
     InfoEscolaridadJYAForm,
     InfoInstitucionalJYAForm,
+    FamiliarForm
 )
 from src.web.handlers.decoradores import (
     sesion_iniciada_requerida, chequear_permiso
@@ -91,7 +96,7 @@ def listar():
         nombre_filtro=nombre_filtro,
         apellido_filtro=apellido_filtro,
         dni_filtro=dni_filtro,
-        profesionales_a_cargo=profesionales_a_cargo,
+        profesional_filtro=profesionales_a_cargo,
     )
 
 
@@ -162,12 +167,17 @@ def cargar_info_salud(id: int):
     de la información de salud del jinete o amazona
     o guarda los datos asociados a él.
     """
+    jya = encontrar_jya(id)
     form = InfoSaludJYAForm()
     form.diagnostico.choices = [
         (diagnostico.id, diagnostico.nombre)
         for diagnostico in listar_diagnosticos()
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
+    form.tipo_discapacidad.choices = [
+        (tipo.id, tipo.nombre)
+        for tipo in listar_tipos_de_discapacidad()]
+
     form.submit.label.text = "Continuar"
 
     if form.validate_on_submit():
@@ -179,12 +189,14 @@ def cargar_info_salud(id: int):
                 diagnostico_otro = form.diagnostico_otro.data
             else:
                 diagnostico_otro = None
-            tipo_discapacidad = None
+            tipo_discapacidad = []
         else:
             diagnostico_id = None
             diagnostico_otro = None
-            tipo_discapacidad = form.tipo_discapacidad.data
-
+            tipo_discapacidad = [
+                obtener_tipo_discapacidad(tipo)
+                for tipo in form.tipo_discapacidad
+            ]
         cargar_informacion_salud(
             id,
             certificado_discapacidad,
@@ -199,6 +211,7 @@ def cargar_info_salud(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
         id_otro_diagnostico=id_otro_diagnostico
     )
@@ -213,6 +226,7 @@ def cargar_info_econ(id: int):
     de la información económica del jinete o amazona,
     o guarda los datos ingrsados en él.
     """
+    jya = encontrar_jya(id)
     form = InfoEconomicaJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -254,6 +268,7 @@ def cargar_info_econ(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
     )
 
@@ -267,6 +282,7 @@ def cargar_info_esc(id: int):
     para la carga de información de escolaridad del jinete o amazona,
     o guarda los datos cargados en él.
     """
+    jya = encontrar_jya(id)
     form = InfoEscolaridadJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -292,6 +308,7 @@ def cargar_info_esc(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
     )
 
@@ -305,6 +322,7 @@ def cargar_info_inst(id: int):
     para la carga de información institucional del jinete o amazona,
     o guarda los datos cargados en él.
     """
+    jya = encontrar_jya(id)
     form = InfoInstitucionalJYAForm()
     form.submit.label.text = "Finalizar"
 
@@ -352,13 +370,15 @@ def cargar_info_inst(id: int):
             auxiliar_pista_id,
         )
 
-        flash("Información institucional guardada.\
-              Continúe con la carga.", "exito")
-        return redirect(url_for("jinetes_y_amazonas.listar"))
+        flash("Información institucional guardada.", "exito")
+        flash("Sólo resta cargar familiares.", "info")
+        return redirect(url_for("jinetes_y_amazonas.ver_familiares",
+                                id=jya.id))
 
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
     )
 
@@ -371,10 +391,62 @@ def ver(id: int):
     Controlador que permite visualizar la información de un jinete o amazona.
     """
     jya = encontrar_jya(id)
-    
+
     return render_template("pages/jinetes_y_amazonas/ver_jya.html",
                            jya=jya,
                            edad=calcular_edad(jya.fecha_nacimiento))
+
+
+@bp.get("/<int:id>/salud")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ver_salud(id: int):
+    """
+    Controlador que permite visualizar la información de un jinete o amazona.
+    """
+    jya = encontrar_jya(id)
+
+    return render_template("pages/jinetes_y_amazonas/ver_salud.html",
+                           jya=jya)
+
+
+@bp.get("/<int:id>/economica")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ver_economica(id: int):
+    """
+    Controlador que permite visualizar la información de un jinete o amazona.
+    """
+    jya = encontrar_jya(id)
+
+    return render_template("pages/jinetes_y_amazonas/ver_economica.html",
+                           jya=jya)
+
+
+@bp.get("/<int:id>/escolaridad")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ver_escolaridad(id: int):
+    """
+    Controlador que permite visualizar la información de un jinete o amazona.
+    """
+    jya = encontrar_jya(id)
+
+    return render_template("pages/jinetes_y_amazonas/ver_escolaridad.html",
+                           jya=jya)
+
+
+@bp.get("/<int:id>/institucional")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ver_institucional(id: int):
+    """
+    Controlador que permite visualizar la información de un jinete o amazona.
+    """
+    jya = encontrar_jya(id)
+
+    return render_template("pages/jinetes_y_amazonas/ver_institucional.html",
+                           jya=jya)
 
 
 @bp.get("/<int:id>/eliminar/")
@@ -415,7 +487,7 @@ def subir_archivo(id: int):
                 "grupo17", url, archivo,
                 tamaño, content_type=archivo.content_type
             )
-            print(url)
+
             cargar_archivo(jya_id, titulo,
                            tipo_archivo, url, archivo_externo=False)
             flash("Archivo subido con éxito", "exito")
@@ -481,7 +553,7 @@ def ver_archivos(id: int):
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 10))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     nombre_filtro = request.args.get("nombre", "")
     tipo_filtro = request.args.get("tipo", "")
 
@@ -516,18 +588,44 @@ def ver_archivos(id: int):
     )
 
 
-@bp.get("/<int:jya_id>/archivos/<int:archivo_id>/editar/")
+@bp.route("/editar_archivo/<int:id>", methods=["GET", "POST"])
 @chequear_permiso("jya_actualizar")
 @sesion_iniciada_requerida
-def editar_archivo(jya_id: int, archivo_id: int):
+def editar_archivo(id: int):
     """
     Controlador que muestra el formulario
     para la edición de un archivo o enlace.
     """
-    archivo = encontrar_archivo(archivo_id)
-    flash("Funcionalidad no implementada", "error")
-    return render_template("pages/jinetes_y_amazonas/documentos.html",
-                           jya=archivo.jya)
+    archivo = encontrar_archivo(id)
+    if archivo.externo:
+        form = EnlaceForm(obj=archivo)
+    else:
+        form = SubirArchivoForm(obj=archivo)
+
+    if request.method == "GET":
+        form.tipo_de_documento_id.data = archivo.tipo_archivo.name
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            archivo.titulo = form.titulo.data
+            archivo.url = validar_url(form.url.data)
+            archivo.tipo_archivo = form.tipo_de_documento_id.data
+
+            guardar_cambios()
+            flash("El documento ha sido editado con éxito", "exito")
+            return redirect(url_for("jinetes_y_amazonas.ver_archivos",
+                                    id=archivo.jya_id))
+
+        else:
+            flash("Error al editar el documento", "error")
+
+    return render_template(
+        "pages/jinetes_y_amazonas/crear_documento.html",
+        form=form,
+        jya=archivo.jya_id,
+        titulo="Editar documento",
+        subir_enlace=archivo.externo,
+    )
 
 
 @bp.get("/descargar_archivo/<int:archivo_id>")
@@ -537,7 +635,7 @@ def descargar_archivo(archivo_id: int):
     """
     Controlador que permite la descarga de un archivo dado su id.
     """
-    documento = obtener_documento(archivo_id)
+    documento = encontrar_archivo(archivo_id)
     cliente = current_app.storage.client
     archivo = cliente.get_object("grupo17", documento.url)
     archivo_bytes = BytesIO(archivo.read())
@@ -551,7 +649,18 @@ def descargar_archivo(archivo_id: int):
     )
 
 
-@bp.get("/eliminar_documento/<int:id>")
+@bp.get("/documentos/<int:documento_id>/ir/")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ir_documento(documento_id: int):
+    """
+    Redirige a la URL del documento con el id dado.
+    """
+    documento = encontrar_archivo(documento_id)
+    return redirect(documento.url)
+
+
+@bp.get("/eliminar_archivo/<int:id>")
 @chequear_permiso("jya_eliminar")
 @sesion_iniciada_requerida
 def eliminar_documento(id: int):
@@ -606,6 +715,7 @@ def editar_j_y_a(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a.html",
         form=form,
+        jya=jya,
         titulo="Editar J/A " + str(jya.nombre) +
         " " + str(jya.apellido)
     )
@@ -627,11 +737,18 @@ def editar_info_salud(id: int):
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
 
+    form.tipo_discapacidad.choices = [
+        (tipo.id, tipo.nombre)
+        for tipo in listar_tipos_de_discapacidad()]
+
     form.submit.label.text = "Guardar"
 
     if request.method == "GET":
         if jya.diagnostico is not None:
             form.diagnostico.data = jya.diagnostico.id
+
+        form.tipo_discapacidad.data = [
+            tipo.id for tipo in jya.tipo_discapacidad]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -642,21 +759,24 @@ def editar_info_salud(id: int):
                     jya.diagnostico_otro = form.diagnostico_otro.data
                 else:
                     jya.diagnostico_otro = None
-                jya.tipo_discapacidad = None
+                jya.tipo_discapacidad = []
             else:
                 jya.diagnostico_id = None
                 jya.diagnostico_otro = None
-                jya.tipo_discapacidad = form.tipo_discapacidad.data
+                jya.tipo_discapacidad = [
+                    obtener_tipo_discapacidad(tipo)
+                    for tipo in form.tipo_discapacidad.data]
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_salud", id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
+        jya=jya,
         titulo="Editar información de salud - J/A "
         + str(jya.nombre)
         + " "
@@ -701,12 +821,13 @@ def editar_info_econ(id: int):
 
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_economica", id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
+        jya=jya,
         titulo="Editar información económica - J/A "
         + str(jya.nombre)
         + " "
@@ -737,13 +858,14 @@ def editar_info_esc(id: int):
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_escolaridad", id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
         form=form,
+        jya=jya,
         titulo="Editar información sobre escolaridad - J/A "
         + str(jya.nombre)
         + " "
@@ -822,15 +944,160 @@ def editar_info_inst(id: int):
             ]
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_institucional",
+                                    id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
 
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
+        jya=jya,
         titulo="Editar información institucional - J/A "
         + str(jya.nombre)
         + " "
         + str(jya.apellido),
     )
+
+
+@bp.route("/nuevo_familiar/<int:jya_id>", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
+def nuevo_familiar(jya_id: int):
+    """
+    Controlador para la carga de un familiar de jinete/amazona
+    """
+    form = FamiliarForm(jya_id)
+    jya = encontrar_jya(jya_id)
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            jya_id = jya_id
+            nombre = form.nombre.data
+            apellido = form.apellido.data
+            parentesco = form.parentesco.data
+            dni = form.dni.data
+            domicilio = form.domicilio_actual.data
+            telefono = form.telefono_actual.data
+            email = form.email.data
+            nivel_escolaridad = form.nivel_escolaridad.data
+            ocupacion = form.ocupacion.data
+            crear_familiar(
+                jya_id,
+                nombre,
+                apellido,
+                parentesco,
+                dni,
+                domicilio,
+                telefono,
+                email,
+                nivel_escolaridad,
+                ocupacion
+            )
+            flash("Familiar cargado con éxito", "exito")
+            return redirect(url_for("jinetes_y_amazonas.ver_familiares",
+                                    id=jya_id))
+        else:
+            flash("Error al crear el familiar")
+
+    return render_template("pages/jinetes_y_amazonas/crear_familiar.html",
+                           form=form,
+                           jya=jya,
+                           titulo="Cargar familiar de " +
+                           jya.nombre+" "+jya.apellido)
+
+
+@bp.get("<int:id>/familiares")
+@chequear_permiso("jya_listar")
+@sesion_iniciada_requerida
+def ver_familiares(id: int):
+    """
+    Controlador que devuelve el listado de
+    familiares del jinete/amazona
+    """
+    jya = encontrar_jya(id)
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "id")
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
+    cant_por_pagina = convertir_a_entero(
+        request.args.get("cant_por_pagina", 6))
+    familiares, cant_resultados = listar_familiares(
+        jya.id,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pagina
+    )
+
+    cant_paginas = cant_resultados // cant_por_pagina
+    if cant_resultados % cant_por_pagina != 0:
+        cant_paginas += 1
+
+    return render_template(
+        "pages/jinetes_y_amazonas/ver_familiares.html",
+        jya=jya,
+        familiares=familiares,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por
+    )
+
+
+@bp.route("/editar_familiar/<int:id>", methods=["GET", "POST"])
+@chequear_permiso("jya_crear")
+@sesion_iniciada_requerida
+def editar_familiar(id: int):
+    familiar = encontrar_familiar(id)
+    jya_id = familiar.jya_id
+    form = FamiliarForm(jya_id, obj=familiar)
+
+    if request.method == "GET":
+        form.nivel_escolaridad.data = familiar.nivel_escolaridad.name
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            familiar.nombre = form.nombre.data
+            familiar.apellido = form.apellido.data
+            familiar.parentesco = form.parentesco.data
+            familiar.dni = form.dni.data
+            familiar.domicilio = form.domicilio_actual.data
+            familiar.telefono = form.telefono_actual.data
+            familiar.email = form.email.data
+            familiar.nivel_escolaridad = form.nivel_escolaridad.data
+            familiar.ocupacion = form.ocupacion.data
+            guardar_cambios()
+
+            flash("Datos actualizados con éxito", "exito")
+            return redirect(url_for("jinetes_y_amazonas.ver_familiares",
+                                    id=familiar.jya_id))
+        else:
+            flash("Ocurrió un error al actualizar los datos del familiar",
+                  "error")
+    return render_template("/pages/jinetes_y_amazonas/crear_familiar.html",
+                           form=form,
+                           jya=familiar.jya,
+                           titulo="Editar familiar de " +
+                           familiar.jya.nombre + " " + familiar.jya.apellido)
+
+
+@bp.get("/familiar/<int:id>")
+@chequear_permiso("jya_mostrar")
+@sesion_iniciada_requerida
+def ver_familiar(id: int):
+    familiar = encontrar_familiar(id)
+    jya = familiar.jya
+    return render_template("/pages/jinetes_y_amazonas/ver_familiar.html",
+                           familiar=familiar, jya=jya)
+
+
+@bp.get("deuda/<int:id>")
+@chequear_permiso("jya_actualizar")
+@sesion_iniciada_requerida
+def marcar_deuda(id: int):
+    jya = encontrar_jya(id)
+    jya.tiene_deuda = not jya.tiene_deuda
+    guardar_cambios()
+
+    return redirect(url_for("jinetes_y_amazonas.listar", **request.args))

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError
-from wtforms.validators import DataRequired, Length, Optional
+from wtforms.validators import (
+    DataRequired, Length, Optional, Email)
 from wtforms.fields import (
     DateField,
     SelectField,
@@ -8,13 +9,21 @@ from wtforms.fields import (
     BooleanField,
     TextAreaField,
     SelectMultipleField,
+    EmailField
 )
 import math
+from src.core.database import db
 from core.forms.validaciones import Unico
-from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
+from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (Familiar,
+                                                            JineteOAmazona)
 
 
 def validar_telefono(form, campo):
+    """
+    Función que, dado un string que se utilizará como número
+    de teléfono, valida que contenga solo digitos
+    y que su longitud sea entre 7 y 15 digitos.
+    """
     try:
         numero = campo.data
         num = int(numero)
@@ -30,6 +39,10 @@ def validar_telefono(form, campo):
 
 
 def validar_cadena_caracteres(form, campo):
+    """
+    Funcion que, dado un campo de tipo string,
+    evalúa si el mismo tiene dígitos numéricos.
+    """
     if any(caracter.isdigit() for caracter in campo.data):
         raise ValidationError('Este campo no puede contener números')
 
@@ -54,19 +67,30 @@ class NuevoJYAForm(FlaskForm):
                                     DataRequired('Ingrese\
                                     la fecha de nacimiento\
                                     del jinete o la amazona')])
-    provincia_nacimiento = StringField('Provincia de nacimiento',
-                                       validators=[Length(max=64),
-                                                   validar_cadena_caracteres])
-    localidad_nacimiento = StringField('Localidad de nacimiento',
-                                       validators=[Length(max=64),
-                                                   validar_cadena_caracteres])
-    domicilio_actual = StringField('Domicilio actual',
-                                   validators=[Length(max=64)])
+    provincia_nacimiento = StringField(
+            'Provincia de nacimiento',
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                            máximo %(max)d caracteres."),
+                        validar_cadena_caracteres])
+    localidad_nacimiento = StringField(
+            'Localidad de nacimiento',
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
+    domicilio_actual = StringField(
+            'Domicilio actual',
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
     telefono_actual = StringField('Telefono actual',
                                   validators=[Optional(), validar_telefono])
-    contacto_emer_nombre = StringField('Nombre de contacto de emergencia',
-                                       validators=[Length(max=64),
-                                                   validar_cadena_caracteres])
+    contacto_emer_nombre = StringField(
+            'Nombre de contacto de emergencia',
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres."),
+                        validar_cadena_caracteres])
     contacto_emer_telefono = StringField('Telefono de contacto de emergencia',
                                          validators=[Optional(),
                                                      validar_telefono])
@@ -84,17 +108,13 @@ class InfoSaludJYAForm(FlaskForm):
     certificado_discapacidad = BooleanField("¿Tiene certificado\
                                              de discapacidad?")
     diagnostico = SelectField("Diagnóstico", coerce=int)
-    diagnostico_otro = StringField("Otro diagnóstico",
-                                   validators=[Length(max=64)])
-    tipo_discapacidad = SelectField(
-        "Tipo de discapacidad",
-        choices=[
-            ("mental", "Mental"),
-            ("motora", "Motora"),
-            ("sensorial", "Sensorial"),
-            ("visceral", "Visceral"),
-        ],
-    )
+    diagnostico_otro = StringField(
+            "Otro diagnóstico",
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
+    tipo_discapacidad = SelectMultipleField(
+        "Tipo de discapacidad", coerce=int)
     submit = SubmitField("Continuar")
 
 
@@ -118,12 +138,18 @@ class InfoEconomicaJYAForm(FlaskForm):
         "Tipo de pensión",
         choices=[("provincial", "Provincial"), ("nacional", "Nacional")],
     )
-    obra_social = StringField("Obra social", validators=[Length(max=64)])
+    obra_social = StringField(
+            "Obra social",
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
     num_afiliado = IntegerField("Numero de afiliado", validators=[Optional()])
     posee_curatela = BooleanField("¿Posee curatela?")
     observaciones_obra_social = StringField(
-        "Observaciones", validators=[Length(max=64)]
-    )
+            "Observaciones",
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
     submit = SubmitField("Continuar")
 
 
@@ -133,19 +159,32 @@ class InfoEscolaridadJYAForm(FlaskForm):
     la información relacionada a la escolaridad del jinete o amazona.
     """
 
-    nombre_escuela = StringField("Nombre de escuela",
-                                 validators=[Length(max=40)])
-    direccion_escuela = StringField("Direccion de escuela",
-                                    validators=[Length(max=50)])
+    nombre_escuela = StringField(
+            "Nombre de escuela",
+            validators=[Length(max=40,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
+    direccion_escuela = StringField(
+            "Direccion de escuela",
+            validators=[Length(max=50,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
     telefono_escuela = StringField("Telefono de la escuela",
                                    validators=[Optional(), validar_telefono])
-    grado_escuela = StringField("Grado al que asiste",
-                                validators=[Length(max=4)])
-    observaciones_escuela = StringField("Observaciones",
-                                        validators=[Length(max=100)])
+    grado_escuela = StringField(
+            "Grado al que asiste",
+            validators=[Length(max=4,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
+    observaciones_escuela = StringField(
+            "Observaciones",
+            validators=[Length(max=64,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
     profesionales_a_cargo = TextAreaField(
         "Profesionales a cargo*", validators=[
-                                    Length(max=200),
+                                    Length(max=200, message="Este campo debe\
+                                    tener como máximo %(max)d caracteres"),
                                     DataRequired('Ingrese al menos\
                                         un profesional a cargo\
                                         del jinete o la amazona'),
@@ -182,3 +221,74 @@ class InfoInstitucionalJYAForm(FlaskForm):
     auxiliar_pista_id = SelectField("Auxiliar de pista", choices=[])
     dias = SelectMultipleField("Dias", coerce=int)
     submit = SubmitField("Finalizar carga")
+
+
+def unico_por_jya(id):
+
+    def _unico_por_jya(form, field):
+        if field.object_data == field.data:
+            return
+        check = (db.session.execute(
+            db.select(Familiar).where(
+                Familiar.jya_id == id, Familiar.dni == field.data)
+                )).scalars().all()
+        if check:
+            raise ValidationError("Este familiar ya fue ingresado")
+
+    return _unico_por_jya
+
+
+class FamiliarForm(FlaskForm):
+    parentesco = StringField(
+            "Parentesco",
+            validators=[Length(max=40,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres."),
+                        validar_cadena_caracteres])
+    nombre = StringField("Nombre*", validators=[
+        DataRequired("Debe ingresar un nombre"),
+        Length(max=30, message="Este campo debe tener como\
+               máximo %(max)d caracteres.")])
+    apellido = StringField("Apellido*", validators=[
+        DataRequired("Debe ingresar un apellido"),
+        Length(max=30,
+               message="Este campo debe tener\
+               como máximo %(max)d caracteres.")])
+    dni = IntegerField("DNI*")
+    domicilio_actual = StringField(
+            "Domicilio",
+            validators=[Length(max=60,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres.")])
+    telefono_actual = StringField('Telefono actual*',
+                                  validators=[
+                                    DataRequired("Debe ingresar un teléfono"),
+                                    validar_telefono])
+    email = EmailField(
+        "Email",
+        validators=[
+            Optional(),
+            Email("El mail debe contener '@' y '.'"),
+        ])
+    nivel_escolaridad = SelectField("Nivel de escolaridad",
+                                    choices=[('primario', 'Primario'),
+                                             ('secundario', 'Secundario'),
+                                             ('terciario', 'Terciario'),
+                                             ('universitario', 'Universitario')],
+                                    render_kw={"placeholder": "Seleccionar"})
+    ocupacion = StringField(
+            "Ocupacion",
+            validators=[Length(max=40,
+                        message="Este campo debe tener como\
+                        máximo %(max)d caracteres."),
+                        validar_cadena_caracteres])
+    submit = SubmitField("Aceptar")
+
+    def __init__(self, id, *args, **kwargs):
+        """Construye los atributos necesarios para la
+        clase FamiliarForm.
+        """
+        super().__init__(*args, **kwargs)
+        # validador de dato único contra el id que recibe
+        self.dni.validators = [DataRequired("Debe ingresar un DNI"),
+                               unico_por_jya(id)]

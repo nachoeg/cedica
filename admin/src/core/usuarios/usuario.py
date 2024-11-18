@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from src.core.database import db
 from src.web.handlers.funciones_auxiliares import (booleano_a_palabra,
                                                    fechahora_a_fecha)
@@ -28,13 +29,14 @@ class Usuario(db.Model):
         del usuario: alias, email, activo, creacion,
         admin_sistema y roles.
         """
+        roles = ("".join(f'{rol.nombre[:3]} · ' for rol in self.roles)[:-3]
+                 if self.roles else "-")
         return {
             "alias": self.alias,
             "email": self.email,
             "activo": booleano_a_palabra(self.activo),
             "creacion": fechahora_a_fecha(self.creacion),
-            "admin_sistema": booleano_a_palabra(self.admin_sistema),
-            "roles": "".join(("" + rol.nombre + ". ") for rol in self.roles),
+            "roles": roles,
         }
 
     def __repr__(self):

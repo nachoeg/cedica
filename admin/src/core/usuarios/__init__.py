@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from src.core.bcrypt import bcrypt
 from src.core.database import db
 from core.usuarios.usuario import Permiso, Rol, Usuario
@@ -11,18 +12,23 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     de usuarios, filtrado y ordenado, y la cantidad total de
     usuarios que genera la consulta.
     """
-    usuarios = db.paginate(
-        db.select(
-            Usuario).distinct().join(
-                Usuario.roles, isouter=True).where(
-                    Usuario.email.ilike(f"%{email_filtro}%"),
-                    (Usuario.activo == activo_filtro) if activo_filtro != '' else True,
-                    (Rol.nombre == rol_filtro) if rol_filtro != '' else True,
-                    ).order_by(getattr(getattr(
-                        Usuario, ordenar_por), orden)()),
-        page=pagina,
-        per_page=cant_por_pagina,
-        error_out=False)
+    email_filtro = Usuario.email.ilike(f"%{email_filtro}%")
+    activo_filtro = (Usuario.activo == activo_filtro
+                     if activo_filtro != '' else True)
+    if rol_filtro == '':
+        rol_filtro = True
+    elif rol_filtro == 'Sin rol':
+        rol_filtro = Rol.id.is_(None)
+    else:
+        rol_filtro = Rol.nombre == rol_filtro
+
+    usuarios = db.paginate(db.select(Usuario).distinct().join(
+        Usuario.roles, isouter=True).where(
+            email_filtro, activo_filtro, rol_filtro).order_by(
+                getattr(getattr(Usuario, ordenar_por), orden)()),
+                           page=pagina,
+                           per_page=cant_por_pagina,
+                           error_out=False)
     total = usuarios.total
     # usuarios = [usuario.to_dict() for usuario in usuarios.items]
 
@@ -35,7 +41,8 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
     parámetro y lo devuelve.
     """
     contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
-    usuario = Usuario(email=email, contraseña=contraseña_hash, 
+    email = email.lower()
+    usuario = Usuario(email=email, contraseña=contraseña_hash,
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
     if not admin_sistema:
@@ -47,13 +54,22 @@ def crear_usuario(email, contraseña, alias, admin_sistema=False,
     return usuario
 
 
+def asignar_contraseña(usuario, contraseña):
+    """Asigna al usuario que recibe por parámetro la
+    contraseña que también recibe como parámetro.
+    """
+    contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
+    usuario.contraseña = contraseña_hash
+    db.session.commit()
+
+
 def actualizar_usuario(usuario, email, alias, admin_sistema, id_roles):
     """Modifica los datos del usuario que recibe por parámetro con los
     datos en el resto de los parámetros.
 
     Parámetros:
     """
-    usuario.email = email
+    usuario.email = email.lower()
     usuario.alias = alias
     usuario.admin_sistema = admin_sistema
     if admin_sistema:
@@ -70,7 +86,7 @@ def actualizar_perfil(usuario, email, alias):
 
     Parámetros:
     """
-    usuario.email = email
+    usuario.email = email.lower()
     usuario.alias = alias
     db.session.commit()
 
@@ -94,10 +110,20 @@ def usuario_por_id(id):
     return usuario
 
 
+def usuario_por_id_none(id):
+    """Devuelve el usuario correspondiente al id pasado por
+    parámetro. Si no lo encuentra devuelve None.
+    """
+    usuario = db.session.execute(
+        db.select(Usuario).where(Usuario.id == id)).scalar_one_or_none()
+    return usuario
+
+
 def usuario_por_email(email):
     """Devuelve el usuario correspondiente al email pasado por
-    parámetro.
+    parámetro. Si no lo encuentra devuelve None.
     """
+    email = email.lower()
     usuario = db.session.execute(
         db.select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
 

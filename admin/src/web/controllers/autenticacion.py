@@ -1,9 +1,11 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
-from src.core.usuarios import (actualizar_perfil,
+
+from core.forms.autenticacion_forms import (IniciarSesionForm,
+                                            CambiarContraseñaForm)
+from src.core.usuarios import (actualizar_perfil, asignar_contraseña,
                                usuario_por_email_y_contraseña, usuario_por_id)
-from core.forms.usuario_forms import (IniciarSesionForm,
-                                      UsuarioSinContraseñaForm)
+from core.forms.usuario_forms import (UsuarioSinContraseñaForm)
 from src.web.handlers.decoradores import (chequear_usuario_sesion,
                                           sesion_iniciada_requerida)
 
@@ -25,8 +27,6 @@ def iniciar_sesion():
                 flash('Usuario y/o contraseña incorrectos', 'error')
             else:
                 session.clear()
-                # cambiar por session['mail']?
-                session['usuario'] = usuario.email
                 session['id'] = usuario.id
                 session['alias'] = usuario.alias
                 session['es_admin'] = usuario.admin_sistema
@@ -43,7 +43,7 @@ def iniciar_sesion():
 def cerrar_sesion():
     """Cierra la sesión activa.
     """
-    del session['usuario']
+    del session['id']
     session.clear()
     flash('Se ha cerrado la sesión', 'exito')
     return redirect(url_for('home'))
@@ -52,11 +52,11 @@ def cerrar_sesion():
 @bp.route('/perfil', methods=['GET'])
 @sesion_iniciada_requerida
 def ver_perfil():
-    """Devuelve la vista de datos del perfil 
+    """Devuelve la vista de datos del perfil
     del usuario con sesión activa.
     """
     usuario = usuario_por_id(session.get('id'))
-    return render_template("pages/usuarios/ver_usuario.html", usuario=usuario)
+    return render_template("pages/usuarios/ver_perfil.html", usuario=usuario)
 
 
 @bp.route('/<int:id>/editar_perfil', methods=['GET', 'POST'])
@@ -71,8 +71,8 @@ def editar_perfil(id):
     form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'POST':
         if form.validate_on_submit():
-            # raise Exception(f'{form.data}')
             actualizar_perfil(usuario, form.email.data, form.alias.data)
+            session['alias'] = usuario.alias
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('autenticacion.ver_perfil'))
@@ -81,3 +81,23 @@ def editar_perfil(id):
                   Revise los datos ingresados',
                   'error')
     return render_template('pages/usuarios/editar_perfil.html', form=form)
+
+
+@bp.route('/cambiar_contraseña', methods=('GET', 'POST'))
+@sesion_iniciada_requerida
+def cambiar_contraseña():
+    """Devuelve la vista que permite al usuario
+    cambiar su contraseña.
+    """
+    usuario = usuario_por_id(session.get('id'))
+    form = CambiarContraseñaForm(usuario.contraseña)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            contraseña_nueva = form.contraseña_nueva.data
+            asignar_contraseña(usuario, contraseña_nueva)
+            flash('Se ha modificado la contraseña', 'exito')
+            return redirect(url_for('home'))
+        else:
+            flash('No se pudo realizar la operación. \
+                  Revise los datos ingresados.', 'error')
+    return render_template('pages/usuarios/cambiar_contraseña.html', form=form)

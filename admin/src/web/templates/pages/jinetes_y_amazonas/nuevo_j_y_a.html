@@ -2,9 +2,15 @@
 {% extends "layouts/base.html" %}
 {% block title %} {{ titulo }} {% endblock %}
 {% block main %}
-{{ navbar_secundaria({
-'volver': url_for('jinetes_y_amazonas.listar'),
-})}}
+{% if jya %}
+    {{ navbar_secundaria({
+    'volver': url_for('jinetes_y_amazonas.ver', id=jya.id),
+    })}}
+{% else %}
+    {{ navbar_secundaria({
+        'volver': url_for('jinetes_y_amazonas.listar'),
+    })}}
+{% endif %}
 <form method="post" class="formulario" novalidate>
     {{ form.csrf_token }}
     <div class="formulario-header">

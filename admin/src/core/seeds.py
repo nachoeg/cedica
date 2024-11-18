@@ -46,6 +46,7 @@ def run():
 
     cargar_diagnosticos()
     cargar_dias()
+    cargar_tipos_de_discapacidad()
 
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
@@ -396,7 +397,7 @@ def run():
     )
 
     ecuestre1 = ecuestre.crear_ecuestre(
-        nombre="Caballo1",
+        nombre="Relámpago",
         fecha_nacimiento="2020-01-01",
         sexo="M",
         raza="Criollo",
@@ -409,7 +410,7 @@ def run():
         entrenadores=[miembro3]
     )
     ecuestre2 = ecuestre.crear_ecuestre(
-        nombre="Caballo2",
+        nombre="Hipo",
         fecha_nacimiento="2012-05-10",
         sexo="F",
         raza="Criollo",
@@ -461,8 +462,10 @@ def run():
     anuncio = anuncios.crear_anuncio("Título", "Copete", "Contenido", 1)
     cargar_anuncios()
 
-# función que carga todos los diagnósticos que se deben mostrar en el sistema
 def cargar_diagnosticos():
+    """
+    Función que carga todos los diagnósticos que se deben mostrar en el sistema
+    """
     jinetes_y_amazonas.crear_diagnostico(nombre="ECNE")
     jinetes_y_amazonas.crear_diagnostico(nombre="Lesión post traumática")
     jinetes_y_amazonas.crear_diagnostico(nombre="Mielomeningocele")
@@ -495,3 +498,10 @@ def cargar_dias():
     jinetes_y_amazonas.crear_dia(nombre="Viernes")
     jinetes_y_amazonas.crear_dia(nombre="Sábado")
     jinetes_y_amazonas.crear_dia(nombre="Domingo")
+
+
+def cargar_tipos_de_discapacidad():
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Mental")
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Motora")
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Sensorial")
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Visceral")

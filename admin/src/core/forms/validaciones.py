@@ -1,5 +1,6 @@
 from wtforms.validators import ValidationError
 from datetime import date
+from src.core.bcrypt import bcrypt
 from src.core.database import db
 
 
@@ -51,22 +52,32 @@ class Unico(object):
     sea único si se modificó.
     """
 
-    def __init__(self, model, field, message=None):
+    def __init__(self, model, field, ilike=False, message=None):
         self.model = model
         self.field = field
         if message is None:
             message = "Este valor ya existe"
+        self.ilike = ilike
         self.message = message
 
     def __call__(self, form, field):
         """Permite llamar a la clase como una función"""
         if field.object_data == field.data:
             return
-        check = (
-            db.session.execute(db.select(self.model).where(self.field == field.data))
-            .scalars()
-            .all()
-        )
+        if self.ilike:
+            check = (
+                db.session.execute(db.select(self.model).where(
+                    self.field.ilike(field.data)))
+                .scalars()
+                .all()
+            )
+        else:
+            check = (
+                db.session.execute(db.select(self.model).where(
+                    self.field == field.data))
+                .scalars()
+                .all()
+            )
         if check:
             raise ValidationError(self.message)
 
@@ -84,13 +95,26 @@ def valor_en_opciones(opciones):
     return _valor_en_opciones
 
 
-# def validar_email(form, field):
-#     validacion = re.match(
-#         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', field.data)
-#     if not validacion:
-#         raise ValidationError("El mail debe contener '@' y '.'")
+def sin_espacios(form, field):
+    """Función que valida que el valor de un campo de formulario
+    no tenga espacios en blanco.
+    """
+    if " " in field.data:
+        raise ValidationError('No puede contener espacios.')
+
 
 def validar_digitos(form, field):
     """Valida que el campo no contenga números."""
     if any(char.isdigit() for char in field.data):
         raise ValidationError("Este campo no puede contener números.")
+
+
+def validar_contraseña(contraseña):
+    """Función que valida que la contraseña de un campo de formulario
+    sea la misma que la recibida por parámetro.
+    """
+    def _validar_contraseña(form, field):
+        if not bcrypt.check_password_hash(contraseña, field.data):
+            raise ValidationError("La contraseña ingresada es incorrecta.")
+
+    return _validar_contraseña
