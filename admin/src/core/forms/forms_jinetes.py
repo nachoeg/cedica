@@ -90,15 +90,8 @@ class InfoSaludJYAForm(FlaskForm):
     diagnostico = SelectField("Diagnóstico", coerce=int)
     diagnostico_otro = StringField("Otro diagnóstico",
                                    validators=[Length(max=64)])
-    tipo_discapacidad = SelectField(
-        "Tipo de discapacidad",
-        choices=[
-            ("mental", "Mental"),
-            ("motora", "Motora"),
-            ("sensorial", "Sensorial"),
-            ("visceral", "Visceral"),
-        ],
-    )
+    tipo_discapacidad = SelectMultipleField(
+        "Tipo de discapacidad", coerce=int)
     submit = SubmitField("Continuar")
 
 

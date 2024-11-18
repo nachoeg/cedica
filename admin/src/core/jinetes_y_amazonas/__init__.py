@@ -1,6 +1,6 @@
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (
-    JineteOAmazona, Diagnostico, Dia, Familiar)
+    JineteOAmazona, Diagnostico, Dia, Familiar, TipoDeDiscapacidad)
 from src.core.jinetes_y_amazonas.documentos import Archivo_JYA, TipoArchivo
 from src.core.miembro.miembro import Miembro
 from src.core.miembro.extras import PuestoLaboral
@@ -27,6 +27,17 @@ def crear_dia(**kwargs):
     db.session.commit()
 
     return dia
+
+
+def crear_tipo_discapacidad(**kwargs):
+    """
+    Funcion que crea un tipo de discapacidad.
+    """
+    tipo_de_discapacidad = TipoDeDiscapacidad(**kwargs)
+    db.session.add(tipo_de_discapacidad)
+    db.session.commit()
+
+    return tipo_de_discapacidad
 
 
 def listar_j_y_a(
@@ -393,6 +404,15 @@ def obtener_dia(dia_id):
     return dia
 
 
+def listar_tipos_de_discapacidad():
+    """
+    Función que retorna el listado de los tipos de discapacidad.
+    """
+    tipos = TipoDeDiscapacidad.query.all()
+
+    return tipos
+
+
 def eliminar_documento_j_y_a(doc_id):
     """
     Funcion que elimina un documento a partir de conocer su id.
@@ -472,3 +492,12 @@ def listar_familiares(jya_id,
                                 per_page=cant_por_pagina, error_out=False)
 
     return familiares, cant_resultados
+
+
+def obtener_tipo_discapacidad(tipo_id):
+    """
+    Funcion que retorna un tipo de discapacidad a partir del id
+    """
+    tipo = TipoDeDiscapacidad.query.get_or_404(tipo_id)
+
+    return tipo

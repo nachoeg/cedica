@@ -44,6 +44,7 @@ def run():
 
     cargar_diagnosticos()
     cargar_dias()
+    cargar_tipos_de_discapacidad()
 
     miembro1 = miembro.crear_miembro(
         nombre="Jose",
@@ -493,3 +494,10 @@ def cargar_dias():
     jinetes_y_amazonas.crear_dia(nombre="Viernes")
     jinetes_y_amazonas.crear_dia(nombre="Sábado")
     jinetes_y_amazonas.crear_dia(nombre="Domingo")
+
+
+def cargar_tipos_de_discapacidad():
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Mental")
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Motora")
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Sensorial")
+    jinetes_y_amazonas.crear_tipo_discapacidad(nombre="Visceral")
