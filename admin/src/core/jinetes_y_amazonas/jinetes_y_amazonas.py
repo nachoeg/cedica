@@ -46,10 +46,10 @@ class Familiar(db.Model):
     __tablename__ = "familiares"
 
     class NivelEscolaridad(enum.Enum):
-        pri = "Primario"
-        sec = "Secundario"
-        ter = "Terciario"
-        uni = "Universitario"
+        primario = "Primario"
+        secundario = "Secundario"
+        terciario = "Terciario"
+        universitario = "Universitario"
 
         def __str__(self):
             return f"{self.value}"
