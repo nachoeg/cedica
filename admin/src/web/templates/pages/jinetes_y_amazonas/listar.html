@@ -41,7 +41,7 @@
 {% block scripts %}
 
 <script>
-
+  
   function verJYA(id) {
     window.location.href = `/jinetes_y_amazonas/${id}`;
   }
@@ -62,8 +62,15 @@
 
   function cambiar_tiene_deuda(id) {
     if (confirm('¿Está seguro de que desea cambiar el estado de la deuda de este jinete/amazona?')) {
-      window.location.href = `/jinetes_y_amazonas/deuda/${id}`;
-    }
+      const actual_url = new URL(window.location.href);
+      const searchParams = actual_url.searchParams;
+      const nueva_url = `/jinetes_y_amazonas/deuda/${id}`;
+
+      actual_url.pathname = nueva_url;
+      actual_url.search = searchParams.toString();
+
+      window.location.href = actual_url.toString();
+      }
   }
 
 </script>

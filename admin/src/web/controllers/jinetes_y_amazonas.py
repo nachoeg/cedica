@@ -1097,4 +1097,4 @@ def marcar_deuda(id: int):
     jya.tiene_deuda = not jya.tiene_deuda
     guardar_cambios()
 
-    return redirect(url_for("jinetes_y_amazonas.listar"))
+    return redirect(url_for("jinetes_y_amazonas.listar", **request.args))
