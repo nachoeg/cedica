@@ -4,6 +4,12 @@ import IconClose from '@/components/icons/IconClose.vue'
 import { RouterLink } from 'vue-router'
 </script>
 
+<script>
+export default {
+  name: 'NavbarComponent',
+}
+</script>
+
 <template>
   <header
     class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-800/65 text-sm py-2.5 border-b dark:border-neutral-700"
@@ -48,7 +54,7 @@ import { RouterLink } from 'vue-router'
         aria-labelledby="hs-navbar-alignment-collapse"
       >
         <div
-          class="flex flex-col gap-x-2 gap-y-3 mt-4 sm:flex-row sm:items-center sm:my-0 [&>*]:btn [&>*]:px-2 [&>*]:py-1.5 [&>*]:btn-outline [&>.router-link-active]:btn-secondary"
+          class="flex flex-col gap-x-2 gap-y-3 mt-4 sm:flex-row sm:items-center sm:my-0 [&>*]:btn [&>*]:px-2 [&>*]:py-1.5 [&>*]:btn-ghost [&>.router-link-active]:btn-secondary"
         >
           <RouterLink to="/contacto">Contacto</RouterLink>
           <RouterLink to="/noticias">Noticias</RouterLink>
