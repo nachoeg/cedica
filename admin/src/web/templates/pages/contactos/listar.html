@@ -16,7 +16,6 @@
 ],
 'acciones': [
     {'nombre': 'Ver', 'funcion': 'verContacto', 'icono': open_icon},
-    {'nombre': 'Editar', 'funcion': 'editarContacto', 'icono': edit_icon},
     {'nombre': 'Borrar', 'funcion': 'borrarContacto', 'icono': delete_icon},
 ],
 'filtros': [
@@ -40,10 +39,6 @@
         if (confirm('¿Estás seguro de que deseas eliminar este pago?')) {
             window.location.href = `/pagos/${id}/eliminar`;
         }
-    }
-
-    function editarPago(id) {
-        window.location.href = `/pagos/${id}/editar`;
     }
 </script>
 {% endblock %}

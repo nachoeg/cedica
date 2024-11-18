@@ -32,7 +32,7 @@ class HistorialEstado(db.Model):
 class Consulta(db.Model):
     """Modelo de consulta"""
 
-    __tablename__ = "consultas"
+    __tablename__ = "consulta"
 
     
 
