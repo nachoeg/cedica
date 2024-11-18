@@ -4,7 +4,8 @@ from src.web.handlers.decoradores import sesion_iniciada_requerida
 from src.core.contacto import (
     listar_consultas,
     listar_estados_consultas,
-    obtener_consulta)
+    obtener_consulta,
+    eliminar_consulta)
 
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 
@@ -21,7 +22,7 @@ def listar():
 
     contactos, cant_resultados = listar_consultas(estado_filtro, ordenar_por, orden, pagina, cant_por_pagina)
 
-    tipos_contactos = listar_estados_consultas
+    tipos_estados = listar_estados_consultas()
 
     cant_paginas = cant_resultados // cant_por_pagina
     if cant_resultados % cant_por_pagina != 0:
@@ -30,7 +31,7 @@ def listar():
     return render_template(
         "pages/contactos/listar.html",
         contactos=contactos,
-        tipos_contactos=tipos_contactos,
+        tipos_estados=tipos_estados,
         cant_resultados=cant_resultados,
         cant_paginas=cant_paginas,
         pagina=pagina,
@@ -47,3 +48,4 @@ def ver(id: int):
     """
     consulta = obtener_consulta(id)
     return render_template("pages/contactos/ver.html", consulta=consulta)
+
