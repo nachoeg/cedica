@@ -395,7 +395,7 @@ def run():
     )
 
     ecuestre1 = ecuestre.crear_ecuestre(
-        nombre="Caballo1",
+        nombre="Relámpago",
         fecha_nacimiento="2020-01-01",
         sexo="M",
         raza="Criollo",
@@ -408,7 +408,7 @@ def run():
         entrenadores=[miembro3]
     )
     ecuestre2 = ecuestre.crear_ecuestre(
-        nombre="Caballo2",
+        nombre="Hipo",
         fecha_nacimiento="2012-05-10",
         sexo="F",
         raza="Criollo",
