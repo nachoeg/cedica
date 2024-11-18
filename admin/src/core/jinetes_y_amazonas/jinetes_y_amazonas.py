@@ -18,6 +18,15 @@ class Diagnostico(db.Model):
         return f"Diagnostico: {self.value}"
 
 
+class TipoDeDiscapacidad(db.Model):
+    """
+    Tabla de tipos de discapacidad
+    """
+    __tablename__ = "tiposdediscapacidad"
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(10))
+
+
 class Dia(db.Model):
     """
     Tabla de días de la semana
@@ -73,7 +82,8 @@ class Familiar(db.Model):
             "apellido": self.apellido,
             "telefono": self.telefono_actual,
         }
-    
+
+
 class JineteOAmazona(db.Model):
     """
     Modelo correspondiente a los J&A.
@@ -98,22 +108,16 @@ class JineteOAmazona(db.Model):
     porcentaje_beca = db.Column(db.Integer)
 
     # información de salud
-
-    class TipoDeDiscapacidad(enum.Enum):
-        mental = "Mental"
-        motora = "Motora"
-        sensorial = "Sensorial"
-        visceral = "Visceral"
-
-        def __str__(self):
-            return f"{self.value}"
-
     certificado_discapacidad = db.Column(db.Boolean)
     diagnostico_id = db.Column(db.Integer, db.ForeignKey("diagnosticos.id"))
     diagnostico = db.relationship("Diagnostico")
 
     diagnostico_otro = db.Column(db.String(30))
-    tipo_discapacidad = db.Column(Enum(TipoDeDiscapacidad))
+    tipo_discapacidad = db.relationship(
+                "TipoDeDiscapacidad",
+                secondary="tipos_discapacidad_por_jinete",
+                lazy=True,
+                backref=db.backref("tipos_discapacidad_por_jinete", lazy=True))
 
     # informacion economica
     class TipoDeAsignacionFamiliar(enum.Enum):
@@ -234,4 +238,15 @@ class JineteOAmazona(db.Model):
         ),
         db.Column("dia_id", db.Integer, db.ForeignKey("dias.id"),
                   primary_key=True),
+    )
+
+    # Tabla intermedia para almacenar los tipos de discapacidad
+    # por cada jinete (relacion muchos a muchos)
+    tipos_disc = db.Table(
+        "tipos_discapacidad_por_jinete",
+        db.Column("jinete_id", db.Integer,
+                  db.ForeignKey("jinetesyamazonas.id"),
+                  primary_key=True),
+        db.Column("tipo_discapacidad", db.Integer,
+                  db.ForeignKey("tiposdediscapacidad.id"), primary_key=True)
     )

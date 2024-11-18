@@ -37,12 +37,9 @@
             <div class="tipo_discapacidad">
                 <p style="color: blue">Como el jinete/amazona <br>
                     no tiene certificado de discapacidad,<br>
-                    ingrese qué tipo de discapacidad tiene</p>
+                    marque qué tipo de discapacidad tiene (se puede marcar más de una opción)</p>
                 {{ form.tipo_discapacidad.label }}
                 {{ form.tipo_discapacidad }}<br>
-                {% for error in form.tipo_discapacidad.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
             </div>
             <div>
                 {{ form.submit() }}

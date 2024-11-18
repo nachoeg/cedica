@@ -31,7 +31,9 @@ from src.core.jinetes_y_amazonas import (
     obtener_dia,
     crear_familiar,
     encontrar_familiar,
-    listar_familiares
+    listar_familiares,
+    obtener_tipo_discapacidad,
+    listar_tipos_de_discapacidad
 )
 from core.forms.forms_jinetes import (
     NuevoJYAForm,
@@ -171,6 +173,10 @@ def cargar_info_salud(id: int):
         for diagnostico in listar_diagnosticos()
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
+    form.tipo_discapacidad.choices = [
+        (tipo.id, tipo.nombre)
+        for tipo in listar_tipos_de_discapacidad()]
+
     form.submit.label.text = "Continuar"
 
     if form.validate_on_submit():
@@ -182,12 +188,14 @@ def cargar_info_salud(id: int):
                 diagnostico_otro = form.diagnostico_otro.data
             else:
                 diagnostico_otro = None
-            tipo_discapacidad = None
+            tipo_discapacidad = []
         else:
             diagnostico_id = None
             diagnostico_otro = None
-            tipo_discapacidad = form.tipo_discapacidad.data
-
+            tipo_discapacidad = [
+                obtener_tipo_discapacidad(tipo)
+                for tipo in form.tipo_discapacidad
+            ]
         cargar_informacion_salud(
             id,
             certificado_discapacidad,
@@ -720,11 +728,18 @@ def editar_info_salud(id: int):
     ]
     id_otro_diagnostico = cargar_id_diagnostico_otro()
 
+    form.tipo_discapacidad.choices = [
+        (tipo.id, tipo.nombre)
+        for tipo in listar_tipos_de_discapacidad()]
+
     form.submit.label.text = "Guardar"
 
     if request.method == "GET":
         if jya.diagnostico is not None:
             form.diagnostico.data = jya.diagnostico.id
+
+        form.tipo_discapacidad.data = [
+            tipo.id for tipo in jya.tipo_discapacidad]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -735,11 +750,13 @@ def editar_info_salud(id: int):
                     jya.diagnostico_otro = form.diagnostico_otro.data
                 else:
                     jya.diagnostico_otro = None
-                jya.tipo_discapacidad = None
+                jya.tipo_discapacidad = []
             else:
                 jya.diagnostico_id = None
                 jya.diagnostico_otro = None
-                jya.tipo_discapacidad = form.tipo_discapacidad.data
+                jya.tipo_discapacidad = [
+                    obtener_tipo_discapacidad(tipo)
+                    for tipo in form.tipo_discapacidad.data]
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
@@ -992,7 +1009,8 @@ def ver_familiares(id: int):
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = convertir_a_entero(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = convertir_a_entero(
+        request.args.get("cant_por_pagina", 6))
     familiares, cant_resultados = listar_familiares(
         jya.id,
         ordenar_por,

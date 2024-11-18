@@ -88,15 +88,8 @@ class InfoSaludJYAForm(FlaskForm):
     diagnostico = SelectField("Diagnóstico", coerce=int)
     diagnostico_otro = StringField("Otro diagnóstico",
                                    validators=[Length(max=64)])
-    tipo_discapacidad = SelectField(
-        "Tipo de discapacidad",
-        choices=[
-            ("mental", "Mental"),
-            ("motora", "Motora"),
-            ("sensorial", "Sensorial"),
-            ("visceral", "Visceral"),
-        ],
-    )
+    tipo_discapacidad = SelectMultipleField(
+        "Tipo de discapacidad", coerce=int)
     submit = SubmitField("Continuar")
 
 
@@ -192,7 +185,8 @@ class FamiliarForm(FlaskForm):
         DataRequired("Debe ingresar un nombre"), Length(max=30)])
     apellido = StringField("Apellido*", validators=[
         DataRequired("Debe ingresar un apellido"), Length(max=30)])
-    dni = IntegerField("DNI*", validators=[DataRequired("Debe ingresar un DNI")])
+    dni = IntegerField("DNI*", validators=[
+        DataRequired("Debe ingresar un DNI")])
     domicilio_actual = StringField("Domicilio", validators=[Length(max=60)])
     telefono_actual = StringField('Telefono actual*',
                                   validators=[
