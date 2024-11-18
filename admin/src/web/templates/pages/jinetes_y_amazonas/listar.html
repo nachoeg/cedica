@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
-{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, files_icon %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, files_icon, debt_icon %}
 
 {% block title %}Jinetes y Amazonas{% endblock %}
 
@@ -15,7 +15,7 @@
 {'id': 'profesionales_a_cargo', 'nombre': 'Profesionales a cargo'}
 ],
 'acciones': [
-{'nombre': 'Tiene deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': edit_icon},
+{'nombre': 'Tiene deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon},
 {'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
 {'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
 {'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon},
@@ -61,7 +61,7 @@
   }
 
   function cambiar_tiene_deuda(id) {
-    if (confirm('¿Está seguro de que desea marcar deuda a este jinete/amazona?')) {
+    if (confirm('¿Está seguro de que desea cambiar el estado de la deuda de este jinete/amazona?')) {
       
     }
   }
