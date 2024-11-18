@@ -1087,3 +1087,14 @@ def ver_familiar(id: int):
     jya = familiar.jya
     return render_template("/pages/jinetes_y_amazonas/ver_familiar.html",
                            familiar=familiar, jya=jya)
+
+
+@bp.get("deuda/<int:id>")
+@chequear_permiso("jya_actualizar")
+@sesion_iniciada_requerida
+def marcar_deuda(id: int):
+    jya = encontrar_jya(id)
+    jya.tiene_deuda = not jya.tiene_deuda
+    guardar_cambios()
+
+    return redirect(url_for("jinetes_y_amazonas.listar"))
