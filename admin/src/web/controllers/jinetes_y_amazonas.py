@@ -370,9 +370,10 @@ def cargar_info_inst(id: int):
             auxiliar_pista_id,
         )
 
-        flash("Información institucional guardada.\
-              Continúe con la carga.", "exito")
-        return redirect(url_for("jinetes_y_amazonas.listar"))
+        flash("Información institucional guardada.", "exito")
+        flash("Sólo resta cargar familiares.", "info")
+        return redirect(url_for("jinetes_y_amazonas.ver_familiares",
+                                id=jya.id))
 
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
