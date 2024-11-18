@@ -28,14 +28,13 @@ class Usuario(db.Model):
         admin_sistema y roles."
 
         """
-        roles = ("".join((rol.nombre + ". ") for rol in self.roles)
+        roles = ("".join(f'{rol.nombre[:3]} · ' for rol in self.roles)[:-3]
                  if self.roles else "-")
         return {
             "alias": self.alias,
             "email": self.email,
             "activo": booleano_a_palabra(self.activo),
             "creacion": fechahora_a_fecha(self.creacion),
-            "admin_sistema": booleano_a_palabra(self.admin_sistema),
             "roles": roles,
         }
 
