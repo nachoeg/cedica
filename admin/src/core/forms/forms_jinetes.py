@@ -259,8 +259,7 @@ class FamiliarForm(FlaskForm):
             "Domicilio",
             validators=[Length(max=60,
                         message="Este campo debe tener como\
-                        máximo %(max)d caracteres."),
-                        validar_cadena_caracteres])
+                        máximo %(max)d caracteres.")])
     telefono_actual = StringField('Telefono actual*',
                                   validators=[
                                     DataRequired("Debe ingresar un teléfono"),
