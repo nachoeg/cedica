@@ -1050,7 +1050,8 @@ def ver_familiares(id: int):
 @sesion_iniciada_requerida
 def editar_familiar(id: int):
     familiar = encontrar_familiar(id)
-    form = FamiliarForm(obj=familiar)
+    jya_id = familiar.jya_id
+    form = FamiliarForm(jya_id, obj=familiar)
 
     if request.method == "GET":
         form.nivel_escolaridad.data = familiar.nivel_escolaridad.name
