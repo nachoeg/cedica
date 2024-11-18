@@ -167,6 +167,7 @@ def cargar_info_salud(id: int):
     de la información de salud del jinete o amazona
     o guarda los datos asociados a él.
     """
+    jya=encontrar_jya(id)
     form = InfoSaludJYAForm()
     form.diagnostico.choices = [
         (diagnostico.id, diagnostico.nombre)
@@ -210,6 +211,7 @@ def cargar_info_salud(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_salud.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
         id_otro_diagnostico=id_otro_diagnostico
     )
@@ -224,6 +226,7 @@ def cargar_info_econ(id: int):
     de la información económica del jinete o amazona,
     o guarda los datos ingrsados en él.
     """
+    jya=encontrar_jya(id)
     form = InfoEconomicaJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -265,6 +268,7 @@ def cargar_info_econ(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_econ.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
     )
 
@@ -278,6 +282,7 @@ def cargar_info_esc(id: int):
     para la carga de información de escolaridad del jinete o amazona,
     o guarda los datos cargados en él.
     """
+    jya=encontrar_jya(id)
     form = InfoEscolaridadJYAForm()
     form.submit.label.text = "Continuar"
 
@@ -303,6 +308,7 @@ def cargar_info_esc(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_esc.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
     )
 
@@ -316,6 +322,7 @@ def cargar_info_inst(id: int):
     para la carga de información institucional del jinete o amazona,
     o guarda los datos cargados en él.
     """
+    jya=encontrar_jya(id)
     form = InfoInstitucionalJYAForm()
     form.submit.label.text = "Finalizar"
 
@@ -370,6 +377,7 @@ def cargar_info_inst(id: int):
     return render_template(
         "pages/jinetes_y_amazonas/nuevo_j_y_a_inst.html",
         form=form,
+        jya=jya,
         titulo="Nuevo jinete/amazona",
     )
 
