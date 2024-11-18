@@ -111,7 +111,6 @@ def cargar_roles():
 def cargar_usuarios():
 
     usuarios.crear_usuario(email="admin@mail.com", contraseña="admin", alias="Clau", admin_sistema=True, creacion=datetime(2022, 3, 12))
-
     usuarios.crear_usuario(email="admin2@mail.com", contraseña="admin2", alias="Ale", admin_sistema=True, creacion=datetime(2021, 5, 29, 15, 23))
 
     todos_los_roles = usuarios.crear_usuario(email="roles@mail.com", contraseña="4.roles", alias="Ana", creacion=datetime(1992, 1, 17))
@@ -120,6 +119,7 @@ def cargar_usuarios():
     tecnica = usuarios.crear_usuario(email="tecnica@mail.com", contraseña="tecnica", alias="Maria", creacion=datetime(2021, 5, 29, 12, 37))
     voluntariado = usuarios.crear_usuario(email="voluntariado@mail.com", contraseña="voluntariado", alias="Néstor", creacion=datetime(2023, 5, 29))
     sin_roles = usuarios.crear_usuario(email="sinroles@mail.com", contraseña="sin_roles", alias="Sandra", creacion=datetime(2005, 12, 25))
+
     ecuestre1 = usuarios.crear_usuario(email="ecuestre1@mail.com", contraseña="ecuestre1", alias="Gloria", creacion=datetime(2024, 10, 23))
     ecuestre2 = usuarios.crear_usuario(email="ecuestre2@mail.com", contraseña="ecuestre2", alias="Leandro", creacion=datetime(2024, 10, 23))
     ecuestre3 = usuarios.crear_usuario(email="ecuestre3@mail.com", contraseña="ecuestre3", alias="Vanesa", creacion=datetime(2024, 10, 23))
@@ -129,13 +129,13 @@ def cargar_usuarios():
 
     roles = cargar_roles()
 
-    # Todos los roles - Juan
+    # Todos los roles - Ana
     usuarios.asignar_rol(todos_los_roles, roles["rol_administracion"])
     usuarios.asignar_rol(todos_los_roles, roles["rol_ecuestre"])
     usuarios.asignar_rol(todos_los_roles, roles["rol_tecnica"])
     usuarios.asignar_rol(todos_los_roles, roles["rol_voluntariado"])
 
-    # Ecuestre - Jorge
+    # Ecuestre - Pablo
     usuarios.asignar_rol(ecuestre, roles["rol_ecuestre"])
 
     # Otros usuarios con rol Ecuestre
@@ -149,5 +149,8 @@ def cargar_usuarios():
     # Técnica - María
     usuarios.asignar_rol(tecnica, roles["rol_tecnica"])
 
-    # Administración - Néstor
+    # Administración - Juan
     usuarios.asignar_rol(administracion, roles["rol_administracion"])
+
+    # Voluntariado - Néstor
+    usuarios.asignar_rol(voluntariado, roles["rol_voluntariado"])

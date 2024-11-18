@@ -1,0 +1,43 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %}J&A {{jya.id}}{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.listar'),
+'tabs': [
+{'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
+{'nombre':'Salud', 'url': url_for('jinetes_y_amazonas.ver_salud', id=jya.id)},
+{'nombre':'Económica', 'url': url_for('jinetes_y_amazonas.ver_economica', id=jya.id)},
+{'nombre':'Escolaridad', 'url': url_for('jinetes_y_amazonas.ver_escolaridad', id=jya.id)},
+{'nombre':'Familiares', 'url': url_for('jinetes_y_amazonas.ver_familiares', id=jya.id)},
+{'nombre':'Trabajo Institucional', 'url': url_for('jinetes_y_amazonas.ver_institucional', id=jya.id)},
+{'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
+]})}}
+<div class="contenedor">
+  <div class="contenedor-header">
+    <h1>Trabajo en nuestra institución - {{ jya.nombre }} {{ jya.apellido }}</h1>
+  </div>
+  <div class="contenedor-body [&_h2]:text-xl dark:[&_hr]:border-neutral-700">
+    <p><strong>Propuesta de trabajo:</strong> {{ mostrar_dato(jya.propuesta_trabajo) }}</p>
+    <p><strong>Condición:</strong> {{ mostrar_dato(jya.condicion) }}</p>
+    <p><strong>Sede:</strong> {{ mostrar_dato(jya.sede) }}</p>
+    <p><strong>Profesor/Terapeuta:</strong> {{ mostrar_dato(jya.profesor.nombre) }} {{ mostrar_dato(jya.profesor.apellido) }}</p>
+    <p><strong>Conductor de caballo:</strong> {{ mostrar_dato(jya.conductor_caballo.nombre) }} {{ mostrar_dato(jya.conductor_caballo.apellido) }}</p>
+    <p><strong>Caballo:</strong> {{ mostrar_dato(jya.caballo.nombre) }} {{ mostrar_dato(jya.caballo.apellido) }}</p>
+    <p><strong>Auxiliar de pista:</strong> {{ mostrar_dato(jya.auxiliar_pista.nombre)}} {{ mostrar_dato(jya.auxiliar_pista.apellido) }}</p>
+    <p><strong>Días que concurre:</strong>
+      </br>
+      {% for dia in jya.dias_asignados %}
+        {{ dia.nombre }}</br>
+      {% endfor %}
+    </p>
+    {% if tiene_permiso(session, 'jya_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_inst', id=jya.id)}}">Editar</a>
+    {% endif %}
+    </div>
+
+  {% endblock %}

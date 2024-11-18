@@ -18,6 +18,7 @@ class ProductionConfig(Config):
         "pool_recycle": 60,
         "pool_pre_ping": True,
     }
+    TABLA_CANT_FILAS = environ.get("TABLA_CANT_FILAS")
 
 
 class DevelopmentConfig(Config):
@@ -33,6 +34,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
+    TABLA_CANT_FILAS = 6
 
 
 class TestingConfig(Config):
