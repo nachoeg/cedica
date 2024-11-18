@@ -96,7 +96,7 @@ def listar():
         nombre_filtro=nombre_filtro,
         apellido_filtro=apellido_filtro,
         dni_filtro=dni_filtro,
-        profesionales_a_cargo=profesionales_a_cargo,
+        profesional_filtro=profesionales_a_cargo,
     )
 
 
@@ -769,7 +769,7 @@ def editar_info_salud(id: int):
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_salud", id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
 
@@ -821,7 +821,7 @@ def editar_info_econ(id: int):
 
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_economica", id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
     return render_template(
@@ -858,7 +858,7 @@ def editar_info_esc(id: int):
             guardar_cambios()
 
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_escolaridad", id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
 
@@ -944,7 +944,8 @@ def editar_info_inst(id: int):
             ]
             guardar_cambios()
             flash("Jinete/Amazona: Información actualizada con éxito", "exito")
-            return redirect(url_for("jinetes_y_amazonas.ver", id=id))
+            return redirect(url_for("jinetes_y_amazonas.ver_institucional",
+                                    id=id))
         else:
             flash("Error al actualizar jinete/amazona", "error")
 
