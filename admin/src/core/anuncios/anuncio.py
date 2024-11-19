@@ -1,9 +1,21 @@
-from datetime import datetime
 import enum
-
 from sqlalchemy import Enum
+from datetime import datetime
 from src.core.database import db
-from src.web.handlers.funciones_auxiliares import fechahora_a_fecha
+from src.web.handlers.funciones_auxiliares import fechahora
+
+
+class Estado(enum.Enum):
+    bo = "Borrador"
+    pu = "Publicado"
+    ar = "Archivado"
+
+    def __str__(self):
+        return f"{self.value}"
+
+    @classmethod
+    def listar(self):
+        return self._member_map_.values()
 
 
 class Anuncio(db.Model):
@@ -20,14 +32,6 @@ class Anuncio(db.Model):
     fecha_ultima_actualizacion = db.Column(db.DateTime, default=datetime.now,
                                            onupdate=datetime.now)
 
-    class Estado(enum.Enum):
-        borrador = "Borrador"
-        publicado = "Publicado"
-        archivado = "Archivado"
-
-        def __str__(self):
-            return f"{self.value}"
-
     estado = db.Column(Enum(Estado), default="borrador")
 
     autor_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
@@ -39,7 +43,12 @@ class Anuncio(db.Model):
         """
         return {
             "titulo": self.titulo,
-            "creacion": fechahora_a_fecha(self.fecha_creacion),
+            "copete": self.copete[:12] + "...",
+            "autor": self.autor.alias,
+            "creacion": fechahora(self.fecha_creacion),
+            "publicacion": fechahora(self.fecha_publicacion)
+            if self.fecha_publicacion is not None else "-",
+            "ultima_actualizacion": fechahora(self.fecha_ultima_actualizacion),
             "estado": self.estado,
         }
 

@@ -1,28 +1,60 @@
-{% from "components/navbar_secundaria.html" import navbar_secundaria %}
-
 {% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon %}
 
 {% block title %}Anuncios{% endblock %}
 
 {% block main %}
 
-{{ navbar_secundaria({
-'volver': url_for('home'),
-})}}
+{% set configuracion = {
+'encabezados': [
+{'id': 'titulo', 'nombre': 'Titulo', 'ordenar': True},
+{'id': 'copete', 'nombre': 'Copete'},
+{'id': 'estado', 'nombre': 'Estado'},
+{'id': 'autor', 'nombre': 'Autor'},
+{'id': 'creacion', 'nombre': 'Creado'},
+{'id': 'publicacion', 'nombre': 'Publicado'},
+{'id': 'ultima_actualizacion', 'nombre': 'Última actualización'}
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'verAnuncio', 'icono': open_icon},
+{'nombre': 'Editar', 'funcion': 'editarAnuncio', 'icono': edit_icon},
+{'nombre': 'Borrar','funcion': 'borrarAnuncio', 'icono': delete_icon}
+],
+'filtros': [
+{'id': 'titulo', 'nombre': 'Titulo', 'tipo': 'texto', 'valor': titulo_filtro },
+{'id': 'estado', 'nombre': 'Estado', 'tipo': 'seleccion', 'opciones': estados,'valor': estado_filtro },
+{'id': 'despues_de', 'nombre': 'Publicado después de', 'tipo': 'fecha', 'valor': despues_de_filtro },
+{'id': 'antes_de', 'nombre': 'Publicado antes de', 'tipo': 'fecha', 'valor': antes_de_filtro },
+],
+'crear': {
+'url': url_for('anuncios.nuevo_anuncio'),
+'nombre': 'Crear anuncio'
+}}
+%}
 
-    {% for anuncio in anuncios %}
-        <div class="contenedor">
-        <div class="contenedor-header">
-            <h1>{{ anuncio.titulo }}</h1>
-        </div>
-        <h2>{{ anuncio.copete }}</h2>
-        <div class="contenedor-body">
-            <p>{{ anuncio.contenido }}</p>
-        </div>
-        <div class="contenedor-footer">
-            Estado: {{ anuncio.estado }} Fecha de creación: {{ anuncio.fecha_creacion }} Autor: {{ anuncio.autor }}
-        </div>
-        </div>
-    {% endfor %}
+{{ tabla(configuracion, anuncios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verAnuncio(id) {
+    window.location.href = `/anuncios/${id}`;
+  }
+
+  function editarAnuncio(id) {
+    window.location.href = `/anuncios/${id}/editar`;
+  }
+
+  function borrarAnuncio(id) {
+    if (confirm('¿Está seguro que desea borrar este anuncio?')) {
+      window.location.href = `/anuncios/${id}/eliminar`;
+    }
+  }
+
+</script>
 
 {% endblock %}

@@ -30,18 +30,24 @@
         {% endfor %}
     </div>
     <div>
-        {{ form.contenido.label }}
-        {{ form.contenido }}
+        {{ form.contenido.label }}</br>
         {% for error in form.contenido.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}</br>
+        {{ form.contenido(cols="35", rows="20") }}
     </div>
 
+    {% if not nuevo %}
+        <div>
+            {{ form.estado.label }}
+            {{ form.estado }}
+            {% for error in form.estado.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div>
-        {{ form.guardar_borrador() }}
-    </div>
-    <div>
-        {{ form.publicar() }}
+        {{ form.guardar() }}
     </div>
     </div>
 </form>
