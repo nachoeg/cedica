@@ -80,3 +80,8 @@ def archivar_consulta(id):
     consulta = Consulta.query.filter_by(id=id).first()
     consulta.archivado = True
     db.session.commit()
+
+def desarchivar_consulta(id):
+    consulta = Consulta.query.filter_by(id=id).first()
+    consulta.archivado = False
+    db.session.commit()

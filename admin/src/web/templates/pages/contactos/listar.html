@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
-{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon, archive_restore_icon %}
 
 {% block title %} Listado de consultas {% endblock %}
 
@@ -22,7 +22,8 @@
     {'id': 'estado', 'nombre': 'Estado'},
 ],
 'acciones': [
-    {'nombre': 'Archivar', 'funcion': 'archivarConsulta', 'icono': archive_icon},
+    {'nombre': 'Archivar', 'funcion': 'archivarConsulta', 'condiciones': [{'fila': 'archivado', 'valor': False}], 'icono': archive_icon},
+    {'nombre': 'Mover a recibidos', 'funcion': 'desarchivarConsulta', 'condiciones': [{'fila': 'archivado', 'valor': True}], 'icono': archive_restore_icon},
     {'nombre': 'Ver', 'funcion': 'verContacto', 'icono': open_icon},
     {'nombre': 'Borrar', 'funcion': 'borrarContacto', 'icono': delete_icon},
 ],
@@ -52,6 +53,12 @@
     function archivarConsulta(id) {
         if (confirm('¿Estás seguro de que deseas archivar esta consulta?')) {
             window.location.href = `/contacto/${id}/archivar`;
+        }
+    }
+
+    function desarchivarConsulta(id) {
+        if (confirm('¿Estás seguro de que deseas mover a recibidos esta consulta?')) {
+            window.location.href = `/contacto/${id}/desarchivar`;
         }
     }
 </script>
