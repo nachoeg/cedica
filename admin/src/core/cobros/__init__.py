@@ -129,3 +129,10 @@ def eliminar_cobro(cobro_id):
     db.session.commit()
 
     return cobro
+
+
+def obtener_ingresos_por_mes():
+    """
+    Función que obtiene los ingresos por mes.
+    """
+    return Cobro.query.order_by(Cobro.fecha_pago).all()

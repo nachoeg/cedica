@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block head %}
+{{ super() }}
+{{ head }}
+{% endblock %}
+
+{% block main %}
+{{ navbar_secundaria({
+'tabs': [
+{'nombre': 'Propuestas de trabajo', 'url': url_for('estadisticas.reporte_propuestas_trabajo')},
+{'nombre': 'Ingresos', 'url': url_for('estadisticas.grafico_ingresos')},
+{'nombre': 'Tipos de discapacidad', 'url': url_for('estadisticas.grafico_discapacidades')},
+]
+})
+}}
+{% endblock %}
