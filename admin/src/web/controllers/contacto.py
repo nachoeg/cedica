@@ -20,8 +20,9 @@ def listar():
     pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     estado_filtro = request.args.get("estado", "")
+    archivado = request.args.get("archivado", True)
 
-    contactos, cant_resultados = listar_consultas(estado_filtro, ordenar_por, orden, pagina, cant_por_pagina)
+    contactos, cant_resultados = listar_consultas(estado_filtro, ordenar_por, orden, pagina, cant_por_pagina, archivado) 
 
     tipos_estados = listar_estados_consultas()
 
@@ -38,7 +39,8 @@ def listar():
         pagina=pagina,
         orden=orden,
         ordenar_por=ordenar_por,
-        estado=estado_filtro
+        estado=estado_filtro,
+        archivado=archivado
     )
 
 @bp.get("/<int:id>/")

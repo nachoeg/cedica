@@ -1,10 +1,17 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
 {% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon %}
 
 {% block title %} Listado de consultas {% endblock %}
 
 {% block main %}
+
+{{ navbar_secundaria({
+    'tabs':[
+    {'nombre': 'Recibidos', 'url': url_for('contacto.listar', archivado=False)},
+    {'nombre': 'Archivados', 'url': url_for('contacto.listar', archivado=True)}
+    ]})}}
 
 {% set configuracion = {
 'encabezados': [

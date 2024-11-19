@@ -1,6 +1,6 @@
 from src.core.database import db
 from src.core.contacto.consulta import Consulta, Estado
-from sqlalchemy import cast, String
+from sqlalchemy import cast, String, and_
 
 
 def listar_consultas(
@@ -9,13 +9,18 @@ def listar_consultas(
     orden="asc",
     pagina=1,
     cant_por_pagina=10,
+    archivado=True
 ):
     """
     Retorna el listado paginado, filtrado y ordenado de las consultas.
     """
 
+
     query = Consulta.query.filter(
-        cast(Consulta.estado, String).ilike(f"%{estado_filtro}%")
+    and_(
+        cast(Consulta.estado, String).ilike(f"%{estado_filtro}%"),
+        Consulta.archivado == archivado
+    )
     )
 
     cant_resultados = query.count()
