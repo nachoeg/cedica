@@ -12,6 +12,11 @@ from src.core.cobros import obtener_ingresos_por_mes
 bp = Blueprint("estadisticas", __name__, url_prefix="/estadisticas")
 
 
+@bp.get("/")
+def index():
+    return reporte_propuestas_trabajo()
+
+
 @bp.get("/grafico_ingresos")
 def grafico_ingresos():
     return render_template(
