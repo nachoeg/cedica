@@ -5,7 +5,8 @@ from src.core.contacto import (
     listar_consultas,
     listar_estados_consultas,
     obtener_consulta,
-    eliminar_consulta)
+    eliminar_consulta,
+    archivar_consulta)
 
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 
@@ -55,4 +56,12 @@ def eliminar(id):
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
     eliminar_consulta(id)
     flash("Consulta eliminado con exito.", 'success')
+    return redirect(url_for('contacto.listar'))
+
+@bp.route('/<int:id>/archivar', methods=['GET'])
+def archivar(id):
+    """Permite eliminar una consulta del sistema, 
+    toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
+    archivar_consulta(id)
+    flash("Consulta archivada con exito.", 'success')
     return redirect(url_for('contacto.listar'))

@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/tabla.html" import tabla %}
-{% from "components/iconos.html" import open_icon, edit_icon, delete_icon %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon %}
 
 {% block title %} Listado de consultas {% endblock %}
 
@@ -15,6 +15,7 @@
     {'id': 'estado', 'nombre': 'Estado'},
 ],
 'acciones': [
+    {'nombre': 'Archivar', 'funcion': 'archivarConsulta', 'icono': archive_icon},
     {'nombre': 'Ver', 'funcion': 'verContacto', 'icono': open_icon},
     {'nombre': 'Borrar', 'funcion': 'borrarContacto', 'icono': delete_icon},
 ],
@@ -38,6 +39,12 @@
     function borrarContacto(id) {
         if (confirm('¿Estás seguro de que deseas eliminar esta consulta?')) {
             window.location.href = `/contacto/${id}/eliminar`;
+        }
+    }
+
+    function archivarConsulta(id) {
+        if (confirm('¿Estás seguro de que deseas archivar esta consulta?')) {
+            window.location.href = `/contacto/${id}/archivar`;
         }
     }
 </script>

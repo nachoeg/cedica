@@ -70,3 +70,8 @@ def obtener_consulta(id):
     """Funcion que busca una consulta por su id"""
     consulta = Consulta.query.filter_by(id=id).first()
     return consulta
+
+def archivar_consulta(id):
+    consulta = Consulta.query.filter_by(id=id).first()
+    consulta.archivado = True
+    db.session.commit()
