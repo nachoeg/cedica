@@ -18,6 +18,7 @@ email_validator = "*"
 flash = "^1.0.3"
 minio = "^7.2.9"
 ulid-py = "^1.1.0"
+marshmallow = "^3.23.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
