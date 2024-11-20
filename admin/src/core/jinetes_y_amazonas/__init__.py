@@ -501,3 +501,13 @@ def obtener_tipo_discapacidad(tipo_id):
     tipo = TipoDeDiscapacidad.query.get_or_404(tipo_id)
 
     return tipo
+
+
+def obtener_cantidad_becados():
+    """
+    Función que obtiene la cantidad de Jinetes y Amazonas becados y no becados.
+    """
+    total_becados = db.session.query(JineteOAmazona).filter_by(becado=True).count()
+    total_no_becados = db.session.query(JineteOAmazona).filter_by(becado=False).count()
+
+    return total_becados, total_no_becados
