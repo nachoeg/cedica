@@ -3,11 +3,12 @@ import matplotlib
 
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
-from flask import Blueprint, render_template, url_for, send_file, redirect
+from flask import Blueprint, render_template, url_for, send_file, redirect, request
 
 from src.core.cobros import obtener_ingresos_por_mes
 from src.core.jinetes_y_amazonas import obtener_cantidad_becados
-
+from src.core.jinetes_y_amazonas import listar_deudores
+from src.web.handlers.funciones_auxiliares import convertir_a_entero
 
 bp = Blueprint("estadisticas", __name__, url_prefix="/estadisticas")
 
@@ -154,4 +155,33 @@ def reporte_propuestas_trabajo():
     return render_template(
         "pages/estadisticas/ver_reporte.html",
         titulo="Reporte de propuestas de trabajo",
+    )
+
+
+@bp.get("/reporte_deudores")
+def reporte_deudores():
+    orden = request.args.get("orden", "asc")
+    ordenar_por = request.args.get("ordenar_por", "id")
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
+    cant_por_pag = int(request.args.get("por_pag", 6))
+
+    jinetes, cant_resultados = listar_deudores(
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pag,
+    )
+
+    cant_paginas = cant_resultados // cant_por_pag
+    if cant_resultados % cant_por_pag != 0:
+        cant_paginas += 1
+
+    return render_template(
+        "pages/estadisticas/reporte_deudores.html",
+        jinetes=jinetes,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+        orden=orden,
+        ordenar_por=ordenar_por,
     )

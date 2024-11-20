@@ -511,3 +511,30 @@ def obtener_cantidad_becados():
     total_no_becados = db.session.query(JineteOAmazona).filter_by(becado=False).count()
 
     return total_becados, total_no_becados
+
+
+def listar_deudores(
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pag=6,
+):
+    """
+    Funcion que devuelve el listado de
+    jinetes y amazonas con deudas partir
+    ordenado según los parámetros recibidos.
+    """
+    query = JineteOAmazona.query.filter(JineteOAmazona.tiene_deuda)
+
+    if orden == "asc":
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
+
+    cant_resultados = query.count()
+
+    j_y_a_ordenados = query.paginate(
+        page=pagina, per_page=cant_por_pag, error_out=False
+    )
+
+    return j_y_a_ordenados, cant_resultados
