@@ -1,6 +1,7 @@
 from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 
+from src.core.oauth import oauth
 from core.forms.autenticacion_forms import (IniciarSesionForm,
                                             CambiarContraseñaForm)
 from src.core.usuarios import (actualizar_perfil, asignar_contraseña,
@@ -101,3 +102,27 @@ def cambiar_contraseña():
             flash('No se pudo realizar la operación. \
                   Revise los datos ingresados.', 'error')
     return render_template('pages/usuarios/cambiar_contraseña.html', form=form)
+
+
+@bp.route('/iniciar_sesion/google', methods=['GET'])
+def iniciar_sesion_google():
+    google = oauth.create_client('google')
+    uri_redireccion = url_for('autenticacion.iniciar_sesion_autorizar', _external=True)
+    return google.authorize_redirect(uri_redireccion)
+
+
+@bp.route('/iniciar_sesion/autorizar', methods=['GET'])
+def iniciar_sesion_autorizar():
+    google = oauth.create_client('google')
+    token = google.authorize_access_token()
+    # el token se usa en la siguiente línea google.get('userinfo', token=token)
+    # pero no es necesario escribirlo
+    info_usuario = token['userinfo']
+    # info_usuario = respuesta.json()
+    # usuario = oauth.google.userinfo()  # esto es una alternativa? o es necesario?
+    if info_usuario:
+        session['email'] = info_usuario.get('email')
+        session['id'] = 1
+        session['roles'] = []
+    # session.permanent = True
+    return redirect(url_for('home'))

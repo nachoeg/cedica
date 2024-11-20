@@ -37,8 +37,8 @@ class DevelopmentConfig(Config):
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
     TABLA_CANT_FILAS = 6
-    GOOGLE_CLIENT_ID = ""
-    GOOGLE_CLIENT_SECRET = ""
+    GOOGLE_CLIENT_ID = "990473437871-efj1b23nan95nnvar20oi2dj3fgr18gj.apps.googleusercontent.com"
+    GOOGLE_CLIENT_SECRET = "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"
 
 
 class TestingConfig(Config):

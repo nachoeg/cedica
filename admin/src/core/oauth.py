@@ -17,17 +17,17 @@ def init_app(app):
     api_base_url = "https://www.googleapis.com/oauth2/v1/"
     userinfo_endpoint = "https://openidconnect.googleapis.com/v1/userinfo"
     client_kwargs = {'scope': 'openid profile email'}
-    server_metadata_url = "htpps://accounts.google.com/.well-known/openid-configuration"
+    server_metadata_url = "https://accounts.google.com/.well-known/openid-configuration"
 
     oauth.register(name=name,
                    client_id=client_id,
                    client_secret=client_secret,
-                   access_token_url=access_token_url,
-                   access_token_params=access_token_params,
-                   authorize_url=authorize_url,
-                   authorize_params=authorize_params,
-                   api_base_url=api_base_url,
-                   userinfo_endpoint=userinfo_endpoint,
+                #    access_token_url=access_token_url,
+                #    access_token_params=access_token_params,
+                #    authorize_url=authorize_url,
+                #    authorize_params=authorize_params,
+                #    api_base_url=api_base_url,
+                #    userinfo_endpoint=userinfo_endpoint,
                    client_kwargs=client_kwargs,
                    server_metadata_url=server_metadata_url,
                    )
