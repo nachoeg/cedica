@@ -1,11 +1,14 @@
 import logging
-from flask import Flask, render_template, send_from_directory
+
+from flask import Flask, render_template
 from flask_session import Session
+
 from src.core.bcrypt import bcrypt
 from src.web.handlers import error
 from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.web.controllers.usuarios import bp as bp_usuarios
 from src.core import database
+from src.core import oauth
 from src.core.config import config
 from src.core import seeds
 from src.web.handlers.funciones_auxiliares import (booleano_a_palabra,
@@ -29,14 +32,13 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 def create_app(env="development", static_folder="../../static"):
     app = Flask(__name__, static_folder=static_folder)
-    app.config['SECRET_KEY'] = 'SecretKey'
     app.config.from_object(config[env])
-    database.init_app(app)
 
+    database.init_app(app)
     session.init_app(app)
     bcrypt.init_app(app)
-
     storage.init_app(app)
+    oauth.init_app(app)
 
     @app.route("/")
     def home():

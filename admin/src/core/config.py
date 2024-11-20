@@ -19,6 +19,8 @@ class ProductionConfig(Config):
         "pool_pre_ping": True,
     }
     TABLA_CANT_FILAS = environ.get("TABLA_CANT_FILAS")
+    GOOGLE_CLIENT_ID = ""
+    GOOGLE_CLIENT_SECRET = ""
 
 
 class DevelopmentConfig(Config):
@@ -35,6 +37,8 @@ class DevelopmentConfig(Config):
         f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
     TABLA_CANT_FILAS = 6
+    GOOGLE_CLIENT_ID = ""
+    GOOGLE_CLIENT_SECRET = ""
 
 
 class TestingConfig(Config):
