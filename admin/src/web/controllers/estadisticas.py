@@ -1,12 +1,10 @@
-from flask import Blueprint, render_template, url_for, send_file
+import io
 import matplotlib
 
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
-import io
-from datetime import datetime
-from src.core.database import db
-from src.core.cobros.cobro import Cobro
+from flask import Blueprint, render_template, url_for, send_file
+
 from src.core.cobros import obtener_ingresos_por_mes
 
 bp = Blueprint("estadisticas", __name__, url_prefix="/estadisticas")
@@ -21,7 +19,7 @@ def index():
 def grafico_ingresos():
     return render_template(
         "pages/estadisticas/ver_grafico.html",
-        titulo="Gráfico de ingresos",
+        titulo="Gráfico de ingresos por mes",
         imagen_url=url_for("estadisticas.grafico_ingresos_imagen"),
     )
 
@@ -29,20 +27,20 @@ def grafico_ingresos():
 @bp.get("/grafico_ingresos/grafico")
 def grafico_ingresos_imagen():
     # Obtener los datos de los cobros desde la base de datos
-    cobros = obtener_ingresos_por_mes()
+    ingresos_por_mes = obtener_ingresos_por_mes()
 
     # Extraer las fechas y los montos de los cobros
-    fechas = [cobro.fecha_pago for cobro in cobros]
-    montos = [cobro.monto for cobro in cobros]
+    fechas = [ingreso.mes.strftime("%Y-%m") for ingreso in ingresos_por_mes]
+    montos = [ingreso.total_ingresos for ingreso in ingresos_por_mes]
 
-    # Crear el gráfico
+    # Crear el gráfico de barras
     plt.figure(figsize=(10, 5))
-    plt.plot(fechas, montos, marker="o", linestyle="-", label="Montos de ingresos")
+    plt.bar(fechas, montos, label="Montos de ingresos")
 
     # Agregar etiquetas y título
     plt.xlabel("Fecha de Pago")
     plt.ylabel("Monto")
-    plt.xticks(rotation=45)
+    plt.title("Ingresos por Mes")
     plt.tight_layout()
 
     # Mostrar leyenda

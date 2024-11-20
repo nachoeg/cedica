@@ -2,6 +2,7 @@ from src.core.database import db
 from src.core.cobros.cobro import Cobro, MedioDePago
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
 from src.core.miembro.miembro import Miembro
+from sqlalchemy import func
 
 
 def listar_cobros(
@@ -107,8 +108,7 @@ def cargar_miembro_activo_choices():
     """
     return [
         (miembro.id, miembro.nombre + " " + miembro.apellido)
-        for miembro in Miembro.query.filter(Miembro.activo.is_(True))
-                                    .order_by("nombre")
+        for miembro in Miembro.query.filter(Miembro.activo.is_(True)).order_by("nombre")
     ]
 
 
@@ -135,4 +135,13 @@ def obtener_ingresos_por_mes():
     """
     Función que obtiene los ingresos por mes.
     """
-    return Cobro.query.order_by(Cobro.fecha_pago).all()
+    ingresos_por_mes = (
+        db.session.query(
+            func.date_trunc("month", Cobro.fecha_pago).label("mes"),
+            func.sum(Cobro.monto).label("total_ingresos"),
+        )
+        .group_by("mes")
+        .order_by("mes")
+        .all()
+    )
+    return ingresos_por_mes
