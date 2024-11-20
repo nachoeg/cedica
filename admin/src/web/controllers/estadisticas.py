@@ -3,7 +3,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
-from flask import Blueprint, render_template, url_for, send_file
+from flask import Blueprint, render_template, url_for, send_file, redirect
 
 from src.core.cobros import obtener_ingresos_por_mes
 
@@ -12,7 +12,7 @@ bp = Blueprint("estadisticas", __name__, url_prefix="/estadisticas")
 
 @bp.get("/")
 def index():
-    return reporte_propuestas_trabajo()
+    return redirect(url_for("estadisticas.reporte_propuestas_trabajo"))
 
 
 @bp.get("/grafico_ingresos")
