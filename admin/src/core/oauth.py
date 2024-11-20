@@ -10,12 +10,12 @@ def init_app(app):
     name = 'google'
     client_id = app.config.get("GOOGLE_CLIENT_ID")
     client_secret = app.config.get("GOOGLE_CLIENT_SECRET")
-    access_token_url = "https://accounts.google.com/o/oauth2/token"
-    access_token_params = None
-    authorize_url = "https://accounts.google.com/o/oauth2/auth"
-    authorize_params = None
-    api_base_url = "https://www.googleapis.com/oauth2/v1/"
-    userinfo_endpoint = "https://openidconnect.googleapis.com/v1/userinfo"
+    # access_token_url = "https://accounts.google.com/o/oauth2/token"
+    # access_token_params = None
+    # authorize_url = "https://accounts.google.com/o/oauth2/auth"
+    authorize_params = {'prompt': 'consent'}  # hace que pida autorización con cada ingreso
+    # api_base_url = "https://www.googleapis.com/oauth2/v1/"
+    # userinfo_endpoint = "https://openidconnect.googleapis.com/v1/userinfo"
     client_kwargs = {'scope': 'openid profile email'}
     server_metadata_url = "https://accounts.google.com/.well-known/openid-configuration"
 
@@ -25,7 +25,7 @@ def init_app(app):
                 #    access_token_url=access_token_url,
                 #    access_token_params=access_token_params,
                 #    authorize_url=authorize_url,
-                #    authorize_params=authorize_params,
+                   authorize_params=authorize_params,
                 #    api_base_url=api_base_url,
                 #    userinfo_endpoint=userinfo_endpoint,
                    client_kwargs=client_kwargs,

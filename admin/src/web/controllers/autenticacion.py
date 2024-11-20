@@ -106,15 +106,14 @@ def cambiar_contraseña():
 
 @bp.route('/iniciar_sesion/google', methods=['GET'])
 def iniciar_sesion_google():
-    google = oauth.create_client('google')
     uri_redireccion = url_for('autenticacion.iniciar_sesion_autorizar', _external=True)
-    return google.authorize_redirect(uri_redireccion)
+    return oauth.google.authorize_redirect(uri_redireccion)
 
 
 @bp.route('/iniciar_sesion/autorizar', methods=['GET'])
 def iniciar_sesion_autorizar():
-    google = oauth.create_client('google')
-    token = google.authorize_access_token()
+    # raise Exception(f'{oauth._clients}')
+    token = oauth.google.authorize_access_token()
     # el token se usa en la siguiente línea google.get('userinfo', token=token)
     # pero no es necesario escribirlo
     info_usuario = token['userinfo']
@@ -124,5 +123,6 @@ def iniciar_sesion_autorizar():
         session['email'] = info_usuario.get('email')
         session['id'] = 1
         session['roles'] = []
+        session['alias'] = 'Inicio Google'
     # session.permanent = True
     return redirect(url_for('home'))
