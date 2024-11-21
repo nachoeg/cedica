@@ -2,6 +2,7 @@ from flask import Blueprint
 from src.core.anuncios import listar_anuncios_api
 from src.core.contacto import crear_consulta
 from flask import request, make_response, jsonify
+from datetime import datetime
 from src.web.schemas.anuncios import anuncios_schema
 from src.web.schemas.contacto import consulta_schema, create_consulta_schema
 
@@ -47,12 +48,19 @@ def guardar_mensaje():
 
         if errors:
             return jsonify(errors), 400
-        else:
-            kwars = create_consulta_schema.load(attrs)
-            consulta = crear_consulta(**kwars)
-            data = consulta_schema.dump(consulta)
-            return jsonify(data), 201
+
+        kwars = create_consulta_schema.load(attrs)
+        consulta = crear_consulta(**kwars)
+
+        consulta.created_at = datetime.now()  
+        consulta.closed_at = datetime.now()
+        consulta.status = "created"
+
+        data = consulta_schema.dump(consulta)
+        return jsonify(data), 201
+
     except Exception as e:
+        # Manejar errores inesperados
         return make_response(jsonify({
             "error": "Ocurrió un error inesperado.",
             "detail": str(e)
