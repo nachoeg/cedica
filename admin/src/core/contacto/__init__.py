@@ -1,5 +1,5 @@
 from src.core.database import db
-from src.core.contacto.consulta import Consulta, Estado, HistorialEstado
+from src.core.contacto.consulta import Consulta, EstadoConsulta, HistorialEstado
 from sqlalchemy import cast, String, and_
 
 
@@ -47,15 +47,15 @@ def listar_estados_consultas():
     """
     Retorna los estados de las consultas.
     """
-    return Estado.listar()
+    return EstadoConsulta.listar()
 
 
-def crear_consulta(nombre, email, mensaje):
+def crear_consulta(titulo, email, mensaje):
     """
     Crea una consulta.
     """
     consulta = Consulta(
-        nombre=nombre,
+        titulo=titulo,
         email=email,
         mensaje=mensaje,
     )
@@ -99,7 +99,7 @@ def actualizar_estado(id, estado, comentario, usuario):
     consulta = Consulta.query.filter_by(id=id).first()
     crear_historia_estado(consulta.estado, consulta.comentario, consulta.ultimo_editor, consulta.id)
     aux = str(estado).lower()
-    consulta.estado = Estado[aux]
+    consulta.estado = EstadoConsulta[aux]
     consulta.comentario = comentario
     consulta.ultimo_editor = usuario
     db.session.commit()

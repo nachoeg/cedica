@@ -2,7 +2,7 @@ from datetime import datetime
 from src.core.database import db
 import enum
 
-class Estado(enum.Enum):
+class EstadoConsulta(enum.Enum):
         """Clase de tipo enumerativo para gestionar las opciones de estado de las consultas"""
 
         recibida = "Recibida"
@@ -21,7 +21,7 @@ class HistorialEstado(db.Model):
     __tablename__ = "historial_estado"
 
     id = db.Column(db.Integer, primary_key=True)
-    estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)
+    estado = db.Column(db.Enum(EstadoConsulta), default=EstadoConsulta.recibida, nullable=False)
     comentario = db.Column(db.Text, nullable=True)
     usuario = db.Column(db.String(100), nullable=True)
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
@@ -45,21 +45,21 @@ class Consulta(db.Model):
     
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
+    titulo = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     mensaje = db.Column(db.String(500), nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
     archivado = db.Column(db.Boolean, nullable=False, default=False)
-    estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)
+    estado = db.Column(db.Enum(EstadoConsulta), default=EstadoConsulta.recibida, nullable=False)
     comentario = db.Column(db.Text, nullable=True)
     ultimo_editor = db.Column(db.String, nullable=True)
 
     def __repr__(self):
-        return f"<Consulta {self.id} - {self.nombre}>"
+        return f"<Consulta {self.id} - {self.titulo}>"
 
     def to_dict(self):
         return {
-            'titulo': self.nombre,
+            'titulo': self.titulo,
             'email': self.email,
             'mensaje': self.mensaje,
             'fecha': self.fecha.strftime('%d-%m-%Y'),

@@ -3,7 +3,7 @@ from marshmallow import fields
 
 
 class ConsultaSchema(Schema):
-    nombre = fields.Str(required=True, validate=lambda x: 1 <= len(x) <= 100)
+    titulo = fields.Str(required=True, validate=lambda x: 1 <= len(x) <= 100)
     email = fields.Email(required=True, validate=lambda x: 1 <= len(x) <= 100)
     mensaje = fields.Str(required=True, validate=lambda x: 1 <= len(x) <= 500)
 
