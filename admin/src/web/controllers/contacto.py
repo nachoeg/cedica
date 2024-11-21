@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from src.core.forms.contacto_forms import HistorialForm
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
 from src.web.handlers.decoradores import sesion_iniciada_requerida
 from src.core.contacto import (
@@ -7,7 +8,8 @@ from src.core.contacto import (
     obtener_consulta,
     eliminar_consulta,
     archivar_consulta,
-    desarchivar_consulta)
+    desarchivar_consulta,
+    actualizar_estado)
 
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 
@@ -21,7 +23,8 @@ def listar():
     pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
     estado_filtro = request.args.get("estado", "")
-    archivado = request.args.get("archivado", True)
+    archivado = request.args.get("archivado", False)
+
 
     contactos, cant_resultados = listar_consultas(estado_filtro, ordenar_por, orden, pagina, cant_por_pagina, archivado) 
 
@@ -44,14 +47,27 @@ def listar():
         archivado=archivado
     )
 
-@bp.get("/<int:id>/")
+@bp.route("/<int:id>/", methods=['GET', 'POST'])
 @sesion_iniciada_requerida
 def ver(id: int):
     """
     Devuelve la vista de una consulta en particular con el id dado.
     """
+    form = HistorialForm()
+    form.estado.choices = [estado for estado in listar_estados_consultas()]
+
+    if request.method == "POST" and form.validate_on_submit():
+        estado = form.estado.data
+        comentario = form.comentario.data
+        usuario = session.get('alias')
+        actualizar_estado(id, estado, comentario, usuario)
+        flash("Estado actualizado con éxito.", 'success')
+        return redirect(url_for('contacto.listar'))
+
     consulta = obtener_consulta(id)
-    return render_template("pages/contactos/ver.html", consulta=consulta)
+    return render_template("pages/contactos/ver.html", form=form, consulta=consulta)      
+
+
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 def eliminar(id):

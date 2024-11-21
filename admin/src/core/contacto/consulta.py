@@ -24,7 +24,7 @@ class HistorialEstado(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)
     comentario = db.Column(db.Text, nullable=True)
-    usuario = db.Column(db.String(100), nullable=False)
+    usuario = db.Column(db.String(100), nullable=True)
     consulta_id = db.Column(db.Integer, db.ForeignKey('consulta.id'), nullable=False)
     consulta = db.relationship('Consulta', backref=db.backref('historiales', lazy=True))
 
@@ -44,6 +44,7 @@ class Consulta(db.Model):
     archivado = db.Column(db.Boolean, nullable=False, default=False)
     estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)
     comentario = db.Column(db.Text, nullable=True)
+    ultimo_editor = db.Column(db.String, nullable=True)
 
     def __repr__(self):
         return f"<Consulta {self.id} - {self.nombre}>"
