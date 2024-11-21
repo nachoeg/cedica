@@ -1831,6 +1831,10 @@ html {
   align-self: center;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -3252,11 +3256,6 @@ html {
     height: fit-content;
   }
 
-  .xs\:w-fit {
-    width: -moz-fit-content;
-    width: fit-content;
-  }
-
   .xs\:min-w-80 {
     min-width: 20rem;
   }
@@ -3264,10 +3263,6 @@ html {
   .xs\:max-w-max {
     max-width: -moz-max-content;
     max-width: max-content;
-  }
-
-  .xs\:flex-row {
-    flex-direction: row;
   }
 
   .xs\:items-center {
