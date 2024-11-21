@@ -47,7 +47,7 @@ class Consulta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    mensaje = db.Column(db.Text, nullable=False)
+    mensaje = db.Column(db.String(500), nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
     archivado = db.Column(db.Boolean, nullable=False, default=False)
     estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)

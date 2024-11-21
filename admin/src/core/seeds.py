@@ -463,9 +463,9 @@ def run():
     anuncio = anuncios.crear_anuncio("Título", "Copete", "Contenido", 1)
     cargar_anuncios()
 
-    # contacto1 = contacto.crear_consulta("consulta1", "consulta1@gmail.com", "consulta1")
-    # contacto2 = contacto.crear_consulta("consulta2", "consulta2@gmail.com", "consulta2")
-    #contacto3 = contacto.crear_consulta("consulta3", "consulta3@gmail.com", "consulta3")
+    contacto1 = contacto.crear_consulta("consulta1", "consulta1@gmail.com", "consulta1")
+    contacto2 = contacto.crear_consulta("consulta2", "consulta2@gmail.com", "consulta2")
+    contacto3 = contacto.crear_consulta("consulta3", "consulta3@gmail.com", "consulta3")
 
 
 def cargar_diagnosticos():
