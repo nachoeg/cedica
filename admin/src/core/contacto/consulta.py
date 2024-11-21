@@ -22,7 +22,7 @@ class HistorialEstado(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     estado = db.Column(db.Enum(EstadoConsulta), default=EstadoConsulta.recibida, nullable=False)
-    comentario = db.Column(db.Text, nullable=True)
+    comentario = db.Column(db.String(250), nullable=True)
     usuario = db.Column(db.String(100), nullable=True)
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
     consulta_id = db.Column(db.Integer, db.ForeignKey('consulta.id'), nullable=False)
@@ -51,7 +51,7 @@ class Consulta(db.Model):
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
     archivado = db.Column(db.Boolean, nullable=False, default=False)
     estado = db.Column(db.Enum(EstadoConsulta), default=EstadoConsulta.recibida, nullable=False)
-    comentario = db.Column(db.Text, nullable=True)
+    comentario = db.Column(db.String(250), nullable=True)
     ultimo_editor = db.Column(db.String, nullable=True)
 
     def __repr__(self):
