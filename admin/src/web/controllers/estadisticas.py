@@ -1,4 +1,4 @@
-import io, redirect
+import io
 import matplotlib
 
 matplotlib.use("Agg")
