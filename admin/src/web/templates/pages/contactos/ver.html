@@ -22,7 +22,28 @@
     {% endif %}
   </div>
 </div>
-
+<form novalidate method="POST" class="formulario">
+  <div class="formulario-body">
+    {{ form.hidden_tag() }}
+  <div class="text-red-600">
+      {{ form.estado.label }}
+      {{ form.estado }}
+      {% for error in form.estado.errors %}
+      <span class="text-red-600">{{ error }}</span>
+      {% endfor %}
+  </div>
+  <div class="text-red-600">
+    {{ form.comentario.label }}
+    {{ form.comentario }}
+    {% for error in form.comentario.errors %}
+    <span class="text-red-600">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div>
+    {{ form.submit() }}
+  </div>
+</div>
+</form>
 
 
 {% endblock %}

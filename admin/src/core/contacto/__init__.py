@@ -1,5 +1,5 @@
 from src.core.database import db
-from src.core.contacto.consulta import Consulta, Estado
+from src.core.contacto.consulta import Consulta, Estado, HistorialEstado
 from sqlalchemy import cast, String, and_
 
 
@@ -33,6 +33,15 @@ def listar_consultas(
     consultas = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
     return consultas, cant_resultados
 
+def listar_historial(
+        id,
+        pagina=1,
+        cant_por_pagina=10,
+):
+    query = HistorialEstado.query.filter_by(consulta_id=id)
+    cant_resultados = query.count()
+    consultas = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
+    return consultas, cant_resultados
 
 def listar_estados_consultas():
     """
@@ -85,3 +94,23 @@ def desarchivar_consulta(id):
     consulta = Consulta.query.filter_by(id=id).first()
     consulta.archivado = False
     db.session.commit()
+
+def actualizar_estado(id, estado, comentario, usuario):
+    consulta = Consulta.query.filter_by(id=id).first()
+    crear_historia_estado(consulta.estado, consulta.comentario, consulta.ultimo_editor, consulta.id)
+    aux = str(estado).lower()
+    consulta.estado = Estado[aux]
+    consulta.comentario = comentario
+    consulta.ultimo_editor = usuario
+    db.session.commit()
+
+def crear_historia_estado(estado, comentario, usuario, consulta):
+    historial = HistorialEstado(
+        estado = estado,
+        comentario = comentario,
+        usuario = usuario,
+        consulta_id = consulta
+    )
+    db.session.add(historial)
+    db.session.commit()
+    return historial
