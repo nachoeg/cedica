@@ -25,9 +25,18 @@ class HistorialEstado(db.Model):
     estado = db.Column(db.Enum(Estado), default=Estado.recibida, nullable=False)
     comentario = db.Column(db.Text, nullable=True)
     usuario = db.Column(db.String(100), nullable=True)
+    fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
     consulta_id = db.Column(db.Integer, db.ForeignKey('consulta.id'), nullable=False)
     consulta = db.relationship('Consulta', backref=db.backref('historiales', lazy=True))
 
+
+    def to_dict(self):
+            return {
+                'estado': self.estado,
+                'comentario': self.comentario if self.comentario is not None else "",
+                'usuario': self.usuario if self.usuario is not None else "",
+                'fecha': self.fecha.strftime('%d-%m-%Y'),
+            }
 
 class Consulta(db.Model):
     """Modelo de consulta"""

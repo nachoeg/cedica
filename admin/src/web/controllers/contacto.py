@@ -9,7 +9,8 @@ from src.core.contacto import (
     eliminar_consulta,
     archivar_consulta,
     desarchivar_consulta,
-    actualizar_estado)
+    actualizar_estado,
+    listar_historial)
 
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 
@@ -92,3 +93,24 @@ def desarchivar(id):
     desarchivar_consulta(id)
     flash("Consulta movida a recibidos con exito.", 'success')
     return redirect(url_for('contacto.listar'))
+
+@bp.route('/<int:id>/listar_historial', methods=['GET'])
+def historial(id):
+    """Permite listar el historial de estado
+    por los que paso la consultas"""
+    pagina = convertir_a_entero(request.args.get("pagina", 1))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+
+    estados, cant_resultados = listar_historial(id, pagina, cant_por_pagina)
+
+    cant_paginas = cant_resultados // cant_por_pagina
+    if cant_resultados % cant_por_pagina != 0:
+        cant_paginas += 1
+
+    return render_template(
+        "pages/contactos/listar_historial.html",
+        estados=estados,
+        cant_resultados=cant_resultados,
+        cant_paginas=cant_paginas,
+        pagina=pagina,
+    )

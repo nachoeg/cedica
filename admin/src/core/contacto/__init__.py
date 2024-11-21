@@ -33,6 +33,15 @@ def listar_consultas(
     consultas = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
     return consultas, cant_resultados
 
+def listar_historial(
+        id,
+        pagina=1,
+        cant_por_pagina=10,
+):
+    query = HistorialEstado.query.filter_by(consulta_id=id)
+    cant_resultados = query.count()
+    consultas = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
+    return consultas, cant_resultados
 
 def listar_estados_consultas():
     """
