@@ -21,8 +21,12 @@
         <p><strong>Comentario:</strong> {{ consulta.comentario }}</p>
     {% endif %}
   </div>
-</div>
-<form novalidate method="POST" class="formulario">
+  <div class="flex gap-3">
+    <a href="{{ url_for('contacto.historial', id=consulta.id) }}" class="btn btn-secondary w-full">
+      Historial de Estados
+    </a>
+  </div>
+  <form novalidate method="POST" class="formulario">
   <div class="formulario-body">
     {{ form.hidden_tag() }}
   <div class="text-red-600">
@@ -39,8 +43,10 @@
     <span class="text-red-600">{{ error }}</span>
     {% endfor %}
   </div>
+  
   <div>
     {{ form.submit() }}
+  </div>
   </div>
 </div>
 </form>
