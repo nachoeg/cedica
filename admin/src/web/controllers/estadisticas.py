@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, send_file
+from flask import Blueprint, render_template, url_for, send_file, redirect
 import matplotlib
 
 matplotlib.use("Agg")
@@ -8,6 +8,7 @@ from datetime import datetime
 from src.core.database import db
 from src.core.cobros.cobro import Cobro
 from src.core.cobros import obtener_ingresos_por_mes
+from src.core.jinetes_y_amazonas import obtener_ranking_propuestas, obtener_cant_tipos_discapacidad, obtener_tipos_discapacidad
 
 bp = Blueprint("estadisticas", __name__, url_prefix="/estadisticas")
 
@@ -54,6 +55,7 @@ def grafico_ingresos_imagen():
 
 @bp.get("/grafico_discapacidades")
 def grafico_discapacidades():
+
     return render_template(
         "pages/estadisticas/ver_grafico.html",
         titulo="Gráfico de tipos de discapacidad",
@@ -63,25 +65,27 @@ def grafico_discapacidades():
 
 @bp.get("/grafico_discapacidades/grafico")
 def grafico_discapacidades_imagen():
-    # Obtener los datos de los cobros desde la base de datos
-    cobros = obtener_ingresos_por_mes()
+    tipos_discapacidad = obtener_tipos_discapacidad()
 
-    # Extraer las fechas y los montos de los cobros
-    fechas = [cobro.fecha_pago for cobro in cobros]
-    montos = [cobro.monto for cobro in cobros]
+    tipos_discapacidad_cant = obtener_cant_tipos_discapacidad()
+    tipos_discapacidad_cant.sort(key=lambda x: x[0])
 
-    # Crear el gráfico
-    plt.figure(figsize=(10, 5))
-    plt.plot(fechas, montos, marker="o", linestyle="-", label="Montos de ingresos")
+    total = 0
 
-    # Agregar etiquetas y título
-    plt.xlabel("Fecha de Pago")
-    plt.ylabel("Monto")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+    lista = [{"id": tipo[0],
+              "nombre": tipo[1],
+              "cant": 0} for tipo in tipos_discapacidad]
 
-    # Mostrar leyenda
-    plt.legend()
+    for item in tipos_discapacidad_cant:
+        id = item[0] - 1
+        lista[id]["cant"] = item[1]
+        total += item[1]
+
+    leyendas = [tipo_disc[1] for tipo_disc in tipos_discapacidad]
+    porcentajes = [x["cant"]*100/total for x in lista]
+
+    fig, ax = plt.subplots()
+    ax.pie(porcentajes, labels=leyendas, autopct='%1.1f%%')
 
     # Guardar el gráfico en un objeto BytesIO
     img = io.BytesIO()
@@ -94,7 +98,21 @@ def grafico_discapacidades_imagen():
 
 @bp.get("/reporte_propuestas_trabajo")
 def reporte_propuestas_trabajo():
+    resultados_actuales, resultados_historicos = obtener_ranking_propuestas()
+    ranking_actuales_con_puestos = []
+    ranking_historico_con_puestos = []
+    for indice, item in enumerate(resultados_actuales, start=1):
+        ranking_actuales_con_puestos.append(({"puesto": indice,
+                                              "propuesta": item[0],
+                                              "cantidad": item[1]}))
+
+    for indice, item in enumerate(resultados_historicos, start=1):
+        ranking_historico_con_puestos.append(({"puesto": indice,
+                                               "propuesta": item[0],
+                                               "cantidad": item[1]}))
     return render_template(
-        "pages/estadisticas/ver_reporte.html",
+        "pages/estadisticas/ver_ranking_propuestas.html",
+        ranking_actual=ranking_actuales_con_puestos,
+        ranking_historico=ranking_historico_con_puestos,
         titulo="Reporte de propuestas de trabajo",
     )
