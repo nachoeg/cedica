@@ -1,0 +1,59 @@
+<script>
+
+  function mostrar_ocultar_diagnostico() {
+    var tiene_certificado = document.getElementById("certificado_discapacidad").checked;
+    var diagnostico = document.getElementsByClassName("diagnostico_div");
+    var tipo_discapacidad = document.getElementsByClassName("tipo_discapacidad");
+    if (tiene_certificado === false) {
+      for (i = 0; i < diagnostico.length; i++) {
+        diagnostico[i].style.display = 'none';
+        diagnostico[i].style.margin = 'auto';
+      }
+
+      for (i = 0; i < tipo_discapacidad.length; i++) {
+        tipo_discapacidad[i].style.display = 'block';
+      }
+    } 
+    else {
+      for (i = 0; i < diagnostico.length; i++) {
+        diagnostico[i].style.display = 'block';
+        diagnostico[i].style.margin = 'auto';
+      }
+
+      for (i = 0; i < tipo_discapacidad.length; i++) {
+        tipo_discapacidad[i].style.display = 'none';
+      }
+    }
+  };
+
+  function mostrar_ocultar_opcion_otro() {
+    var diagnostico_seleccionado = document.getElementById("diagnostico").value;
+    var diagnostico_otro_div = document.getElementsByClassName("diagnostico_otro");
+    var id_diagnostico_otro = document.getElementsByClassName("id_otro_diagnostico")[0].textContent;
+    
+
+    if (diagnostico_seleccionado === id_diagnostico_otro) {
+      for (i = 0; i < diagnostico_otro_div.length; i++) {
+        diagnostico_otro_div[i].style.display = 'block';
+        diagnostico_otro_div[i].style.margin = 'auto';
+      }
+    }
+    else {
+      for (i = 0; i < diagnostico_otro_div.length; i++) {
+        diagnostico_otro_div[i].style.display = 'none';
+        diagnostico_otro_div[i].style.margin = 'auto';
+      }
+    }
+  }
+
+  document.getElementById("certificado_discapacidad").addEventListener("change", function(){
+    mostrar_ocultar_diagnostico();
+  });
+
+  document.getElementById("diagnostico").addEventListener("click", function(){
+    mostrar_ocultar_opcion_otro();
+  })
+
+  mostrar_ocultar_diagnostico();
+
+</script>

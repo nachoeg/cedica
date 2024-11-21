@@ -1,0 +1,44 @@
+<script>
+
+  function mostrar_ocultar_porcentaje() {
+    var becado = document.getElementById("becado").checked;
+    var porcentaje_beca = document.getElementById("porcentaje_beca");
+    
+    if (becado === false) {
+      porcentaje_beca.style.display = 'none';
+    } 
+    else {
+      porcentaje_beca.style.display = 'block';
+    }
+  };
+
+  function mostrar_ocultar_edad() {
+    var edadAMostrar = document.getElementById("edad");
+    var fecha_nacimiento = document.getElementById("fecha_nacimiento").value;
+    
+    var hoy = new Date();
+    var cumpleanos = new Date(fecha_nacimiento);
+    var edadCalculada = hoy.getFullYear() - cumpleanos.getFullYear();
+    var mes = hoy.getMonth() - cumpleanos.getMonth();
+
+    if (mes <0 || (mes === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edadCalculada--;
+    }
+    
+    edadAMostrar.value = edadCalculada;
+    
+  };
+
+  document.getElementById("edad").setAttribute("disabled", "disabled");
+  document.getElementById("becado").addEventListener("change", function(){
+    mostrar_ocultar_porcentaje();
+  });
+
+  mostrar_ocultar_porcentaje();
+
+  document.getElementById("fecha_nacimiento").addEventListener("change", function(){
+    mostrar_ocultar_edad();
+  })
+
+
+</script>

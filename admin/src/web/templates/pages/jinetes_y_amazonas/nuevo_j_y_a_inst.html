@@ -3,7 +3,7 @@
 {% block title %} {{titulo}} {% endblock %}
 {% block main %}
 {{ navbar_secundaria({
-'volver': url_for('jinetes_y_amazonas.listar'),
+'volver': url_for('jinetes_y_amazonas.ver_institucional', id=jya.id),
 })}}
 <form method="post" class="formulario" novalidate>
     {{ form.csrf_token }}
@@ -52,6 +52,7 @@
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </div>
+        <div>{{ form.dias.label }} {{ form.dias }}</div>
         <div>
             {{ form.submit() }}
         </div>

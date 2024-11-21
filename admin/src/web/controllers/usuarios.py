@@ -1,14 +1,17 @@
 import math
-from flask import (Blueprint, flash, redirect,
+
+from flask import (Blueprint, current_app, flash, redirect,
                    render_template, request, url_for)
-from src.core.usuarios import (actualizar_usuario, crear_usuario,
-                               listar_usuarios, nombres_roles, 
+
+from src.core.usuarios import (actualizar_perfil, actualizar_usuario,
+                               crear_usuario, listar_usuarios, nombres_roles,
                                roles_por_usuario, usuario_por_id)
 from core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)
-from src.web.handlers.funciones_auxiliares import palabra_a_booleano, convertir_a_entero
+from src.web.handlers.funciones_auxiliares import (palabra_a_booleano,
+                                                   convertir_a_entero)
 
 bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
@@ -20,10 +23,12 @@ def listado_usuarios():
     """Devuelve la vista de usuarios en la base de datos
     Los datos se envían paginados, filtrados y ordenados.
     """
+    cant_filas = current_app.config.get("TABLA_CANT_FILAS")
+
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     email_filtro = request.args.get("email", "")
     activo_filtro = request.args.get("activo", "")
     rol_filtro = request.args.get("rol", "")
@@ -37,20 +42,20 @@ def listado_usuarios():
     cant_paginas = math.ceil(cant_resultados / cant_por_pagina)
 
     roles = nombres_roles()
+    roles.append('Sin rol')
 
-    return render_template(
-        "pages/usuarios/listado_usuarios.html",
-        usuarios=usuarios,
-        cant_resultados=cant_resultados,
-        cant_paginas=cant_paginas,
-        pagina=pagina,
-        orden=orden,
-        ordenar_por=ordenar_por,
-        email_filtro=email_filtro,
-        activo_filtro=activo_filtro,
-        rol_filtro=rol_filtro,
-        roles=roles
-    )
+    return render_template("pages/usuarios/listado_usuarios.html",
+                           usuarios=usuarios,
+                           cant_resultados=cant_resultados,
+                           cant_paginas=cant_paginas,
+                           pagina=pagina,
+                           orden=orden,
+                           ordenar_por=ordenar_por,
+                           email_filtro=email_filtro,
+                           activo_filtro=activo_filtro,
+                           rol_filtro=rol_filtro,
+                           roles=roles
+                           )
 
 
 @bp.route('/registrar_usuario', methods=['GET', 'POST'])
@@ -80,7 +85,7 @@ def registrar_usuario():
 @chequear_permiso('usuario_mostrar')
 @sesion_iniciada_requerida
 def ver_usuario(id):
-    """Devuelve la vista de los datos del usuario 
+    """Devuelve la vista de los datos del usuario
     cuyo id recibe como parámetro.
     """
     usuario = usuario_por_id(id)
@@ -98,12 +103,14 @@ def editar_usuario(id):
     usuario = usuario_por_id(id)
     form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'GET':
-        form.roles.data = [str(rol.id) for rol in roles_por_usuario(id)]
+        form.roles.data = [rol.id for rol in roles_por_usuario(id)]
     if request.method == 'POST':
         if form.validate_on_submit():
-            # raise Exception(f'{form.data}')
-            actualizar_usuario(usuario, form.email.data, form.alias.data,
-                               form.admin_sistema.data, form.roles.data)
+            if usuario.admin_sistema:
+                actualizar_perfil(usuario, form.email.data, form.alias.data)
+            else:
+                actualizar_usuario(usuario, form.email.data, form.alias.data,
+                                   form.admin_sistema.data, form.roles.data)
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('usuarios.listado_usuarios'))
@@ -111,7 +118,8 @@ def editar_usuario(id):
             flash('No se pudo actualizar el registro. \
                   Revise los datos ingresados',
                   'error')
-    return render_template('pages/usuarios/editar_usuario.html', form=form)
+    return render_template('pages/usuarios/editar_usuario.html',
+                           form=form, usuario=usuario)
 
 
 @bp.route('/<int:id>/bloquear', methods=['GET'])

@@ -1,5 +1,5 @@
 {% from 'components/iconos.html' import user_icon, login_icon, hamburger_icon, close_icon, logout_icon, google_icon,
-avatar_placeholder_icon, show_password_icon %}
+avatar_placeholder_icon, show_password_icon, lock_icon %}
 
 <header
   class="fixed z-50 flex flex-wrap md:justify-start md:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-800/65 text-sm py-2.5 border-b dark:border-neutral-700">
@@ -63,6 +63,10 @@ avatar_placeholder_icon, show_password_icon %}
                 <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.ver_perfil') }}">
                   {{user_icon('size-4')}}
                   Perfil
+                </a>
+                <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cambiar_contraseña') }}">
+                  {{lock_icon('size-4')}}
+                  Cambiar contraseña
                 </a>
                 <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cerrar_sesion') }}">
                   {{logout_icon('size-4')}}

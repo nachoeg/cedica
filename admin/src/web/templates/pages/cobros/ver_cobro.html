@@ -21,14 +21,18 @@
     <p><strong>Monto:</strong> {{ cobro.monto }}</p>
     <p><strong>Recibió el dinero: </strong>{{ cobro.recibio_el_dinero.nombre }} {{ cobro.recibio_el_dinero.apellido }}</p>
     <p><strong>Observaciones: </strong> {{ cobro.observaciones }}</p>
-    <p><strong>Pago incompleto:</strong> {{ booleano_a_palabra(cobro.tiene_deuda) }}</p>
   </div>
   <div class="contenedor-footer">
-    <a class="btn btn-secondary w-full" href="{{ url_for('cobros.editar_cobro', id=cobro.id) }}">Editar</a>
-    <button type="submit" class="btn btn-danger w-full" onclick="
-      if (confirm('¿Estás seguro de que deseas eliminar este cobro?')) {
-        window.location.href = `/cobros/{{cobro.id}}/eliminar`;
-      }">Eliminar</button>
+    {% if tiene_permiso(session, 'cobro_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{ url_for('cobros.editar_cobro', id=cobro.id) }}">Editar</a>
+    {% endif %}
+    {% if tiene_permiso(session, 'cobro_eliminar') %}
+      <button type="submit" class="btn btn-danger w-full" onclick="
+        if (confirm('¿Estás seguro de que deseas eliminar este cobro?')) {
+          window.location.href = `/cobros/{{cobro.id}}/eliminar`;
+        }">Eliminar
+      </button>
+    {% endif %}
   </div>
 </div>
 

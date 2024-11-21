@@ -1,0 +1,42 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %}J&A {{jya.id}}{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('jinetes_y_amazonas.listar'),
+'tabs': [
+{'nombre': 'Información general', 'url': url_for('jinetes_y_amazonas.ver', id=jya.id)},
+{'nombre':'Salud', 'url': url_for('jinetes_y_amazonas.ver_salud', id=jya.id)},
+{'nombre':'Económica', 'url': url_for('jinetes_y_amazonas.ver_economica', id=jya.id)},
+{'nombre':'Escolaridad', 'url': url_for('jinetes_y_amazonas.ver_escolaridad', id=jya.id)},
+{'nombre':'Familiares', 'url': url_for('jinetes_y_amazonas.ver_familiares', id=jya.id)},
+{'nombre':'Trabajo Institucional', 'url': url_for('jinetes_y_amazonas.ver_institucional', id=jya.id)},
+{'nombre': 'Documentos', 'url': url_for('jinetes_y_amazonas.ver_archivos', id=jya.id)}
+]})}}
+<div class="contenedor">
+  <div class="contenedor-header">
+    <h1>Información económica - {{ jya.nombre }} {{ jya.apellido }}</h1>
+  </div>
+  <div class="contenedor-body [&_h2]:text-xl dark:[&_hr]:border-neutral-700">
+    <p><strong>¿Recibe asignación familiar?:</strong> {{ booleano_a_palabra(jya.asignacion_familiar) if jya.asignacion_familiar is not none else "-sin datos-"  }}</p>
+    {% if jya.asignacion_familiar %}
+      <p><strong>Tipo de asignación familiar:</strong> {{ mostrar_dato(jya.tipo_asignacion_familiar) }}</p>
+    {% endif %}
+    <p><strong>¿Es beneficiario de alguna pensión?:</strong> {{ booleano_a_palabra(jya.beneficiario_pension) if jya.beneficiario_pension is not none else "-sin datos-" }}</p>
+    {% if jya.beneficiario_pesion %}
+      <p><strong>Tipo de pensión:</strong> {{ mostrar_dato(jya.tipo_pension) }}</p>
+    {% endif %}
+    <p><strong>Obra social:</strong> {{ mostrar_dato(jya.obra_social) }}</p>
+    <p><strong>Numero de afiliado:</strong> {{ mostrar_dato(jya.num_afiliado) }}</p>
+    <p><strong>¿Posee curatela?:</strong> {{ booleano_a_palabra(jya.posee_curatela) if jya.posee_curatela is not none else "-sin datos-" }}</p>
+    <p><strong>Observaciones:</strong> {{ mostrar_dato(jya.observaciones_obra_social) }}</p>
+    {% if tiene_permiso(session, 'jya_actualizar') %}
+      <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_econ', id=jya.id)}}">Editar</a>
+    {% endif %}
+    </div>
+
+  {% endblock %}
