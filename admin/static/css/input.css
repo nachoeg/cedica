@@ -81,100 +81,99 @@
   .alert-neutral {
     @apply bg-gray-100 border-gray-200 text-gray-800 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white;
   }
-}
 
-.contenedor,
-.formulario {
-  @apply w-full md:w-fit md:min-w-[400px] mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
-}
+  .contenedor,
+  .formulario {
+    @apply w-full md:w-fit md:min-w-[400px] mx-auto bg-white dark:bg-neutral-800 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden;
+  }
 
-.contenedor:has(.contenedor-body),
-.formulario:has(.formulario-body) {
-  @apply flex flex-col;
-}
+  .contenedor {
+    @apply divide-y divide-gray-200 dark:divide-neutral-700;
+  }
 
-.contenedor:not(:has(.contenedor-body)),
-.formulario:not(:has(.formulario-body)),
-.contenedor-body,
-.formulario-body {
-  @apply flex flex-col p-4 gap-4;
-}
+  .contenedor:has(.contenedor-body),
+  .formulario:has(.formulario-body) {
+    @apply flex flex-col;
+  }
 
-.contenedor-footer,
-.contenedor-header,
-.formulario-header {
-  @apply flex items-center gap-2 py-3 px-4 font-semibold border-gray-200 dark:border-neutral-700;
-}
+  .contenedor:not(:has(.contenedor-body)),
+  .formulario:not(:has(.formulario-body)),
+  .contenedor-body,
+  .formulario-body {
+    @apply flex flex-col p-4 gap-4;
+  }
 
-.contenedor-footer {
-  @apply gap-3;
-}
+  .contenedor-footer,
+  .contenedor-header,
+  .formulario-header {
+    @apply flex items-center gap-2 py-3 px-4 font-semibold border-gray-200 dark:border-neutral-700;
+  }
 
-.contenedor-header,
-.formulario-header {
-  @apply border-b;
-}
+  .contenedor-footer {
+    @apply gap-3;
+  }
 
-.contenedor-footer {
-  @apply border-t;
-}
+  .formulario-header {
+    @apply border-b;
+  }
 
-.dropdown {
-  @apply p-4 gap-4 w-fit mx-auto bg-white border border-gray-200 overflow-hidden shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800;
-}
+  .dropdown {
+    @apply p-4 gap-4 w-fit mx-auto bg-white border border-gray-200 overflow-hidden shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800;
+  }
 
-.dropdown label,
-.formulario label {
-  @apply label;
-}
+  .dropdown label,
+  .formulario label {
+    @apply label;
+  }
 
-.dropdown input,
-.dropdown select,
-.formulario input,
-.formulario select {
-  @apply input;
-}
+  .dropdown input,
+  .dropdown select,
+  .formulario input,
+  .formulario select {
+    @apply input;
+  }
 
-.formulario select[multiple] {
-  @apply px-0 py-0 rounded-r-none;
-}
+  .formulario select[multiple] {
+    @apply px-0 py-0 rounded-r-none;
+  }
 
-.formulario select[multiple] option {
-  @apply py-1 px-3;
-}
+  .formulario select[multiple] option {
+    @apply py-1 px-3;
+  }
 
-.dropdown input[type="file"],
-.formulario input[type="file"] {
-  @apply p-0 pe-3 file:bg-gray-100 file:border-0 file:me-4 file:py-2 file:px-4 dark:file:bg-neutral-700 dark:file:text-neutral-200;
-}
+  .dropdown input[type="file"],
+  .formulario input[type="file"] {
+    @apply p-0 pe-3 file:bg-gray-100 file:border-0 file:me-4 file:py-2 file:px-4 dark:file:bg-neutral-700 dark:file:text-neutral-200;
+  }
 
-.dropdown input,
-.dropdown select {
-  @apply bg-gray-100 border-gray-100 dark:border-neutral-800;
-}
+  .dropdown input,
+  .dropdown select {
+    @apply bg-gray-100 border-gray-100 dark:border-neutral-800;
+  }
 
-.dropdown select,
-.formulario select:not([multiple]) {
-  @apply pe-10;
-}
+  .dropdown select,
+  .formulario select:not([multiple]) {
+    @apply pe-10;
+  }
 
-.formulario input[type="submit"],
-.formulario button[type="submit"] {
-  @apply btn btn-primary;
-}
+  .formulario input[type="submit"],
+  .formulario button[type="submit"] {
+    @apply btn btn-primary;
+  }
 
-.dropdown .btn-secondary {
-  @apply dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:border-neutral-800 dark:hover:border-neutral-700 dark:focus:border-neutral-700;
-}
+  .dropdown .btn-secondary {
+    @apply dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:border-neutral-800 dark:hover:border-neutral-700 dark:focus:border-neutral-700;
+  }
 
-.formulario input[type="checkbox"] {
-  @apply w-fit p-2 shrink-0 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800;
-}
+  .formulario input[type="checkbox"] {
+    @apply w-fit p-2 shrink-0 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800;
+  }
 
-.input-checkbox {
-  @apply input py-0 items-center flex justify-between gap-2;
-}
+  .input-checkbox {
+    @apply input py-0 items-center flex justify-between gap-2;
+  }
 
-.input-checkbox label {
-  @apply flex-1 mb-0 py-2.5;
+  .input-checkbox label {
+    @apply flex-1 mb-0 py-2.5;
+  }
 }
