@@ -574,3 +574,40 @@ def obtener_tipos_discapacidad():
 
     query = TipoDeDiscapacidad.query.with_entities(TipoDeDiscapacidad.id, TipoDeDiscapacidad.nombre).all()
     return query
+
+
+def obtener_cantidad_becados():
+    """
+    Función que obtiene la cantidad de Jinetes y Amazonas becados y no becados.
+    """
+    total_becados = db.session.query(JineteOAmazona).filter_by(becado=True).count()
+    total_no_becados = db.session.query(JineteOAmazona).filter_by(becado=False).count()
+
+    return total_becados, total_no_becados
+
+
+def listar_deudores(
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pag=6,
+):
+    """
+    Funcion que devuelve el listado de
+    jinetes y amazonas con deudas partir
+    ordenado según los parámetros recibidos.
+    """
+    query = JineteOAmazona.query.filter(JineteOAmazona.tiene_deuda)
+
+    if orden == "asc":
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
+
+    cant_resultados = query.count()
+
+    j_y_a_ordenados = query.paginate(
+        page=pagina, per_page=cant_por_pag, error_out=False
+    )
+
+    return j_y_a_ordenados, cant_resultados
