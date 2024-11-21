@@ -60,36 +60,37 @@ def listar_anuncios(
     return anuncios, cant_resultados
 
 def listar_anuncios_api(
-        autor_filtro="",
-        despues_de_filtro="",
-        antes_de_filtro="",
-        pagina=1,
-        cant_por_pag=6,
+    autor_filtro=None,
+    despues_de_filtro=None,
+    antes_de_filtro=None,
+    pagina=1,
+    cant_por_pag=6,
 ):
     """
     Lista todos los anuncios del sistema.
-    Recibe como parámetros filtros que ingresa
-    el usuario y devuelve los anuncios ordenados por id
-    en orden ascendente o descendente según los
-    parámetros recibidos.
+    Recibe como parámetros filtros opcionales que ingresa
+    el usuario y devuelve los anuncios ordenados por id.
     """
+    query = Anuncio.query
 
-    query = Anuncio.query.filter(
-        Anuncio.titulo.ilike(f"%{autor_filtro}%"),
-    )
+    # Filtrar por autor si se proporciona
+    if autor_filtro:
+        query = query.filter(Anuncio.autor.alias.ilike(f"%{autor_filtro}%"))
 
-    if despues_de_filtro != "":
+    # Filtrar por fecha de publicación si se proporcionan
+    if despues_de_filtro:
         query = query.filter(Anuncio.fecha_publicacion >= despues_de_filtro)
 
-    if antes_de_filtro != "":
+    if antes_de_filtro:
         query = query.filter(Anuncio.fecha_publicacion <= antes_de_filtro)
 
+    # Contar resultados totales
     cant_resultados = query.count()
-    
-    anuncios = query.paginate(
-        page=pagina, per_page=cant_por_pag, error_out=False
-    )
-    return anuncios, cant_resultados
+
+    # Paginación
+    anuncios = query.paginate(page=pagina, per_page=cant_por_pag, error_out=False)
+
+    return anuncios.items, cant_resultados
 
 def encontrar_anuncio(id):
     """

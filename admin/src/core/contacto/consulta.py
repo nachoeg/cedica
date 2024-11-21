@@ -17,7 +17,6 @@ class Estado(enum.Enum):
             return f"{self.value}"
 
 
-
 class HistorialEstado(db.Model):
     __tablename__ = "historial_estado"
 

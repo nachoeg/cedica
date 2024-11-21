@@ -7,7 +7,7 @@ class AnuncioSchema(Schema):
     content = fields.String(attribute="contenido") 
     published_at = fields.DateTime(attribute="fecha_publicacion")  
     updated_at = fields.DateTime(attribute="fecha_ultima_actualizacion") 
-    author = fields.Function(lambda obj: obj.autor.nombre if obj.autor else None) 
+    author = fields.Function(lambda obj: obj.autor.alias if obj.autor else None) 
     status = fields.String(attribute="estado.value")
 
 anuncio_schema = AnuncioSchema()
