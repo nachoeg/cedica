@@ -1,0 +1,23 @@
+{% extends "layouts/estadisticas.html" %}
+
+{% block title %} {{titulo}} {% endblock %}
+
+{% block main %}
+{{ super() }}
+<div class="contenedor">
+    <div class="contenedor-header">
+      <h1> {{titulo}} </h1>
+    </div>
+    <div class="contenedor-body">
+        Ranking actual
+        {% for item in ranking_actual %}
+            <p>puesto: {{ item.puesto }} propuesta: {{ item.propuesta }} Cantidad: {{ item.cantidad }}</p>
+        {% endfor %}
+        Ranking histórico
+        {% for item in ranking_historico %}
+            <p>puesto: {{ item.puesto }} propuesta: {{ item.propuesta }} Cantidad: {{ item.cantidad }}</p>
+        {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

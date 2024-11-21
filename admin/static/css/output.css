@@ -3430,6 +3430,10 @@ html {
   color: rgb(163 163 163 / var(--tw-placeholder-opacity));
 }
 
+.dark\:mix-blend-lighten:is(.dark *) {
+  mix-blend-mode: lighten;
+}
+
 .dark\:brightness-200:is(.dark *) {
   --tw-brightness: brightness(2);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
@@ -3442,6 +3446,11 @@ html {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
     var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
     var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.dark\:invert:is(.dark *) {
+  --tw-invert: invert(100%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .dark\:before\:border-neutral-700:is(.dark *)::before {
