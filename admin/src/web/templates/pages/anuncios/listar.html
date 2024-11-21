@@ -8,13 +8,9 @@
 
 {% set configuracion = {
 'encabezados': [
-{'id': 'titulo', 'nombre': 'Titulo', 'ordenar': True},
-{'id': 'copete', 'nombre': 'Copete'},
+{'id': 'titulo', 'nombre': 'Titulo', 'truncar': True, 'ordenar': True,},
 {'id': 'estado', 'nombre': 'Estado'},
 {'id': 'autor', 'nombre': 'Autor'},
-{'id': 'creacion', 'nombre': 'Creado'},
-{'id': 'publicacion', 'nombre': 'Publicado'},
-{'id': 'ultima_actualizacion', 'nombre': 'Última actualización'}
 ],
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verAnuncio', 'icono': open_icon},
@@ -30,8 +26,8 @@
 'crear': {
 'url': url_for('anuncios.nuevo_anuncio'),
 'nombre': 'Crear anuncio'
-}}
-%}
+}
+}%}
 
 {{ tabla(configuracion, anuncios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
 
