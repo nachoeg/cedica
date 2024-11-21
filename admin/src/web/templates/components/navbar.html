@@ -91,7 +91,8 @@ avatar_placeholder_icon, show_password_icon, lock_icon %}
           {'nombre': 'Equipo', 'url': url_for('miembro.miembro_listar'), 'permiso': 'miembro_listar'},
           {'nombre': 'Cobros', 'url': url_for('cobros.listar'), 'permiso': 'cobro_listar'},
           {'nombre': 'Pagos', 'url': url_for('pago.pago_listar'), 'permiso': 'pago_listar'},
-          {'nombre': 'Usuarios', 'url': url_for('usuarios.listado_usuarios'), 'permiso': 'usuario_listar'}
+          {'nombre': 'Usuarios', 'url': url_for('usuarios.listado_usuarios'), 'permiso': 'usuario_listar'},
+          {'nombre': 'Solicitudes', 'url': url_for('solicitudes.listado_solicitudes'), },
       ] %}
       {% for enlace in enlaces %}
           {% if tiene_permiso(session, enlace.permiso) %}

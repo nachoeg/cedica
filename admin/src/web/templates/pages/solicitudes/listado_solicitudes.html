@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, ban_icon, circle_check_icon %}
+
+
+{% block title %}Solicitudes{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+    'encabezados': [
+      {'id': 'email', 'nombre': 'Email', 'ordenar': True},
+      {'id': 'aceptada', 'nombre': 'Aceptado', 'ordenar': True},
+      {'id': 'fecha_solicitud', 'nombre': 'Fecha de solicitud', 'ordenar': True},
+    ],
+    'acciones': [
+      {'nombre': 'Aceptar','funcion': 'aceptarSolicitud', 'icono': circle_check_icon, 'condiciones': [{'fila': 'aceptada', 'valor': False}]},
+      {'nombre': 'Eliminar','funcion': 'eliminarSolicitud', 'icono': delete_icon, 'condiciones': []},
+    ],
+    'filtros': [
+      {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
+      {'id': 'activo', 'nombre': 'Activo', 'tipo': 'seleccion', 'valor': activo_filtro,
+       'opciones': ['Sí', 'No']
+      },
+    ],
+  }
+%}
+
+{{ tabla(configuracion, solicitudes, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+
+{% include 'pages/usuarios/_acciones_usuario.html' %}
+
+{% endblock %}

@@ -2,7 +2,55 @@ from datetime import datetime
 
 from src.core.bcrypt import bcrypt
 from src.core.database import db
-from core.usuarios.usuario import Permiso, Rol, Usuario
+from src.core.usuarios.usuario import Permiso, Rol, Usuario
+from src.core.usuarios.solicitud import SolicitudUsuario
+
+
+# SOLICITUDES
+def listar_solicitudes(orden, ordenar_por, pagina, cant_por_pagina,
+                       email_filtro, aceptada_filtro):
+    """Devuelve una tupla que contiene un listado paginado
+    de solicitudes, filtrado y ordenado, y la cantidad total de
+    solicitudes que genera la consulta.
+    """
+    email_filtro = SolicitudUsuario.email.ilike(f"%{email_filtro}%")
+    aceptada_filtro = (SolicitudUsuario.aceptada == aceptada_filtro
+                       if aceptada_filtro != '' else True)
+
+    solicitudes = db.paginate(db.select(SolicitudUsuario).where(
+        email_filtro, aceptada_filtro).order_by(
+            getattr(getattr(SolicitudUsuario, ordenar_por), orden)()),
+                              page=pagina,
+                              per_page=cant_por_pagina,
+                              error_out=False)
+    total = solicitudes.total
+    # usuarios = [usuario.to_dict() for usuario in usuarios.items]
+
+    return (total, solicitudes)
+
+
+def crear_solicitud(email, fecha_solicitud=datetime.now()):
+    """Crea un objeto de tipo SolicitudUsuario con los datos que recibe por
+    parámetro y lo devuelve.
+    """
+    email = email.lower()
+    solicitud = SolicitudUsuario(email=email, fecha_solicitud=fecha_solicitud)
+    db.session.add(solicitud)
+    db.session.commit()
+
+    return solicitud
+
+
+def solicitud_por_email(email):
+    """Devuelve la solicitud correspondiente al email pasado por
+    parámetro. Si no lo encuentra devuelve None.
+    """
+    email = email.lower()
+    solicitud = db.session.execute(
+        db.select(SolicitudUsuario).where(SolicitudUsuario.email == email)
+        ).scalar_one_or_none()
+
+    return solicitud
 
 
 # USUARIOS

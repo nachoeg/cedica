@@ -6,7 +6,7 @@ from flask import (Blueprint, current_app, flash, redirect,
 from src.core.usuarios import (actualizar_perfil, actualizar_usuario,
                                crear_usuario, listar_usuarios, nombres_roles,
                                roles_por_usuario, usuario_por_id)
-from core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
+from src.core.forms.usuario_forms import UsuarioSinContraseñaForm, UsuarioForm
 from src.core.database import db
 from src.web.handlers.decoradores import (no_modificar_admin, chequear_permiso,
                                           sesion_iniciada_requerida)

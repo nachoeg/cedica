@@ -2,11 +2,13 @@ from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 
 from src.core.oauth import oauth
-from core.forms.autenticacion_forms import (IniciarSesionForm,
-                                            CambiarContraseñaForm)
+from src.core.forms.autenticacion_forms import (IniciarSesionForm,
+                                                CambiarContraseñaForm)
 from src.core.usuarios import (actualizar_perfil, asignar_contraseña,
-                               usuario_por_email_y_contraseña, usuario_por_id)
-from core.forms.usuario_forms import (UsuarioSinContraseñaForm)
+                               crear_solicitud, solicitud_por_email,
+                               usuario_por_email, usuario_por_id,
+                               usuario_por_email_y_contraseña)
+from src.core.forms.usuario_forms import (UsuarioSinContraseñaForm)
 from src.web.handlers.decoradores import (chequear_usuario_sesion,
                                           sesion_iniciada_requerida)
 
@@ -106,23 +108,60 @@ def cambiar_contraseña():
 
 @bp.route('/iniciar_sesion/google', methods=['GET'])
 def iniciar_sesion_google():
-    uri_redireccion = url_for('autenticacion.iniciar_sesion_autorizar', _external=True)
+    uri_redireccion = url_for('autenticacion.iniciar_sesion_autorizar',
+                              _external=True)
     return oauth.google.authorize_redirect(uri_redireccion)
 
 
 @bp.route('/iniciar_sesion/autorizar', methods=['GET'])
 def iniciar_sesion_autorizar():
-    # raise Exception(f'{oauth._clients}')
+    """Verifica los datos obtenidos de la conexión con Google.
+    Inicia sesión en caso de existir el usuario con el mail obtenido.
+    Crea una solicitud pendiente de aprobación en caso de no existir.
+    """
     token = oauth.google.authorize_access_token()
-    # el token se usa en la siguiente línea google.get('userinfo', token=token)
-    # pero no es necesario escribirlo
-    info_usuario = token['userinfo']
-    # info_usuario = respuesta.json()
-    # usuario = oauth.google.userinfo()  # esto es una alternativa? o es necesario?
-    if info_usuario:
-        session['email'] = info_usuario.get('email')
-        session['id'] = 1
-        session['roles'] = []
-        session['alias'] = 'Inicio Google'
-    # session.permanent = True
+    info_usuario_google = token['userinfo']
+    if info_usuario_google:
+        email_google = info_usuario_google.get('email')
+        usuario = usuario_por_email(info_usuario_google.get('email'))
+        if usuario is None and info_usuario_google.get('email_verified'):
+            if solicitud_por_email(email_google) is None:
+                crear_solicitud(email_google)
+                flash(f'Se generó la solicitud de registro del \
+                        mail {email_google}. Debe ser aceptada por \
+                        la administración para poder ingresar.',
+                      'info')
+                return redirect(url_for('home'))
+            else:
+                flash(f'La solicitud de registro del \
+                        mail {email_google} ya existe. Debe ser aceptada por \
+                        la administración para poder ingresar.',
+                      'warning')
+        elif not info_usuario_google.get('email_verified'):
+            flash('No se pudo registrar la solicitud: email no verificado',
+                  'error')
+        else:
+            raise Exception(f'{info_usuario_google.get('email_verified')}')
+            session['email'] = email_google
+            session['id'] = 1
+            session['roles'] = []
+            session['alias'] = 'Inicio Google'
+            flash('Ha iniciado sesión', 'exito')
+            return redirect(url_for('home'))
     return redirect(url_for('home'))
+
+
+# raise Exception(f'{token['userinfo']}')
+# {'iss': 'https://accounts.google.com',
+#  'azp': '990473437871-efj1b23nan9[...].apps.googleusercontent.com',
+#  'aud': '990473437871-efj1b23nan9[...].apps.googleusercontent.com',
+#  'sub': '10712970261...', 'email': 'un.mail@gmail.com',
+#  'email_verified': True,
+#  'at_hash': 'vACIOaUf...',
+#  'nonce': 'kSFtWcRf6...',
+#  'name': 'Nombre Apellido',
+#  'picture': 'https://lh3.googleusercontent.com/a/ACg8ocK[...]',
+#  'given_name': 'Nombre',
+#  'family_name': 'Apellido',
+#  'iat': 1732100000,
+#  'exp': 1732100000}

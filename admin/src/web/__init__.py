@@ -7,6 +7,7 @@ from src.core.bcrypt import bcrypt
 from src.web.handlers import error
 from src.web.controllers.autenticacion import bp as bp_autenticacion
 from src.web.controllers.usuarios import bp as bp_usuarios
+from src.web.controllers.solicitudes import bp as bp_solicitudes
 from src.core import database
 from src.core import oauth
 from src.core.config import config
@@ -46,6 +47,7 @@ def create_app(env="development", static_folder="../../static"):
 
     app.register_blueprint(bp_autenticacion)
     app.register_blueprint(bp_usuarios)
+    app.register_blueprint(bp_solicitudes)
 
     app.register_error_handler(404, error.error_not_found)
     app.register_error_handler(401, error.no_autorizado)

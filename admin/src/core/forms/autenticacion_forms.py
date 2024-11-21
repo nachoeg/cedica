@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import EmailField, PasswordField
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
-from core.forms.validaciones import sin_espacios, validar_contraseña
+from src.core.forms.validaciones import sin_espacios, validar_contraseña
 
 
 class IniciarSesionForm(FlaskForm):
