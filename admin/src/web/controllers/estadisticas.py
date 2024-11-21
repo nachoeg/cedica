@@ -140,11 +140,26 @@ def grafico_discapacidades_imagen():
         total += item[1]
 
     leyendas = [tipo_disc[1] for tipo_disc in tipos_discapacidad]
-    porcentajes = [x["cant"]*100/total for x in lista]
+    if total != 0:
+        porcentajes = [x["cant"]*100/total for x in lista]
+    else:
+        porcentajes = [0 for x in lista]
 
     fig, ax = plt.subplots()
-    ax.pie(porcentajes, labels=leyendas, autopct='%1.1f%%')
+    # ax.pie(porcentajes, labels=leyendas, autopct='%1.1f%%')
 
+    plt.figure(figsize=(6, 6))
+    wedges, texts, autotexts = plt.pie(
+        porcentajes, autopct="%1.1f%%", startangle=140
+    )
+    plt.axis("equal")  # Equal aspect ratio asegura que el gráfico sea un círculo
+
+    # Agregar la leyenda con las cantidades totales
+    plt.legend(
+        wedges,
+        leyendas,
+        bbox_to_anchor=(0.2, 1.15),
+    )
     # Guardar el gráfico en un objeto BytesIO
     img = io.BytesIO()
     plt.savefig(img, format="png")
