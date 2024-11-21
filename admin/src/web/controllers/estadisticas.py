@@ -84,23 +84,37 @@ def grafico_becados_imagen():
     # Obtener los datos de los J&A becados desde la base de datos
     total_becados, total_no_becados = obtener_cantidad_becados()
 
-    # Crear el gráfico de tortas
-    labels = [f"Becados ({total_becados})", f"No Becados ({total_no_becados})"]
-    sizes = [total_becados, total_no_becados]
-    colors = ["#ff9999", "#66b3ff"]
+    # Verificar si hay datos
+    if total_becados == 0 and total_no_becados == 0:
+        # Crear una imagen alternativa indicando que no hay datos
+        plt.figure(figsize=(6, 3))
+        plt.text(
+            0.5, 0.5, "No hay datos disponibles", ha="center", va="center", fontsize=12
+        )
+        plt.axis("off")
+        
+    else:
+        # Crear el gráfico de tortas
+        labels = [f"Becados ({total_becados})", f"No Becados ({total_no_becados})"]
+        sizes = [total_becados, total_no_becados]
+        colors = ["#ff9999", "#66b3ff"]
 
-    plt.figure(figsize=(6, 6))
-    wedges, texts, autotexts = plt.pie(
-        sizes, colors=colors, autopct="%1.1f%%", startangle=140
-    )
-    plt.axis("equal")  # Equal aspect ratio asegura que el gráfico sea un círculo
+        def autopct_format(pct):
+            # Mostrar el porcentaje solo si es mayor a 0
+            return f"{pct:.1f}%" if pct > 0 else ""
 
-    # Agregar la leyenda con las cantidades totales
-    plt.legend(
-        wedges,
-        labels,
-        bbox_to_anchor=(0.2, 1.15),
-    )
+        plt.figure(figsize=(6, 6))
+        wedges, texts, autotexts = plt.pie(
+            sizes, colors=colors, autopct=autopct_format, startangle=140
+        )
+        plt.axis("equal")  # Equal aspect ratio asegura que el gráfico sea un círculo
+
+        # Agregar la leyenda con las cantidades totales
+        plt.legend(
+            wedges,
+            labels,
+            bbox_to_anchor=(0.2, 1.15),
+        )
 
     # Guardar el gráfico en un objeto BytesIO
     img = io.BytesIO()
