@@ -5,6 +5,7 @@ from src.core.pago import obtener_tipo_pago
 from datetime import date
 
 class PagoForm(FlaskForm):
+    """Formulario para crear un nuevo pago en el sistema"""
     tipo_id = SelectField('Tipo de Pago*', validators=[DataRequired('Debe seleccionar una opcion.')])
     monto = DecimalField('Monto*', validators=[DataRequired('Debe de ingresar un monto.'), NumberRange(min=0.01, max=2147483647, message="El monto debe ser mayor a 0")])
     descripcion = StringField('Descripción', validators=[Optional(), Length(max=250, message="No puedo tener más de %(max)d caracteres.")])

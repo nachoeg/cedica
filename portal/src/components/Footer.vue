@@ -3,6 +3,8 @@ import FooterLink from './FooterLink.vue'
 import IconFacebook from './icons/IconFacebook.vue'
 import IconInstagram from './icons/IconInstagram.vue'
 import IconX from './icons/IconX.vue'
+import IconWhatsapp from './icons/IconWhatsapp.vue'
+import IconMail from './icons/IconMail.vue'
 </script>
 
 <script>
@@ -25,15 +27,21 @@ export default {
     </p>
 
     <!-- Redes sociales -->
-    <div class="space-x-2 text-black dark:text-white">
+    <div class="flex gap-x-2 justify-center text-black dark:text-white">
       <FooterLink href="https://www.facebook.com/cedica.equitacionparatodos/">
-        <IconFacebook class="size-5 stroke-2"></IconFacebook>
+        <IconFacebook class="size-6"></IconFacebook>
       </FooterLink>
       <FooterLink href="https://www.instagram.com/cedica.equitacionparatodos/">
-        <IconInstagram class="size-5"></IconInstagram>
+        <IconInstagram class="size-6"></IconInstagram>
       </FooterLink>
       <FooterLink href="https://x.com/cedica_">
-        <IconX class="size-5"></IconX>
+        <IconX class="size-6"></IconX>
+      </FooterLink>
+      <FooterLink href="https://web.whatsapp.com/send?phone=542215066291">
+        <IconWhatsapp class="size-6"></IconWhatsapp>
+      </FooterLink>
+      <FooterLink href="mailto:equitacionparatodos@gmail.com">
+        <IconMail class="size-6"></IconMail>
       </FooterLink>
     </div>
   </footer>

@@ -64,10 +64,12 @@ avatar_placeholder_icon, show_password_icon, lock_icon %}
               {{user_icon('size-4')}}
               Perfil
             </a>
+            {% if not session.get('sin_contraseña') %}
             <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cambiar_contraseña') }}">
               {{lock_icon('size-4')}}
               Cambiar contraseña
             </a>
+            {% endif %}
             <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cerrar_sesion') }}">
               {{logout_icon('size-4')}}
               Cerrar sesión

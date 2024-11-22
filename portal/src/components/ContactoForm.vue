@@ -73,7 +73,7 @@
             mensaje: "",
         },
         mensaje: null,
-        captchaToken: null, // Token de reCAPTCHA
+        captchaToken: null, 
         };
     },
     methods: {
@@ -83,7 +83,7 @@
             return;
         }
         try {
-            const response = await fetch("https://admin-grupo17.proyecto2024.linti.unlp.edu.ar/api/message", {
+            const response = await fetch("/api/message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -92,9 +92,9 @@
             });
             if (response.ok) {
                 this.mensaje = "Mensaje enviado con éxito.";
-                this.formData = { titulo: "", email: "", mensaje: "" }; // Resetear formulario
-                this.captchaToken = null; // Resetear token
-                grecaptcha.reset(); // Resetear reCAPTCHA
+                this.formData = { titulo: "", email: "", mensaje: "" };
+                this.captchaToken = null; 
+                grecaptcha.reset();
             } else {
             const error = await response.json();
                 this.mensaje = `Error: ${error.message}`;
@@ -108,12 +108,10 @@
         }
     },
     mounted() {
-    // Usamos $nextTick para asegurarnos de que el DOM esté listo
     this.$nextTick(() => {
-      // Renderizamos el reCAPTCHA
         grecaptcha.render('recaptcha', {
-        sitekey: '6Ldhj4YqAAAAAIUOpoUYXTzLUlSmKCNIyVppBnPY', // Reemplaza esto por tu clave
-        callback: this.onCaptchaVerified, // Función de callback
+        sitekey: '6Ldhj4YqAAAAAIUOpoUYXTzLUlSmKCNIyVppBnPY',
+        callback: this.onCaptchaVerified,
         });
     });
     },
