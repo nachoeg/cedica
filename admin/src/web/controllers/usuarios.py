@@ -113,7 +113,8 @@ def editar_usuario(id):
                                   alias=form.alias.data)
             else:
                 actualizar_usuario(usuario=usuario, email=form.email.data,
-                                   alias=form.alias.data,admin_sistema=form.admin_sistema.data,
+                                   alias=form.alias.data,
+                                   admin_sistema=form.admin_sistema.data,
                                    id_roles=form.roles.data)
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')

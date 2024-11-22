@@ -19,8 +19,8 @@ class ProductionConfig(Config):
         "pool_pre_ping": True,
     }
     TABLA_CANT_FILAS = environ.get("TABLA_CANT_FILAS")
-    GOOGLE_CLIENT_ID = ""
-    GOOGLE_CLIENT_SECRET = ""
+    GOOGLE_CLIENT_ID = environ.get("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = environ.get("GOOGLE_CLIENT_SECRET")
 
 
 class DevelopmentConfig(Config):

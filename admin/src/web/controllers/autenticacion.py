@@ -15,6 +15,16 @@ from src.web.handlers.decoradores import (chequear_usuario_sesion,
 bp = Blueprint("autenticacion", __name__, url_prefix="")
 
 
+def cargar_datos_sesion(id, alias, admin_sistema,
+                        nombre_roles, sin_contraseña=False):
+    session.clear()
+    session['id'] = id
+    session['alias'] = alias
+    session['es_admin'] = admin_sistema
+    session['roles'] = nombre_roles
+    session['sin_contraseña'] = sin_contraseña
+
+
 @bp.route('/iniciar_sesion', methods=('GET', 'POST'))
 def iniciar_sesion():
     """Devuelve la vista de iniciar sesión.
@@ -29,11 +39,10 @@ def iniciar_sesion():
                 form.email.data = ""
                 flash('Usuario y/o contraseña incorrectos', 'error')
             else:
-                session.clear()
-                session['id'] = usuario.id
-                session['alias'] = usuario.alias
-                session['es_admin'] = usuario.admin_sistema
-                session['roles'] = [rol.nombre for rol in usuario.roles]
+                nombre_roles = [rol.nombre for rol in usuario.roles]
+                cargar_datos_sesion(id=usuario.id, alias=usuario.alias,
+                                    admin_sistema=usuario.admin_sistema,
+                                    nombre_roles=nombre_roles)
                 flash('Ha iniciado sesión', 'exito')
                 return redirect(url_for('home'))
         else:
@@ -142,27 +151,11 @@ def iniciar_sesion_autorizar():
             flash('No se pudo registrar la solicitud: email no verificado',
                   'error')
         else:
-            # raise Exception(f'{info_usuario_google.get('email_verified')}')
-            session['email'] = email_google
-            session['id'] = 1
-            session['roles'] = []
-            session['alias'] = 'Inicio Google'
+            nombre_roles = [rol.nombre for rol in usuario.roles]
+            cargar_datos_sesion(id=usuario.id, alias=usuario.alias,
+                                admin_sistema=usuario.admin_sistema,
+                                nombre_roles=nombre_roles, sin_contraseña=True)
             flash('Ha iniciado sesión', 'exito')
             return redirect(url_for('home'))
     return redirect(url_for('home'))
 
-
-# raise Exception(f'{token['userinfo']}')
-# {'iss': 'https://accounts.google.com',
-#  'azp': '990473437871-efj1b23nan9[...].apps.googleusercontent.com',
-#  'aud': '990473437871-efj1b23nan9[...].apps.googleusercontent.com',
-#  'sub': '10712970261...', 'email': 'un.mail@gmail.com',
-#  'email_verified': True,
-#  'at_hash': 'vACIOaUf...',
-#  'nonce': 'kSFtWcRf6...',
-#  'name': 'Nombre Apellido',
-#  'picture': 'https://lh3.googleusercontent.com/a/ACg8ocK[...]',
-#  'given_name': 'Nombre',
-#  'family_name': 'Apellido',
-#  'iat': 1732100000,
-#  'exp': 1732100000}
