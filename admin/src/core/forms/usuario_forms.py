@@ -55,3 +55,30 @@ class UsuarioForm(UsuarioSinContraseñaForm):
                     sin_espacios,
                     ]
         )
+
+
+class UsuarioSinMailContraseñaForm(FlaskForm):
+    """Clase que hereda de FlaskForm y representa el formulario de
+    un usuario sin el campo 'contraseña'.
+    """
+    alias = StringField("Alias", validators=[
+        InputRequired("Debe ingresar un alias."),
+        Length(max=100, message="No puedo tener más de %(max)d caracteres."),
+        Unico(Usuario, Usuario.alias, ilike=True, message="El alias ingresado \
+              ya existe."),
+        sin_espacios,
+        ])
+    admin_sistema = BooleanField("¿Es admin general?", default=False)
+    roles = SelectMultipleField("Roles", coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        """Construye los atributos necesarios para la
+        clase UsuarioSinContraseñaForm.
+        """
+        super(UsuarioSinMailContraseñaForm, self).__init__(*args, **kwargs)
+        # carga las opciones al campo roles
+        opciones = [(rol.id, rol.nombre) for rol in get_roles()]
+        self.roles.choices = opciones
+        # agrega validación de que el valor recibido está entre las opciones
+        id_opciones = [opcion[0] for opcion in self.roles.choices]
+        self.roles.validators = [valor_en_opciones(id_opciones)]

@@ -1,0 +1,35 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %} Aceptar usuario {% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({'volver': url_for('solicitudes.listado_solicitudes')}) }}
+
+{% from "pages/usuarios/_campo_form.html" import render_field %}
+{% from "pages/usuarios/_select_multi_checkbox.html" import select_multi_checkbox %}
+<form method=post class="formulario">
+  <div class="formulario-header">
+    <h1>Aceptar usuario </h1>
+  </div>
+  {{ form.csrf_token }}
+  <div class="formulario-body">
+    <p class="text-gray-600 text-xs italic">* Campos obligatorios</p>
+    <p class="text-gray-950 text-sm">Email: {{ solicitud.email }}</p>
+    <div>{{ render_field(form.alias) }}</div>
+    <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
+    <div>{{ select_multi_checkbox(form.roles) }}</div>
+    <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
+    <div><input type=submit></div>
+  </div>
+</form>
+
+{% include "pages/usuarios/_ocultar_mostrar.html" %}
+
+{% endblock %}
