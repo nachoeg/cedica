@@ -1,38 +1,42 @@
 {% extends "layouts/base.html" %}
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
 
+{% block title %} {{consulta.titulo}} {% endblock %}
+
+
 {% block main %}
 
 {{ navbar_secundaria({
-'volver': url_for('contacto.listar'),
-'tabs': [{'nombre': 'Datos', 'url': url_for('contacto.ver', id=consulta.id)},
-        {'nombre': 'Historial de cambios', 'url': url_for('contacto.historial', id=consulta.id)}
+'volver': url_for('contacto.listar_recibidos'),
+'tabs': [{'nombre': 'Detalles', 'url': url_for('contacto.ver', id=consulta.id)},
+{'nombre': 'Historial de cambios', 'url': url_for('contacto.historial', id=consulta.id)}
 ]})}}
 
-<div class="contenedor">
-  <div class="contenedor-header">
-    <h1> Detalles de la consulta </h1>
+<div class="space-y-2 w-fit mx-auto">
+  <div class="contenedor">
+    <div class="contenedor-header gap-1 flex-col items-stretch">
+      <h1> {{ consulta.titulo }} </h1>
+      <div
+        class="flex justify-between gap-10 place-items-start text-sm font-normal text-gray-600 dark:text-neutral-400">
+        <p> {{ consulta.email }} </p>
+        <span>{{ consulta.fecha.strftime('%d/%m/%Y') }}</span>
+      </div>
+    </div>
+    <div class="contenedor-body">
+
+      <p>{{consulta.mensaje}} </p>
+    </div>
   </div>
-  <div class="contenedor-body">
-    <p><strong>Titulo:</strong> {{ consulta.titulo }}</p>
-    <p><strong>Fecha:</strong> {{ consulta.fecha.strftime('%d/%m/%Y') }}</p>
-    <p><strong>Mail:</strong> {{ consulta.email }}</p>
-    <p><strong>Estado:</strong> {{ consulta.estado }}</p>
-    {% if consulta.comentario %}
-        <p><strong>Comentario:</strong> {{ consulta.comentario }}</p>
-    {% endif %}
-    
-    <p class="text-gray-600 text-xs italic"> Puedes modificar el estado de la consulta en el siguiente formulario. </p>
-    <p class="text-gray-600 text-xs italic"> Tambien puedes agregarle un comentario que describa el cambio. </p>
-    <form novalidate method="POST" class="formulario">
-      <div class="formulario-body">
-        {{ form.hidden_tag() }}
+
+  <form novalidate method="POST" class="formulario w-full">
+    <div class="formulario-body">
+      {{ form.hidden_tag() }}
       <div class="text-red-600">
-          {{ form.estado.label }}
-          {{ form.estado }}
-          {% for error in form.estado.errors %}
-          <span class="text-red-600">{{ error }}</span>
-          {% endfor %}
+        {{ form.estado.label }}
+        {{ form.estado }}
+        {% for error in form.estado.errors %}
+        <span class="text-red-600">{{ error }}</span>
+        {% endfor %}
       </div>
       <div class="text-red-600">
         {{ form.comentario.label }}
@@ -41,14 +45,10 @@
         <span class="text-red-600">{{ error }}</span>
         {% endfor %}
       </div>
-      <div>
-        {{ form.submit() }}
-      </div>
-      </div>
-      </form>
-  </div>
-  
-  
+      {{ form.submit() }}
+    </div>
+  </form>
 </div>
+
 
 {% endblock %}

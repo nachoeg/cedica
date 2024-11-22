@@ -3,24 +3,23 @@
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
 {% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon, archive_restore_icon %}
 
-{% block title %} Listado de consultas {% endblock %}
+{% block title %} {{titulo}} {% endblock %}
 
 {% block main %}
 
 {{ navbar_secundaria({
     'tabs':[
-    {'nombre': 'Recibidos', 'url': url_for('contacto.listar', archivado=False)},
-    {'nombre': 'Archivados', 'url': url_for('contacto.listar', archivado=True)}
-    ]})}}
+    {'nombre': 'Recibidos', 'url': url_for('contacto.listar_recibidos')},
+    {'nombre': 'Archivados', 'url': url_for('contacto.listar_archivados')}
+]})}}
 
 {% set configuracion = {
-'titulo': 'Consultas',
+'titulo': titulo,
 'encabezados': [
-    {'id': 'titulo', 'nombre': 'Titulo'},
+    {'id': 'titulo', 'nombre': 'Titulo', 'truncar': True},
     {'id': 'fecha', 'nombre': 'Fecha', 'ordenar': True},
     {'id': 'email', 'nombre': 'Email'},
-    {'id': 'mensaje', 'nombre': 'Mensaje', 'truncar': True},
-    {'id': 'estado', 'nombre': 'Estado'},
+    {'id': 'estado', 'nombre': 'Estado', 'ordenar': True},
 ],
 'acciones': [
     {'nombre': 'Archivar', 'funcion': 'archivarConsulta', 'condiciones': [{'fila': 'archivado', 'valor': False}], 'icono': archive_icon},

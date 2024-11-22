@@ -3,17 +3,18 @@
 {% from "components/navbar_secundaria.html" import navbar_secundaria %}
 {% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon, archive_restore_icon %}
 
-{% block title %} Listado de consultas {% endblock %}
+{% block title %} Historial de cambios {% endblock %}
 
 {% block main %}
 
 {{ navbar_secundaria({
-    'volver': url_for('contacto.listar'),
-    'tabs': [{'nombre': 'Datos', 'url': url_for('contacto.ver', id=consulta)},
+    'volver': url_for('contacto.listar_recibidos'),
+    'tabs': [{'nombre': 'Detalles', 'url': url_for('contacto.ver', id=consulta)},
             {'nombre': 'Historial de cambios', 'url': url_for('contacto.historial', id=consulta)}
     ]})}}
 
 {% set configuracion = {
+'titulo': 'Historial de cambios',
 'encabezados': [
     {'id': 'estado', 'nombre': 'Estado'},
     {'id': 'comentario', 'nombre': 'Comentario', 'truncar': True},
