@@ -6,7 +6,11 @@ from matplotlib import pyplot as plt
 from flask import Blueprint, render_template, url_for, send_file, redirect, request
 
 from src.core.cobros import obtener_ingresos_por_mes
-from src.core.jinetes_y_amazonas import obtener_ranking_propuestas, obtener_cant_tipos_discapacidad, obtener_tipos_discapacidad
+from src.core.jinetes_y_amazonas import (
+    obtener_ranking_propuestas,
+    obtener_cant_tipos_discapacidad,
+    obtener_tipos_discapacidad,
+    obtener_ranking_jinetes_por_dia)
 from src.core.jinetes_y_amazonas import obtener_cantidad_becados
 from src.core.jinetes_y_amazonas import listar_deudores
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
@@ -231,4 +235,15 @@ def reporte_deudores():
         pagina=pagina,
         orden=orden,
         ordenar_por=ordenar_por,
+    )
+
+
+@bp.get("/reporte_jinetes_dias")
+def reporte_jinetes_por_dia():
+    resultados_actuales = obtener_ranking_jinetes_por_dia()
+
+    return render_template(
+        "pages/estadisticas/ver_ranking_propuestas.html",
+        ranking_actual=resultados_actuales,
+        titulo="Reporte de propuestas de trabajo",
     )

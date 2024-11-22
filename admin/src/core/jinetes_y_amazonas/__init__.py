@@ -611,3 +611,11 @@ def listar_deudores(
     )
 
     return j_y_a_ordenados, cant_resultados
+
+
+def obtener_ranking_jinetes_por_dia():
+    """
+    Función que retorna un ranking de días según la cantidad de jinetes
+    que asisten a CEDICA.
+    """
+    print("hacer")
