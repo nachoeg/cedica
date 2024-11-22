@@ -1,9 +1,9 @@
 <script setup>
-import noticiasLista from '../components/noticiasLista.vue'
+import NoticiasLista from '../components/NoticiasLista.vue'
 </script>
 
 <template>
   <main>
-    <noticiasLista />
+    <NoticiasLista />
   </main>
 </template>
