@@ -2,7 +2,7 @@ import logging
 
 from flask import Flask, render_template
 from flask_session import Session
-
+from flask_cors import CORS
 from src.core.bcrypt import bcrypt
 from src.web.handlers import error
 from src.web.controllers.autenticacion import bp as bp_autenticacion
@@ -91,6 +91,8 @@ def create_app(env="development", static_folder="../../static"):
     app.register_blueprint(contacto_bp)
 
     app.register_blueprint(api_bp)
+
+    CORS(app) 
 
     return app
 

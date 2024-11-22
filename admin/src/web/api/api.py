@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from src.core.anuncios import listar_anuncios_api
 from src.core.contacto import crear_consulta
 from flask import request, make_response, jsonify
@@ -7,6 +7,18 @@ from src.web.schemas.anuncios import anuncios_schema
 from src.web.schemas.contacto import consulta_schema, create_consulta_schema
 
 bp = Blueprint("api", __name__, url_prefix="/api")
+
+# def validar_captcha(token):
+    # secret_key = '6Ldhj4YqAAAAAJJOnlmmdh2bzzdWbDA3PgAJtFcc'
+    # url = 'https://www.google.com/recaptcha/api/siteverify'
+    # payload = {'secret': secret_key, 'response': token}
+    # response = request.post(url, data=payload)
+    # return response.json().get('success', False)
+
+        #captcha_token = attrs.get('captchaToken')
+        #if not captcha_token or not validar_captcha(captcha_token):
+            #return jsonify({"captcha": "Captcha inválido o ausente."}), 400
+        
 
 @bp.get("/articles")
 def listar():
