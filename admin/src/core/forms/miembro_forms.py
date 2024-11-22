@@ -5,6 +5,7 @@ from src.core.forms.validaciones import LimiteDeArchivo, Unico, validar_digitos,
 from src.core.miembro.miembro import Miembro
 
 class InfoMiembroForm(FlaskForm):
+    """Formulario para crear un nuevo miembro de equipo"""
     nombre = StringField('Nombre*', validators=[
         DataRequired('Ingrese el nombre.'),
         Length(max=100, message="No puede tener más de %(max)d caracteres."),
@@ -76,6 +77,7 @@ class InfoMiembroForm(FlaskForm):
     submit = SubmitField('Guardar')
 
 class ArchivoMiembroForm(FlaskForm):
+    """Formulario para cargar archivos a un miembro de equipo"""
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
@@ -91,6 +93,7 @@ class ArchivoMiembroForm(FlaskForm):
     submit = SubmitField("Guardar")
 
 class EditarArchivoMiembroForm(FlaskForm):
+    """Formulario para editar los documentos cargados"""
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
@@ -99,6 +102,7 @@ class EditarArchivoMiembroForm(FlaskForm):
 
 
 class EnlaceMiembroForm(FlaskForm):
+    """"Formulario para modificar enlaces cargados a un miembro del equipo"""
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )

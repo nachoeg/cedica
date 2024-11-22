@@ -1,5 +1,8 @@
 from src.core.forms.pago_forms import PagoForm
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from src.core.miembro import obtener_miembro_dni, obtener_miembro
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.funciones_auxiliares import convertir_a_entero
 from src.core.pago import (
     crear_pago, 
     listar_pagos, 
@@ -8,9 +11,7 @@ from src.core.pago import (
     listar_tipos_pagos, 
     obtener_tipo_pago, 
     eliminar_pago)
-from src.core.miembro import obtener_miembro_dni, obtener_miembro
-from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-from src.web.handlers.funciones_auxiliares import convertir_a_entero
+
 
 bp = Blueprint('pago', __name__, url_prefix='/pagos')
 
@@ -20,10 +21,11 @@ bp = Blueprint('pago', __name__, url_prefix='/pagos')
 def pago_listar():
     """Lista los pagos de forma paginada, una cantidad de 10 por pagina, permite aplicar filtros y ordenar de manera
     ascendente y descendente por diversos campos"""
+    cant_filas = current_app.config.get("TABLA_CANT_FILAS")
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "fecha_pago")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     search_fecha_inicio = request.args.get("fecha_inicio", "")
     search_fecha_fin = request.args.get("fecha_fin", "")
     tipo_pago_id = request.args.get("tipo_pago_id", "")
@@ -56,6 +58,7 @@ def pago_listar():
         tipo_pago_id=tipo_pago_id,
         beneficiario=search_beneficiario,
     )
+
 
 @bp.route('/crear', methods=['GET', 'POST'])
 @chequear_permiso("pago_crear")
@@ -107,6 +110,7 @@ def pago_mostrar(id):
         nombre = ''
     return render_template('pages/pagos/mostrar.html', pago=pago, beneficiario=beneficiario, nombre=nombre)
 
+
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 @chequear_permiso("pago_eliminar")
 @sesion_iniciada_requerida
@@ -116,6 +120,7 @@ def pago_eliminar(id):
     eliminar_pago(id)
     flash("Pago eliminado con exito.", 'success')
     return redirect(url_for('pago.pago_listar'))
+
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 @chequear_permiso("pago_actualizar")

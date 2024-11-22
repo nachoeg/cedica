@@ -2,6 +2,7 @@ from marshmallow import fields
 from marshmallow import Schema
 
 class AnuncioSchema(Schema):
+    """ Esquema de los anuncios que devuelve /api/articles"""
     title = fields.String(attribute="titulo")  
     summary = fields.String(attribute="copete")  
     content = fields.String(attribute="contenido") 

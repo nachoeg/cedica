@@ -12,7 +12,9 @@ from src.core.contacto import (
     actualizar_estado,
     listar_historial)
 
+
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
+
 
 @chequear_permiso("consulta_listar")
 @sesion_iniciada_requerida
@@ -47,17 +49,20 @@ def listar(titulo, archivado):
         archivado=archivado
     )
 
+
 @bp.get("/")
 @chequear_permiso("consulta_listar")
 @sesion_iniciada_requerida
 def listar_recibidos():
     return listar(titulo="Consultas recibidas", archivado=False)
     
+
 @bp.get("/archivados")
 @chequear_permiso("consulta_listar")
 @sesion_iniciada_requerida
 def listar_archivados():
     return listar(titulo="Consultas archivadas", archivado=True)
+
 
 @bp.route("/<int:id>/", methods=['GET', 'POST'])
 @chequear_permiso("consulta_mostrar")
@@ -81,7 +86,6 @@ def ver(id: int):
     return render_template("pages/contactos/ver.html", form=form, consulta=consulta)      
 
 
-
 @bp.route('/<int:id>/eliminar', methods=['GET'])
 @chequear_permiso("consulta_eliminar")
 @sesion_iniciada_requerida
@@ -91,6 +95,7 @@ def eliminar(id):
     eliminar_consulta(id)
     flash("Consulta eliminado con exito.", 'success')
     return redirect(url_for('contacto.listar_recibidos'))
+
 
 @bp.route('/<int:id>/archivar', methods=['GET'])
 @chequear_permiso("consulta_actualizar")
@@ -102,6 +107,7 @@ def archivar(id):
     flash("Consulta archivada con exito.", 'success')
     return redirect(url_for('contacto.listar_recibidos'))
 
+
 @bp.route('/<int:id>/desarchivar', methods=['GET'])
 @chequear_permiso("consulta_actualizar")
 @sesion_iniciada_requerida
@@ -111,6 +117,7 @@ def desarchivar(id):
     desarchivar_consulta(id)
     flash("Consulta movida a recibidos con exito.", 'success')
     return redirect(url_for('contacto.listar_recibidos'))
+
 
 @bp.route('/<int:id>/listar_historial', methods=['GET'])
 @chequear_permiso("consulta_mostrar")
