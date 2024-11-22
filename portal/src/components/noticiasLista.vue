@@ -17,10 +17,10 @@
       <tbody>
         <tr v-for="noticia in noticias" :key="noticia.id">
           <td>{{ noticia.id }}</td>
-          <td>{{ noticia.titulo }}</td>
-          <td>{{ noticia.copete }}</td>
-          <td>{{ noticia.autor }}</td>
-          <td>{{ noticia.fecha_publicacion }}</td>
+          <td>{{ noticia.title }}</td>
+          <td>{{ noticia.summary }}</td>
+          <td>{{ noticia.author }}</td>
+          <td>{{ noticia.published_at }}</td>
         </tr>
       </tbody>
     </table>
@@ -41,6 +41,7 @@ const fetchNoticias = async () => {
 }
 
 onMounted(() => {
+
   if (!noticias.value.length) {
     fetchNoticias()
   }
