@@ -42,6 +42,13 @@ def cargar_permisos():
     permisos["permiso_ecuestre_actualizar"] = usuarios.crear_permiso(nombre="ecuestre_actualizar")
     permisos["permiso_ecuestre_mostrar"] = usuarios.crear_permiso(nombre="ecuestre_mostrar")
 
+    permisos["permiso_consulta_listar"] = usuarios.crear_permiso(nombre="consulta_listar")
+    permisos["permiso_consulta_crear"] = usuarios.crear_permiso(nombre="consulta_crear")
+    permisos["permiso_consulta_eliminar"] = usuarios.crear_permiso(nombre="consulta_eliminar")
+    permisos["permiso_consulta_actualizar"] = usuarios.crear_permiso(nombre="consulta_actualizar")
+    permisos["permiso_consulta_mostrar"] = usuarios.crear_permiso(nombre="consulta_mostrar")
+
+
     return permisos
 
 
@@ -81,6 +88,12 @@ def cargar_roles():
 
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_ecuestre_listar"])
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_ecuestre_mostrar"])
+
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_mostrar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_crear"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_actualizar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_eliminar"])
 
     # rol ECUESTRE
     usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_jya_listar"])

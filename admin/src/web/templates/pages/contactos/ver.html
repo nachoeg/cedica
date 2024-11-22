@@ -5,7 +5,8 @@
 
 {{ navbar_secundaria({
 'volver': url_for('contacto.listar'),
-'tabs': [
+'tabs': [{'nombre': 'Datos', 'url': url_for('contacto.ver', id=consulta.id)},
+        {'nombre': 'Historial de cambios', 'url': url_for('contacto.historial', id=consulta.id)}
 ]})}}
 
 <div class="contenedor">

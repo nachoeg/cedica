@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from src.core.forms.contacto_forms import HistorialForm
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
-from src.web.handlers.decoradores import sesion_iniciada_requerida
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 from src.core.contacto import (
     listar_consultas,
     listar_estados_consultas,
@@ -15,6 +15,7 @@ from src.core.contacto import (
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 
 @bp.get("/")
+@chequear_permiso("consulta_listar")
 @sesion_iniciada_requerida
 def listar():
     """Lista las consultas de forma paginada, una cantidad de 6 por pagina, permite aplicar filtros y ordenar de manera
@@ -49,6 +50,7 @@ def listar():
     )
 
 @bp.route("/<int:id>/", methods=['GET', 'POST'])
+@chequear_permiso("consulta_mostrar")
 @sesion_iniciada_requerida
 def ver(id: int):
     """
@@ -71,6 +73,8 @@ def ver(id: int):
 
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
+@chequear_permiso("consulta_eliminar")
+@sesion_iniciada_requerida
 def eliminar(id):
     """Permite eliminar una consulta del sistema, 
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
@@ -79,6 +83,8 @@ def eliminar(id):
     return redirect(url_for('contacto.listar'))
 
 @bp.route('/<int:id>/archivar', methods=['GET'])
+@chequear_permiso("consulta_actualizar")
+@sesion_iniciada_requerida
 def archivar(id):
     """Permite eliminar una consulta del sistema, 
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
@@ -87,6 +93,8 @@ def archivar(id):
     return redirect(url_for('contacto.listar'))
 
 @bp.route('/<int:id>/desarchivar', methods=['GET'])
+@chequear_permiso("consulta_actualizar")
+@sesion_iniciada_requerida
 def desarchivar(id):
     """Permite eliminar una consulta del sistema, 
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
@@ -95,6 +103,8 @@ def desarchivar(id):
     return redirect(url_for('contacto.listar'))
 
 @bp.route('/<int:id>/listar_historial', methods=['GET'])
+@chequear_permiso("consulta_mostrar")
+@sesion_iniciada_requerida
 def historial(id):
     """Permite listar el historial de estado
     por los que paso la consultas"""
@@ -113,4 +123,5 @@ def historial(id):
         cant_resultados=cant_resultados,
         cant_paginas=cant_paginas,
         pagina=pagina,
+        consulta=id
     )

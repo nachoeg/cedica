@@ -7,10 +7,16 @@
 
 {% block main %}
 
+{{ navbar_secundaria({
+    'volver': url_for('contacto.listar'),
+    'tabs': [{'nombre': 'Datos', 'url': url_for('contacto.ver', id=consulta)},
+            {'nombre': 'Historial de cambios', 'url': url_for('contacto.historial', id=consulta)}
+    ]})}}
+
 {% set configuracion = {
 'encabezados': [
     {'id': 'estado', 'nombre': 'Estado'},
-    {'id': 'comentario', 'nombre': 'Comentario'},
+    {'id': 'comentario', 'nombre': 'Comentario', 'truncar': True},
     {'id': 'usuario', 'nombre': 'Usuario'},
     {'id': 'fecha', 'nombre': 'Fecha'},
 ],
