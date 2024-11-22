@@ -35,7 +35,7 @@ if tiene_permiso(session,'jya_actualizar') else False,
 'crear': {
 'url': url_for('jinetes_y_amazonas.nuevo_familiar', jya_id=jya.id),
 'nombre': 'Crear familiar'
-}
+} if tiene_permiso(session, 'jya_crear') else False,
 }
 %}
 

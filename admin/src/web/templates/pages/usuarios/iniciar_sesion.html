@@ -27,10 +27,10 @@
   </div>
   <div class="flex flex-col gap-2">
     <button type="submit">Iniciar sesión</button>
-    <button type="button" class="btn btn-secondary-light w-full">
+    <a type="button" class="btn btn-secondary-light w-full" href="{{ url_for('autenticacion.iniciar_sesion_google') }}">
       {{google_icon()}}
       Iniciar sesión con Google
-    </button>
+    </a>
   </div>
 </form>
 

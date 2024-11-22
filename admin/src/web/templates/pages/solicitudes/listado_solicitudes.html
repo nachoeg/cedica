@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, ban_icon, circle_check_icon %}
+
+
+{% block title %}Solicitudes{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+  'titulo': 'Solicitudes de registro',
+  'encabezados': [
+    {'id': 'email', 'nombre': 'Email', 'ordenar': True},
+    {'id': 'aceptada', 'nombre': 'Aceptada', 'ordenar': True},
+    {'id': 'fecha_solicitud', 'nombre': 'Fecha de solicitud', 'ordenar': True},
+  ],
+  'acciones': [
+    {'nombre': 'Aceptar','funcion': 'aceptarSolicitud', 'icono': circle_check_icon, 'condiciones': [{'fila': 'aceptada', 'valor': False}]} if
+    tiene_permiso(session, 'solicitud_aceptar') else False,
+    {'nombre': 'Eliminar','funcion': 'eliminarSolicitud', 'icono': delete_icon, 'condiciones': []} if tiene_permiso(session,
+    'solicitud_eliminar') else False,
+  ],
+  'filtros': [
+    {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
+    {'id': 'activo', 'nombre': 'Activo', 'tipo': 'seleccion', 'valor': activo_filtro,
+      'opciones': ['Sí', 'No']
+    },
+  ],
+}%}
+
+{{ tabla(configuracion, solicitudes, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+
+{% include 'pages/usuarios/_acciones_usuario.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function aceptarSolicitud(id) {
+    if (confirm('¿Está seguro que desea aceptar esta solicitud?')) {
+      window.location.href = `/solicitudes/${id}/aceptar`;
+    }
+  }
+
+  function eliminarSolicitud(id) {
+    if (confirm('¿Está seguro que desea eliminar esta solicitud?')) {
+      window.location.href = `/solicitudes/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

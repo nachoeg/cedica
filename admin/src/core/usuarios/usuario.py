@@ -11,13 +11,15 @@ class Usuario(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    contraseña = db.Column(db.String(100), nullable=False)
+    # contraseña no tiene nullable=False por el login con google
+    contraseña = db.Column(db.String(100))
     alias = db.Column(db.String(100), nullable=False, unique=True)
     activo = db.Column(db.Boolean, nullable=False, default=True)
     admin_sistema = db.Column(db.Boolean, default=False, nullable=False)
     creacion = db.Column(db.DateTime, default=datetime.now)
     ultima_actualizacion = db.Column(db.DateTime, default=datetime.now,
                                      onupdate=datetime.now)
+    sin_contraseña = db.Column(db.Boolean, default=False, nullable=False)
 
     roles = db.relationship('Rol', secondary='roles_usuario', lazy=True,
                             backref=db.backref('usuarios', lazy=False))

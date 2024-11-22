@@ -16,7 +16,8 @@
 'acciones': [
 {'nombre': 'Ver', 'funcion': 'verAnuncio', 'icono': open_icon},
 {'nombre': 'Editar', 'funcion': 'editarAnuncio', 'icono': edit_icon},
-{'nombre': 'Borrar','funcion': 'borrarAnuncio', 'icono': delete_icon}
+{'nombre': 'Borrar','funcion': 'borrarAnuncio', 'icono': delete_icon} if tiene_permiso(session,
+'anuncio_eliminar') else False,
 ],
 'filtros': [
 {'id': 'titulo', 'nombre': 'Titulo', 'tipo': 'texto', 'valor': titulo_filtro },

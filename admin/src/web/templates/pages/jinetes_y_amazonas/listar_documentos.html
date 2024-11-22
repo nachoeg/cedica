@@ -42,11 +42,11 @@ if tiene_permiso(session, 'jya_eliminar') else False,
 'subir': {
 'url': url_for('jinetes_y_amazonas.subir_archivo', id=jya.id),
 'nombre': 'Subir'
-},
+} if tiene_permiso(session, 'jya_crear') else False,
 'enlace': {
 'url': url_for('jinetes_y_amazonas.subir_enlace', id=jya.id),
 'nombre': 'Enlace'
-},
+} if tiene_permiso(session, 'jya_crear') else False,
 }
 %}
 
