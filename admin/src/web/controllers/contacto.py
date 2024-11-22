@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
 from src.core.forms.contacto_forms import HistorialForm
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
@@ -21,10 +21,11 @@ bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 def listar(titulo, archivado):
     """Lista las consultas de forma paginada, una cantidad de 6 por pagina, permite aplicar filtros y ordenar de manera
     ascendente y descendente por diversos campos"""
+    cant_filas = current_app.config.get("TABLA_CANT_FILAS")
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "fecha")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     estado_filtro = request.args.get("estado", "")
 
     contactos, cant_resultados = listar_consultas(estado_filtro, ordenar_por, orden, pagina, cant_por_pagina, archivado) 
@@ -125,8 +126,9 @@ def desarchivar(id):
 def historial(id):
     """Permite listar el historial de estado
     por los que paso la consultas"""
+    cant_filas = current_app.config.get("TABLA_CANT_FILAS")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
 
     estados, cant_resultados = listar_historial(id, pagina, cant_por_pagina)
 
