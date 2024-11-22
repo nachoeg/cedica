@@ -5,24 +5,12 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
 
 <div id="tabla"
   class="flex flex-col bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 divide-y divide-gray-200 dark:divide-neutral-700 overflow-hidden">
-  <div class="flex items-center space-x-2 p-2 md:px-6 md:py-4">
-    <!-- Boton subir -->
-    {% if configuracion.subir %}
-    <a href="{{ configuracion.subir.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
-      {{ upload_icon('size-4') }} {{ configuracion.subir.nombre }}
-    </a>
-    {% endif %}
-    <!-- Boton enlace -->
-    {% if configuracion.enlace %}
-    <a href="{{ configuracion.enlace.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
-      {{ plus_icon('size-4') }} {{ configuracion.enlace.nombre }}
-    </a>
-    {% endif %}
-    <!-- Boton crear -->
-    {% if configuracion.crear %}
-    <a href="{{ configuracion.crear.url }}" class="btn btn-primary py-1.5 px-3 gap-1">
-      {{ plus_icon('size-4') }} {{ configuracion.crear.nombre }}
-    </a>
+  <div class="flex sm:items-center gap-2 py-3 px-4 md:px-6 md:py-4 flex-col sm:flex-row ">
+    <!-- Titulo -->
+    {% if configuracion.titulo %}
+    <h2 class="font-semibold text-gray-800 dark:text-neutral-200">
+      {{ configuracion.titulo }}
+    </h2>
     {% endif %}
     <!-- Busqueda -->
     {% if configuracion.busqueda %}
@@ -38,8 +26,8 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
       </div>
     </div>
     {% endif %}
-    <!-- Filtros -->
-    <div class="flex-1 flex items-center justify-end space-x-2">
+    <div class="flex-1 flex items-center sm:justify-end space-x-2">
+      <!-- Filtros -->
       {% if configuracion.filtros %}
       <div class="hs-dropdown [--auto-close:inside] [--placement:bottom-right] relative sm:inline-flex z-20">
         <button id="hs-dropdown-filtro" type="button"
@@ -90,6 +78,24 @@ macro tabla(configuracion, resultados, cant_resultados, cant_paginas, pagina, or
           </div>
         </div>
       </div>
+      {% endif %}
+      <!-- Boton subir -->
+      {% if configuracion.subir %}
+      <a href="{{ configuracion.subir.url }}" class="btn btn-primary py-1.5 px-3 gap-1 text-nowrap">
+        {{ upload_icon('size-4') }} {{ configuracion.subir.nombre }}
+      </a>
+      {% endif %}
+      <!-- Boton enlace -->
+      {% if configuracion.enlace %}
+      <a href="{{ configuracion.enlace.url }}" class="btn btn-primary py-1.5 px-3 gap-1 text-nowrap">
+        {{ plus_icon('size-4') }} {{ configuracion.enlace.nombre }}
+      </a>
+      {% endif %}
+      <!-- Boton crear -->
+      {% if configuracion.crear %}
+      <a href="{{ configuracion.crear.url }}" class="btn btn-primary py-1.5 px-3 gap-1 text-nowrap">
+        {{ plus_icon('size-4') }} {{ configuracion.crear.nombre }}
+      </a>
       {% endif %}
     </div>
   </div>
