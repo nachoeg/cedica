@@ -4,7 +4,7 @@
     <p v-if="loading">Cargando...</p>
     <p v-if="error">{{ error }}</p>
 
-    <table v-if="!loading && issues.length">
+    <table v-if="!loading && noticias.length">
       <thead>
       <tr>
         <th>#</th>
@@ -41,6 +41,7 @@ const fetchNoticias = async() => {
 };
 
 onMounted(() => {
+  console.log("HOla");
   if (!noticias.value.length) {
     fetchNoticias();
   }

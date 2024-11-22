@@ -6,8 +6,8 @@ export const useNoticiasStore = defineStore('noticias', {
     loading: false,
   }),
   actions: {
-    async fetchNoticas() {
-      //obtiene las noticias del servidor
+    async fetchNoticias() {
+      //obtiene las noticias
       try {
         this.loading = true
         this.error = null
