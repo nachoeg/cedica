@@ -15,68 +15,68 @@ avatar_placeholder_icon, show_password_icon, lock_icon %}
     <div class="md:order-3 flex items-center gap-x-2 ">
 
       {% if not esta_autenticado(session) %}
-        <a class="btn btn-outline size-9 p-0 xs:size-fit xs:py-2 xs:px-3"
-          href="{{ url_for('autenticacion.iniciar_sesion') }}">
-          {{login_icon('size-4')}}
-          <span class="hidden xs:inline">Iniciar sesión</span>
-        </a>
+      <a class="btn btn-outline size-9 p-0 xs:size-fit xs:py-2 xs:px-3"
+        href="{{ url_for('autenticacion.iniciar_sesion') }}">
+        {{login_icon('size-4')}}
+        <span class="hidden xs:inline">Iniciar sesión</span>
+      </a>
 
       {% else %}
-        <!-- Hamburger button -->
-        <button type="button" class="md:hidden hs-collapse-toggle btn btn-outline relative size-9"
-          id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
-          aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
-          {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
-          {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
-          <span class="sr-only">Toggle</span>
-        </button>
-  
-        <span class="hidden md:block">
-          {% include 'components/boton_tema.html' %}
-        </span>
-        <div class="hidden md:block border-s h-6 mx-1.5 border-gray-200 dark:border-neutral-700"> </div>
+      <!-- Hamburger button -->
+      <button type="button" class="md:hidden hs-collapse-toggle btn btn-outline relative size-9"
+        id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
+        aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
+        {{hamburger_icon('hs-collapse-open:hidden shrink-0 size-5')}}
+        {{close_icon('hs-collapse-open:block hidden shrink-0 size-5')}}
+        <span class="sr-only">Toggle</span>
+      </button>
 
-          <!-- Opciones de usuario -->
-          <div class="hs-dropdown [--offset:16] relative inline-flex">
-            <button id="hs-dropdown-with-header" type="button"
-              class="hs-dropdown-toggle inline-block size-9 bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden"
-              aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-              {{avatar_placeholder_icon('')}}
-            </button>
-            <div
-              class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white border border-gray-200 shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800 dark:divide-neutral-800"
-              role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-header">
-              <div class="py-3 px-4 border-b border-gray-200 dark:border-neutral-800">
-                {% if session.get('es_admin') %}
-                  <p class="text-sm text-gray-500 dark:text-neutral-400">Admin sistema</p>
-                {% else %}
-                  {% for rol in session.get('roles') %}
-                  <p class="text-sm text-gray-500 dark:text-neutral-400">{{ rol }}</p>
-                  {% endfor %}
-                {% endif %}
-                <p class="text-sm font-medium text-gray-800 dark:text-neutral-300">{{ session.get('alias') }}</p>
-              </div>
-              <div class="p-1 space-y-0.5">
-                {% set userLinksClases = 'flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800
-                hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800
-                dark:hover:text-neutral-300 dark:focus:bg-neutral-700' %}
-                <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.ver_perfil') }}">
-                  {{user_icon('size-4')}}
-                  Perfil
-                </a>
-                <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cambiar_contraseña') }}">
-                  {{lock_icon('size-4')}}
-                  Cambiar contraseña
-                </a>
-                <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cerrar_sesion') }}">
-                  {{logout_icon('size-4')}}
-                  Cerrar sesión
-                </a>
-              </div>
-            </div>
+      <span class="hidden md:block">
+        {% include 'components/boton_tema.html' %}
+      </span>
+      <div class="hidden md:block border-s h-6 mx-1.5 border-gray-200 dark:border-neutral-700"> </div>
+
+      <!-- Opciones de usuario -->
+      <div class="hs-dropdown [--offset:16] relative inline-flex">
+        <button id="hs-dropdown-with-header" type="button"
+          class="hs-dropdown-toggle inline-block size-9 bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+          {{avatar_placeholder_icon('')}}
+        </button>
+        <div
+          class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white border border-gray-200 shadow-2xl rounded-xl mt-2 dark:bg-neutral-900 dark:border-neutral-800 dark:divide-neutral-800"
+          role="menu" aria-orientation="vertical" aria-labelledby="hs-dropdown-with-header">
+          <div class="py-3 px-4 border-b border-gray-200 dark:border-neutral-800">
+            {% if session.get('es_admin') %}
+            <p class="text-sm text-gray-500 dark:text-neutral-400">Admin sistema</p>
+            {% else %}
+            {% for rol in session.get('roles') %}
+            <p class="text-sm text-gray-500 dark:text-neutral-400">{{ rol }}</p>
+            {% endfor %}
+            {% endif %}
+            <p class="text-sm font-medium text-gray-800 dark:text-neutral-300">{{ session.get('alias') }}</p>
+          </div>
+          <div class="p-1 space-y-0.5">
+            {% set userLinksClases = 'flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800
+            hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800
+            dark:hover:text-neutral-300 dark:focus:bg-neutral-700' %}
+            <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.ver_perfil') }}">
+              {{user_icon('size-4')}}
+              Perfil
+            </a>
+            <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cambiar_contraseña') }}">
+              {{lock_icon('size-4')}}
+              Cambiar contraseña
+            </a>
+            <a class="{{userLinksClases}}" href="{{ url_for('autenticacion.cerrar_sesion') }}">
+              {{logout_icon('size-4')}}
+              Cerrar sesión
+            </a>
           </div>
         </div>
-      {% endif %}
+      </div>
+    </div>
+    {% endif %}
 
 
     <!-- Menu de navegación -->
@@ -85,20 +85,24 @@ avatar_placeholder_icon, show_password_icon, lock_icon %}
       aria-labelledby="hs-navbar-alignment-collapse">
       {% if esta_autenticado(session) %}
       <div class="flex flex-col me-0 lg:me-16 gap-1 my-2 md:flex-row md:items-center md:my-0">
-      {% set enlaces = [
-          {'nombre': 'J&A', 'url': url_for('jinetes_y_amazonas.listar'), 'permiso': 'jya_listar'},
-          {'nombre': 'Ecuestre', 'url': url_for('ecuestre.listar'), 'permiso': 'ecuestre_listar'},
-          {'nombre': 'Equipo', 'url': url_for('miembro.miembro_listar'), 'permiso': 'miembro_listar'},
-          {'nombre': 'Cobros', 'url': url_for('cobros.listar'), 'permiso': 'cobro_listar'},
-          {'nombre': 'Pagos', 'url': url_for('pago.pago_listar'), 'permiso': 'pago_listar'},
-          {'nombre': 'Usuarios', 'url': url_for('usuarios.listado_usuarios'), 'permiso': 'usuario_listar'}
-      ] %}
-      {% for enlace in enlaces %}
-          {% if tiene_permiso(session, enlace.permiso) %}
-              <a class="btn px-2 py-1.5 {% if request.path.startswith(enlace.url) %} btn-secondary {% else %} btn-ghost {% endif %}"
-                 href="{{ enlace.url }}">{{ enlace.nombre }}</a>
-          {% endif %}
-      {% endfor %}
+        {% set enlaces = [
+        {'nombre': 'J&A', 'url': url_for('jinetes_y_amazonas.listar'), 'permiso': 'jya_listar'},
+        {'nombre': 'Ecuestre', 'url': url_for('ecuestre.listar'), 'permiso': 'ecuestre_listar'},
+        {'nombre': 'Equipo', 'url': url_for('miembro.miembro_listar'), 'permiso': 'miembro_listar'},
+        {'nombre': 'Cobros', 'url': url_for('cobros.listar'), 'permiso': 'cobro_listar'},
+        {'nombre': 'Pagos', 'url': url_for('pago.pago_listar'), 'permiso': 'pago_listar'},
+        {'nombre': 'Usuarios', 'url': url_for('usuarios.listado_usuarios'), 'permiso': 'usuario_listar'},
+        {'nombre': 'Solicitudes', 'url': url_for('solicitudes.listado_solicitudes'), 'permiso': 'solicitud_listar'},
+        {'nombre': 'Consultas', 'url': url_for('contacto.listar'), 'permiso': 'consulta_listar'},
+        {'nombre': 'Anuncios', 'url': url_for('anuncios.listar'), 'permiso': 'anuncio_listar'},
+        {'nombre': 'Estadísticas', 'url': url_for('estadisticas.index'), 'permiso': 'estadistica_listar'},
+        ] %}
+        {% for enlace in enlaces %}
+        {% if tiene_permiso(session, enlace.permiso) %}
+        <a class="btn px-2 py-1.5 {% if request.path.startswith(enlace.url) %} btn-secondary {% else %} btn-ghost {% endif %}"
+          href="{{ enlace.url }}">{{ enlace.nombre }}</a>
+        {% endif %}
+        {% endfor %}
       </div>
       {% endif %}
       <div class="md:hidden">

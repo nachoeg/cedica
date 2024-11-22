@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon %}
+
+{% block title %}Anuncios{% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'titulo': 'Anuncios',
+'encabezados': [
+{'id': 'titulo', 'nombre': 'Titulo', 'truncar': True, 'ordenar': True,},
+{'id': 'estado', 'nombre': 'Estado'},
+{'id': 'autor', 'nombre': 'Autor'},
+],
+'acciones': [
+{'nombre': 'Ver', 'funcion': 'verAnuncio', 'icono': open_icon},
+{'nombre': 'Editar', 'funcion': 'editarAnuncio', 'icono': edit_icon},
+{'nombre': 'Borrar','funcion': 'borrarAnuncio', 'icono': delete_icon} if tiene_permiso(session,
+'anuncio_eliminar') else False,
+],
+'filtros': [
+{'id': 'titulo', 'nombre': 'Titulo', 'tipo': 'texto', 'valor': titulo_filtro },
+{'id': 'estado', 'nombre': 'Estado', 'tipo': 'seleccion', 'opciones': estados,'valor': estado_filtro },
+{'id': 'despues_de', 'nombre': 'Publicado después de', 'tipo': 'fecha', 'valor': despues_de_filtro },
+{'id': 'antes_de', 'nombre': 'Publicado antes de', 'tipo': 'fecha', 'valor': antes_de_filtro },
+],
+'crear': {
+'url': url_for('anuncios.nuevo_anuncio'),
+'nombre': 'Crear anuncio'
+}
+}%}
+
+{{ tabla(configuracion, anuncios, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verAnuncio(id) {
+    window.location.href = `/anuncios/${id}`;
+  }
+
+  function editarAnuncio(id) {
+    window.location.href = `/anuncios/${id}/editar`;
+  }
+
+  function borrarAnuncio(id) {
+    if (confirm('¿Está seguro que desea borrar este anuncio?')) {
+      window.location.href = `/anuncios/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

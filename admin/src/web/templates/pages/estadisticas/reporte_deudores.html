@@ -1,0 +1,70 @@
+{% extends "layouts/estadisticas.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, files_icon, debt_icon %}
+
+{% block title %}Reporte de jinetes y amazonas con deudas{% endblock %}
+
+{% block main %}
+{{super()}}
+{% set configuracion = {
+'titulo': 'Jinetes y amazonas con deudas',
+'encabezados': [
+{'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
+{'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
+{'id': 'dni', 'nombre': 'DNI'},
+],
+'acciones': [
+{'nombre': 'Quitar deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon}
+if tiene_permiso(session,'jya_actualizar') else False,
+{'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
+{'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
+{'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon}
+if tiene_permiso(session,'jya_actualizar') else False,
+{'nombre': 'Borrar','funcion': 'borrarJYA', 'icono': delete_icon}
+if tiene_permiso(session, 'jya_eliminar') else False,
+],
+}
+%}
+
+{{ tabla(configuracion, jinetes, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function verJYA(id) {
+    window.location.href = `/jinetes_y_amazonas/${id}`;
+  }
+
+  function editarJYA(id) {
+    window.location.href = `/jinetes_y_amazonas/${id}/editar`;
+  }
+
+  function borrarJYA(id) {
+    if (confirm('¿Está seguro que desea borrar este cobro?')) {
+      window.location.href = `/jinetes_y_amazonas/${id}/eliminar`;
+    }
+  }
+
+  function verDocumentos(id) {
+    window.location.href = `/jinetes_y_amazonas/${id}/archivos`;
+  }
+
+  function cambiar_tiene_deuda(id) {
+    if (confirm('¿Está seguro de que desea cambiar el estado de la deuda de este jinete/amazona?')) {
+      const actual_url = new URL(window.location.href);
+      const searchParams = actual_url.searchParams;
+      const nueva_url = `/jinetes_y_amazonas/deuda/${id}`;
+
+      actual_url.pathname = nueva_url;
+      actual_url.search = searchParams.toString();
+
+      window.location.href = actual_url.toString();
+    }
+  }
+
+</script>
+
+{% endblock %}

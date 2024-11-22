@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon, archive_restore_icon %}
+
+{% block title %} Listado de consultas {% endblock %}
+
+{% block main %}
+
+{{ navbar_secundaria({
+    'tabs':[
+    {'nombre': 'Recibidos', 'url': url_for('contacto.listar', archivado=False)},
+    {'nombre': 'Archivados', 'url': url_for('contacto.listar', archivado=True)}
+    ]})}}
+
+{% set configuracion = {
+'titulo': 'Consultas',
+'encabezados': [
+    {'id': 'titulo', 'nombre': 'Titulo'},
+    {'id': 'fecha', 'nombre': 'Fecha', 'ordenar': True},
+    {'id': 'email', 'nombre': 'Email'},
+    {'id': 'mensaje', 'nombre': 'Mensaje', 'truncar': True},
+    {'id': 'estado', 'nombre': 'Estado'},
+],
+'acciones': [
+    {'nombre': 'Archivar', 'funcion': 'archivarConsulta', 'condiciones': [{'fila': 'archivado', 'valor': False}], 'icono': archive_icon},
+    {'nombre': 'Mover a recibidos', 'funcion': 'desarchivarConsulta', 'condiciones': [{'fila': 'archivado', 'valor': True}], 'icono': archive_restore_icon},
+    {'nombre': 'Ver', 'funcion': 'verContacto', 'icono': open_icon},
+    {'nombre': 'Borrar', 'funcion': 'borrarContacto', 'icono': delete_icon},
+],
+'filtros': [
+    {'id': 'estado', 'nombre': 'Estado', 'tipo': 'seleccion', 'opciones': tipos_estados, 'valor': 'estado'},
+],
+'crear': {
+}
+} %}
+
+{{ tabla(configuracion, contactos, cant_resultados, cant_paginas, pagina, orden, ordenar_por) }}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function verContacto(id) {
+        window.location.href = `/contacto/${id}`;
+    }
+
+    function borrarContacto(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta consulta?')) {
+            window.location.href = `/contacto/${id}/eliminar`;
+        }
+    }
+
+    function archivarConsulta(id) {
+        if (confirm('¿Estás seguro de que deseas archivar esta consulta?')) {
+            window.location.href = `/contacto/${id}/archivar`;
+        }
+    }
+
+    function desarchivarConsulta(id) {
+        if (confirm('¿Estás seguro de que deseas mover a recibidos esta consulta?')) {
+            window.location.href = `/contacto/${id}/desarchivar`;
+        }
+    }
+</script>
+{% endblock %}
