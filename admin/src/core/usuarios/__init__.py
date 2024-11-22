@@ -2,7 +2,64 @@ from datetime import datetime
 
 from src.core.bcrypt import bcrypt
 from src.core.database import db
-from core.usuarios.usuario import Permiso, Rol, Usuario
+from src.core.usuarios.usuario import Permiso, Rol, Usuario
+from src.core.usuarios.solicitud import SolicitudUsuario
+
+
+# SOLICITUDES
+def listar_solicitudes(orden, ordenar_por, pagina, cant_por_pagina,
+                       email_filtro, aceptada_filtro):
+    """Devuelve una tupla que contiene un listado paginado
+    de solicitudes, filtrado y ordenado, y la cantidad total de
+    solicitudes que genera la consulta.
+    """
+    email_filtro = SolicitudUsuario.email.ilike(f"%{email_filtro}%")
+    aceptada_filtro = (SolicitudUsuario.aceptada == aceptada_filtro
+                       if aceptada_filtro != '' else True)
+
+    solicitudes = db.paginate(db.select(SolicitudUsuario).where(
+        email_filtro, aceptada_filtro).order_by(
+            getattr(getattr(SolicitudUsuario, ordenar_por), orden)()),
+                              page=pagina,
+                              per_page=cant_por_pagina,
+                              error_out=False)
+    total = solicitudes.total
+    # usuarios = [usuario.to_dict() for usuario in usuarios.items]
+
+    return (total, solicitudes)
+
+
+def crear_solicitud(email, fecha_solicitud=datetime.now()):
+    """Crea un objeto de tipo SolicitudUsuario con los datos que recibe por
+    parámetro y lo devuelve.
+    """
+    email = email.lower()
+    solicitud = SolicitudUsuario(email=email, fecha_solicitud=fecha_solicitud)
+    db.session.add(solicitud)
+    db.session.commit()
+
+    return solicitud
+
+
+def solicitud_por_email(email):
+    """Devuelve la solicitud correspondiente al email pasado por
+    parámetro. Si no lo encuentra devuelve None.
+    """
+    email = email.lower()
+    solicitud = db.session.execute(
+        db.select(SolicitudUsuario).where(SolicitudUsuario.email == email)
+        ).scalar_one_or_none()
+
+    return solicitud
+
+
+def solicitud_por_id(id):
+    """Devuelve la solicitud correspondiente al id pasado por
+    parámetro. Si no la encuentra levanta un error 404.
+    """
+    solicitud = db.get_or_404(SolicitudUsuario, id)
+
+    return solicitud
 
 
 # USUARIOS
@@ -35,14 +92,16 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     return (total, usuarios)
 
 
-def crear_usuario(email, contraseña, alias, admin_sistema=False,
-                  id_roles=[], creacion=datetime.now()):
+def crear_usuario(email, alias, contraseña=None, admin_sistema=False,
+                  id_roles=[], creacion=datetime.now(), sin_contraseña=False):
     """Crea un objeto de tipo Usuario con los datos que recibe por
     parámetro y lo devuelve.
     """
-    contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
+    if not sin_contraseña:
+        contraseña = bcrypt.generate_password_hash(contraseña
+                                                   ).decode('utf-8')
     email = email.lower()
-    usuario = Usuario(email=email, contraseña=contraseña_hash,
+    usuario = Usuario(email=email, contraseña=contraseña,
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
     if not admin_sistema:

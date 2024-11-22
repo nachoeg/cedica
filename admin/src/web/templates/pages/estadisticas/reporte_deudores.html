@@ -1,22 +1,20 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/estadisticas.html" %}
 {% from "components/tabla.html" import tabla %}
 {% from "components/iconos.html" import open_icon, edit_icon, delete_icon, files_icon, debt_icon %}
 
-{% block title %}Jinetes y Amazonas{% endblock %}
+{% block title %}Reporte de jinetes y amazonas con deudas{% endblock %}
 
 {% block main %}
-
+{{super()}}
 {% set configuracion = {
-'titulo': 'Jinetes y Amazonas',
+'titulo': 'Jinetes y amazonas con deudas',
 'encabezados': [
 {'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
 {'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
 {'id': 'dni', 'nombre': 'DNI'},
-{'id': 'tiene_deuda', 'nombre': 'Deuda'},
-{'id': 'profesionales_a_cargo', 'nombre': 'Profesionales a cargo'}
 ],
 'acciones': [
-{'nombre': 'Tiene deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon}
+{'nombre': 'Quitar deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon}
 if tiene_permiso(session,'jya_actualizar') else False,
 {'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
 {'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
@@ -25,16 +23,6 @@ if tiene_permiso(session,'jya_actualizar') else False,
 {'nombre': 'Borrar','funcion': 'borrarJYA', 'icono': delete_icon}
 if tiene_permiso(session, 'jya_eliminar') else False,
 ],
-'filtros': [
-{'id': 'nombre', 'nombre': 'Nombre', 'tipo': 'texto', 'valor': nombre_filtro },
-{'id': 'apellido', 'nombre': 'Apellido', 'tipo': 'texto', 'valor': apellido_filtro },
-{'id': 'dni', 'nombre': 'DNI', 'tipo': 'texto', 'valor': dni_filtro },
-{'id': 'profesionales_a_cargo', 'nombre': 'Profesional', 'tipo': 'texto', 'valor': profesional_filtro },
-],
-'crear': {
-'url': url_for('jinetes_y_amazonas.nuevo_j_y_a'),
-'nombre': 'Crear JyA'
-}
 }
 %}
 
@@ -45,7 +33,7 @@ if tiene_permiso(session, 'jya_eliminar') else False,
 {% block scripts %}
 
 <script>
-  
+
   function verJYA(id) {
     window.location.href = `/jinetes_y_amazonas/${id}`;
   }
@@ -74,7 +62,7 @@ if tiene_permiso(session, 'jya_eliminar') else False,
       actual_url.search = searchParams.toString();
 
       window.location.href = actual_url.toString();
-      }
+    }
   }
 
 </script>

@@ -43,7 +43,7 @@ class Anuncio(db.Model):
         """
         return {
             "titulo": self.titulo,
-            "copete": self.copete[:12] + "...",
+            "copete": self.copete,
             "autor": self.autor.alias,
             "creacion": fechahora(self.fecha_creacion),
             "publicacion": fechahora(self.fecha_publicacion)

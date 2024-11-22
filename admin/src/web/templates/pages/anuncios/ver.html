@@ -14,20 +14,23 @@
   <div class="contenedor-header">
     <h1>{{ anuncio.titulo }}</h1>
   </div>
-  <div class="contenedor-body">
-    <h2>{{ anuncio.copete }}</h2>
+  <div class="contenedor-body text-sm">
+    <h2 class="font-medium text-gray-700 dark:text-neutral-300">{{ anuncio.copete }}</h2>
     <p>{{ anuncio.contenido }}</p>
   </div>
-  <div class="contenedor-footer">
+  <div class="contenedor-body text-sm gap-1 font-medium text-gray-700 dark:text-neutral-300 ">
     <p>Fecha de creación: {{ fechahora(anuncio.fecha_creacion) }}</p>
-    <p>Fecha de publicación: {{ fechahora(anuncio.fecha_publicacion) if anuncio.fecha_publicacion else "-" }}</p>
+    <p>Fecha de publicación: {{ fechahora(anuncio.fecha_publicacion) if anuncio.fecha_publicacion else "-" }}
+    </p>
     <p>Fecha de última actualización: {{ fechahora(anuncio.fecha_ultima_actualizacion) }}</p>
-      <a class="btn btn-secondary w-full" href="{{ url_for('anuncios.editar_anuncio', id=anuncio.id) }}">Editar</a>
-      <button type="submit" class="btn btn-danger w-full" onclick="
+  </div>
+  <div class="contenedor-footer">
+    <a class="btn btn-secondary w-full" href="{{ url_for('anuncios.editar_anuncio', id=anuncio.id) }}">Editar</a>
+    <button type="submit" class="btn btn-danger w-full" onclick="
         if (confirm('¿Estás seguro de que deseas eliminar este anuncio?')) {
           window.location.href = `/anuncios/{{anuncio.id}}/eliminar`;
         }">Eliminar
-      </button>
+    </button>
   </div>
 </div>
 

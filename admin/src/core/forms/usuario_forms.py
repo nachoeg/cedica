@@ -3,10 +3,10 @@ from wtforms import (BooleanField, EmailField, PasswordField,
                      SelectMultipleField, StringField)
 from wtforms.validators import (Email, InputRequired, Length)
 
-from core.forms.validaciones import (Unico, sin_espacios,
-                                     valor_en_opciones)
-from core.usuarios import get_roles
-from core.usuarios.usuario import Usuario
+from src.core.forms.validaciones import (Unico, sin_espacios,
+                                         valor_en_opciones)
+from src.core.usuarios import get_roles
+from src.core.usuarios.usuario import Usuario
 
 
 class UsuarioSinContraseñaForm(FlaskForm):
