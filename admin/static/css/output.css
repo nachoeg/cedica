@@ -2082,50 +2082,6 @@ html {
   max-width: 20rem;
 }
 
-.max-w-40 {
-  max-width: 10rem;
-}
-
-.max-w-72 {
-  max-width: 18rem;
-}
-
-.max-w-96 {
-  max-width: 24rem;
-}
-
-.max-w-10 {
-  max-width: 2.5rem;
-}
-
-.max-w-32 {
-  max-width: 8rem;
-}
-
-.max-w-80 {
-  max-width: 20rem;
-}
-
-.max-w-9 {
-  max-width: 2.25rem;
-}
-
-.max-w-md {
-  max-width: 28rem;
-}
-
-.max-w-lg {
-  max-width: 32rem;
-}
-
-.max-w-xl {
-  max-width: 36rem;
-}
-
-.max-w-3xl {
-  max-width: 48rem;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2225,28 +2181,16 @@ html {
   gap: 0.25rem;
 }
 
+.gap-10 {
+  gap: 2.5rem;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
 
 .gap-3 {
   gap: 0.75rem;
-}
-
-.gap-10 {
-  gap: 2.5rem;
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
-.gap-8 {
-  gap: 2rem;
-}
-
-.gap-0 {
-  gap: 0px;
 }
 
 .gap-x-1 {
@@ -2606,10 +2550,6 @@ html {
   text-align: end;
 }
 
-.align-baseline {
-  vertical-align: baseline;
-}
-
 .align-middle {
   vertical-align: middle;
 }
@@ -2669,12 +2609,12 @@ html {
   font-weight: 500;
 }
 
-.font-semibold {
-  font-weight: 600;
-}
-
 .font-normal {
   font-weight: 400;
+}
+
+.font-semibold {
+  font-weight: 600;
 }
 
 .uppercase {
@@ -3406,10 +3346,6 @@ html {
 
   .md\:justify-start {
     justify-content: flex-start;
-  }
-
-  .md\:p-5 {
-    padding: 1.25rem;
   }
 
   .md\:px-4 {
