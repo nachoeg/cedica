@@ -4,6 +4,6 @@ import noticiasLista from '../components/noticiasLista.vue'
 
 <template>
   <main>
-    <noticiasLista/>
+    <noticiasLista />
   </main>
 </template>
