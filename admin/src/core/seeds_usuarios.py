@@ -48,6 +48,18 @@ def cargar_permisos():
     permisos["permiso_consulta_actualizar"] = usuarios.crear_permiso(nombre="consulta_actualizar")
     permisos["permiso_consulta_mostrar"] = usuarios.crear_permiso(nombre="consulta_mostrar")
 
+    permisos["permiso_anuncio_listar"] = usuarios.crear_permiso(nombre="anuncio_listar")
+    permisos["permiso_anuncio_crear"] = usuarios.crear_permiso(nombre="anuncio_crear")
+    permisos["permiso_anuncio_eliminar"] = usuarios.crear_permiso(nombre="anuncio_eliminar")
+    permisos["permiso_anuncio_actualizar"] = usuarios.crear_permiso(nombre="anuncio_actualizar")
+    permisos["permiso_anuncio_mostrar"] = usuarios.crear_permiso(nombre="anuncio_mostrar")
+
+    permisos["permiso_estadistica_listar"] = usuarios.crear_permiso(nombre="estadistica_listar")
+    permisos["permiso_estadistica_mostrar"] = usuarios.crear_permiso(nombre="estadistica_mostrar")
+
+    permisos["permiso_solicitud_listar"] = usuarios.crear_permiso(nombre="solicitud_listar")
+    permisos["permiso_solicitud_aceptar"] = usuarios.crear_permiso(nombre="solicitud_aceptar")
+    permisos["permiso_solicitud_eliminar"] = usuarios.crear_permiso(nombre="solicitud_eliminar")
 
     return permisos
 
@@ -58,6 +70,7 @@ def cargar_roles():
     roles["rol_ecuestre"] = usuarios.crear_rol(nombre="Ecuestre")
     roles["rol_voluntariado"] = usuarios.crear_rol(nombre="Voluntariado")
     roles["rol_administracion"] = usuarios.crear_rol(nombre="Administración")
+    roles["rol_edicion"] = usuarios.crear_rol(nombre="Edición")
 
     permisos = cargar_permisos()
 
@@ -95,6 +108,18 @@ def cargar_roles():
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_actualizar"])
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_eliminar"])
 
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_mostrar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_crear"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_actualizar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_eliminar"])
+
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_estadistica_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_estadistica_mostrar"])
+
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_solicitud_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_solicitud_aceptar"])
+
     # rol ECUESTRE
     usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_jya_listar"])
     usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_jya_mostrar"])
@@ -118,6 +143,15 @@ def cargar_roles():
     usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_ecuestre_listar"])
     usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_ecuestre_mostrar"])
 
+    usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_estadistica_listar"])
+    usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_estadistica_mostrar"])
+
+    # rol EDICIÓN
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_listar"])
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_mostrar"])
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_crear"])
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_actualizar"])
+
     return roles
 
 
@@ -131,6 +165,7 @@ def cargar_usuarios():
     ecuestre = usuarios.crear_usuario(email="ecuestre@mail.com", contraseña="ecuestre", alias="Pablo", creacion=datetime(2024, 10, 23))
     tecnica = usuarios.crear_usuario(email="tecnica@mail.com", contraseña="tecnica", alias="Maria", creacion=datetime(2021, 5, 29, 12, 37))
     voluntariado = usuarios.crear_usuario(email="voluntariado@mail.com", contraseña="voluntariado", alias="Néstor", creacion=datetime(2023, 5, 29))
+    edicion = usuarios.crear_usuario(email="edicion@mail.com", contraseña="edicion", alias="Clara", creacion=datetime(2022, 11, 22))
     sin_roles = usuarios.crear_usuario(email="sinroles@mail.com", contraseña="sin_roles", alias="Sandra", creacion=datetime(2005, 12, 25))
 
     ecuestre1 = usuarios.crear_usuario(email="ecuestre1@mail.com", contraseña="ecuestre1", alias="Gloria", creacion=datetime(2024, 10, 23))
@@ -167,3 +202,6 @@ def cargar_usuarios():
 
     # Voluntariado - Néstor
     usuarios.asignar_rol(voluntariado, roles["rol_voluntariado"])
+
+    # Edición - Clara
+    usuarios.asignar_rol(edicion, roles["rol_edicion"])

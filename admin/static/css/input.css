@@ -129,7 +129,8 @@
   .dropdown input,
   .dropdown select,
   .formulario input,
-  .formulario select {
+  .formulario select,
+  .formulario textarea {
     @apply input;
   }
 

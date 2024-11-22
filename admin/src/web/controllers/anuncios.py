@@ -14,6 +14,7 @@ bp = Blueprint("anuncios", __name__, url_prefix="/anuncios")
 
 
 @bp.get("/")
+@chequear_permiso('anuncio_listar')
 @sesion_iniciada_requerida
 def listar():
     """
@@ -65,6 +66,7 @@ def listar():
 
 
 @bp.route("/nuevo_anuncio", methods=["GET", "POST"])
+@chequear_permiso('anuncio_crear')
 @sesion_iniciada_requerida
 def nuevo_anuncio():
     """
@@ -86,6 +88,7 @@ def nuevo_anuncio():
 
 
 @bp.get("/<int:id>")
+@chequear_permiso('anuncio_mostrar')
 @sesion_iniciada_requerida
 def ver_anuncio(id: int):
     """
@@ -97,6 +100,7 @@ def ver_anuncio(id: int):
 
 
 @bp.route("/<int:id>/editar", methods=["GET", "POST"])
+@chequear_permiso('anuncio_actualizar')
 @sesion_iniciada_requerida
 def editar_anuncio(id: int):
     """
@@ -130,6 +134,7 @@ def editar_anuncio(id: int):
 
 
 @bp.get("/<int:id>/eliminar")
+@chequear_permiso('anuncio_eliminar')
 @sesion_iniciada_requerida
 def eliminar(id: int):
     """

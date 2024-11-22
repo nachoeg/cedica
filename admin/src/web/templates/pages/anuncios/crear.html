@@ -30,11 +30,11 @@
         {% endfor %}
     </div>
     <div>
-        {{ form.contenido.label }}</br>
+        {{ form.contenido.label }}
+        {{ form.contenido(cols="35", rows="20") }}
         {% for error in form.contenido.errors %}
             <span style="color: red;">{{ error }}</span>
-        {% endfor %}</br>
-        {{ form.contenido(cols="35", rows="20") }}
+        {% endfor %}
     </div>
 
     {% if not nuevo %}
