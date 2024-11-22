@@ -16,7 +16,7 @@ bp = Blueprint("solicitudes", __name__, url_prefix="/solicitudes")
 
 
 @bp.route('/', methods=['GET'])
-# @chequear_permiso('solicitud_listar')
+@chequear_permiso('solicitud_listar')
 @sesion_iniciada_requerida
 def listado_solicitudes():
     """Devuelve la vista de usuarios en la base de datos
@@ -52,7 +52,7 @@ def listado_solicitudes():
 
 
 @bp.route('/<int:id>/aceptar', methods=['GET'])
-# @chequear_permiso('solicitud_aceptar')
+@chequear_permiso('solicitud_aceptar')
 @sesion_iniciada_requerida
 def aceptar_solicitud(id):
     solicitud = solicitud_por_id(id)
@@ -74,7 +74,7 @@ def aceptar_solicitud(id):
 
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
-# @chequear_permiso('solicitud_eliminar')
+@chequear_permiso('solicitud_eliminar')
 @sesion_iniciada_requerida
 def eliminar_solicitud(id):
     solicitud = solicitud_por_id(id)

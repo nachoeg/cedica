@@ -15,8 +15,10 @@
     {'id': 'fecha_solicitud', 'nombre': 'Fecha de solicitud', 'ordenar': True},
   ],
   'acciones': [
-    {'nombre': 'Aceptar','funcion': 'aceptarSolicitud', 'icono': circle_check_icon, 'condiciones': [{'fila': 'aceptada', 'valor': False}]},
-    {'nombre': 'Eliminar','funcion': 'eliminarSolicitud', 'icono': delete_icon, 'condiciones': []},
+    {'nombre': 'Aceptar','funcion': 'aceptarSolicitud', 'icono': circle_check_icon, 'condiciones': [{'fila': 'aceptada', 'valor': False}]} if
+    tiene_permiso(session, 'solicitud_aceptar') else False,
+    {'nombre': 'Eliminar','funcion': 'eliminarSolicitud', 'icono': delete_icon, 'condiciones': []} if tiene_permiso(session,
+    'solicitud_eliminar') else False,
   ],
   'filtros': [
     {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },

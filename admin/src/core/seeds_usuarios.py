@@ -48,6 +48,18 @@ def cargar_permisos():
     permisos["permiso_consulta_actualizar"] = usuarios.crear_permiso(nombre="consulta_actualizar")
     permisos["permiso_consulta_mostrar"] = usuarios.crear_permiso(nombre="consulta_mostrar")
 
+    permisos["permiso_anuncio_listar"] = usuarios.crear_permiso(nombre="anuncio_listar")
+    permisos["permiso_anuncio_crear"] = usuarios.crear_permiso(nombre="anuncio_crear")
+    permisos["permiso_anuncio_eliminar"] = usuarios.crear_permiso(nombre="anuncio_eliminar")
+    permisos["permiso_anuncio_actualizar"] = usuarios.crear_permiso(nombre="anuncio_actualizar")
+    permisos["permiso_anuncio_mostrar"] = usuarios.crear_permiso(nombre="anuncio_mostrar")
+
+    permisos["permiso_estadistica_listar"] = usuarios.crear_permiso(nombre="estadistica_listar")
+    permisos["permiso_estadistica_mostrar"] = usuarios.crear_permiso(nombre="estadistica_mostrar")
+
+    permisos["permiso_solicitud_listar"] = usuarios.crear_permiso(nombre="solicitud_listar")
+    permisos["permiso_solicitud_aceptar"] = usuarios.crear_permiso(nombre="solicitud_aceptar")
+    permisos["permiso_solicitud_eliminar"] = usuarios.crear_permiso(nombre="solicitud_eliminar")
 
     return permisos
 
@@ -58,6 +70,7 @@ def cargar_roles():
     roles["rol_ecuestre"] = usuarios.crear_rol(nombre="Ecuestre")
     roles["rol_voluntariado"] = usuarios.crear_rol(nombre="Voluntariado")
     roles["rol_administracion"] = usuarios.crear_rol(nombre="Administración")
+    roles["rol_edicion"] = usuarios.crear_rol(nombre="Edición")
 
     permisos = cargar_permisos()
 
@@ -95,6 +108,18 @@ def cargar_roles():
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_actualizar"])
     usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_consulta_eliminar"])
 
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_mostrar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_crear"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_actualizar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_anuncio_eliminar"])
+
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_estadistica_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_estadistica_mostrar"])
+
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_solicitud_listar"])
+    usuarios.asignar_permiso(roles["rol_administracion"], permisos["permiso_solicitud_aceptar"])
+
     # rol ECUESTRE
     usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_jya_listar"])
     usuarios.asignar_permiso(roles["rol_ecuestre"], permisos["permiso_jya_mostrar"])
@@ -117,6 +142,15 @@ def cargar_roles():
 
     usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_ecuestre_listar"])
     usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_ecuestre_mostrar"])
+
+    usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_estadistica_listar"])
+    usuarios.asignar_permiso(roles["rol_tecnica"], permisos["permiso_estadistica_mostrar"])
+
+    # rol EDICIÓN
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_listar"])
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_mostrar"])
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_crear"])
+    usuarios.asignar_permiso(roles["rol_edicion"], permisos["permiso_anuncio_actualizar"])
 
     return roles
 
