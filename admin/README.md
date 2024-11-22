@@ -14,6 +14,7 @@ Trabajo integrador de la materia Proyecto de Software en la Facultad de Informá
 | ecuestre@mail.com&#8204;        | ecuestre          | no       | Ecuestre
 | tecnica@mail.com&#8204;         | tecnica           | no       | Técnica
 | voluntariado@mail.com&#8204;    | voluntariado      | no       | Voluntariado
+| edicion@mail.com&#8204;         | edicion           | no       | Edición
 | sinroles@mail.com&#8204;        | sinroles          | no       | -
 
 

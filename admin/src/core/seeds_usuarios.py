@@ -165,6 +165,7 @@ def cargar_usuarios():
     ecuestre = usuarios.crear_usuario(email="ecuestre@mail.com", contraseña="ecuestre", alias="Pablo", creacion=datetime(2024, 10, 23))
     tecnica = usuarios.crear_usuario(email="tecnica@mail.com", contraseña="tecnica", alias="Maria", creacion=datetime(2021, 5, 29, 12, 37))
     voluntariado = usuarios.crear_usuario(email="voluntariado@mail.com", contraseña="voluntariado", alias="Néstor", creacion=datetime(2023, 5, 29))
+    edicion = usuarios.crear_usuario(email="edicion@mail.com", contraseña="edicion", alias="Clara", creacion=datetime(2022, 11, 22))
     sin_roles = usuarios.crear_usuario(email="sinroles@mail.com", contraseña="sin_roles", alias="Sandra", creacion=datetime(2005, 12, 25))
 
     ecuestre1 = usuarios.crear_usuario(email="ecuestre1@mail.com", contraseña="ecuestre1", alias="Gloria", creacion=datetime(2024, 10, 23))
@@ -201,3 +202,6 @@ def cargar_usuarios():
 
     # Voluntariado - Néstor
     usuarios.asignar_rol(voluntariado, roles["rol_voluntariado"])
+
+    # Edición - Clara
+    usuarios.asignar_rol(edicion, roles["rol_edicion"])
