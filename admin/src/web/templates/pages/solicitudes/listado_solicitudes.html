@@ -32,3 +32,23 @@
 {% include 'pages/usuarios/_acciones_usuario.html' %}
 
 {% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function aceptarSolicitud(id) {
+    if (confirm('¿Está seguro que desea aceptar esta solicitud?')) {
+      window.location.href = `/solicitudes/${id}/aceptar`;
+    }
+  }
+
+  function eliminarSolicitud(id) {
+    if (confirm('¿Está seguro que desea eliminar esta solicitud?')) {
+      window.location.href = `/solicitudes/${id}/eliminar`;
+    }
+  }
+
+</script>
+
+{% endblock %}

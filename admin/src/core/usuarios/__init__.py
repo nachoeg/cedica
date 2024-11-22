@@ -53,6 +53,15 @@ def solicitud_por_email(email):
     return solicitud
 
 
+def solicitud_por_id(id):
+    """Devuelve la solicitud correspondiente al id pasado por
+    parámetro. Si no la encuentra levanta un error 404.
+    """
+    solicitud = db.get_or_404(SolicitudUsuario, id)
+
+    return solicitud
+
+
 # USUARIOS
 def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
                     email_filtro, activo_filtro, rol_filtro):
@@ -83,14 +92,16 @@ def listar_usuarios(orden, ordenar_por, pagina, cant_por_pagina,
     return (total, usuarios)
 
 
-def crear_usuario(email, contraseña, alias, admin_sistema=False,
-                  id_roles=[], creacion=datetime.now()):
+def crear_usuario(email, alias, contraseña=None, admin_sistema=False,
+                  id_roles=[], creacion=datetime.now(), sin_contraseña=False):
     """Crea un objeto de tipo Usuario con los datos que recibe por
     parámetro y lo devuelve.
     """
-    contraseña_hash = bcrypt.generate_password_hash(contraseña).decode('utf-8')
+    if not sin_contraseña:
+        contraseña = bcrypt.generate_password_hash(contraseña
+                                                   ).decode('utf-8')
     email = email.lower()
-    usuario = Usuario(email=email, contraseña=contraseña_hash,
+    usuario = Usuario(email=email, contraseña=contraseña,
                       alias=alias, admin_sistema=admin_sistema,
                       creacion=creacion)
     if not admin_sistema:

@@ -74,7 +74,8 @@ def editar_perfil(id):
     form = UsuarioSinContraseñaForm(obj=usuario)
     if request.method == 'POST':
         if form.validate_on_submit():
-            actualizar_perfil(usuario, form.email.data, form.alias.data)
+            actualizar_perfil(usuario=usuario, email=form.email.data,
+                              alias=form.alias.data)
             session['alias'] = usuario.alias
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
@@ -141,7 +142,7 @@ def iniciar_sesion_autorizar():
             flash('No se pudo registrar la solicitud: email no verificado',
                   'error')
         else:
-            raise Exception(f'{info_usuario_google.get('email_verified')}')
+            # raise Exception(f'{info_usuario_google.get('email_verified')}')
             session['email'] = email_google
             session['id'] = 1
             session['roles'] = []

@@ -68,9 +68,11 @@ def registrar_usuario():
     form = UsuarioForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
-            usuario = crear_usuario(form.email.data, form.contraseña.data,
-                                    form.alias.data, form.admin_sistema.data,
-                                    form.roles.data)
+            usuario = crear_usuario(email=form.email.data,
+                                    contraseña=form.contraseña.data,
+                                    alias=form.alias.data,
+                                    admin_sistema=form.admin_sistema.data,
+                                    id_roles=form.roles.data)
             flash(f'Registro exitoso. \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('usuarios.listado_usuarios'))
@@ -107,10 +109,12 @@ def editar_usuario(id):
     if request.method == 'POST':
         if form.validate_on_submit():
             if usuario.admin_sistema:
-                actualizar_perfil(usuario, form.email.data, form.alias.data)
+                actualizar_perfil(usuario=usuario, email=form.email.data,
+                                  alias=form.alias.data)
             else:
-                actualizar_usuario(usuario, form.email.data, form.alias.data,
-                                   form.admin_sistema.data, form.roles.data)
+                actualizar_usuario(usuario=usuario, email=form.email.data,
+                                   alias=form.alias.data,admin_sistema=form.admin_sistema.data,
+                                   id_roles=form.roles.data)
             flash(f'Se guardaron los cambios al usuario \
                 Alias: {usuario.alias}, email: {usuario.email}', 'exito')
             return redirect(url_for('usuarios.listado_usuarios'))

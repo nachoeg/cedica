@@ -1,7 +1,11 @@
 import math
-from flask import Blueprint, current_app, render_template, request
 
-from src.core.usuarios import listar_solicitudes
+from flask import (Blueprint, current_app, flash,
+                   redirect, render_template, request, url_for)
+
+from src.core.database import db
+from src.core.usuarios import (crear_usuario, listar_solicitudes,
+                               solicitud_por_id, usuario_por_email)
 from src.web.handlers.decoradores import (chequear_permiso,
                                           sesion_iniciada_requerida)
 from src.web.handlers.funciones_auxiliares import (convertir_a_entero,
@@ -45,3 +49,37 @@ def listado_solicitudes():
                            email_filtro=email_filtro,
                            aceptada_filtro=aceptada_filtro,
                            )
+
+
+@bp.route('/<int:id>/aceptar', methods=['GET'])
+# @chequear_permiso('solicitud_aceptar')
+@sesion_iniciada_requerida
+def aceptar_solicitud(id):
+    solicitud = solicitud_por_id(id)
+    usuario = usuario_por_email(solicitud.email)
+    if not solicitud.aceptada and usuario is None:
+        # cambiar por una solicitud de ingresar alias que chequee unicidad
+        alias = solicitud.email.split('@')[0]
+        usuario = crear_usuario(email=solicitud.email, alias=alias,
+                                sin_contraseña=True)
+        solicitud.aceptada = True
+        db.session.commit()
+        flash(f'Se ha creado el usuario \
+                Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+    else:
+        flash(f'El usuario \
+                Alias: {usuario.alias}, email: {usuario.email} \
+                ya se encuentra activo', 'info')
+    return redirect(url_for('solicitudes.listado_solicitudes'))
+
+
+@bp.route('/<int:id>/eliminar', methods=['GET'])
+# @chequear_permiso('solicitud_eliminar')
+@sesion_iniciada_requerida
+def eliminar_solicitud(id):
+    solicitud = solicitud_por_id(id)
+    db.session.delete(solicitud)
+    db.session.commit()
+    flash(f'Se ha eliminado la solicitud \
+              del email: {solicitud.email}', 'exito')
+    return redirect(url_for('solicitudes.listado_solicitudes'))
