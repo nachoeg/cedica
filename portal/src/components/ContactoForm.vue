@@ -83,7 +83,7 @@
             return;
         }
         try {
-            const response = await fetch("http://localhost:5000/api/message", {
+            const response = await fetch("https://admin-grupo17.proyecto2024.linti.unlp.edu.ar//api/message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
