@@ -10,6 +10,7 @@ from src.core.jinetes_y_amazonas import (
     obtener_ranking_propuestas,
     obtener_cant_tipos_discapacidad,
     obtener_tipos_discapacidad,
+    obtener_dia,
     obtener_ranking_jinetes_por_dia)
 from src.core.jinetes_y_amazonas import obtener_cantidad_becados
 from src.core.jinetes_y_amazonas import listar_deudores
@@ -241,9 +242,14 @@ def reporte_deudores():
 @bp.get("/reporte_jinetes_dias")
 def reporte_jinetes_por_dia():
     resultados_actuales = obtener_ranking_jinetes_por_dia()
+    ranking_con_puestos = []
 
+    for indice, item in enumerate(resultados_actuales, start=1):
+        ranking_con_puestos.append(({"puesto" : indice,
+                                     "dia": obtener_dia(item[0]).nombre,
+                                     "cantidad": item[1]}))
     return render_template(
-        "pages/estadisticas/ver_ranking_propuestas.html",
-        ranking_actual=resultados_actuales,
+        "pages/estadisticas/ver_ranking_dias.html",
+        ranking_actual=ranking_con_puestos,
         titulo="Reporte de propuestas de trabajo",
     )
