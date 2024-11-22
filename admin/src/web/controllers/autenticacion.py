@@ -102,17 +102,22 @@ def cambiar_contraseña():
     """Devuelve la vista que permite al usuario
     cambiar su contraseña.
     """
-    usuario = usuario_por_id(session.get('id'))
-    form = CambiarContraseñaForm(usuario.contraseña)
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            contraseña_nueva = form.contraseña_nueva.data
-            asignar_contraseña(usuario, contraseña_nueva)
-            flash('Se ha modificado la contraseña', 'exito')
-            return redirect(url_for('home'))
-        else:
-            flash('No se pudo realizar la operación. \
-                  Revise los datos ingresados.', 'error')
+    if session.get('sin_contraseña'):
+        flash('No tiene contraseña en el sistema \
+                  para ser modificada.', 'error')
+        return redirect(url_for('home'))
+    else:
+        usuario = usuario_por_id(session.get('id'))
+        form = CambiarContraseñaForm(usuario.contraseña)
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                contraseña_nueva = form.contraseña_nueva.data
+                asignar_contraseña(usuario, contraseña_nueva)
+                flash('Se ha modificado la contraseña', 'exito')
+                return redirect(url_for('home'))
+            else:
+                flash('No se pudo realizar la operación. \
+                    Revise los datos ingresados.', 'error')
     return render_template('pages/usuarios/cambiar_contraseña.html', form=form)
 
 
