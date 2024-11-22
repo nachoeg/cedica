@@ -23,9 +23,11 @@
     <p class="text-gray-600 text-xs italic">* Campos obligatorios</p>
     <p class="text-gray-950 text-sm">Email: {{ solicitud.email }}</p>
     <div>{{ render_field(form.alias) }}</div>
+    {% if session.get('es_admin') %}
     <div>{{ render_field(form.admin_sistema, id="es_admin", type="checkbox") }}</div>
     <div>{{ select_multi_checkbox(form.roles) }}</div>
     <div class="alert alert-info" id="mensaje_roles" style="display: None;">Si es admin general no puede asignarle roles</div>
+    {% endif %}
     <div><input type=submit></div>
   </div>
 </form>
