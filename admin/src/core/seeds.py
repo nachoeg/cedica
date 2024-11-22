@@ -3,6 +3,9 @@ from src.core import cobros, jinetes_y_amazonas
 from src.core.seeds_usuarios import cargar_usuarios
 from src.core import ecuestre
 from src.core import pago
+from src.core import anuncios
+from src.core.seeds_anuncios import cargar_anuncios
+from src.core import contacto
 
 def run():
     
@@ -268,7 +271,7 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
     j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Tatiana", apellido="Tomassi",
-                                           dni=36234222,
+                                            dni=36234222,
                                            fecha_nacimiento='1992/09/10',
                                            provincia_nacimiento='La Pampa',
                                            localidad_nacimiento='Santa Rosa',
@@ -456,6 +459,13 @@ def run():
     
     for tipo in tipos_de_documento_miembro:
         miembro.crear_tipo_de_documento(tipo=tipo)
+
+    anuncio = anuncios.crear_anuncio("Título", "Copete", "Contenido", 1)
+    cargar_anuncios()
+
+    contacto1 = contacto.crear_consulta("consulta1", "consulta1@gmail.com", "consulta1")
+    contacto2 = contacto.crear_consulta("consulta2", "consulta2@gmail.com", "consulta2")
+    contacto3 = contacto.crear_consulta("consulta3", "consulta3@gmail.com", "consulta3")
 
 
 def cargar_diagnosticos():

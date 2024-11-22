@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from src.core.database import db
 from src.core.cobros.cobro import Cobro, MedioDePago
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import JineteOAmazona
@@ -107,8 +108,7 @@ def cargar_miembro_activo_choices():
     """
     return [
         (miembro.id, miembro.nombre + " " + miembro.apellido)
-        for miembro in Miembro.query.filter(Miembro.activo.is_(True))
-                                    .order_by("nombre")
+        for miembro in Miembro.query.filter(Miembro.activo.is_(True)).order_by("nombre")
     ]
 
 
@@ -129,3 +129,20 @@ def eliminar_cobro(cobro_id):
     db.session.commit()
 
     return cobro
+
+
+def obtener_ingresos_por_mes():
+    """
+    Función que obtiene los ingresos por mes, limitados a un máximo de 12 meses.
+    """
+    mes = func.date_trunc("month", Cobro.fecha_pago).label("mes")
+    total_ingresos = func.sum(Cobro.monto).label("total_ingresos")
+
+    ingresos_por_mes = (
+        db.session.query(mes, total_ingresos)
+        .group_by(mes)
+        .order_by(mes.desc())
+        .limit(12)
+        .all()
+    )
+    return ingresos_por_mes

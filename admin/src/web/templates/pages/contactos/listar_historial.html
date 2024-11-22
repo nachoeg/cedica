@@ -1,0 +1,27 @@
+{% extends "layouts/base.html" %}
+{% from "components/tabla.html" import tabla %}
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% from "components/iconos.html" import open_icon, edit_icon, delete_icon, archive_icon, archive_restore_icon %}
+
+{% block title %} Listado de consultas {% endblock %}
+
+{% block main %}
+
+{% set configuracion = {
+'encabezados': [
+    {'id': 'estado', 'nombre': 'Estado'},
+    {'id': 'comentario', 'nombre': 'Comentario'},
+    {'id': 'usuario', 'nombre': 'Usuario'},
+    {'id': 'fecha', 'nombre': 'Fecha'},
+],
+'acciones': [
+],
+'filtros': [
+],
+'crear': {
+}
+} %}
+
+{{ tabla(configuracion, estados, cant_resultados, cant_paginas, pagina) }}
+
+{% endblock %}

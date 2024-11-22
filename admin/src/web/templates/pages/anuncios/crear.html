@@ -1,0 +1,55 @@
+{% from "components/navbar_secundaria.html" import navbar_secundaria %}
+{% extends "layouts/base.html" %}
+{% block title %} {{titulo}} {% endblock %}
+{% block main %}
+
+{{ navbar_secundaria({
+'volver': url_for('anuncios.listar'),
+})}}
+
+<form method="post" novalidate class="formulario">
+    {{ form.csrf_token }}
+    <div class="formulario-header">
+        <h1>{{titulo}}</h1>
+    </div>
+    <div class="formulario-body">
+    <p class="text-gray-600 text-xs italic">Los campos con * son obligatorios </p>
+
+    <div>
+        {{ form.titulo.label }}
+        {{ form.titulo }}
+        {% for error in form.titulo.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.copete.label }}
+        {{ form.copete }}
+        {% for error in form.copete.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.contenido.label }}</br>
+        {% for error in form.contenido.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}</br>
+        {{ form.contenido(cols="35", rows="20") }}
+    </div>
+
+    {% if not nuevo %}
+        <div>
+            {{ form.estado.label }}
+            {{ form.estado }}
+            {% for error in form.estado.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div>
+        {{ form.guardar() }}
+    </div>
+    </div>
+</form>
+
+{% endblock %}

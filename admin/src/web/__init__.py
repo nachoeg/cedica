@@ -21,6 +21,10 @@ from src.web.controllers.ecuestre import bp as ecuestre_bp
 from src.web.controllers.jinetes_y_amazonas import bp as jinetes_y_amazonas_bp
 from src.web.controllers.cobros import bp as cobros_bp
 from src.web.controllers.pagos import bp as pagos_bp
+from web.controllers.estadisticas import bp as estadisticas_bp
+from src.web.controllers.anuncios import bp as anuncios_bp
+from src.web.controllers.contacto import bp as contacto_bp
+from src.web.api.api import bp as api_bp
 from src.web.handlers.decoradores import esta_autenticado, tiene_permiso
 from src.web.storage import storage
 from src.web import helpers_jya
@@ -80,4 +84,13 @@ def create_app(env="development", static_folder="../../static"):
 
     app.register_blueprint(pagos_bp)
 
+    app.register_blueprint(estadisticas_bp)
+
+    app.register_blueprint(anuncios_bp)
+    
+    app.register_blueprint(contacto_bp)
+
+    app.register_blueprint(api_bp)
+
     return app
+

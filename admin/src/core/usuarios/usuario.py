@@ -24,11 +24,12 @@ class Usuario(db.Model):
     roles = db.relationship('Rol', secondary='roles_usuario', lazy=True,
                             backref=db.backref('usuarios', lazy=False))
 
+    anuncios = db.relationship('Anuncio', back_populates='autor')
+
     def to_dict(self):
         """Método que devuelve un diccionario con los datos
-        del usuario: alias, email, activo, fecha_creacion,
-        admin_sistema y roles."
-
+        del usuario: alias, email, activo, creacion,
+        admin_sistema y roles.
         """
         roles = ("".join(f'{rol.nombre[:3]} · ' for rol in self.roles)[:-3]
                  if self.roles else "-")

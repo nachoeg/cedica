@@ -1,3 +1,5 @@
+import sqlalchemy
+from sqlalchemy import func, select
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (
     JineteOAmazona, Diagnostico, Dia, Familiar, TipoDeDiscapacidad)
@@ -501,3 +503,111 @@ def obtener_tipo_discapacidad(tipo_id):
     tipo = TipoDeDiscapacidad.query.get_or_404(tipo_id)
 
     return tipo
+
+
+def obtener_ranking_propuestas():
+    """
+    Función que retorna el listado de propuestas de trabajo con su
+    correspondiente cantidad de jinetes y amazonas que participan de ella
+    ordenadas de manera descendente por el número de jinetes y amazonas.
+    """
+    propuestas = ["hipoterapia",
+                  "monta_terapeutica",
+                  "deporte_ecuestre",
+                  "actividades_recreativas",
+                  "equitacion"]
+
+    propuestas_a_imprimir = {
+                  "hipoterapia": "Hipoterapia",
+                  "monta_terapeutica": "Monta terapéutica",
+                  "deporte_ecuestre": "Deporte ecuestre",
+                  "actividades_recreativas": "Actividades recreativas",
+                  "equitacion": "Equitación"
+    }
+    ranking_historico = []
+    ranking_actual = []
+    for propuesta in propuestas:
+        clave = propuestas_a_imprimir[propuesta]
+        valor_historico = JineteOAmazona.query.filter(
+            JineteOAmazona.propuesta_trabajo == propuesta).count()
+        valor_actual = JineteOAmazona.query.filter(
+            JineteOAmazona.propuesta_trabajo == propuesta,
+            JineteOAmazona.condicion == "regular").count()
+        ranking_historico.append((clave, valor_historico))
+        ranking_actual.append((clave, valor_actual))
+
+    ranking_historico.sort(key=lambda propuesta: propuesta[1], reverse=True)
+    ranking_actual.sort(key=lambda propuesta: propuesta[1], reverse=True)
+
+    return ranking_actual, ranking_historico
+
+
+def obtener_cant_tipos_discapacidad():
+    """
+    Función que retorna el listado de tipos de discapacidad (el id de la tabla)
+    con su correspondiente cantidad de jinetes y amazonas
+    """
+    tipos_dis_cantidades = TipoDeDiscapacidad.query.join(
+        JineteOAmazona.tipo_discapacidad).with_entities(
+        TipoDeDiscapacidad.id,
+        func.count(JineteOAmazona.id)).group_by(TipoDeDiscapacidad.id).all()
+
+    return tipos_dis_cantidades
+
+
+def obtener_jinetes_por_tipo_discapacidad(tipo):
+    """
+    Función que imprime un listado de jinetes para cada tipo de discapacidad
+    """
+    for tipo in listar_tipos_de_discapacidad():
+        nombre = tipo.nombre
+        query = JineteOAmazona.query.join(
+            JineteOAmazona.tipo_discapacidad).filter(
+            TipoDeDiscapacidad.id == tipo.id
+        ).all()
+    
+
+def obtener_tipos_discapacidad():
+    """
+    Función que retorna los id y los nombres de todos los tipos de discapacidad
+    """
+
+    query = TipoDeDiscapacidad.query.with_entities(TipoDeDiscapacidad.id, TipoDeDiscapacidad.nombre).all()
+    return query
+
+
+def obtener_cantidad_becados():
+    """
+    Función que obtiene la cantidad de Jinetes y Amazonas becados y no becados.
+    """
+    total_becados = db.session.query(JineteOAmazona).filter_by(becado=True).count()
+    total_no_becados = db.session.query(JineteOAmazona).filter_by(becado=False).count()
+
+    return total_becados, total_no_becados
+
+
+def listar_deudores(
+    ordenar_por="id",
+    orden="asc",
+    pagina=1,
+    cant_por_pag=6,
+):
+    """
+    Funcion que devuelve el listado de
+    jinetes y amazonas con deudas partir
+    ordenado según los parámetros recibidos.
+    """
+    query = JineteOAmazona.query.filter(JineteOAmazona.tiene_deuda)
+
+    if orden == "asc":
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).asc())
+    else:
+        query = query.order_by(getattr(JineteOAmazona, ordenar_por).desc())
+
+    cant_resultados = query.count()
+
+    j_y_a_ordenados = query.paginate(
+        page=pagina, per_page=cant_por_pag, error_out=False
+    )
+
+    return j_y_a_ordenados, cant_resultados
