@@ -38,7 +38,7 @@ def listar_historial(
         pagina=1,
         cant_por_pagina=10,
 ):
-    query = HistorialEstado.query.filter_by(consulta_id=id)
+    query = HistorialEstado.query.filter_by(consulta_id=id).order_by(HistorialEstado.fecha.desc())
     cant_resultados = query.count()
     consultas = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
     return consultas, cant_resultados

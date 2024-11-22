@@ -34,7 +34,7 @@ if tiene_permiso(session, 'jya_eliminar') else False,
 'crear': {
 'url': url_for('jinetes_y_amazonas.nuevo_j_y_a'),
 'nombre': 'Crear JyA'
-}
+} if tiene_permiso(session, 'jya_crear') else False,
 }
 %}
 
