@@ -1,10 +1,10 @@
 from flask import Blueprint, request
 import requests
-from src.core.anuncios import listar_anuncios_api
+from src.core.anuncios import listar_anuncios_api, encontrar_anuncio
 from src.core.contacto import crear_consulta
 from flask import request, make_response, jsonify
 from datetime import datetime
-from src.web.schemas.anuncios import anuncios_schema
+from src.web.schemas.anuncios import anuncios_schema, anuncio_schema
 from src.web.schemas.contacto import consulta_schema, create_consulta_schema
 import logging
 
@@ -65,6 +65,31 @@ def listar():
         return make_response(jsonify({
             "error": "Parámetros inválidos o faltantes en la solicitud.",
         }), 400)
+    
+@bp.get("/article/")
+def obtener_anuncio():
+    try:
+        id = int(request.args.get('id'))
+
+        if not id:
+            return make_response(jsonify({
+                "error": "No se encontro un anuncio con el id especificado.",
+            }), 400)
+    
+        anuncio = encontrar_anuncio(id)
+
+        if not anuncio:
+            return make_response(jsonify({
+                "error": "No se encontro un anuncio con el id especificado.",
+            }), 400)
+        data = anuncio_schema.dump(anuncio)
+    
+        return jsonify(data), 200
+    except:
+        return make_response(jsonify({
+            "error": "Parámetros inválidos o faltantes en la solicitud.",
+        }), 400)
+
     
 @bp.post("/message")
 def guardar_mensaje():
