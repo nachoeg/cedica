@@ -611,3 +611,17 @@ def listar_deudores(
     )
 
     return j_y_a_ordenados, cant_resultados
+
+
+def obtener_ranking_jinetes_por_dia():
+    """
+    Función que retorna un ranking de días según la cantidad de jinetes
+    que asisten a CEDICA.
+    """
+    jinetes_actuales = Dia.query.join(JineteOAmazona.dias_asignados).with_entities(
+        Dia.id, func.count(JineteOAmazona.id)).group_by(Dia.id).all()
+    
+    jinetes_historicos = Dia.query.join(JineteOAmazona.dias_asignados).with_entities(
+        Dia.id, func.count(JineteOAmazona.id)).group_by(Dia.id).all()
+
+    return jinetes_actuales, jinetes_historicos
