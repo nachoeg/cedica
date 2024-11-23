@@ -4,6 +4,6 @@ import NoticiaDetalle from '@/components/NoticiaDetalle.vue'
 
 <template>
   <main>
-    <NoticiaDetalle></NoticiaDetalle>
+    <NoticiaDetalle :id="$route.params.id"></NoticiaDetalle>
   </main>
 </template>
