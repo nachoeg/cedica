@@ -9,7 +9,7 @@ export const useNoticiaStore = defineStore('noticia', {
     async fetchNoticia(id) {
       try {
         this.loading = true
-        const response = await fetch(`http://localhost:5000/api/article?id=${id}`)
+        const response = await fetch(`https://admin-grupo17.proyecto2024.linti.unlp.edu.ar/api/article?id=${id}`)
         if (response.ok) {
           const data = await response.json()
           this.noticia = data

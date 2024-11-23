@@ -18,6 +18,11 @@ const fetchNoticia = async () => {
   await store.fetchNoticia(props.id)
 }
 
+const formatFecha = (fecha) => {
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Date(fecha).toLocaleDateString('es-ES', opciones)
+}
+
 onMounted(() => {
   fetchNoticia()
 })
@@ -39,8 +44,8 @@ onMounted(() => {
       <p>{{ noticia.content }}</p>
       <br />
       <div class="text-gray-600 dark:text-neutral-400 text-end">
-        <p>Fecha de publicación: {{ noticia.published_at }}</p>
-        <p>Última actualización: {{ noticia.updated_at }}</p>
+        <p>Fecha de publicación: {{ formatFecha(noticia.published_at) }}</p>
+        <p>Última actualización: {{ formatFecha(noticia.updated_at) }}</p>
       </div>
     </div>
   </div>

@@ -25,7 +25,7 @@
           class="bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4 md:px-5 dark:bg-neutral-800 dark:border-neutral-700"
         >
           <p class="mt-1 text-sm text-gray-500 dark:text-neutral-500">
-            Última actualización {{ noticia.updated_at }}
+            Última actualización: {{ formatFecha(noticia.updated_at) }}
           </p>
         </div>
       </RouterLink>
@@ -47,6 +47,11 @@ import { onMounted } from 'vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
 import { RouterLink } from 'vue-router'
 import NoticiasPaginacion from '../components/NoticiasPaginacion.vue'
+
+const formatFecha = (fecha) => {
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Date(fecha).toLocaleDateString('es-ES', opciones)
+}
 
 const store = useNoticiasStore()
 const { noticias, cant_pages, page, loading, error } = storeToRefs(store)
