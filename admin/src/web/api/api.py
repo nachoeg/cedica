@@ -53,11 +53,16 @@ def listar():
 
         data = anuncios_schema.dump(anuncios)
 
+        cant_paginas = cant_resultados // per_page
+        if cant_resultados % per_page != 0:
+            cant_paginas += 1
+
         response_body = {
             "data": data,
             "page": page,
             "per_page": per_page,
             "total": cant_resultados,
+            "cant_pages": cant_paginas,
         }
 
         return make_response(jsonify(response_body), 200)
