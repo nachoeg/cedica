@@ -3,6 +3,7 @@ import math
 from flask import (Blueprint, current_app, flash,
                    redirect, render_template, request, url_for)
 
+from src.core.forms.usuario_forms import UsuarioSinMailContraseñaForm
 from src.core.database import db
 from src.core.usuarios import (crear_usuario, listar_solicitudes,
                                solicitud_por_id, usuario_por_email)
@@ -58,19 +59,40 @@ def aceptar_solicitud(id):
     solicitud = solicitud_por_id(id)
     usuario = usuario_por_email(solicitud.email)
     if not solicitud.aceptada and usuario is None:
-        # cambiar por una solicitud de ingresar alias que chequee unicidad
-        alias = solicitud.email.split('@')[0]
-        usuario = crear_usuario(email=solicitud.email, alias=alias,
-                                sin_contraseña=True)
-        solicitud.aceptada = True
-        db.session.commit()
-        flash(f'Se ha creado el usuario \
-                Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+        return redirect(url_for('solicitudes.aceptar_usuario', id=id))
     else:
         flash(f'El usuario \
                 Alias: {usuario.alias}, email: {usuario.email} \
                 ya se encuentra activo', 'info')
     return redirect(url_for('solicitudes.listado_solicitudes'))
+
+
+@bp.route('/<int:id>/modificar_datos', methods=['GET', 'POST'])
+@chequear_permiso('solicitud_aceptar')
+@sesion_iniciada_requerida
+def aceptar_usuario(id):
+    form = UsuarioSinMailContraseñaForm()
+    solicitud = solicitud_por_id(id)
+    if request.method == 'GET':
+        form.alias.data = solicitud.email.split('@')[0]
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            usuario = crear_usuario(email=solicitud.email,
+                                    alias=form.alias.data,
+                                    admin_sistema=form.admin_sistema.data,
+                                    id_roles=form.roles.data,
+                                    sin_contraseña=True)
+            solicitud.aceptada = True
+            db.session.commit()
+            flash(f'Se ha creado el usuario \
+                    Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+            return redirect(url_for('solicitudes.listado_solicitudes'))
+        else:
+            flash('No se pudo crear el usuario. \
+                   Revise los datos ingresados',
+                  'error')
+    return render_template('pages/usuarios/aceptar_usuario.html',
+                           form=form, solicitud=solicitud)
 
 
 @bp.route('/<int:id>/eliminar', methods=['GET'])
