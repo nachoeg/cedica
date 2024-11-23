@@ -11,17 +11,7 @@
 'encabezados': [
 {'id': 'nombre', 'nombre': 'Nombre', 'ordenar': True},
 {'id': 'apellido', 'nombre': 'Apellido', 'ordenar': True},
-{'id': 'dni', 'nombre': 'DNI'},
-],
-'acciones': [
-{'nombre': 'Quitar deuda', 'funcion': 'cambiar_tiene_deuda', 'icono': debt_icon}
-if tiene_permiso(session,'jya_actualizar') else False,
-{'nombre': 'Ver', 'funcion': 'verJYA', 'icono': open_icon},
-{'nombre': 'Documentos', 'funcion': 'verDocumentos', 'icono': files_icon},
-{'nombre': 'Editar', 'funcion': 'editarJYA', 'icono': edit_icon}
-if tiene_permiso(session,'jya_actualizar') else False,
-{'nombre': 'Borrar','funcion': 'borrarJYA', 'icono': delete_icon}
-if tiene_permiso(session, 'jya_eliminar') else False,
+{'id': 'dni', 'nombre': 'DNI', 'ordenar': True},
 ],
 }
 %}

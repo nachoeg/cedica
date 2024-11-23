@@ -1,7 +1,7 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
+import FooterComponent from './components/FooterComponent.vue'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import Footer from './components/Footer.vue'
   <main class="inicio bg-left w-full mx-auto p-2 sm:p-5 lg:px-8">
     <RouterView />
   </main>
-  <Footer />
+  <FooterComponent />
 </template>
 
 

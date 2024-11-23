@@ -2,6 +2,7 @@ from marshmallow import Schema, fields, post_dump
 
 
 class ConsultaSchema(Schema):
+    """Esquema para crear nuevas consultas a partir de api/message"""
     titulo = fields.Str(required=True, validate=lambda x: 1 <= len(x) <= 100)
     email = fields.Email(required=True, validate=lambda x: 1 <= len(x) <= 100)
     mensaje = fields.Str(required=True, validate=lambda x: 1 <= len(x) <= 500)

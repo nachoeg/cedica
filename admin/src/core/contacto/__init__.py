@@ -38,6 +38,7 @@ def listar_historial(
         pagina=1,
         cant_por_pagina=10,
 ):
+    """Lista el historial de estado de una consulta"""
     query = HistorialEstado.query.filter_by(consulta_id=id).order_by(HistorialEstado.fecha.desc())
     cant_resultados = query.count()
     consultas = query.paginate(page=pagina, per_page=cant_por_pagina, error_out=False)
@@ -86,16 +87,19 @@ def obtener_consulta(id):
     return consulta
 
 def archivar_consulta(id):
+    """Permite archivar una consulta"""
     consulta = Consulta.query.filter_by(id=id).first()
     consulta.archivado = True
     db.session.commit()
 
 def desarchivar_consulta(id):
+    """Desarchiva una consulta"""
     consulta = Consulta.query.filter_by(id=id).first()
     consulta.archivado = False
     db.session.commit()
 
 def actualizar_estado(id, estado, comentario, usuario):
+    """Actualiza el estado de una consulta"""
     consulta = Consulta.query.filter_by(id=id).first()
     crear_historia_estado(consulta.estado, consulta.comentario, consulta.ultimo_editor, consulta.id)
     aux = str(estado).lower()
@@ -111,6 +115,7 @@ def crear_historia_estado(estado, comentario, usuario, consulta):
         usuario = usuario,
         consulta_id = consulta
     )
+    """Crea un nuevo historial de estado"""
     db.session.add(historial)
     db.session.commit()
     return historial

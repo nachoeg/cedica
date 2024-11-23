@@ -1,25 +1,37 @@
 import io
 import matplotlib
 
+
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 from flask import Blueprint, render_template, url_for, send_file, redirect, request
 
 from src.core.cobros import obtener_ingresos_por_mes
-from src.core.jinetes_y_amazonas import obtener_ranking_propuestas, obtener_cant_tipos_discapacidad, obtener_tipos_discapacidad
+from src.core.jinetes_y_amazonas import (
+    obtener_ranking_propuestas,
+    obtener_cant_tipos_discapacidad,
+    obtener_tipos_discapacidad,
+    obtener_dia,
+    obtener_ranking_jinetes_por_dia)
 from src.core.jinetes_y_amazonas import obtener_cantidad_becados
 from src.core.jinetes_y_amazonas import listar_deudores
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
+from src.web.handlers.decoradores import (chequear_permiso,
+                                          sesion_iniciada_requerida)
 
 bp = Blueprint("estadisticas", __name__, url_prefix="/estadisticas")
 
 
 @bp.get("/")
+@chequear_permiso('estadistica_listar')
+@sesion_iniciada_requerida
 def index():
     return redirect(url_for("estadisticas.reporte_propuestas_trabajo"))
 
 
 @bp.get("/grafico_ingresos")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def grafico_ingresos():
     return render_template(
         "pages/estadisticas/ver_grafico.html",
@@ -29,6 +41,8 @@ def grafico_ingresos():
 
 
 @bp.get("/grafico_ingresos/grafico")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def grafico_ingresos_imagen():
     # Obtener los datos de los cobros desde la base de datos
     ingresos_por_mes = obtener_ingresos_por_mes()
@@ -71,6 +85,8 @@ def grafico_ingresos_imagen():
 
 
 @bp.get("/grafico_becados")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def grafico_becados():
     return render_template(
         "pages/estadisticas/ver_grafico.html",
@@ -80,6 +96,8 @@ def grafico_becados():
 
 
 @bp.get("/grafico_becados/grafico")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def grafico_becados_imagen():
     # Obtener los datos de los J&A becados desde la base de datos
     total_becados, total_no_becados = obtener_cantidad_becados()
@@ -126,6 +144,8 @@ def grafico_becados_imagen():
 
 
 @bp.get("/grafico_discapacidades")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def grafico_discapacidades():
 
     return render_template(
@@ -136,6 +156,8 @@ def grafico_discapacidades():
 
 
 @bp.get("/grafico_discapacidades/grafico")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def grafico_discapacidades_imagen():
     tipos_discapacidad = obtener_tipos_discapacidad()
 
@@ -184,6 +206,8 @@ def grafico_discapacidades_imagen():
 
 
 @bp.get("/reporte_propuestas_trabajo")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def reporte_propuestas_trabajo():
     resultados_actuales, resultados_historicos = obtener_ranking_propuestas()
     ranking_actuales_con_puestos = []
@@ -198,7 +222,7 @@ def reporte_propuestas_trabajo():
                                                "propuesta": item[0],
                                                "cantidad": item[1]}))
     return render_template(
-        "pages/estadisticas/ver_ranking_propuestas.html",
+        "pages/estadisticas/ranking_propuestas.html",
         ranking_actual=ranking_actuales_con_puestos,
         ranking_historico=ranking_historico_con_puestos,
         titulo="Reporte de propuestas de trabajo",
@@ -206,6 +230,8 @@ def reporte_propuestas_trabajo():
 
 
 @bp.get("/reporte_deudores")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
 def reporte_deudores():
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "id")
@@ -231,4 +257,33 @@ def reporte_deudores():
         pagina=pagina,
         orden=orden,
         ordenar_por=ordenar_por,
+    )
+
+
+@bp.get("/reporte_jinetes_dias")
+@chequear_permiso('estadistica_mostrar')
+@sesion_iniciada_requerida
+def reporte_jinetes_por_dia():
+    resultados_actuales, resultados_historicos = obtener_ranking_jinetes_por_dia()
+
+    resultados_actuales.sort(key=lambda x: x[1], reverse=True)
+    resultados_historicos.sort(key=lambda x: x[1], reverse=True)
+
+    ranking_con_puestos = []
+    ranking_historico_con_puestos = []
+
+    for indice, item in enumerate(resultados_actuales, start=1):
+        ranking_con_puestos.append(({"puesto" : indice,
+                                     "dia": obtener_dia(item[0]).nombre,
+                                     "cantidad": item[1]}))
+
+    for indice, item in enumerate(resultados_historicos, start=1):
+        ranking_historico_con_puestos.append(({"puesto" : indice,
+                                    "dia": obtener_dia(item[0]).nombre,
+                                    "cantidad": item[1]}))
+    return render_template(
+        "pages/estadisticas/ver_ranking_dias.html",
+        ranking_actual=ranking_con_puestos,
+        ranking_historico=ranking_historico_con_puestos,
+        titulo="Reporte de cantidad de jinetes por día",
     )

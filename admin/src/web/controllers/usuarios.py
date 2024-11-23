@@ -171,5 +171,5 @@ def eliminar_usuario(id):
     db.session.delete(usuario)
     db.session.commit()
     flash(f'Se ha eliminado al usuario \
-              Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
+            Alias: {usuario.alias}, email: {usuario.alias}', 'exito')
     return redirect(url_for('usuarios.listado_usuarios'))

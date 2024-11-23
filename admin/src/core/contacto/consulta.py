@@ -18,6 +18,7 @@ class EstadoConsulta(enum.Enum):
 
 
 class HistorialEstado(db.Model):
+    """Modelo para mantener el historial de los cambios de estado que ocurren en las consultas"""
     __tablename__ = "historial_estado"
 
     id = db.Column(db.Integer, primary_key=True)
