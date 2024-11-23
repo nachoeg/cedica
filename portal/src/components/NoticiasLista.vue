@@ -4,10 +4,10 @@
     <LoadingComponent v-if="loading"></LoadingComponent>
     <p v-if="error">{{ error }}</p>
     <div v-if="!loading && noticias.length" class="flex flex-col gap-2">
-      <a
+      <RouterLink
         v-for="noticia in noticias"
+        :to="{ name: 'noticia', params: { id: noticia.id } }"
         :key="noticia.id"
-        :href="`/noticias/${noticia.id}`"
         class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700"
       >
         <div class="p-4 md:p-5">
@@ -28,7 +28,7 @@
             Última actualización {{ noticia.fecha_actualizacion }}
           </p>
         </div>
-      </a>
+      </RouterLink>
     </div>
     <p v-if="!loading && !noticias.length">No hay noticias para mostrar.</p>
   </div>
@@ -39,6 +39,7 @@ import { useNoticiasStore } from '../stores/noticias.js'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
+import { RouterLink } from 'vue-router'
 
 const store = useNoticiasStore()
 const { noticias, loading, error } = storeToRefs(store)
