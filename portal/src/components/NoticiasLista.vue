@@ -31,6 +31,12 @@
       </RouterLink>
     </div>
     <p v-if="!loading && !noticias.length">No hay noticias para mostrar.</p>
+    <NoticiasPaginacion
+      v-if="!loading && cant_pages > 1"
+      :cant_pages="cant_pages"
+      :current_page="page"
+      @page-changed="fetchNoticias"
+    ></NoticiasPaginacion>
   </div>
 </template>
 
@@ -40,12 +46,12 @@ import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
 import { RouterLink } from 'vue-router'
+import NoticiasPaginacion from '../components/NoticiasPaginacion.vue'
 
 const store = useNoticiasStore()
-const { noticias, loading, error } = storeToRefs(store)
-
-const fetchNoticias = async () => {
-  await store.fetchNoticias()
+const { noticias, cant_pages, page, loading, error } = storeToRefs(store)
+const fetchNoticias = async (page = 1) => {
+  await store.fetchNoticias(page)
 }
 
 onMounted(() => {
