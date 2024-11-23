@@ -2,6 +2,7 @@ from marshmallow import fields
 from marshmallow import Schema
 
 class AnuncioSchema(Schema):
+    id = fields.Integer()
     title = fields.String(attribute="titulo")  
     summary = fields.String(attribute="copete")  
     content = fields.String(attribute="contenido") 
