@@ -222,7 +222,7 @@ def reporte_propuestas_trabajo():
                                                "propuesta": item[0],
                                                "cantidad": item[1]}))
     return render_template(
-        "pages/estadisticas/ver_ranking_propuestas.html",
+        "pages/estadisticas/ranking_propuestas.html",
         ranking_actual=ranking_actuales_con_puestos,
         ranking_historico=ranking_historico_con_puestos,
         titulo="Reporte de propuestas de trabajo",
@@ -264,15 +264,26 @@ def reporte_deudores():
 @chequear_permiso('estadistica_mostrar')
 @sesion_iniciada_requerida
 def reporte_jinetes_por_dia():
-    resultados_actuales = obtener_ranking_jinetes_por_dia()
+    resultados_actuales, resultados_historicos = obtener_ranking_jinetes_por_dia()
+
+    resultados_actuales.sort(key=lambda x: x[1], reverse=True)
+    resultados_historicos.sort(key=lambda x: x[1], reverse=True)
+
     ranking_con_puestos = []
+    ranking_historico_con_puestos = []
 
     for indice, item in enumerate(resultados_actuales, start=1):
         ranking_con_puestos.append(({"puesto" : indice,
                                      "dia": obtener_dia(item[0]).nombre,
                                      "cantidad": item[1]}))
+
+    for indice, item in enumerate(resultados_historicos, start=1):
+        ranking_historico_con_puestos.append(({"puesto" : indice,
+                                    "dia": obtener_dia(item[0]).nombre,
+                                    "cantidad": item[1]}))
     return render_template(
         "pages/estadisticas/ver_ranking_dias.html",
         ranking_actual=ranking_con_puestos,
-        titulo="Reporte de propuestas de trabajo",
+        ranking_historico=ranking_historico_con_puestos,
+        titulo="Reporte de cantidad de jinetes por día",
     )
