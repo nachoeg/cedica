@@ -61,3 +61,7 @@ Trabajo integrador de la materia Proyecto de Software en la Facultad de Informá
         email: email de la persona que realizo la consulta
 
     Es importante, admeas, que el endpoint recibe un atirbuto captcha_token por segurdad, el cual es validado y debe de proveerse o dara codigo de erro 400. 
+
+    /api/article (get)
+
+    Este endpoint devuelve una noticifica cargada en el sistema, se el debe de pasar un id, valor que es de caracter obligatorio para realizar la consulta, de lo contrario dara error 400
