@@ -14,7 +14,7 @@ export const useNoticiasStore = defineStore('noticias', {
       try {
         this.loading = true
         this.error = null
-        const response = await fetch(`http://localhost:5000/api/articles?page=${page}`)
+        const response = await fetch(`https://admin-grupo17.proyecto2024.linti.unlp.edu.ar/api/articles?page=${page}`)
         if (response.ok) {
           const data = await response.json()
           this.cant_pages = data.cant_pages
