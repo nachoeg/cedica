@@ -13,9 +13,10 @@ export const useNoticiasStore = defineStore('noticias', {
         this.error = null
         const response = await fetch('http://localhost:5000/api/articles')
         if (response.ok) {
-          console.log('HOLA ARTICLES')
+          const data = await response.json();
+          console.log(data);
+          this.noticias = data.data;
         }
-        this.noticias = response.data
       } catch {
         this.error = 'Error al obtener las noticias'
       } finally {

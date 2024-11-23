@@ -12,20 +12,20 @@
       >
         <div class="p-4 md:p-5">
           <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-            {{ noticia.titulo }}
+            {{ noticia.title }}
           </h3>
           <p class="mt-1 text-xs font-medium uppercase text-gray-500 dark:text-neutral-400">
-            {{ noticia.autor }}
+            {{ noticia.author }}
           </p>
           <p class="mt-2 text-gray-500 dark:text-neutral-300">
-            {{ noticia.copete }}
+            {{ noticia.summary }}
           </p>
         </div>
         <div
           class="bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4 md:px-5 dark:bg-neutral-800 dark:border-neutral-700"
         >
           <p class="mt-1 text-sm text-gray-500 dark:text-neutral-500">
-            Última actualización {{ noticia.fecha_actualizacion }}
+            Última actualización {{ noticia.updated_at }}
           </p>
         </div>
       </RouterLink>
