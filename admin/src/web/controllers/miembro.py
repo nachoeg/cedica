@@ -1,4 +1,10 @@
+import ulid
 from io import BytesIO
+from os import fstat
+from src.core.usuarios import usuario_por_alias
+from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
+from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
+from src.core.forms.miembro_forms import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
 from flask import (
     current_app, 
     Blueprint, 
@@ -8,7 +14,8 @@ from flask import (
     url_for, 
     flash,
     send_file,
-    abort)
+    abort, 
+    current_app)
 from src.core.miembro import (
     crear_miembro, 
     crear_domicilio, 
@@ -26,12 +33,6 @@ from src.core.miembro import (
     crear_documento,
     eliminar_documento_miembro,
     miembro_por_id)
-from src.core.forms.miembro_forms import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
-from src.core.usuarios import usuario_por_alias
-from os import fstat
-from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
-import ulid
-from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
 
 
 bp = Blueprint('miembro', __name__, url_prefix='/miembros')
@@ -44,10 +45,11 @@ def miembro_listar():
     """ Realiza el listado paginado de los miembros del equipo,
     permite filtrar por nombre, apellido, dni, email y profesion, ademas de ordenar
     asc y desc por nombre, apellido y fecha de creacion"""
+    cant_filas = current_app.config.get("TABLA_CANT_FILAS")
     orden = request.args.get("orden", "asc")
     ordenar_por = request.args.get("ordenar_por", "nombre")
     pagina = convertir_a_entero(request.args.get("pagina", 1))
-    cant_por_pagina = int(request.args.get("cant_por_pagina", 6))
+    cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     nombre_filtro = request.args.get("nombre", "")
     apellido_filtro = request.args.get("apellido", "")
     dni_filtro = request.args.get("dni", "")
@@ -87,6 +89,7 @@ def miembro_listar():
         email_filtro=email_filtro,
         profesion_filtro=profesion_filtro
     )
+
 
 @bp.route('/crear', methods=['GET', 'POST'])
 @chequear_permiso("miembro_crear")
@@ -170,6 +173,7 @@ def miembro_crear():
 
     return render_template('pages/miembros/crear.html', form=form, titulo="Crear miembro")
 
+
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 @chequear_permiso("miembro_actualizar")
 @sesion_iniciada_requerida
@@ -241,6 +245,7 @@ def miembro_editar(id: int):
 
     return render_template("pages/miembros/crear.html", form=form, titulo="Editar miembro")    
 
+
 @bp.route('/<int:id>', methods=['GET'])
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
@@ -248,6 +253,7 @@ def miembro_mostrar(id):
     """Muestra la informacion de un miembro del equipo"""
     miembro = miembro_por_id(id)
     return render_template('pages/miembros/mostrar.html', miembro=miembro)
+
 
 @bp.route('/<int:id>/cambiar_condicion', methods=['GET'])
 @chequear_permiso("miembro_eliminar")
@@ -257,6 +263,7 @@ def miembro_cambiar_condicion(id):
     cambiar_condicion_miembro(id)
     flash("Miembro activado/desactivado con exito.", 'success')
     return redirect(url_for('miembro.miembro_listar'))
+
 
 @bp.get("/<int:id>/documentos/")
 @chequear_permiso("miembro_mostrar")
@@ -301,6 +308,7 @@ def miembro_documentos(id: int):
         tipos_documento=tipos_documento,
     )
 
+
 @bp.route("/<int:id>/documentos/subir_archivo/", methods=["GET", "POST"])
 @chequear_permiso("miembro_crear")
 @sesion_iniciada_requerida
@@ -341,6 +349,7 @@ def miembro_subir_archivo(id: int):
         "pages/miembros/crear_documento.html", form=form, miembro=miembro, subir_archivo=True, titulo="Subir archivo"
     )
 
+
 @bp.route("/<int:id>/documentos/subir_enlace/", methods=["GET", "POST"])
 @chequear_permiso("miembro_crear")
 @sesion_iniciada_requerida
@@ -371,6 +380,7 @@ def miembro_subir_enlace(id: int):
         "pages/miembros/crear_documento.html", form=form, miembro=miembro, subir_enlace=True, titulo="Subir enlace"
     )
 
+
 @bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
@@ -378,6 +388,7 @@ def ir_documento(id: int,documento_id: int):
     """Redirigue al enlace previamente cargado como documento del miembro"""
     documento = obtener_documento(documento_id)
     return redirect(documento.url)
+
 
 @bp.get("/<int:id>/documentos/<int:documento_id>/descargar/")
 @chequear_permiso("miembro_mostrar")
@@ -398,6 +409,7 @@ def descargar_documento(id: int, documento_id: int):
         download_name=f"{documento.nombre}{extension}"
     )
 
+
 @bp.get("/<int:id>/documentos/<int:documento_id>/eliminar/")
 @chequear_permiso("miembro_eliminar")
 @sesion_iniciada_requerida
@@ -413,6 +425,7 @@ def eliminar_documento(id: int, documento_id: int):
     eliminar_documento_miembro(documento_id)
     flash("Documento eliminado con exito", "exito")
     return redirect(url_for("miembro.miembro_documentos", id=id))
+
 
 @bp.route("/<int:id>/documentos/<int:documento_id>/editar/", methods=["GET", "POST"])
 @chequear_permiso("miembro_actualizar")

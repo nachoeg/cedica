@@ -39,3 +39,29 @@ Trabajo integrador de la materia Proyecto de Software en la Facultad de Informá
 - Lea Agustina Mankowski Kochubey
 - Matías Geringer
 - Verónica Cao
+
+### Informacion sobre la API:
+
+    La API tienen dos endpoints:
+    
+    /api/articles (get)
+    
+    Este metodo devuelve los aritculos de forma pagina, tiene 5 parametros opcionales que pueden pasarse: 
+        author: permite filtar por nombre de autor de la noticias.
+        published_from y published_to: permiten filtrar por fecha de creacion.
+        page: numero de pagina
+        per_page: cantidad de elementos por pagina.
+    /api/articles devuelve los elementos de forma paginada, por defecto page toma el valor de 1 y per_page de 6
+
+    /api/message (post)
+
+    Este metodo permite cargar una consulta en el sistema, en el cuerpo del post se le debe pasar 3 valors que son de caracter obligatorio:
+        title: titulo de la consulta:
+        message: mensaje de la consulta
+        email: email de la persona que realizo la consulta
+
+    Es importante, admeas, que el endpoint recibe un atirbuto captcha_token por segurdad, el cual es validado y debe de proveerse o dara codigo de erro 400. 
+
+    /api/article (get)
+
+    Este endpoint devuelve una noticifica cargada en el sistema, se el debe de pasar un id, valor que es de caracter obligatorio para realizar la consulta, de lo contrario dara error 400
