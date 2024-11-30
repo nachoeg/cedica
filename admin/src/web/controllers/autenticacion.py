@@ -156,11 +156,15 @@ def iniciar_sesion_autorizar():
             flash('No se pudo registrar la solicitud: email no verificado',
                   'error')
         else:
-            nombre_roles = [rol.nombre for rol in usuario.roles]
-            cargar_datos_sesion(id=usuario.id, alias=usuario.alias,
-                                admin_sistema=usuario.admin_sistema,
-                                nombre_roles=nombre_roles, sin_contraseña=True)
-            flash('Ha iniciado sesión', 'exito')
-            return redirect(url_for('home'))
+            if not usuario.activo:
+                flash('No se puede iniciar la sesión. \
+                       Consulte con la administración.', 'error')
+            else:
+                nombre_roles = [rol.nombre for rol in usuario.roles]
+                cargar_datos_sesion(id=usuario.id, alias=usuario.alias,
+                                    admin_sistema=usuario.admin_sistema,
+                                    nombre_roles=nombre_roles, sin_contraseña=True)
+                flash('Ha iniciado sesión', 'exito')
+                return redirect(url_for('home'))
     return redirect(url_for('home'))
 

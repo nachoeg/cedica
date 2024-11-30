@@ -199,7 +199,8 @@ def usuario_por_email_y_contraseña(email, contraseña):
     """
     usuario = usuario_por_email(email)
 
-    if usuario and bcrypt.check_password_hash(usuario.contraseña, contraseña):
+    if (usuario and usuario.contraseña is not None and
+            bcrypt.check_password_hash(usuario.contraseña, contraseña)):
         return usuario
 
     return None
