@@ -29,12 +29,13 @@ def listar_solicitudes(orden, ordenar_por, pagina, cant_por_pagina,
     return (total, solicitudes)
 
 
-def crear_solicitud(email, fecha_solicitud=datetime.now()):
+def crear_solicitud(email, fecha_solicitud=datetime.now(), aceptada=False):
     """Crea un objeto de tipo SolicitudUsuario con los datos que recibe por
     parámetro y lo devuelve.
     """
     email = email.lower()
-    solicitud = SolicitudUsuario(email=email, fecha_solicitud=fecha_solicitud)
+    solicitud = SolicitudUsuario(email=email, fecha_solicitud=fecha_solicitud,
+                                 aceptada=aceptada)
     db.session.add(solicitud)
     db.session.commit()
 

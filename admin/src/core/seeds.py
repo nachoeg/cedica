@@ -1,14 +1,21 @@
 from src.core import miembro
 from src.core import cobros, jinetes_y_amazonas
-from src.core.seeds_usuarios import cargar_usuarios
+from src.core.seeds_usuarios import cargar_usuarios, cargar_solicitudes
 from src.core import ecuestre
 from src.core import pago
 from src.core import anuncios
 from src.core.seeds_anuncios import cargar_anuncios
 from src.core import contacto
 
+
 def run():
-    
+
+    print("Cargando la base de datos...")
+    cargar_usuarios()
+    print("Usuarios OK")
+    cargar_solicitudes()
+    print("Solicitudes OK")
+
     profesiones = [
         "Psicólogo/a", "Psicomotricista", "Médico/a", "Kinesiólogo/a",
         "Terapista Ocupacional", "Psicopedagogo/a", "Docente", "Profesor",
@@ -42,8 +49,6 @@ def run():
         numero="101",
         localidad="Ciudad B"
     )
-
-    cargar_usuarios()
 
     cargar_diagnosticos()
     cargar_dias()

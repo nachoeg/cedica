@@ -205,3 +205,11 @@ def cargar_usuarios():
 
     # Edición - Clara
     usuarios.asignar_rol(edicion, roles["rol_edicion"])
+
+
+def cargar_solicitudes():
+
+    usuarios.crear_solicitud(email="tecnica@mail.com")
+    usuarios.crear_solicitud(email="solicitud@mail.com")
+    usuarios.crear_solicitud(email="clau@mail.com")
+    usuarios.crear_solicitud(email="admin2@mail.com", aceptada=True)

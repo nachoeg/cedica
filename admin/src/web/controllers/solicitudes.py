@@ -30,7 +30,7 @@ def listado_solicitudes():
     pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     email_filtro = request.args.get("email", "")
-    aceptada_filtro = request.args.get("activo", "")
+    aceptada_filtro = request.args.get("aceptada", "")
 
     # activo_filtro = palabra_a_booleano(activo_filtro)
     cant_resultados, solicitudes = listar_solicitudes(
