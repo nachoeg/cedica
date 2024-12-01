@@ -27,7 +27,7 @@ class SubirArchivoForm(FlaskForm):
         validators=[
             DataRequired("Selecciona un archivo"),
             LimiteDeArchivo(tamanio_en_mb=100),
-            TipoDeArchivo(permitidos=["pdf", "doc", "xls", "jpeg"]),
+            TipoDeArchivo(permitidos=["pdf", "doc", "xls", "jpeg", "jpg", "docx"]),
         ],
     )
     tipo_de_documento_id = SelectField("Tipo", coerce=int)

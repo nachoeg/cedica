@@ -44,7 +44,7 @@ class DocumentoMiembro(db.Model):
     def to_dict(self):
         return {
             "nombre": self.nombre,
-            "fecha": self.fecha,
+            "fecha": self.fecha.strftime("%d-%m-%Y"),
             "tipo": self.tipo_de_documento.tipo if self.tipo_de_documento else None,
         }
 

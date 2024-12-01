@@ -30,8 +30,12 @@
     <p><strong>Condición:</strong> {{ miembro.condicion_trabajo.nombre }}</p>
     <p><strong>Calle:</strong> {{ miembro.domicilio.calle }}</p>
     <p><strong>Numero:</strong> {{ miembro.domicilio.numero}}</p>
+    {% if miembro.domicilio.piso %}
     <p><strong>Piso:</strong> {{ miembro.domicilio.piso }}</p>
+    {% endif %}
+    {% if miembro.domicilio.dpto %}
     <p><strong>Departamento:</strong> {{ miembro.domicilio.dpto }}</p>
+    {% endif %}
     <p><strong>Localidad:</strong> {{ miembro.domicilio.localidad }}</p>
     <p><strong>Usuario:</strong> {{ miembro.usuario.alias }}</p>
     </div>
