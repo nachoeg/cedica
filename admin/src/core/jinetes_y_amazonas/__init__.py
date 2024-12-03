@@ -351,9 +351,10 @@ def listar_profesores():
     Funcion que retorna los profesores del sistema.
     """
     profesores = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Profesor de Equitación"
+        PuestoLaboral.nombre == "Profesor de Equitación",
+        Miembro.activo.is_(True)
     )
-    print(profesores)
+
     return profesores
 
 
@@ -362,7 +363,8 @@ def listar_conductores():
     Funcion que retorna los conductores del sistema.
     """
     conductores = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Conductor"
+        PuestoLaboral.nombre == "Conductor",
+        Miembro.activo.is_(True)
     )
 
     return conductores
@@ -373,7 +375,8 @@ def listar_auxiliares_pista():
     Funcion que retorna los auxiliares de pista del sistema.
     """
     auxiliares = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Auxiliar de pista"
+        PuestoLaboral.nombre == "Auxiliar de pista",
+        Miembro.activo.is_(True)
     )
 
     return auxiliares
