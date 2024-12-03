@@ -25,15 +25,16 @@
     <p><strong>¿Posee certificado de discapacidad?:</strong> {{ booleano_a_palabra(jya.certificado_discapacidad) if jya.certificado_discapacidad is not none else "-sin datos-" }}</p>
     {% if jya.certificado_discapacidad %}
       <p><strong>Diagnóstico:</strong> {{ mostrar_dato(jya.diagnostico.nombre) }}</p>
-    {% endif %}
-    {% if jya.diagnostico_otro %}
-    <p><strong>Descripción del diagnóstico:</strong> {{ jya.diagnostico_otro }}</p>
-    {% endif %}
+      {% if jya.diagnostico_otro %}
+      <p><strong>Descripción del diagnóstico:</strong> {{ jya.diagnostico_otro }}</p>
+      {% endif %}
+    {% else %}
     <p><strong>Tipo de discapacidad:</strong></br>
       {% for tipo in jya.tipo_discapacidad %}
         {{ mostrar_dato(tipo.nombre) }}</br>
       {% endfor %}
-  </p>
+    </p>
+    {% endif %}
   {% if tiene_permiso(session, 'jya_actualizar') %}
     <a class="btn btn-secondary w-full" href="{{url_for('jinetes_y_amazonas.editar_info_salud', id=jya.id)}}">Editar</a>
   {% endif %}
