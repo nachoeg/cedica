@@ -153,7 +153,10 @@ def iniciar_sesion_autorizar():
                         la administración para poder ingresar.',
                       'warning')
         elif not info_usuario_google.get('email_verified'):
-            flash('No se pudo registrar la solicitud: email no verificado',
+            flash('No se pudo registrar la solicitud: email no verificado.',
+                  'error')
+        elif usuario.contraseña is not None:
+            flash('Utilice su contraseña para ingresar al sistema.',
                   'error')
         else:
             if not usuario.activo:

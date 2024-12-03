@@ -211,5 +211,5 @@ def cargar_solicitudes():
 
     usuarios.crear_solicitud(email="tecnica@mail.com")
     usuarios.crear_solicitud(email="solicitud@mail.com")
-    usuarios.crear_solicitud(email="clau@mail.com")
+    usuarios.crear_solicitud(email="sandra@mail.com")
     usuarios.crear_solicitud(email="admin2@mail.com", aceptada=True)
