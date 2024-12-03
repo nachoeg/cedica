@@ -195,7 +195,7 @@ def cargar_info_salud(id: int):
             diagnostico_otro = None
             tipo_discapacidad = [
                 obtener_tipo_discapacidad(tipo)
-                for tipo in form.tipo_discapacidad
+                for tipo in form.tipo_discapacidad.data
             ]
         cargar_informacion_salud(
             id,

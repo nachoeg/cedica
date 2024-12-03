@@ -78,7 +78,7 @@ def nuevo_anuncio():
         titulo = form.titulo.data
         copete = form.copete.data
         contenido = form.contenido.data
-        id = session["id"]
+        id = session.get("id")
         crear_anuncio(titulo, copete, contenido, id)
 
         return redirect(url_for("anuncios.listar"))
