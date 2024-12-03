@@ -4,15 +4,22 @@ export const useNoticiaStore = defineStore('noticia', {
   state: () => ({
     noticia: {},
     loading: false,
+    error: null,
   }),
   actions: {
     async fetchNoticia(id) {
       try {
         this.loading = true
-        const response = await fetch(`https://admin-grupo17.proyecto2024.linti.unlp.edu.ar/api/article?id=${id}`)
+        this.error = null
+
+        const response = await fetch(
+          `https://admin-grupo17.proyecto2024.linti.unlp.edu.ar/api/article?id=${id}`,
+        )
+        const data = await response.json()
         if (response.ok) {
-          const data = await response.json()
           this.noticia = data
+        } else {
+          this.error = data.error
         }
       } catch {
         this.error = 'Error al obtener la noticia'
