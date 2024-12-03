@@ -4,45 +4,52 @@ from os import fstat
 from src.core.usuarios import usuario_por_alias
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 from src.web.handlers.funciones_auxiliares import validar_url, convertir_a_entero
-from src.core.forms.miembro_forms import InfoMiembroForm, ArchivoMiembroForm, EnlaceMiembroForm, EditarArchivoMiembroForm
+from src.core.forms.miembro_forms import (
+    InfoMiembroForm,
+    ArchivoMiembroForm,
+    EnlaceMiembroForm,
+    EditarArchivoMiembroForm,
+)
 from flask import (
-    current_app, 
-    Blueprint, 
-    render_template, 
-    request, 
-    redirect, 
-    url_for, 
+    current_app,
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
     flash,
     send_file,
-    abort, 
-    current_app)
+    abort,
+    current_app,
+)
 from src.core.miembro import (
-    crear_miembro, 
-    crear_domicilio, 
-    listar_condiciones, 
-    listar_profesiones, 
-    obtener_documento, 
-    listar_puestos_laborales, 
-    listar_miembros, 
-    obtener_miembro, 
-    guardar_cambios, 
-    buscar_domicilio, 
-    cambiar_condicion_miembro, 
-    listar_tipos_de_documentos, 
-    listar_documentos, 
+    crear_miembro,
+    crear_domicilio,
+    listar_condiciones,
+    listar_profesiones,
+    obtener_documento,
+    listar_puestos_laborales,
+    listar_miembros,
+    obtener_miembro,
+    guardar_cambios,
+    buscar_domicilio,
+    cambiar_condicion_miembro,
+    listar_tipos_de_documentos,
+    listar_documentos,
     crear_documento,
     eliminar_documento_miembro,
-    miembro_por_id)
+    miembro_por_id,
+)
 
 
-bp = Blueprint('miembro', __name__, url_prefix='/miembros')
+bp = Blueprint("miembro", __name__, url_prefix="/miembros")
 
 
-@bp.route('/', methods=['GET'])
+@bp.route("/", methods=["GET"])
 @chequear_permiso("miembro_listar")
 @sesion_iniciada_requerida
 def miembro_listar():
-    """ Realiza el listado paginado de los miembros del equipo,
+    """Realiza el listado paginado de los miembros del equipo,
     permite filtrar por nombre, apellido, dni, email y profesion, ademas de ordenar
     asc y desc por nombre, apellido y fecha de creacion"""
     cant_filas = current_app.config.get("TABLA_CANT_FILAS")
@@ -57,8 +64,15 @@ def miembro_listar():
     profesion_filtro = request.args.get("profesion", "")
 
     miembros, cant_resultados = listar_miembros(
-        nombre_filtro, apellido_filtro, dni_filtro, email_filtro, profesion_filtro,
-        ordenar_por, orden, pagina, cant_por_pagina
+        nombre_filtro,
+        apellido_filtro,
+        dni_filtro,
+        email_filtro,
+        profesion_filtro,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pagina,
     )
 
     profesiones = listar_profesiones()
@@ -87,20 +101,26 @@ def miembro_listar():
         apellido_filtro=apellido_filtro,
         dni_filtro=dni_filtro,
         email_filtro=email_filtro,
-        profesion_filtro=profesion_filtro
+        profesion_filtro=profesion_filtro,
     )
 
 
-@bp.route('/crear', methods=['GET', 'POST'])
+@bp.route("/crear", methods=["GET", "POST"])
 @chequear_permiso("miembro_crear")
 @sesion_iniciada_requerida
 def miembro_crear():
-    """ Levante el formulario para crear un miembro y recibe los datos que envia al modulo de miembro para crear uno nuevo"""
+    """Levante el formulario para crear un miembro y recibe los datos que envia al modulo de miembro para crear uno nuevo"""
     form = InfoMiembroForm()
 
-    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
-    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
-    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
+    form.condicion_id.choices = [
+        (condicion.id, condicion.nombre) for condicion in listar_condiciones()
+    ]
+    form.profesion_id.choices = [
+        (profesion.id, profesion.nombre) for profesion in listar_profesiones()
+    ]
+    form.puesto_laboral_id.choices = [
+        (puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()
+    ]
 
     if request.method == "POST" and form.validate_on_submit():
         nombre = form.nombre.data
@@ -123,30 +143,33 @@ def miembro_crear():
         alias = form.alias.data
 
         domicilio_existente = buscar_domicilio(
-            calle=calle,
-            numero=numero,
-            piso=piso,
-            dpto=dpto,
-            localidad=localidad
+            calle=calle, numero=numero, piso=piso, dpto=dpto, localidad=localidad
         )
 
         if domicilio_existente:
             domicilio_id = domicilio_existente.id
         else:
-            nuevo_domicilio = crear_domicilio(calle=calle, numero=numero, piso=piso, dpto=dpto, localidad=localidad)
+            nuevo_domicilio = crear_domicilio(
+                calle=calle, numero=numero, piso=piso, dpto=dpto, localidad=localidad
+            )
             domicilio_id = nuevo_domicilio.id
 
         if alias:
-            usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
+            usuario = usuario_por_alias(
+                alias
+            )  # Verificamos si existe el usuario con el alias dado
             if usuario:
                 if usuario.miembro:  # Si el usuario ya está asignado a un miembro
-                    flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
+                    flash(
+                        f"El alias {alias} ya está asignado a un miembro del equipo.",
+                        "danger",
+                    )
                     return render_template("pages/miembros/crear.html", form=form)
                 else:
                     # Si el usuario existe pero no está asignado a ningún miembro
                     usuario_id = usuario.id
             else:
-                flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
+                flash(f"No se encontró ningún usuario con el alias {alias}.", "danger")
                 return render_template("pages/miembros/crear.html", form=form)
         else:
             usuario_id = None
@@ -165,13 +188,15 @@ def miembro_crear():
             profesion_id=profesion_id,
             puesto_laboral_id=puesto_laboral_id,
             domicilio_id=domicilio_id,
-            usuario_id=usuario_id
+            usuario_id=usuario_id,
         )
 
-        flash("Miembro registrado con éxito.", 'success')
-        return redirect(url_for('miembro.miembro_listar'))
+        flash("Miembro registrado con éxito.", "success")
+        return redirect(url_for("miembro.miembro_listar"))
 
-    return render_template('pages/miembros/crear.html', form=form, titulo="Crear miembro")
+    return render_template(
+        "pages/miembros/crear.html", form=form, titulo="Crear miembro"
+    )
 
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
@@ -188,10 +213,16 @@ def miembro_editar(id: int):
     form.piso.data = miembro.domicilio.piso
     form.dpto.data = miembro.domicilio.dpto
     form.localidad.data = miembro.domicilio.localidad
-    form.condicion_id.choices = [(condicion.id, condicion.nombre) for condicion in listar_condiciones()]
-    form.profesion_id.choices = [(profesion.id, profesion.nombre) for profesion in listar_profesiones()]
-    form.puesto_laboral_id.choices = [(puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()]
-    
+    form.condicion_id.choices = [
+        (condicion.id, condicion.nombre) for condicion in listar_condiciones()
+    ]
+    form.profesion_id.choices = [
+        (profesion.id, profesion.nombre) for profesion in listar_profesiones()
+    ]
+    form.puesto_laboral_id.choices = [
+        (puesto.id, puesto.nombre) for puesto in listar_puestos_laborales()
+    ]
+
     if request.method == "POST" and form.validate_on_submit():
         miembro.nombre = form.nombre.data
         miembro.apellido = form.apellido.data
@@ -211,58 +242,73 @@ def miembro_editar(id: int):
             numero=form.numero.data,
             piso=form.piso.data,
             dpto=form.dpto.data,
-            localidad=form.localidad.data
+            localidad=form.localidad.data,
         )
 
         if domicilio_existente:
             miembro.domicilio_id = domicilio_existente.id
         else:
-            nuevo_domicilio = crear_domicilio(calle=form.calle.data, numero=form.numero.data, piso=form.piso.data, dpto=form.dpto.data, localidad=form.localidad.data)
+            nuevo_domicilio = crear_domicilio(
+                calle=form.calle.data,
+                numero=form.numero.data,
+                piso=form.piso.data,
+                dpto=form.dpto.data,
+                localidad=form.localidad.data,
+            )
             miembro.domicilio_id = nuevo_domicilio.id
 
         alias = form.alias.data
         if alias:
-            usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
+            usuario = usuario_por_alias(
+                alias
+            )  # Verificamos si existe el usuario con el alias dado
             if usuario:
-                if usuario.miembro and usuario.id != miembro.usuario.id: # Si el usuario ya está asignado a un miembro y es usuario de un miembro distintos
-                    flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
+                if (
+                    usuario.miembro and usuario.id != miembro.usuario.id
+                ):  # Si el usuario ya está asignado a un miembro y es usuario de un miembro distintos
+                    flash(
+                        f"El alias {alias} ya está asignado a un miembro del equipo.",
+                        "danger",
+                    )
                     return render_template("pages/miembros/crear.html", form=form)
                 else:
                     # Si el usuario existe pero no está asignado a ningún miembro
                     miembro.usuario_id = usuario.id
             else:
-                flash(f"No se encontró ningún usuario con el alias {alias}.", 'danger')
-                return render_template("pages/miembros/crear.html", form=form)  
+                flash(f"No se encontró ningún usuario con el alias {alias}.", "danger")
+                return render_template("pages/miembros/crear.html", form=form)
         elif alias == "":
             miembro.usuario_id = None
 
         guardar_cambios()
-        flash("Miembro editado con éxito.", 'success')
-        return redirect(url_for("miembro.miembro_listar")) 
+        flash("Miembro editado con éxito.", "success")
+        return redirect(url_for("miembro.miembro_listar"))
 
     if miembro.usuario != None:
-        form.alias.data = miembro.usuario.alias 
+        form.alias.data = miembro.usuario.alias
 
-    return render_template("pages/miembros/crear.html", form=form, titulo="Editar miembro")    
+    return render_template(
+        "pages/miembros/crear.html", form=form, titulo="Editar miembro"
+    )
 
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route("/<int:id>", methods=["GET"])
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
 def miembro_mostrar(id):
     """Muestra la informacion de un miembro del equipo"""
     miembro = miembro_por_id(id)
-    return render_template('pages/miembros/mostrar.html', miembro=miembro)
+    return render_template("pages/miembros/mostrar.html", miembro=miembro)
 
 
-@bp.route('/<int:id>/cambiar_condicion', methods=['GET'])
+@bp.route("/<int:id>/cambiar_condicion", methods=["GET"])
 @chequear_permiso("miembro_eliminar")
 @sesion_iniciada_requerida
 def miembro_cambiar_condicion(id):
     """Activa o desactiva a un miembro del equipo"""
     cambiar_condicion_miembro(id)
-    flash("Miembro activado/desactivado con exito.", 'success')
-    return redirect(url_for('miembro.miembro_listar'))
+    flash("Miembro activado/desactivado con exito.", "success")
+    return redirect(url_for("miembro.miembro_listar"))
 
 
 @bp.get("/<int:id>/documentos/")
@@ -318,7 +364,9 @@ def miembro_subir_archivo(id: int):
     if miembro is None:
         abort(404)
     form = ArchivoMiembroForm()
-    form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -346,7 +394,11 @@ def miembro_subir_archivo(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/miembros/crear_documento.html", form=form, miembro=miembro, subir_archivo=True, titulo="Subir archivo"
+        "pages/miembros/crear_documento.html",
+        form=form,
+        miembro=miembro,
+        subir_archivo=True,
+        titulo="Subir archivo",
     )
 
 
@@ -359,7 +411,9 @@ def miembro_subir_enlace(id: int):
     if miembro is None:
         abort(404)
     form = EnlaceMiembroForm()
-    form.tipo_de_documento_id.choices = [(t.id, t.tipo) for t in listar_tipos_de_documentos()]
+    form.tipo_de_documento_id.choices = [
+        (t.id, t.tipo) for t in listar_tipos_de_documentos()
+    ]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -367,7 +421,6 @@ def miembro_subir_enlace(id: int):
             tipo = form.tipo_de_documento_id.data
             miembro_id = id
             url = validar_url(form.url.data)
-
 
             crear_documento(nombre, tipo, url, miembro_id, archivo_externo=True)
 
@@ -377,14 +430,18 @@ def miembro_subir_enlace(id: int):
             flash("Error al subir el documento", "error")
 
     return render_template(
-        "pages/miembros/crear_documento.html", form=form, miembro=miembro, subir_enlace=True, titulo="Subir enlace"
+        "pages/miembros/crear_documento.html",
+        form=form,
+        miembro=miembro,
+        subir_enlace=True,
+        titulo="Subir enlace",
     )
 
 
 @bp.get("/<int:id>/documentos/<int:documento_id>/ir/")
 @chequear_permiso("miembro_mostrar")
 @sesion_iniciada_requerida
-def ir_documento(id: int,documento_id: int):
+def ir_documento(id: int, documento_id: int):
     """Redirigue al enlace previamente cargado como documento del miembro"""
     documento = obtener_documento(documento_id)
     return redirect(documento.url)
@@ -406,7 +463,7 @@ def descargar_documento(id: int, documento_id: int):
     return send_file(
         archivo_bytes,
         as_attachment=True,
-        download_name=f"{documento.nombre}{extension}"
+        download_name=f"{documento.nombre}{extension}",
     )
 
 
@@ -431,7 +488,7 @@ def eliminar_documento(id: int, documento_id: int):
 @chequear_permiso("miembro_actualizar")
 @sesion_iniciada_requerida
 def editar_documento(id: int, documento_id: int):
-    """Permite modificar un documento, para los enlaces se permite modificar todos los valores, 
+    """Permite modificar un documento, para los enlaces se permite modificar todos los valores,
     mientras que para archivos se puede modificar solamente tipo y nombre"""
     miembro = obtener_miembro(id)
     if miembro is None:
@@ -440,7 +497,7 @@ def editar_documento(id: int, documento_id: int):
     if documento.archivo_externo:
         form = EnlaceMiembroForm(obj=documento)
     else:
-        form =  EditarArchivoMiembroForm(obj=documento)
+        form = EditarArchivoMiembroForm(obj=documento)
     form.tipo_de_documento_id.choices = [
         (t.id, t.tipo) for t in listar_tipos_de_documentos()
     ]

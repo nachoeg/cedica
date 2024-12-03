@@ -1,4 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    current_app,
+)
 from src.core.forms.contacto_forms import HistorialForm
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
@@ -10,10 +19,11 @@ from src.core.contacto import (
     archivar_consulta,
     desarchivar_consulta,
     actualizar_estado,
-    listar_historial)
+    listar_historial,
+)
 
 
-bp = Blueprint('contacto', __name__, url_prefix='/contacto')
+bp = Blueprint("contacto", __name__, url_prefix="/contacto")
 
 
 @chequear_permiso("consulta_listar")
@@ -28,7 +38,9 @@ def listar(titulo, archivado):
     cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     estado_filtro = request.args.get("estado", "")
 
-    contactos, cant_resultados = listar_consultas(estado_filtro, ordenar_por, orden, pagina, cant_por_pagina, archivado) 
+    contactos, cant_resultados = listar_consultas(
+        estado_filtro, ordenar_por, orden, pagina, cant_por_pagina, archivado
+    )
 
     tipos_estados = listar_estados_consultas()
 
@@ -47,7 +59,7 @@ def listar(titulo, archivado):
         ordenar_por=ordenar_por,
         estado=estado_filtro,
         titulo=titulo,
-        archivado=archivado
+        archivado=archivado,
     )
 
 
@@ -56,7 +68,7 @@ def listar(titulo, archivado):
 @sesion_iniciada_requerida
 def listar_recibidos():
     return listar(titulo="Consultas recibidas", archivado=False)
-    
+
 
 @bp.get("/archivados")
 @chequear_permiso("consulta_listar")
@@ -65,7 +77,7 @@ def listar_archivados():
     return listar(titulo="Consultas archivadas", archivado=True)
 
 
-@bp.route("/<int:id>/", methods=['GET', 'POST'])
+@bp.route("/<int:id>/", methods=["GET", "POST"])
 @chequear_permiso("consulta_mostrar")
 @sesion_iniciada_requerida
 def ver(id: int):
@@ -79,48 +91,48 @@ def ver(id: int):
     if request.method == "POST" and form.validate_on_submit():
         estado = form.estado.data
         comentario = form.comentario.data
-        usuario = session.get('alias')
+        usuario = session.get("alias")
         actualizar_estado(id, estado, comentario, usuario)
-        flash("Estado actualizado con éxito.", 'success')
-        return redirect(url_for('contacto.listar_recibidos'))
+        flash("Estado actualizado con éxito.", "success")
+        return redirect(url_for("contacto.listar_recibidos"))
 
-    return render_template("pages/contactos/ver.html", form=form, consulta=consulta)      
+    return render_template("pages/contactos/ver.html", form=form, consulta=consulta)
 
 
-@bp.route('/<int:id>/eliminar', methods=['GET'])
+@bp.route("/<int:id>/eliminar", methods=["GET"])
 @chequear_permiso("consulta_eliminar")
 @sesion_iniciada_requerida
 def eliminar(id):
-    """Permite eliminar una consulta del sistema, 
+    """Permite eliminar una consulta del sistema,
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
     eliminar_consulta(id)
-    flash("Consulta eliminado con exito.", 'success')
-    return redirect(url_for('contacto.listar_recibidos'))
+    flash("Consulta eliminado con exito.", "success")
+    return redirect(url_for("contacto.listar_recibidos"))
 
 
-@bp.route('/<int:id>/archivar', methods=['GET'])
+@bp.route("/<int:id>/archivar", methods=["GET"])
 @chequear_permiso("consulta_actualizar")
 @sesion_iniciada_requerida
 def archivar(id):
-    """Permite eliminar una consulta del sistema, 
+    """Permite eliminar una consulta del sistema,
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
     archivar_consulta(id)
-    flash("Consulta archivada con exito.", 'success')
-    return redirect(url_for('contacto.listar_recibidos'))
+    flash("Consulta archivada con exito.", "success")
+    return redirect(url_for("contacto.listar_recibidos"))
 
 
-@bp.route('/<int:id>/desarchivar', methods=['GET'])
+@bp.route("/<int:id>/desarchivar", methods=["GET"])
 @chequear_permiso("consulta_actualizar")
 @sesion_iniciada_requerida
 def desarchivar(id):
-    """Permite eliminar una consulta del sistema, 
+    """Permite eliminar una consulta del sistema,
     toma el id y se lo envia la modulo de contacto para hacer efectiva la baja"""
     desarchivar_consulta(id)
-    flash("Consulta movida a recibidos con exito.", 'success')
-    return redirect(url_for('contacto.listar_recibidos'))
+    flash("Consulta movida a recibidos con exito.", "success")
+    return redirect(url_for("contacto.listar_recibidos"))
 
 
-@bp.route('/<int:id>/listar_historial', methods=['GET'])
+@bp.route("/<int:id>/listar_historial", methods=["GET"])
 @chequear_permiso("consulta_mostrar")
 @sesion_iniciada_requerida
 def historial(id):
@@ -142,5 +154,5 @@ def historial(id):
         cant_resultados=cant_resultados,
         cant_paginas=cant_paginas,
         pagina=pagina,
-        consulta=id
+        consulta=id,
     )

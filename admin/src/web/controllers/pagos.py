@@ -1,19 +1,29 @@
 from src.core.forms.pago_forms import PagoForm
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    current_app,
+)
 from src.core.miembro import obtener_miembro_dni, obtener_miembro
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
 from src.core.pago import (
-    crear_pago, 
-    listar_pagos, 
-    obtener_pago, 
-    guardar_cambios, 
-    listar_tipos_pagos, 
-    obtener_tipo_pago, 
-    eliminar_pago)
+    crear_pago,
+    listar_pagos,
+    obtener_pago,
+    guardar_cambios,
+    listar_tipos_pagos,
+    obtener_tipo_pago,
+    eliminar_pago,
+)
 
 
-bp = Blueprint('pago', __name__, url_prefix='/pagos')
+bp = Blueprint("pago", __name__, url_prefix="/pagos")
+
 
 @bp.get("/")
 @chequear_permiso("pago_listar")
@@ -32,7 +42,14 @@ def pago_listar():
     search_beneficiario = request.args.get("beneficiario", "")
 
     pagos, cant_resultados = listar_pagos(
-        search_fecha_inicio, search_fecha_fin, tipo_pago_id, search_beneficiario, ordenar_por, orden, pagina, cant_por_pagina
+        search_fecha_inicio,
+        search_fecha_fin,
+        tipo_pago_id,
+        search_beneficiario,
+        ordenar_por,
+        orden,
+        pagina,
+        cant_por_pagina,
     )
 
     tipos_pago = listar_tipos_pagos()
@@ -60,7 +77,7 @@ def pago_listar():
     )
 
 
-@bp.route('/crear', methods=['GET', 'POST'])
+@bp.route("/crear", methods=["GET", "POST"])
 @chequear_permiso("pago_crear")
 @sesion_iniciada_requerida
 def pago_crear():
@@ -68,7 +85,7 @@ def pago_crear():
     al modulo de pago y crear uno nuevo"""
     form = PagoForm()
     form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in listar_tipos_pagos()]
-    
+
     if request.method == "POST" and form.validate_on_submit():
         monto = form.monto.data
         descripcion = form.descripcion.data
@@ -76,7 +93,7 @@ def pago_crear():
         tipo_id = form.tipo_id.data
 
         tipo_pago = obtener_tipo_pago(tipo_id)
-        miembro_dni = form.dni.data if tipo_pago.nombre == 'Honorario' else None
+        miembro_dni = form.dni.data if tipo_pago.nombre == "Honorario" else None
 
         miembro_id = None
         if miembro_dni:
@@ -84,18 +101,27 @@ def pago_crear():
             if miembro:
                 miembro_id = miembro.id
             else:
-                flash(f"No se encontró ningún miembro activo con el DNI {miembro_dni}.", 'danger')
-                return redirect(url_for('pago.pago_crear'))
+                flash(
+                    f"No se encontró ningún miembro activo con el DNI {miembro_dni}.",
+                    "danger",
+                )
+                return redirect(url_for("pago.pago_crear"))
 
-        crear_pago(monto=monto, descripcion=descripcion, fecha_pago=fecha_pago, tipo_id=tipo_id, miembro_id=miembro_id)
+        crear_pago(
+            monto=monto,
+            descripcion=descripcion,
+            fecha_pago=fecha_pago,
+            tipo_id=tipo_id,
+            miembro_id=miembro_id,
+        )
 
-        flash("Pago registrado con éxito.", 'success')
-        return redirect(url_for('pago.pago_listar'))
+        flash("Pago registrado con éxito.", "success")
+        return redirect(url_for("pago.pago_listar"))
 
-    return render_template('pages/pagos/crear.html', form=form, titulo="Crear pago")
+    return render_template("pages/pagos/crear.html", form=form, titulo="Crear pago")
 
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route("/<int:id>", methods=["GET"])
 @chequear_permiso("pago_mostrar")
 @sesion_iniciada_requerida
 def pago_mostrar(id):
@@ -106,27 +132,29 @@ def pago_mostrar(id):
         beneficiario = miembro.dni
         nombre = miembro.nombre + " " + miembro.apellido
     else:
-        beneficiario = ''
-        nombre = ''
-    return render_template('pages/pagos/mostrar.html', pago=pago, beneficiario=beneficiario, nombre=nombre)
+        beneficiario = ""
+        nombre = ""
+    return render_template(
+        "pages/pagos/mostrar.html", pago=pago, beneficiario=beneficiario, nombre=nombre
+    )
 
 
-@bp.route('/<int:id>/eliminar', methods=['GET'])
+@bp.route("/<int:id>/eliminar", methods=["GET"])
 @chequear_permiso("pago_eliminar")
 @sesion_iniciada_requerida
 def pago_eliminar(id):
-    """Permite eliminar un pago del sistema, 
+    """Permite eliminar un pago del sistema,
     toma el id y se lo envia la modulo de pago para hacer efectiva la baja"""
     eliminar_pago(id)
-    flash("Pago eliminado con exito.", 'success')
-    return redirect(url_for('pago.pago_listar'))
+    flash("Pago eliminado con exito.", "success")
+    return redirect(url_for("pago.pago_listar"))
 
 
 @bp.route("/<int:id>/editar/", methods=["GET", "POST"])
 @chequear_permiso("pago_actualizar")
 @sesion_iniciada_requerida
 def pago_editar(id: int):
-    """Controlador parar realizar la edicion del pago, 
+    """Controlador parar realizar la edicion del pago,
     levanta el formulario con datos precargados"""
     pago = obtener_pago(id)
     form = PagoForm(obj=pago)
@@ -138,19 +166,22 @@ def pago_editar(id: int):
         pago.tipo_id = form.tipo_id.data
         pago.monto = form.monto.data
         pago.descripcion = form.descripcion.data
-        pago.fecha_pago = form.fecha_pago.data        
+        pago.fecha_pago = form.fecha_pago.data
 
         tipo_pago = obtener_tipo_pago(form.tipo_id.data)
-        miembro_dni = form.dni.data if tipo_pago.nombre == 'Honorario' else None
+        miembro_dni = form.dni.data if tipo_pago.nombre == "Honorario" else None
         miembro_id = None
         if miembro_dni:
             miembro = obtener_miembro_dni(miembro_dni)
             if miembro:
                 miembro_id = miembro.id
             else:
-                flash(f"No se encontró ningún miembro activo con el DNI {miembro_dni}.", 'danger')
+                flash(
+                    f"No se encontró ningún miembro activo con el DNI {miembro_dni}.",
+                    "danger",
+                )
                 return render_template("pages/pagos/crear.html", form=form)
-        pago.miembro_id = miembro_id    
+        pago.miembro_id = miembro_id
 
         guardar_cambios()
         return redirect(url_for("pago.pago_listar"))
