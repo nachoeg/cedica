@@ -4,9 +4,16 @@
 
 {% block main %}
 
+{{ navbar_secundaria({
+    'volver': url_for('miembro.miembro_documentos', id=miembro.id)
+    })}}
+
 <div class="contenedor">
-    <h1 class="text-xl">Detalles de Documento</h1>
-    
+
+    <div class="formulario-header">
+        <h1>Detalles de Documento</h1>
+    </div>    
+    <p class="text-gray-600 text-xs italic">  Documentos de {{miembro.nombre}} {{miembro.apellido}} </p>    
     <p><strong>Nombre:</strong> {{ documento.nombre }}</p>
     <p><strong>Fecha:</strong> {{ documento.fecha }}</p>
     <p><strong>URL:</strong> {{ documento.url }}</p>

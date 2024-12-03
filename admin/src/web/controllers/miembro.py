@@ -224,7 +224,7 @@ def miembro_editar(id: int):
         if alias:
             usuario = usuario_por_alias(alias)  # Verificamos si existe el usuario con el alias dado
             if usuario:
-                if usuario.miembro:  # Si el usuario ya está asignado a un miembro
+                if usuario.miembro and usuario.id != miembro.usuario.id: # Si el usuario ya está asignado a un miembro y es usuario de un miembro distintos
                     flash(f"El alias {alias} ya está asignado a un miembro del equipo.", 'danger')
                     return render_template("pages/miembros/crear.html", form=form)
                 else:

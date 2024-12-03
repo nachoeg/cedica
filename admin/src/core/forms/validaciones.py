@@ -1,3 +1,4 @@
+from flask import request
 from wtforms.validators import ValidationError
 from datetime import date
 from src.core.bcrypt import bcrypt
@@ -118,3 +119,11 @@ def validar_contraseña(contraseña):
             raise ValidationError("La contraseña ingresada es incorrecta.")
 
     return _validar_contraseña
+
+
+def url_valida(form, field):
+    """
+    Valida que la URL comience con http o https.
+    """
+    if not field.data.startswith(("http://", "https://")):
+        raise ValidationError("La URL debe comenzar con http o https.")

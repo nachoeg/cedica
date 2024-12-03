@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, SelectField, FileField
 from wtforms.validators import DataRequired, Optional, NumberRange, Email, Length
-from src.core.forms.validaciones import LimiteDeArchivo, Unico, validar_digitos, TipoDeArchivo
+from src.core.forms.validaciones import LimiteDeArchivo, Unico, validar_digitos, TipoDeArchivo, url_valida
 from src.core.miembro.miembro import Miembro
 
 class InfoMiembroForm(FlaskForm):
@@ -106,6 +106,6 @@ class EnlaceMiembroForm(FlaskForm):
     nombre = StringField(
         "Nombre", validators=[DataRequired("Ingrese el nombre del documento"), Length(max=100, message="No puedo tener más de %(max)d caracteres.")]
     )
-    url = StringField("Enlace", validators=[DataRequired("Ingrese el enlace.")])
+    url = StringField("Enlace", validators=[DataRequired("Ingrese el enlace."), url_valida])
     tipo_de_documento_id = SelectField("Tipo", validators=[DataRequired("Seleccione un opcion.")], coerce=int)
     submit = SubmitField("Guardar")
