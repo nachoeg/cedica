@@ -1,6 +1,7 @@
 <script setup>
 import IconHamburger from '@/components/icons/IconHamburger.vue'
 import IconClose from '@/components/icons/IconClose.vue'
+import TemaBoton from './TemaBoton.vue'
 import { RouterLink } from 'vue-router'
 </script>
 
@@ -12,7 +13,7 @@ export default {
 
 <template>
   <header
-    class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white/65 backdrop-blur-md dark:bg-neutral-800/65 text-sm py-2.5 border-b dark:border-neutral-700"
+    class="fixed z-50 flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white/90 backdrop-blur-md dark:bg-neutral-800/90 text-sm py-2.5 border-b dark:border-neutral-700"
   >
     <nav
       class="max-w-[90rem] w-full mx-auto px-2 sm:px-5 lg:px-8 flex flex-wrap basis-full items-center justify-between"
@@ -54,10 +55,14 @@ export default {
         aria-labelledby="hs-navbar-alignment-collapse"
       >
         <div
-          class="flex flex-col gap-x-2 gap-y-3 mt-4 sm:flex-row sm:items-center sm:my-0 [&>*]:btn [&>*]:px-2 [&>*]:py-1.5 [&>*]:btn-ghost [&>.router-link-active]:btn-secondary"
+          class="flex flex-col gap-x-2 gap-y-3 mt-4 sm:flex-row sm:items-center sm:my-0 [&>a]:btn [&>a]:px-2 [&>a]:py-1.5 [&>a]:btn-ghost [&>.router-link-active]:btn-secondary"
         >
           <RouterLink to="/contacto">Contacto</RouterLink>
           <RouterLink to="/noticias">Noticias</RouterLink>
+          <div class="flex justify-between items-center">
+            <span class="sm:hidden">Cambiar tema</span>
+            <TemaBoton />
+          </div>
         </div>
       </div>
     </nav>
