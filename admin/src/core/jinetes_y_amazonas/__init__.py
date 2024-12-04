@@ -85,7 +85,6 @@ def listar_j_y_a(
     return j_y_a_ordenados, cant_resultados
 
 
-# función que crea un registro de jinete o amazona
 def crear_j_o_a(
     nombre,
     apellido,
@@ -126,6 +125,64 @@ def crear_j_o_a(
     db.session.commit()
 
     return j_o_a
+
+
+def cargar_tipo_discapacidad(jya, tipo_discapacidad):
+    """
+    Agrega un tipo de discapacidad a los tipos de discapacidad
+    de un jinete pasado por parámetro.
+    Tipo de discapacidad es un número del 1 al 4 correspondientes
+    a los tipos de discapacidad Mental, Motora, Sensorial y Visceral
+    """
+    jya.tipo_discapacidad.append(obtener_tipo_discapacidad(tipo_discapacidad))
+    db.session.commit()
+
+    return jya
+
+
+def cargar_dia_a_jinete(jya, dia):
+    """
+    Agrega un día a los días asignados al jinete recibido
+    como parámetro. 
+    El día es un número entre 1 y 7 correspondiente a Lunes, 
+    Martes, Miercoles, Jueves, Viernes, Sabado y Domingo
+    """
+    jya.dias_asignados.append(obtener_dia(dia))
+    db.session.commit()
+
+    return jya
+
+
+def cargar_deuda(jya, tiene_deuda):
+    """
+    Recibe un jinete por parámetro y le asigna el valor del segundo
+    parámetro al campo tiene_deuda del jinete.
+    """
+    jya.tiene_deuda = tiene_deuda
+    db.session.commit()
+
+    return jya
+
+
+def cargar_propuesta_trabajo(jya, propuesta):
+    """
+    Recibe un jinete por parámetro y le asigna el valor
+    del segundo parámetro al campo propuesta_trabajo.
+    El parámetro propuesta puede tomar los valores 'hipoterapia',
+    'monta_terapeutica', 'deporte_ecuestre',
+    'actividades_recreativas', 'equitacion'
+    """
+    jya.propuesta_trabajo = propuesta
+    db.session.commit()
+
+
+def cargar_condicion(jya, condicion):
+    """
+    Recibe un jinete por parámetro y le asigna el valor
+    del segundo parámetro al campo condicion: puede ser 'regular' o 'de_baja'
+    """
+    jya.condicion = condicion
+    db.session.commit()
 
 
 def cargar_informacion_salud(
@@ -351,9 +408,10 @@ def listar_profesores():
     Funcion que retorna los profesores del sistema.
     """
     profesores = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Profesor de Equitación"
+        PuestoLaboral.nombre == "Profesor de Equitación",
+        Miembro.activo.is_(True)
     )
-    print(profesores)
+
     return profesores
 
 
@@ -362,7 +420,8 @@ def listar_conductores():
     Funcion que retorna los conductores del sistema.
     """
     conductores = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Conductor"
+        PuestoLaboral.nombre == "Conductor",
+        Miembro.activo.is_(True)
     )
 
     return conductores
@@ -373,7 +432,8 @@ def listar_auxiliares_pista():
     Funcion que retorna los auxiliares de pista del sistema.
     """
     auxiliares = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Auxiliar de pista"
+        PuestoLaboral.nombre == "Auxiliar de pista",
+        Miembro.activo.is_(True)
     )
 
     return auxiliares

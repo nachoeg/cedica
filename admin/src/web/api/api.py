@@ -65,7 +65,7 @@ def listar():
         }
 
         return make_response(jsonify(response_body), 200)
-    except:
+    except ValueError:
         return make_response(
             jsonify(
                 {
@@ -73,6 +73,15 @@ def listar():
                 }
             ),
             400,
+        )
+    except Exception as e:
+        return make_response(
+            jsonify(
+                {
+                    "error": f"Se produjo un error inesperado: {str(e)}",
+                }
+            ),
+            500,
         )
 
 
@@ -105,7 +114,7 @@ def obtener_anuncio():
         data = anuncio_schema.dump(anuncio)
 
         return jsonify(data), 200
-    except:
+    except ValueError:
         return make_response(
             jsonify(
                 {
@@ -113,6 +122,15 @@ def obtener_anuncio():
                 }
             ),
             400,
+        )
+    except Exception as e:
+        return make_response(
+            jsonify(
+                {
+                    "error": f"Se produjo un error inesperado: {str(e)}",
+                }
+            ),
+            500,
         )
 
 

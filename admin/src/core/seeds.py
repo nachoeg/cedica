@@ -25,8 +25,10 @@ def run():
         miembro.crear_profesion(nombre=profesion)
 
     puestos = [
-        "Administrativo/a", "Terapeuta", "Conductor", "Auxiliar de pista", "Herrero",
-        "Veterinario", "Entrenador de Caballos", "Domador", "Profesor de Equitación",
+        "Administrativo/a", "Terapeuta", "Conductor",
+        "Auxiliar de pista", "Herrero",
+        "Veterinario", "Entrenador de Caballos", "Domador",
+        "Profesor de Equitación",
         "Docente de Capacitación", "Auxiliar de mantenimiento", "Otro"
     ]
     for puesto in puestos:
@@ -90,7 +92,8 @@ def run():
         activo=True
     )
     
-    #Creo un miembro con con puesto entrenador de caballos para asignarlo a un ecuestre
+    # Creo un miembro con con puesto entrenador
+    # de caballos para asignarlo a un ecuestre
     miembro3 = miembro.crear_miembro(
         nombre="Fernando",
         apellido="Gomez",
@@ -109,7 +112,7 @@ def run():
         activo=True
     )
     
-    #Creo un miembro con con puesto conductor para asignarlo a un ecuestre
+    # Creo un miembro con con puesto conductor para asignarlo a un ecuestre
     miembro4 = miembro.crear_miembro(
         nombre="Carlos",
         apellido="Gimenez",
@@ -129,7 +132,7 @@ def run():
     )
 
     # Creo un miembro con puesto Conductor de caballo
-    miembro5 = miembro.crear_miembro(
+    miembro.crear_miembro(
         nombre="Gisela",
         apellido="Gimenez",
         dni="16543345",
@@ -148,7 +151,7 @@ def run():
     )
 
     # Creo un miembro con puesto Conductor de caballo
-    miembro6 = miembro.crear_miembro(
+    miembro.crear_miembro(
         nombre="Gloria",
         apellido="Valente",
         dni="16548875",
@@ -167,7 +170,7 @@ def run():
     )
 
     # Creo un miembro con puesto Profesor de equitación
-    miembro7 = miembro.crear_miembro(
+    miembro.crear_miembro(
         nombre="Leandro",
         apellido="Larez",
         dni="18548875",
@@ -185,9 +188,8 @@ def run():
         activo=True
     )
 
-
     # Creo un miembro con puesto Profesor de equitación
-    miembro8 = miembro.crear_miembro(
+    miembro.crear_miembro(
         nombre="Vanesa",
         apellido="Velazquez",
         dni="18548899",
@@ -206,7 +208,7 @@ def run():
     )
 
     # Creo un miembro con puesto Auxiliar de pista
-    miembro8 = miembro.crear_miembro(
+    miembro.crear_miembro(
         nombre="Guillermo",
         apellido="Limbo",
         dni="18533449",
@@ -225,7 +227,7 @@ def run():
     )
 
     # Creo un miembro con puesto Auxiliar de pista
-    miembro8 = miembro.crear_miembro(
+    miembro.crear_miembro(
         nombre="Lucas",
         apellido="Luquez",
         dni="184438919",
@@ -250,10 +252,10 @@ def run():
         "Actividades Recreativas",
         "Equitación",
     ]
-    
+
     for tipo in tipos_de_jya:
         ecuestre.crear_tipo_de_jya(tipo=tipo)
-        
+
     tipos_de_documento_ecuestre = [
         "Ficha general del caballo",
         "Planificación de entrenamiento",
@@ -261,7 +263,7 @@ def run():
         "Carga de Imágenes",
         "Registro veterinario"
     ]
-    
+
     for tipo in tipos_de_documento_ecuestre:
         ecuestre.crear_tipo_de_documento(tipo=tipo)
 
@@ -275,16 +277,32 @@ def run():
                                             contacto_emer_nombre='Alvaro',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
-    j_y_a2= jinetes_y_amazonas.crear_j_o_a(nombre="Tatiana", apellido="Tomassi",
+
+    jinetes_y_amazonas.cargar_deuda(j_y_a1, True)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a1, 'hipoterapia')
+    jinetes_y_amazonas.cargar_condicion(j_y_a1, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a1, 1)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a1, 2)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a1, 1)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a1, 2)
+    j_y_a2 = jinetes_y_amazonas.crear_j_o_a(nombre="Tatiana",
+                                            apellido="Tomassi",
                                             dni=36234222,
-                                           fecha_nacimiento='1992/09/10',
-                                           provincia_nacimiento='La Pampa',
-                                           localidad_nacimiento='Santa Rosa',
-                                           domicilio_actual='62 n312',
-                                           telefono_actual='2214569794',
-                                           contacto_emer_nombre='Martin',
-                                           contacto_emer_telefono='2214678864',
-                                           becado=True, porcentaje_beca=30)
+                                            fecha_nacimiento='1992/09/10',
+                                            provincia_nacimiento='La Pampa',
+                                            localidad_nacimiento='Santa Rosa',
+                                            domicilio_actual='62 n312',
+                                            telefono_actual='2214569794',
+                                            contacto_emer_nombre='Martin',
+                                            contacto_emer_telefono='2214678864',
+                                            becado=True, porcentaje_beca=30)
+    jinetes_y_amazonas.cargar_deuda(j_y_a2, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a2, 'hipoterapia')
+    jinetes_y_amazonas.cargar_condicion(j_y_a2, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a2, 1)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a2, 5)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a2, 2)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a2, 4)
     j_y_a3 = jinetes_y_amazonas.crear_j_o_a(nombre="Saul", apellido="Sosa",
                                             dni=36234223,
                                             fecha_nacimiento='1992/09/10',
@@ -295,6 +313,14 @@ def run():
                                             contacto_emer_nombre='Jimena',
                                             contacto_emer_telefono='2214671264',
                                             becado=True, porcentaje_beca=30)
+    jinetes_y_amazonas.cargar_deuda(j_y_a3, True)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a3, 'monta_terapeutica')
+    jinetes_y_amazonas.cargar_condicion(j_y_a3, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 4)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 5)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 6)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 1)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a3, 4)
     j_y_a4 = jinetes_y_amazonas.crear_j_o_a(nombre="Romina", apellido="Rodriguez",
                                             dni=36234224,
                                             fecha_nacimiento='1992/09/10',
@@ -305,6 +331,12 @@ def run():
                                             contacto_emer_nombre='Valentina',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
+    jinetes_y_amazonas.cargar_deuda(j_y_a4, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a4, 'deporte_ecuestre')
+    jinetes_y_amazonas.cargar_condicion(j_y_a4, 'de_baja')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a4, 2)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a4, 3)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a4, 3)
     j_y_a5 = jinetes_y_amazonas.crear_j_o_a(nombre="Quimey", apellido="Quiroga",
                                             dni=36234225,
                                             fecha_nacimiento='1992/09/10',
@@ -315,6 +347,14 @@ def run():
                                             contacto_emer_nombre='Paloma',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
+    jinetes_y_amazonas.cargar_deuda(j_y_a5, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a5,
+                                                'actividades_recreativas')
+    jinetes_y_amazonas.cargar_condicion(j_y_a5, 'de_baja')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a5, 7)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a5, 1)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a5, 2)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a5, 1)
     j_y_a6 = jinetes_y_amazonas.crear_j_o_a(nombre="Paula", apellido="Paredes",
                                             dni=36234226,
                                             fecha_nacimiento='1992/09/10',
@@ -325,6 +365,11 @@ def run():
                                             contacto_emer_nombre='Valentin',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=30)
+    jinetes_y_amazonas.cargar_deuda(j_y_a6, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a6, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a6, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a6, 3)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a6, 1)
     j_y_a7 = jinetes_y_amazonas.crear_j_o_a(nombre="Omar", apellido="Ortega",
                                             dni=36234227,
                                             fecha_nacimiento='1992/09/10',
@@ -335,6 +380,12 @@ def run():
                                             contacto_emer_nombre='Carlos',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=50)
+    jinetes_y_amazonas.cargar_deuda(j_y_a7, True)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a7, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a7, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a7, 2)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a7, 5)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a7, 1)
     j_y_a8 = jinetes_y_amazonas.crear_j_o_a(nombre="Nicol", apellido="Nivez",
                                             dni=36234228,
                                             fecha_nacimiento='1992/09/10',
@@ -345,6 +396,11 @@ def run():
                                             contacto_emer_nombre='Miranda',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=30)
+    jinetes_y_amazonas.cargar_deuda(j_y_a8, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a8, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a8, 'de_baja')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a8, 2)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a8, 2)
     j_y_a9 = jinetes_y_amazonas.crear_j_o_a(nombre="Mario", apellido="Muccio",
                                             dni=36234229,
                                             fecha_nacimiento='1992/09/10',
@@ -355,6 +411,13 @@ def run():
                                             contacto_emer_nombre='Mabel',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
+    jinetes_y_amazonas.cargar_deuda(j_y_a9, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a9, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a9, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a9, 4)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a9, 6)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a9, 4)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a9, 3)
     j_y_a10 = jinetes_y_amazonas.crear_j_o_a(nombre="Lourdes",
                                              apellido="Lampa",
                                              dni=36234231,
@@ -366,6 +429,15 @@ def run():
                                              contacto_emer_nombre='Pablo',
                                              contacto_emer_telefono='2214428864',
                                              becado=False)
+    jinetes_y_amazonas.cargar_deuda(j_y_a10, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a10, 'deporte_ecuestre')
+    jinetes_y_amazonas.cargar_condicion(j_y_a10, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 1)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 2)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 4)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 5)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a10, 1)
+
     j_y_a11 = jinetes_y_amazonas.crear_j_o_a(nombre="Juan", apellido="Juarez",
                                              dni=36234232,
                                              fecha_nacimiento='1992/09/10',
@@ -376,29 +448,83 @@ def run():
                                              contacto_emer_nombre='Juan',
                                              contacto_emer_telefono='2214428864',
                                              becado=False)
+    jinetes_y_amazonas.cargar_deuda(j_y_a11, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a11, 'monta_terapeutica')
+    jinetes_y_amazonas.cargar_condicion(j_y_a11, 'regular')
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a11, 4)
+    jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a11, 5)
+    jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a11, 1)
 
-    cobro1 = cobros.crear_cobro(
+    cobros.crear_cobro(
         medio_de_pago="efectivo",
-        fecha_pago="2024/09/10 13:19:38",
-        monto=400,
+        fecha_pago="2024/08/10 13:19:38",
+        monto=4000,
         observaciones="Nada para agregar",
         joa_id=j_y_a1.id,
         recibio_el_dinero_id=miembro1.id,
     )
-    cobro2 = cobros.crear_cobro(
+    cobros.crear_cobro(
         medio_de_pago="credito",
         fecha_pago="2024/09/12 13:19:38",
-        monto=500,
+        monto=5000,
         observaciones="Queda al día",
         joa_id=j_y_a1.id,
         recibio_el_dinero_id=miembro1.id,
     )
-    cobro3 = cobros.crear_cobro(
+    cobros.crear_cobro(
         medio_de_pago="debito",
-        fecha_pago="2024/09/11 13:19:38",
-        monto=600,
+        fecha_pago="2024/10/11 13:19:38",
+        monto=6000,
         observaciones="-",
         joa_id=j_y_a3.id,
+        recibio_el_dinero_id=miembro2.id,
+    )
+    cobros.crear_cobro(
+        medio_de_pago="efectivo",
+        fecha_pago="2024/07/10 13:19:38",
+        monto=4000,
+        observaciones="Nada para agregar",
+        joa_id=j_y_a5.id,
+        recibio_el_dinero_id=miembro1.id,
+    )
+    cobros.crear_cobro(
+        medio_de_pago="credito",
+        fecha_pago="2024/08/12 13:19:38",
+        monto=5600,
+        observaciones="Queda al día",
+        joa_id=j_y_a7.id,
+        recibio_el_dinero_id=miembro1.id,
+    )
+    cobros.crear_cobro(
+        medio_de_pago="debito",
+        fecha_pago="2024/06/11 13:19:38",
+        monto=6400,
+        observaciones="-",
+        joa_id=j_y_a8.id,
+        recibio_el_dinero_id=miembro2.id,
+    )
+    cobros.crear_cobro(
+        medio_de_pago="efectivo",
+        fecha_pago="2024/08/10 13:19:38",
+        monto=4000,
+        observaciones="Nada para agregar",
+        joa_id=j_y_a9.id,
+        recibio_el_dinero_id=miembro1.id,
+    )
+    cobros.crear_cobro(
+        medio_de_pago="credito",
+        fecha_pago="2024/10/12 13:19:38",
+        monto=7000,
+        observaciones="Queda al día",
+        joa_id=j_y_a10.id,
+        recibio_el_dinero_id=miembro1.id,
+    )
+    cobros.crear_cobro(
+        medio_de_pago="debito",
+        fecha_pago="2024/11/11 13:19:38",
+        monto=8000,
+        observaciones="-",
+        joa_id=j_y_a11.id,
         recibio_el_dinero_id=miembro2.id,
     )
 

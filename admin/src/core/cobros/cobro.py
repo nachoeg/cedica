@@ -52,7 +52,7 @@ class Cobro(db.Model):
             "id": self.id,
             "fecha_pago": fechahora_a_fecha(self.fecha_pago),
             "medio_de_pago": self.medio_de_pago,
-            "monto": self.monto,
+            "monto": "$" + str(self.monto),
             "observaciones": self.observaciones,
             "joa": (
                 self.joa.nombre + " " + self.joa.apellido

@@ -19,7 +19,11 @@ def posterior_a_fecha_de_nacimiento(form, field):
     fecha_nacimiento = form.fecha_nacimiento.data
     fecha_ingreso = field.data
 
-    if fecha_nacimiento > fecha_ingreso:
+    if (
+        fecha_nacimiento is not None
+        and fecha_ingreso is not None
+        and fecha_nacimiento > fecha_ingreso
+    ):
         raise ValidationError(
             "La fecha de ingreso debe ser posterior o igual a la fecha de nacimiento."
         )
@@ -68,6 +72,7 @@ class EcuestreForm(FlaskForm):
         "Fecha de ingreso",
         validators=[
             DataRequired("Ingrese una fecha de ingreso"),
+            FechaNoFutura(),
             posterior_a_fecha_de_nacimiento,
         ],
         default=datetime.now,

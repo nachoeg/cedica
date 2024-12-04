@@ -8,7 +8,8 @@ from src.core.cobros import (
     cargar_joa_choices,
     cargar_miembro_activo_choices,
     listar_medios_de_pago,
-    eliminar_cobro
+    eliminar_cobro,
+    listar_miembros_activos
 )
 from core.forms.cobro_forms import CobroForm
 from src.web.handlers.decoradores import (
@@ -130,7 +131,9 @@ def editar_cobro(id: int):
     cobro = encontrar_cobro(id)
     form = CobroForm(obj=cobro)
     form.joa.choices = cargar_joa_choices()
-    form.recibio_el_dinero.choices = cargar_miembro_activo_choices()
+    form.recibio_el_dinero.choices = [(-1, "Ninguno")] + [
+        (m.id, m.nombre + " " + m.apellido) for m in listar_miembros_activos()
+    ]
 
     if request.method == "GET":
         form.joa.data = cobro.joa.id
