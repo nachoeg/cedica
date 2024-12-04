@@ -157,8 +157,13 @@ def pago_editar(id: int):
     pago = obtener_pago(id)
     form = PagoForm(obj=pago)
     if request.method == "GET" and (pago.miembro_id != None):
-        form.dni.data = pago.miembro.dni
+        form.miembro.data = pago.miembro.id
     form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in listar_tipos_pagos()]
+    miembros_habilitados = [
+        (miembro.id, f"{miembro.nombre} {miembro.apellido} ({miembro.dni})")
+        for miembro in listar_miembros_habilitados()
+    ]
+    form.miembro.choices = miembros_habilitados
 
     if request.method == "POST" and form.validate_on_submit():
         pago.tipo_id = form.tipo_id.data
@@ -167,21 +172,14 @@ def pago_editar(id: int):
         pago.fecha_pago = form.fecha_pago.data
 
         tipo_pago = obtener_tipo_pago(form.tipo_id.data)
-        miembro_dni = form.dni.data if tipo_pago.nombre == "Honorario" else None
-        miembro_id = None
-        if miembro_dni:
-            miembro = obtener_miembro_dni(miembro_dni)
-            if miembro:
-                miembro_id = miembro.id
-            else:
-                flash(
-                    f"No se encontró ningún miembro activo con el DNI {miembro_dni}.",
-                    "danger",
-                )
-                return render_template("pages/pagos/crear.html", form=form)
-        pago.miembro_id = miembro_id
+        miembro = form.miembro.data if tipo_pago.nombre == "Honorario" else None
+        pago.miembro_id = miembro
 
         guardar_cambios()
         return redirect(url_for("pago.pago_listar"))
 
-    return render_template("pages/pagos/crear.html", form=form, titulo="Editar pago")
+    return render_template("pages/pagos/crear.html", 
+        form=form, 
+        titulo="Editar pago",
+        miembros=miembros_habilitados
+    )
