@@ -30,7 +30,7 @@ def listado_solicitudes():
     pagina = convertir_a_entero(request.args.get("pagina", 1))
     cant_por_pagina = int(request.args.get("cant_por_pagina", cant_filas))
     email_filtro = request.args.get("email", "")
-    aceptada_filtro = request.args.get("activo", "")
+    aceptada_filtro = request.args.get("aceptada", "")
 
     # activo_filtro = palabra_a_booleano(activo_filtro)
     cant_resultados, solicitudes = listar_solicitudes(
@@ -61,9 +61,9 @@ def aceptar_solicitud(id):
     if not solicitud.aceptada and usuario is None:
         return redirect(url_for('solicitudes.aceptar_usuario', id=id))
     else:
-        flash(f'El usuario \
-                Alias: {usuario.alias}, email: {usuario.email} \
-                ya se encuentra activo', 'info')
+        flash(f'El usuario de \
+                email {usuario.email} \
+                ya existe en el sistema', 'info')
     return redirect(url_for('solicitudes.listado_solicitudes'))
 
 
@@ -71,26 +71,37 @@ def aceptar_solicitud(id):
 @chequear_permiso('solicitud_aceptar')
 @sesion_iniciada_requerida
 def aceptar_usuario(id):
+    # form = UsuarioSinContraseñaForm()
     form = UsuarioSinMailContraseñaForm()
     solicitud = solicitud_por_id(id)
     if request.method == 'GET':
         form.alias.data = solicitud.email.split('@')[0]
     if request.method == 'POST':
-        if form.validate_on_submit():
-            usuario = crear_usuario(email=solicitud.email,
-                                    alias=form.alias.data,
-                                    admin_sistema=form.admin_sistema.data,
-                                    id_roles=form.roles.data,
-                                    sin_contraseña=True)
-            solicitud.aceptada = True
-            db.session.commit()
-            flash(f'Se ha creado el usuario \
-                    Alias: {usuario.alias}, email: {usuario.email}', 'exito')
+        # form.email.data = solicitud.email
+        usuario = usuario_por_email(solicitud.email)
+        if usuario is not None:
+            flash(f'El usuario de \
+                    email {usuario.email} \
+                    ya existe en el sistema', 'error')
             return redirect(url_for('solicitudes.listado_solicitudes'))
         else:
-            flash('No se pudo crear el usuario. \
-                   Revise los datos ingresados',
-                  'error')
+            if form.validate_on_submit():
+                usuario = crear_usuario(email=solicitud.email,
+                                        alias=form.alias.data,
+                                        admin_sistema=form.admin_sistema.data,
+                                        id_roles=form.roles.data,
+                                        sin_contraseña=True)
+                solicitud.aceptada = True
+                db.session.commit()
+                flash(f'Solicitud aceptada. \
+                        Se ha creado el usuario \
+                        Alias: {usuario.alias}, email: {usuario.email}',
+                      'exito')
+                return redirect(url_for('solicitudes.listado_solicitudes'))
+            else:
+                flash('No se pudo crear el usuario. \
+                       Revise los datos ingresados',
+                      'error')
     return render_template('pages/usuarios/aceptar_usuario.html',
                            form=form, solicitud=solicitud)
 

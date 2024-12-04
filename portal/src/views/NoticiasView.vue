@@ -1,3 +1,9 @@
+<script setup>
+import NoticiasLista from '../components/NoticiasLista.vue'
+</script>
+
 <template>
-  <h1>Noticias</h1>
+  <main>
+    <NoticiasLista />
+  </main>
 </template>

@@ -18,12 +18,12 @@
   </div>
   <div class="contenedor-body">
     <p><strong>Nombre:</strong> {{ ecuestre.nombre }}</p>
-    <p><strong>Fecha de Nacimiento:</strong> {{ ecuestre.fecha_nacimiento }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ ecuestre.to_dict().fecha_nacimiento }}</p>
     <p><strong>Sexo:</strong> {{ ecuestre.sexo }}</p>
     <p><strong>Raza:</strong> {{ ecuestre.raza }}</p>
     <p><strong>Pelaje:</strong> {{ ecuestre.pelaje }}</p>
     <p><strong>Compra/Donación:</strong> {{ ecuestre.es_compra }}</p>
-    <p><strong>Fecha de Ingreso:</strong> {{ ecuestre.fecha_ingreso }}</p>
+    <p><strong>Fecha de Ingreso:</strong> {{ ecuestre.to_dict().fecha_ingreso }}</p>
     <p><strong>Sede:</strong> {{ ecuestre.sede }}</p>
     <p><strong>Tipo de J&A:</strong> {{ ecuestre.tipo_de_jya }}</p>
     <p><strong>Entrenadores:</strong> {{ ecuestre.to_dict().entrenadores }}</p>

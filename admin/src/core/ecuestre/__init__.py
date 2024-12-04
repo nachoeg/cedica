@@ -2,6 +2,7 @@ from src.core.database import db
 from src.core.ecuestre.ecuestre import Ecuestre, TipoDeJyA, TipoDeDocumento, Documento
 from src.core.miembro import Miembro, PuestoLaboral
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 
 def listar_ecuestres(
@@ -78,11 +79,13 @@ def listar_tipos_de_documentos():
 
 def listar_entrenadores():
     """
-    Retorna el listado de los miembros que son entrenadores de caballos.
+    Retorna el listado de los miembros que son entrenadores de caballos y están activos.
     """
     entrenadores = (
         Miembro.query.join(PuestoLaboral, Miembro.puesto_laboral_id == PuestoLaboral.id)
-        .filter(PuestoLaboral.nombre == "Entrenador de Caballos")
+        .filter(
+            PuestoLaboral.nombre == "Entrenador de Caballos", Miembro.activo == True
+        )
         .all()
     )
     return entrenadores
@@ -90,11 +93,11 @@ def listar_entrenadores():
 
 def listar_conductores():
     """
-    Retorna el listado de los miembros que son conductores de caballos.
+    Retorna el listado de los miembros que son conductores de caballos y están activos.
     """
     conductores = (
-        Miembro.query.join(PuestoLaboral)
-        .filter(PuestoLaboral.nombre == "Conductor")
+        Miembro.query.join(PuestoLaboral, Miembro.puesto_laboral_id == PuestoLaboral.id)
+        .filter(PuestoLaboral.nombre == "Conductor", Miembro.activo == True)
         .all()
     )
     return conductores
@@ -176,9 +179,15 @@ def eliminar_ecuestre(id):
     Funcion que, dado un id, elimina el ecuestre con dicho id.
     """
     ecuestre = Ecuestre.query.get_or_404(id)
-    db.session.delete(ecuestre)
-    db.session.commit()
-    return ecuestre
+    try:
+        db.session.delete(ecuestre)
+        db.session.commit()
+        return ecuestre
+    except IntegrityError:
+        db.session.rollback()
+        raise ValueError(
+            "No se puede eliminar el ecuestre porque está asociado a un Jinete o Amazona."
+        )
 
 
 def eliminar_tipo_de_jya(tipo_de_jya_id):

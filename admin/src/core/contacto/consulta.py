@@ -27,7 +27,7 @@ class HistorialEstado(db.Model):
     usuario = db.Column(db.String(100), nullable=True)
     fecha = db.Column(db.DateTime, default=datetime.now, nullable=False)
     consulta_id = db.Column(db.Integer, db.ForeignKey('consulta.id'), nullable=False)
-    consulta = db.relationship('Consulta', backref=db.backref('historiales', lazy=True))
+    consulta = db.relationship('Consulta', backref=db.backref('historiales', lazy=True, cascade="all, delete-orphan"))
 
 
     def to_dict(self):
