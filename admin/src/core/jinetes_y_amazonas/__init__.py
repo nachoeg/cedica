@@ -1,5 +1,4 @@
-import sqlalchemy
-from sqlalchemy import func, select
+from sqlalchemy import func
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (
     JineteOAmazona, Diagnostico, Dia, Familiar, TipoDeDiscapacidad)
@@ -353,7 +352,7 @@ def listar_profesores():
     profesores = Miembro.query.join(PuestoLaboral).filter(
         PuestoLaboral.nombre == "Profesor de Equitación"
     )
-    print(profesores)
+
     return profesores
 
 
@@ -560,19 +559,19 @@ def obtener_jinetes_por_tipo_discapacidad(tipo):
     Función que imprime un listado de jinetes para cada tipo de discapacidad
     """
     for tipo in listar_tipos_de_discapacidad():
-        nombre = tipo.nombre
-        query = JineteOAmazona.query.join(
+        JineteOAmazona.query.join(
             JineteOAmazona.tipo_discapacidad).filter(
             TipoDeDiscapacidad.id == tipo.id
         ).all()
-    
+
 
 def obtener_tipos_discapacidad():
     """
     Función que retorna los id y los nombres de todos los tipos de discapacidad
     """
 
-    query = TipoDeDiscapacidad.query.with_entities(TipoDeDiscapacidad.id, TipoDeDiscapacidad.nombre).all()
+    query = TipoDeDiscapacidad.query.with_entities(
+        TipoDeDiscapacidad.id, TipoDeDiscapacidad.nombre).all()
     return query
 
 
@@ -580,8 +579,10 @@ def obtener_cantidad_becados():
     """
     Función que obtiene la cantidad de Jinetes y Amazonas becados y no becados.
     """
-    total_becados = db.session.query(JineteOAmazona).filter_by(becado=True).count()
-    total_no_becados = db.session.query(JineteOAmazona).filter_by(becado=False).count()
+    total_becados = db.session.query(
+        JineteOAmazona).filter_by(becado=True).count()
+    total_no_becados = db.session.query(
+        JineteOAmazona).filter_by(becado=False).count()
 
     return total_becados, total_no_becados
 
@@ -618,10 +619,13 @@ def obtener_ranking_jinetes_por_dia():
     Función que retorna un ranking de días según la cantidad de jinetes
     que asisten a CEDICA.
     """
-    jinetes_actuales = Dia.query.join(JineteOAmazona.dias_asignados).with_entities(
-        Dia.id, func.count(JineteOAmazona.id)).group_by(Dia.id).all()
-    
-    jinetes_historicos = Dia.query.join(JineteOAmazona.dias_asignados).with_entities(
+    jinetes_actuales = Dia.query.join(
+        JineteOAmazona.dias_asignados).with_entities(
+        Dia.id, func.count(JineteOAmazona.id)).group_by(
+            Dia.id).filter(JineteOAmazona.condicion == 'regular').all()
+
+    jinetes_historicos = Dia.query.join(
+        JineteOAmazona.dias_asignados).with_entities(
         Dia.id, func.count(JineteOAmazona.id)).group_by(Dia.id).all()
 
     return jinetes_actuales, jinetes_historicos
