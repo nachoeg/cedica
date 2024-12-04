@@ -26,4 +26,10 @@ class CobroForm(FlaskForm):
 
     def validate_fecha_pago(self, fecha_pago):
         if fecha_pago.data and fecha_pago.data > date.today():
-            raise ValidationError('La fecha de cobro no puede ser posterior a hoy.')
+            raise ValidationError('La fecha de cobro\
+                                  no puede ser posterior a hoy.')
+
+    def validate_recibio_el_dinero(self, recibio_el_dinero):
+        if recibio_el_dinero == -1:
+            raise ValidationError('Se debe seleccionar al miembro de equipo\
+                                  que recibió el dinero.')
