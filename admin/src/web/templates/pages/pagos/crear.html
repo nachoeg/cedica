@@ -54,10 +54,10 @@
         {% endfor %}
     </div>
 
-    <div class="text-red-600" id="dni_group">
-        {{ form.dni.label }}
-        {{ form.dni }}
-        {% for error in form.dni.errors %}
+    <div class="text-red-600" id="miembro_group">
+        {{ form.miembro.label }}
+        {{ form.miembro }}
+        {% for error in form.miembro.errors %}
         <span class="text-red-600">{{ error }}</span>
         {% endfor %}
     </div>
@@ -75,8 +75,8 @@
         document.querySelector('[name="fecha_pago"]').setAttribute('max', today);
 
         const tipoSelect = document.getElementById('tipo_id');
-        const dniGroup = document.getElementById('dni_group');
-        const dniField = document.querySelector('[name="dni"]');
+        const dniGroup = document.getElementById('miembro_group');
+        const dniField = document.querySelector('[name="miembro"]');
 
         function toggleDniField() {
             const selectedOption = tipoSelect.options[tipoSelect.selectedIndex].text;

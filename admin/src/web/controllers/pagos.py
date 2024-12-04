@@ -11,6 +11,7 @@ from flask import (
 from src.core.miembro import obtener_miembro_dni, obtener_miembro
 from src.web.handlers.decoradores import sesion_iniciada_requerida, chequear_permiso
 from src.web.handlers.funciones_auxiliares import convertir_a_entero
+from src.core.miembro import listar_miembros_habilitados
 from src.core.pago import (
     crear_pago,
     listar_pagos,
@@ -85,6 +86,11 @@ def pago_crear():
     al modulo de pago y crear uno nuevo"""
     form = PagoForm()
     form.tipo_id.choices = [(tipo.id, tipo.nombre) for tipo in listar_tipos_pagos()]
+    miembros_habilitados = [
+        (miembro.id, f"{miembro.nombre} {miembro.apellido} ({miembro.dni})")
+        for miembro in listar_miembros_habilitados()
+    ]
+    form.miembro.choices = miembros_habilitados
 
     if request.method == "POST" and form.validate_on_submit():
         monto = form.monto.data
@@ -93,32 +99,24 @@ def pago_crear():
         tipo_id = form.tipo_id.data
 
         tipo_pago = obtener_tipo_pago(tipo_id)
-        miembro_dni = form.dni.data if tipo_pago.nombre == "Honorario" else None
-
-        miembro_id = None
-        if miembro_dni:
-            miembro = obtener_miembro_dni(miembro_dni)
-            if miembro:
-                miembro_id = miembro.id
-            else:
-                flash(
-                    f"No se encontró ningún miembro activo con el DNI {miembro_dni}.",
-                    "danger",
-                )
-                return redirect(url_for("pago.pago_crear"))
+        miembro = form.miembro.data if tipo_pago.nombre == "Honorario" else None
 
         crear_pago(
             monto=monto,
             descripcion=descripcion,
             fecha_pago=fecha_pago,
             tipo_id=tipo_id,
-            miembro_id=miembro_id,
+            miembro_id=miembro,
         )
 
         flash("Pago registrado con éxito.", "success")
         return redirect(url_for("pago.pago_listar"))
 
-    return render_template("pages/pagos/crear.html", form=form, titulo="Crear pago")
+    return render_template("pages/pagos/crear.html", 
+        form=form, 
+        titulo="Crear pago", 
+        miembros=miembros_habilitados
+    )
 
 
 @bp.route("/<int:id>", methods=["GET"])

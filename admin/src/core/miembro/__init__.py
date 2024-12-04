@@ -213,3 +213,7 @@ def eliminar_documento_miembro(documento_id):
     db.session.delete(documento)
     db.session.commit()
     return documento
+
+def listar_miembros_habilitados():
+    miembros = Miembro.query.filter(Miembro.activo.is_(True)).all()
+    return miembros
