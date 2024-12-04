@@ -1,5 +1,4 @@
-import sqlalchemy
-from sqlalchemy import func, select
+from sqlalchemy import func
 from src.core.database import db
 from src.core.jinetes_y_amazonas.jinetes_y_amazonas import (
     JineteOAmazona, Diagnostico, Dia, Familiar, TipoDeDiscapacidad)
@@ -85,7 +84,6 @@ def listar_j_y_a(
     return j_y_a_ordenados, cant_resultados
 
 
-# función que crea un registro de jinete o amazona
 def crear_j_o_a(
     nombre,
     apellido,
@@ -126,6 +124,64 @@ def crear_j_o_a(
     db.session.commit()
 
     return j_o_a
+
+
+def cargar_tipo_discapacidad(jya, tipo_discapacidad):
+    """
+    Agrega un tipo de discapacidad a los tipos de discapacidad
+    de un jinete pasado por parámetro.
+    Tipo de discapacidad es un número del 1 al 4 correspondientes
+    a los tipos de discapacidad Mental, Motora, Sensorial y Visceral
+    """
+    jya.tipo_discapacidad.append(obtener_tipo_discapacidad(tipo_discapacidad))
+    db.session.commit()
+
+    return jya
+
+
+def cargar_dia_a_jinete(jya, dia):
+    """
+    Agrega un día a los días asignados al jinete recibido
+    como parámetro. 
+    El día es un número entre 1 y 7 correspondiente a Lunes, 
+    Martes, Miercoles, Jueves, Viernes, Sabado y Domingo
+    """
+    jya.dias_asignados.append(obtener_dia(dia))
+    db.session.commit()
+
+    return jya
+
+
+def cargar_deuda(jya, tiene_deuda):
+    """
+    Recibe un jinete por parámetro y le asigna el valor del segundo
+    parámetro al campo tiene_deuda del jinete.
+    """
+    jya.tiene_deuda = tiene_deuda
+    db.session.commit()
+
+    return jya
+
+
+def cargar_propuesta_trabajo(jya, propuesta):
+    """
+    Recibe un jinete por parámetro y le asigna el valor
+    del segundo parámetro al campo propuesta_trabajo.
+    El parámetro propuesta puede tomar los valores 'hipoterapia',
+    'monta_terapeutica', 'deporte_ecuestre',
+    'actividades_recreativas', 'equitacion'
+    """
+    jya.propuesta_trabajo = propuesta
+    db.session.commit()
+
+
+def cargar_condicion(jya, condicion):
+    """
+    Recibe un jinete por parámetro y le asigna el valor
+    del segundo parámetro al campo condicion: puede ser 'regular' o 'de_baja'
+    """
+    jya.condicion = condicion
+    db.session.commit()
 
 
 def cargar_informacion_salud(
@@ -351,9 +407,10 @@ def listar_profesores():
     Funcion que retorna los profesores del sistema.
     """
     profesores = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Profesor de Equitación"
+        PuestoLaboral.nombre == "Profesor de Equitación",
+        Miembro.activo.is_(True)
     )
-    print(profesores)
+
     return profesores
 
 
@@ -362,7 +419,8 @@ def listar_conductores():
     Funcion que retorna los conductores del sistema.
     """
     conductores = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Conductor"
+        PuestoLaboral.nombre == "Conductor",
+        Miembro.activo.is_(True)
     )
 
     return conductores
@@ -373,7 +431,8 @@ def listar_auxiliares_pista():
     Funcion que retorna los auxiliares de pista del sistema.
     """
     auxiliares = Miembro.query.join(PuestoLaboral).filter(
-        PuestoLaboral.nombre == "Auxiliar de pista"
+        PuestoLaboral.nombre == "Auxiliar de pista",
+        Miembro.activo.is_(True)
     )
 
     return auxiliares
@@ -560,19 +619,19 @@ def obtener_jinetes_por_tipo_discapacidad(tipo):
     Función que imprime un listado de jinetes para cada tipo de discapacidad
     """
     for tipo in listar_tipos_de_discapacidad():
-        nombre = tipo.nombre
-        query = JineteOAmazona.query.join(
+        JineteOAmazona.query.join(
             JineteOAmazona.tipo_discapacidad).filter(
             TipoDeDiscapacidad.id == tipo.id
         ).all()
-    
+
 
 def obtener_tipos_discapacidad():
     """
     Función que retorna los id y los nombres de todos los tipos de discapacidad
     """
 
-    query = TipoDeDiscapacidad.query.with_entities(TipoDeDiscapacidad.id, TipoDeDiscapacidad.nombre).all()
+    query = TipoDeDiscapacidad.query.with_entities(
+        TipoDeDiscapacidad.id, TipoDeDiscapacidad.nombre).all()
     return query
 
 
@@ -580,8 +639,10 @@ def obtener_cantidad_becados():
     """
     Función que obtiene la cantidad de Jinetes y Amazonas becados y no becados.
     """
-    total_becados = db.session.query(JineteOAmazona).filter_by(becado=True).count()
-    total_no_becados = db.session.query(JineteOAmazona).filter_by(becado=False).count()
+    total_becados = db.session.query(
+        JineteOAmazona).filter_by(becado=True).count()
+    total_no_becados = db.session.query(
+        JineteOAmazona).filter_by(becado=False).count()
 
     return total_becados, total_no_becados
 
@@ -618,10 +679,13 @@ def obtener_ranking_jinetes_por_dia():
     Función que retorna un ranking de días según la cantidad de jinetes
     que asisten a CEDICA.
     """
-    jinetes_actuales = Dia.query.join(JineteOAmazona.dias_asignados).with_entities(
-        Dia.id, func.count(JineteOAmazona.id)).group_by(Dia.id).all()
-    
-    jinetes_historicos = Dia.query.join(JineteOAmazona.dias_asignados).with_entities(
+    jinetes_actuales = Dia.query.join(
+        JineteOAmazona.dias_asignados).with_entities(
+        Dia.id, func.count(JineteOAmazona.id)).group_by(
+            Dia.id).filter(JineteOAmazona.condicion == 'regular').all()
+
+    jinetes_historicos = Dia.query.join(
+        JineteOAmazona.dias_asignados).with_entities(
         Dia.id, func.count(JineteOAmazona.id)).group_by(Dia.id).all()
 
     return jinetes_actuales, jinetes_historicos

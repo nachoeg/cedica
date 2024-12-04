@@ -55,7 +55,8 @@ if tiene_permiso(session, 'jya_eliminar') else False,
   }
 
   function borrarJYA(id) {
-    if (confirm('¿Está seguro que desea borrar este cobro?')) {
+    if (confirm('¿Está seguro de que desea borrar este jinete/amazona? Si el jinete/amazona tiene cobros asociados, '+
+      'también serán eliminados del sistema. La información eliminada no podrá ser recuperada.')) {
       window.location.href = `/jinetes_y_amazonas/${id}/eliminar`;
     }
   }

@@ -210,8 +210,11 @@ def eliminar(id: int):
     """
     Elimina un ecuestre con el id dado.
     """
-    eliminar_ecuestre(id)
-    flash("Ecuestre eliminado con exito", "exito")
+    try:
+        eliminar_ecuestre(id)
+        flash("Ecuestre eliminado con exito", "exito")
+    except ValueError as e:
+        flash(str(e), "error")
     return redirect(url_for("ecuestre.listar"))
 
 

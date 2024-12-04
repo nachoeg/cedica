@@ -112,6 +112,14 @@ def cargar_miembro_activo_choices():
     ]
 
 
+def listar_miembros_activos():
+    """Función que retorna los miembros activos del sistema"""
+
+    personas = Miembro.query.filter(Miembro.activo.is_(True)).order_by("nombre").all()
+
+    return personas
+
+
 def listar_medios_de_pago():
     """
     Funcion que devuelve los medios de pago del sistema.

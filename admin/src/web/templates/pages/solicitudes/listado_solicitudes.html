@@ -22,7 +22,7 @@
   ],
   'filtros': [
     {'id': 'email', 'nombre': 'Email', 'tipo': 'texto', 'valor': email_filtro },
-    {'id': 'activo', 'nombre': 'Activo', 'tipo': 'seleccion', 'valor': activo_filtro,
+    {'id': 'aceptada', 'nombre': 'Aceptada', 'tipo': 'seleccion', 'valor': aceptada_filtro,
       'opciones': ['Sí', 'No']
     },
   ],
@@ -40,7 +40,7 @@
 <script>
 
   function aceptarSolicitud(id) {
-    if (confirm('¿Está seguro que desea aceptar esta solicitud?')) {
+    if (confirm('Será redirigido a la pantalla para generar el usuario correspondiente. ¿Desea continuar?')) {
       window.location.href = `/solicitudes/${id}/aceptar`;
     }
   }

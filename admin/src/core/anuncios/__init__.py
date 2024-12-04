@@ -1,5 +1,6 @@
 from src.core.database import db
 from src.core.anuncios.anuncio import Anuncio, Estado
+from src.core.usuarios.usuario import Usuario
 
 
 def crear_anuncio(titulo, copete, contenido, autor_id, estado="bo"):
@@ -71,11 +72,11 @@ def listar_anuncios_api(
     Recibe como parámetros filtros opcionales que ingresa
     el usuario y devuelve los anuncios ordenados por id.
     """
-    query = Anuncio.query
+    query = Anuncio.query.join(Usuario)
 
     # Filtrar por autor si se proporciona
     if autor_filtro:
-        query = query.filter(Anuncio.autor.alias.ilike(f"%{autor_filtro}%"))
+        query = query.filter(Usuario.alias.ilike(f"%{autor_filtro}%"))
 
     # Filtrar por fecha de publicación si se proporcionan
     if despues_de_filtro:
