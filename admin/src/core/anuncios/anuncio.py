@@ -30,7 +30,7 @@ class Anuncio(db.Model):
     fecha_publicacion = db.Column(db.DateTime)
     fecha_creacion = db.Column(db.DateTime, default=datetime.now)
     fecha_ultima_actualizacion = db.Column(db.DateTime, default=datetime.now,
-                                           onupdate=datetime.now)
+        onupdate=datetime.now)
 
     estado = db.Column(Enum(Estado), default="borrador")
 

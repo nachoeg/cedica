@@ -1,4 +1,3 @@
-import logging
 import requests
 from datetime import datetime
 from src.core.anuncios import listar_anuncios_api, encontrar_anuncio

@@ -1,3 +1,5 @@
+import logging
+from datetime import datetime
 from src.core.database import db
 from src.core.anuncios.anuncio import Anuncio, Estado
 from src.core.usuarios.usuario import Usuario
@@ -72,7 +74,7 @@ def listar_anuncios_api(
     Recibe como parámetros filtros opcionales que ingresa
     el usuario y devuelve los anuncios ordenados por id.
     """
-    query = Anuncio.query.join(Usuario)
+    query = Anuncio.query.join(Usuario).filter(Anuncio.estado == Estado.pu)
 
     # Filtrar por autor si se proporciona
     if autor_filtro:
@@ -80,9 +82,12 @@ def listar_anuncios_api(
 
     # Filtrar por fecha de publicación si se proporcionan
     if despues_de_filtro:
+        despues_de_filtro = datetime.strptime(despues_de_filtro, "%d/%m/%Y")
         query = query.filter(Anuncio.fecha_publicacion >= despues_de_filtro)
 
     if antes_de_filtro:
+        antes_de_filtro = datetime.strptime(antes_de_filtro, "%d/%m/%Y")
+        antes_de_filtro = antes_de_filtro.replace(hour=23, minute=59, second=59, microsecond=999999)
         query = query.filter(Anuncio.fecha_publicacion <= antes_de_filtro)
 
     # Contar resultados totales

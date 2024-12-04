@@ -59,6 +59,9 @@
         </div>
         <div class="noticia-footer">
           <p class="mt-1 text-sm text-gray-500 dark:text-neutral-500">
+            Fecha de publicacion: {{ formatFecha(noticia.published_at) }}
+          </p>
+          <p class="mt-1 text-sm text-gray-500 dark:text-neutral-500">
             Última actualización: {{ formatFecha(noticia.updated_at) }}
           </p>
         </div>
