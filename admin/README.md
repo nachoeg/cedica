@@ -48,7 +48,8 @@ Trabajo integrador de la materia Proyecto de Software en la Facultad de Informá
     
     Este metodo devuelve los aritculos de forma pagina, tiene 5 parametros opcionales que pueden pasarse: 
         author: permite filtar por nombre de autor de la noticias.
-        published_from y published_to: permiten filtrar por fecha de creacion.
+        published_from y published_to: permiten filtrar por fecha de creacion, estas fechas deben de ser enviadas siguendo
+        el formato iso.
         page: numero de pagina
         per_page: cantidad de elementos por pagina.
     /api/articles devuelve los elementos de forma paginada, por defecto page toma el valor de 1 y per_page de 6

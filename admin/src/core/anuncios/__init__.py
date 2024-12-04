@@ -82,11 +82,13 @@ def listar_anuncios_api(
 
     # Filtrar por fecha de publicación si se proporcionan
     if despues_de_filtro:
-        despues_de_filtro = datetime.strptime(despues_de_filtro, "%d/%m/%Y")
+        despues_de_filtro = datetime.fromisoformat(despues_de_filtro)
+        query = query.filter(Anuncio.fecha_publicacion >= despues_de_filtro)
         query = query.filter(Anuncio.fecha_publicacion >= despues_de_filtro)
 
     if antes_de_filtro:
-        antes_de_filtro = datetime.strptime(antes_de_filtro, "%d/%m/%Y")
+        antes_de_filtro = datetime.fromisoformat(antes_de_filtro)
+        # Ajustar a última hora del día para incluir el rango completo
         antes_de_filtro = antes_de_filtro.replace(hour=23, minute=59, second=59, microsecond=999999)
         query = query.filter(Anuncio.fecha_publicacion <= antes_de_filtro)
 
