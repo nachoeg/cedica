@@ -273,10 +273,10 @@ def run():
                                             contacto_emer_nombre='Alvaro',
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
-    print(j_y_a1.dias_asignados)
-    print("Recien imprimí los dias asignados")
-    jinetes_y_amazonas.cargar_deuda(j_y_a1, True)
 
+    jinetes_y_amazonas.cargar_deuda(j_y_a1, True)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a1, 'hipoterapia')
+    jinetes_y_amazonas.cargar_condicion(j_y_a1, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a1, 1)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a1, 2)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a1, 1)
@@ -293,6 +293,8 @@ def run():
                                             contacto_emer_telefono='2214678864',
                                             becado=True, porcentaje_beca=30)
     jinetes_y_amazonas.cargar_deuda(j_y_a2, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a2, 'hipoterapia')
+    jinetes_y_amazonas.cargar_condicion(j_y_a2, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a2, 1)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a2, 5)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a2, 2)
@@ -308,6 +310,8 @@ def run():
                                             contacto_emer_telefono='2214671264',
                                             becado=True, porcentaje_beca=30)
     jinetes_y_amazonas.cargar_deuda(j_y_a3, True)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a3, 'monta_terapeutica')
+    jinetes_y_amazonas.cargar_condicion(j_y_a3, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 4)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 5)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a3, 6)
@@ -324,6 +328,8 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
     jinetes_y_amazonas.cargar_deuda(j_y_a4, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a4, 'deporte_ecuestre')
+    jinetes_y_amazonas.cargar_condicion(j_y_a4, 'de_baja')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a4, 2)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a4, 3)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a4, 3)
@@ -338,6 +344,9 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
     jinetes_y_amazonas.cargar_deuda(j_y_a5, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a5,
+                                                'actividades_recreativas')
+    jinetes_y_amazonas.cargar_condicion(j_y_a5, 'de_baja')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a5, 7)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a5, 1)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a5, 2)
@@ -353,6 +362,8 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=30)
     jinetes_y_amazonas.cargar_deuda(j_y_a6, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a6, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a6, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a6, 3)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a6, 1)
     j_y_a7 = jinetes_y_amazonas.crear_j_o_a(nombre="Omar", apellido="Ortega",
@@ -366,6 +377,8 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=50)
     jinetes_y_amazonas.cargar_deuda(j_y_a7, True)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a7, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a7, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a7, 2)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a7, 5)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a7, 1)
@@ -380,6 +393,8 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=30)
     jinetes_y_amazonas.cargar_deuda(j_y_a8, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a8, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a8, 'de_baja')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a8, 2)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a8, 2)
     j_y_a9 = jinetes_y_amazonas.crear_j_o_a(nombre="Mario", apellido="Muccio",
@@ -393,6 +408,8 @@ def run():
                                             contacto_emer_telefono='2214428864',
                                             becado=True, porcentaje_beca=25)
     jinetes_y_amazonas.cargar_deuda(j_y_a9, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a9, 'equitacion')
+    jinetes_y_amazonas.cargar_condicion(j_y_a9, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a9, 4)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a9, 6)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a9, 4)
@@ -409,6 +426,8 @@ def run():
                                              contacto_emer_telefono='2214428864',
                                              becado=False)
     jinetes_y_amazonas.cargar_deuda(j_y_a10, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a10, 'deporte_ecuestre')
+    jinetes_y_amazonas.cargar_condicion(j_y_a10, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 1)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 2)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a10, 4)
@@ -426,6 +445,8 @@ def run():
                                              contacto_emer_telefono='2214428864',
                                              becado=False)
     jinetes_y_amazonas.cargar_deuda(j_y_a11, False)
+    jinetes_y_amazonas.cargar_propuesta_trabajo(j_y_a11, 'monta_terapeutica')
+    jinetes_y_amazonas.cargar_condicion(j_y_a11, 'regular')
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a11, 4)
     jinetes_y_amazonas.cargar_dia_a_jinete(j_y_a11, 5)
     jinetes_y_amazonas.cargar_tipo_discapacidad(j_y_a11, 1)

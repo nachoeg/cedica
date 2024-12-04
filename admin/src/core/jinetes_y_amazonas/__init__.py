@@ -164,6 +164,27 @@ def cargar_deuda(jya, tiene_deuda):
     return jya
 
 
+def cargar_propuesta_trabajo(jya, propuesta):
+    """
+    Recibe un jinete por parámetro y le asigna el valor
+    del segundo parámetro al campo propuesta_trabajo.
+    El parámetro propuesta puede tomar los valores 'hipoterapia',
+    'monta_terapeutica', 'deporte_ecuestre',
+    'actividades_recreativas', 'equitacion'
+    """
+    jya.propuesta_trabajo = propuesta
+    db.session.commit()
+
+
+def cargar_condicion(jya, condicion):
+    """
+    Recibe un jinete por parámetro y le asigna el valor
+    del segundo parámetro al campo condicion: puede ser 'regular' o 'de_baja'
+    """
+    jya.condicion = condicion
+    db.session.commit()
+
+
 def cargar_informacion_salud(
     id, certificado_discapacidad,
     diagnostico_id, diagnostico_otro, tipo_discapacidad
