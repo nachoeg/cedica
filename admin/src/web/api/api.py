@@ -1,3 +1,4 @@
+import logging
 import requests
 from datetime import datetime
 from src.core.anuncios import listar_anuncios_api, encontrar_anuncio
@@ -32,7 +33,7 @@ def validar_captcha(token):
 
 
 @bp.get("/articles")
-def listar():
+def listar_anuncios():
     """Devuelve en formato JSON la lista de de articulos de noticias de forma paginada,
     devuelve, permite aplicar filtros por autor y fecha de publicacion"""
     try:
@@ -124,26 +125,22 @@ def guardar_mensaje():
 
         captcha_token = attrs.pop("captchaToken", None)
 
-        if not captcha_token:
-            return jsonify({"captcha": "Captcha inválido o ausente."}), 400
-
-        if not validar_captcha(captcha_token):
+        if not captcha_token or not validar_captcha(captcha_token):
             return jsonify({"captcha": "Captcha inválido."}), 400
 
         errors = create_consulta_schema.validate(attrs)
         if errors:
-            return jsonify(errors), 400
+            formatted_errors = {field: msgs[0] for field, msgs in errors.items()}
+            return jsonify(formatted_errors), 400
 
         kwars = create_consulta_schema.load(attrs)
         consulta = crear_consulta(**kwars)
 
         consulta.created_at = datetime.now()
-        consulta.closed_at = datetime.now()
         consulta.status = "created"
 
         data = consulta_schema.dump(consulta)
         return jsonify(data), 201
-
     except:
         return make_response(
             jsonify(
