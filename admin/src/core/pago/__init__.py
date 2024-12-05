@@ -66,6 +66,7 @@ def cargar_tipo_pago(nombre):
 
 
 def guardar_cambios():
+    """Guarda los cambios en la base de datos"""
     db.session.commit()
 
 
@@ -76,8 +77,8 @@ def obtener_pago(id):
 
 
 def obtener_tipo_pago(id):
-    tipo_pago = TipoDePago.query.get_or_404(id)
     """Obtiene un tipo de pago a partir del id"""
+    tipo_pago = TipoDePago.query.get_or_404(id)
     return tipo_pago
 
 

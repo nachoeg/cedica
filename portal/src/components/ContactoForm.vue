@@ -16,7 +16,6 @@
             type="text"
             id="titulo"
             v-model="formData.titulo"
-            required
             class="mt-1 block w-full rounded-md border-neutral-300 bg-white text-neutral-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-300"
             />
             <span v-if="errors.titulo" class="text-red-600 text-sm">{{ errors.titulo }}</span>
@@ -30,7 +29,6 @@
             type="email"
             id="email"
             v-model="formData.email"
-            required
             class="mt-1 block w-full rounded-md border-neutral-300 bg-white text-neutral-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-300"
             />
             <span v-if="errors.email" class="text-red-600 text-sm">{{ errors.email }}</span>
@@ -43,7 +41,6 @@
             <textarea
             id="mensaje"
             v-model="formData.mensaje"
-            required
             rows="4"
             class="mt-1 block w-full rounded-md border-neutral-300 bg-white text-neutral-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-300"
             ></textarea>

@@ -47,11 +47,12 @@ class PagoForm(FlaskForm):
     submit = SubmitField("Guardar")
 
     def validate_fechaDePago(self, fecha_pago):
+        """ Esta funcion cheque que la fecha de pago no sea posterior a hoy"""
         if fecha_pago.data and fecha_pago.data > date.today():
             raise ValidationError("La fecha de pago no puede ser posterior a hoy.")
-        
 
     def validate_miembro_id(self, miembro_id):
+        """ Esta funcion chequea que si el tipo de pago es Honorario se ingrese un miembro """
         tipo_pago = obtener_tipo_pago(self.tipo_id.data)
         if tipo_pago.nombre == "Honorario" and not miembro_id.data:
             raise ValidationError(

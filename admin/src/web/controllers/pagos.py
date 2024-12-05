@@ -112,10 +112,11 @@ def pago_crear():
         flash("Pago registrado con éxito.", "success")
         return redirect(url_for("pago.pago_listar"))
 
-    return render_template("pages/pagos/crear.html", 
-        form=form, 
-        titulo="Crear pago", 
-        miembros=miembros_habilitados
+    return render_template(
+        "pages/pagos/crear.html",
+        form=form,
+        titulo="Crear pago",
+        miembros=miembros_habilitados,
     )
 
 
@@ -178,8 +179,9 @@ def pago_editar(id: int):
         guardar_cambios()
         return redirect(url_for("pago.pago_listar"))
 
-    return render_template("pages/pagos/crear.html", 
-        form=form, 
+    return render_template(
+        "pages/pagos/crear.html",
+        form=form,
         titulo="Editar pago",
-        miembros=miembros_habilitados
+        miembros=miembros_habilitados,
     )

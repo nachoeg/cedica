@@ -67,6 +67,7 @@ def listar(titulo, archivado):
 @chequear_permiso("consulta_listar")
 @sesion_iniciada_requerida
 def listar_recibidos():
+    """Devuelve todas las consultas que se encuentran en la carpeta de recibidos"""
     return listar(titulo="Consultas recibidas", archivado=False)
 
 
@@ -74,6 +75,7 @@ def listar_recibidos():
 @chequear_permiso("consulta_listar")
 @sesion_iniciada_requerida
 def listar_archivados():
+    """Devuelve todas las consultas que se encuentran archivadas"""
     return listar(titulo="Consultas archivadas", archivado=True)
 
 

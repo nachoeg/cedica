@@ -87,6 +87,9 @@ def listar_anuncios():
 
 @bp.get("/article/")
 def obtener_anuncio():
+    """
+    Recibe un id y devuelve el anuncio guardado en el sistema con ese id
+    """
     try:
         id = int(request.args.get("id"))
 

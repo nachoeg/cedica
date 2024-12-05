@@ -3,7 +3,7 @@ from marshmallow import Schema
 
 
 class AnuncioSchema(Schema):
-    """Esquema de los anuncios que devuelve /api/articles"""
+    """Esquema de los anuncios"""
 
     id = fields.Integer()
     title = fields.String(attribute="titulo")

@@ -98,21 +98,25 @@ def crear_miembro(**kwargs):
 
 
 def listar_profesiones():
+    """Lista todas las profesiones posibles de un miembro"""
     profesiones = Profesion.query.all()
     return profesiones
 
 
 def listar_puestos_laborales():
+    """Lista todos los puestos laborales posibles de un miembro"""
     puestos = PuestoLaboral.query.all()
     return puestos
 
 
 def listar_condiciones():
+    """Lista todas las condiciones de trabajo posibles de un miembro"""
     condiciones = CondicionDeTrabajo.query.all()
     return condiciones
 
 
 def crear_profesion(nombre):
+    """Crea una nueva profesion"""
     profesion = Profesion(nombre=nombre)
     db.session.add(profesion)
     db.session.commit()
@@ -120,6 +124,7 @@ def crear_profesion(nombre):
 
 
 def crear_puesto_laboral(nombre):
+    """Crea un nuevo puesto laboral"""
     puesto = PuestoLaboral(nombre=nombre)
     db.session.add(puesto)
     db.session.commit()
@@ -127,6 +132,7 @@ def crear_puesto_laboral(nombre):
 
 
 def crear_condicion(nombre):
+    """Crea una nueva condicion de trabajo"""
     condicion = CondicionDeTrabajo(nombre=nombre)
     db.session.add(condicion)
     db.session.commit()
@@ -134,6 +140,7 @@ def crear_condicion(nombre):
 
 
 def crear_domicilio(**kwargs):
+    """Crea un nuevo domicilio"""
     domicilio = Domicilio(**kwargs)
     db.session.add(domicilio)
     db.session.commit()
@@ -142,6 +149,7 @@ def crear_domicilio(**kwargs):
 
 
 def guardar_cambios():
+    """Guarda los cambios en la base de datos"""
     db.session.commit()
 
 
@@ -158,6 +166,7 @@ def obtener_miembro_dni(dni):
 
 
 def miembro_por_id(id):
+    """Busca un miembro por id"""
     return Miembro.query.get_or_404(id)
 
 
@@ -169,6 +178,7 @@ def buscar_domicilio(calle, numero, piso, dpto, localidad):
 
 
 def cambiar_condicion_miembro(id):
+    """Cambia la condicion de un miembro, de activo a inactivo y viceversa"""
     miembro = Miembro.query.get_or_404(id)
     if miembro.activo == True:
         miembro.activo = False
@@ -178,11 +188,13 @@ def cambiar_condicion_miembro(id):
 
 
 def listar_tipos_de_documentos():
+    """Lista todos los tipos de documentos"""
     tipos_de_documentos = TipoDeDocumentoMiembro.query.all()
     return tipos_de_documentos
 
 
 def crear_tipo_de_documento(tipo):
+    """Crea un nuevo tipo de documento"""
     tipo_de_documento = TipoDeDocumentoMiembro(tipo=tipo)
     db.session.add(tipo_de_documento)
     db.session.commit()
@@ -190,6 +202,7 @@ def crear_tipo_de_documento(tipo):
 
 
 def crear_documento(nombre, tipo_de_documento_id, url, miembro_id, archivo_externo):
+    """Guarda un documento en el sistema"""
     documento = DocumentoMiembro(
         nombre=nombre,
         fecha=datetime.now(),
@@ -204,16 +217,20 @@ def crear_documento(nombre, tipo_de_documento_id, url, miembro_id, archivo_exter
 
 
 def obtener_documento(id):
+    """Busca un documento por id"""
     documento = DocumentoMiembro.query.get_or_404(id)
     return documento
 
 
 def eliminar_documento_miembro(documento_id):
+    """Elimina un documento del sistema, buscandolo por id"""
     documento = DocumentoMiembro.query.get_or_404(documento_id)
     db.session.delete(documento)
     db.session.commit()
     return documento
 
+
 def listar_miembros_habilitados():
+    """Lista todos los miembors del sistema que estan habilitados"""
     miembros = Miembro.query.filter(Miembro.activo.is_(True)).all()
     return miembros
