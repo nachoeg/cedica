@@ -58,50 +58,50 @@
           <!-- Tab Contenido -->
           <div class="w-full h-full">
             <div id="tabs-with-card-1" class="w-full h-full bg-white shadow-xl shadow-gray-200 rounded-xl dark:bg-transparent dark:shadow-gray-200/20 p-4 " role="tabpanel" aria-labelledby="tabs-with-card-item-1">
-              <h2 class="text-2xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200 pb-5">
+              <h2 class="text-xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200 pb-5">
                 Clases de TACAs/Equinoterapia
               </h2>
-              <p class="text-xl text-gray-600 text-justify dark:text-neutral-200">
+              <p class="text-md sm:text-xl text-gray-600 text-justify dark:text-neutral-200">
                 Nuestra principal actividad es ofrecer Terapias y Actividades Asistidas con Caballos/ Equinoterapia y deporte ecuestre adaptado.
                 Contamos con un equipo de profesionales formados para brindar asistencia interdisciplinaria de calidad.
               </p>
-              <p class="text-xl text-gray-600 text-justify dark:text-neutral-200">
+              <p class="text-md sm:text-xl text-gray-600 text-justify dark:text-neutral-200">
                 Desarrollamos un método específico para personas con discapacidades y bajos recursos que de otro modo no podrían afrontar los gastos de este tipo de terapia.
                  </p>
             </div>
 
             <div id="tabs-with-card-2" class="w-full h-full bg-white shadow-xl shadow-gray-200 rounded-xl dark:bg-transparent dark:shadow-gray-200/20 p-4 hidden" role="tabpanel" aria-labelledby="tabs-with-card-item-2">
-              <h2 class="text-2xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200 pb-5">
+              <h2 class="text-xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200 pb-5">
                 Cursos on line y presenciales
               </h2>
-              <p class="text-xl text-gray-600 text-justify dark:text-neutral-200">
+              <p class="text-md sm:text-xl text-gray-600 text-justify dark:text-neutral-200">
                 Uno de nuestros objetivos es brindar cursos y capacitaciones tanto a amazonas y jinetes como a los profesionales que los acompañan. A través de estos, se permite que las personas puedan adquirir distintas destrezas y habilidades prácticas, técnicas y teóricas.</p>
-              <p class="text-xl text-gray-600 text-justify dark:text-neutral-200">
+              <p class="text-md sm:text-xl text-gray-600 text-justify dark:text-neutral-200">
                 Buscamos estimular la profesionalización de la práctica y el desarrollo de tareas específicas para la gestión eficaz de los diferentes centros de TACAs de nuestro país y Latinoamérica.</p>
-              <p class="text-lg text-gray-600 text-justify dark:text-neutral-200 mt-3">
+              <p class="text-md sm:text-lg text-gray-600 text-justify dark:text-neutral-200 mt-3">
               Entre los cursos que hemos dictado en el último tiempo podemos mencionar:</p>
-              <p class="text-lg italic text-gray-600 text-justify dark:text-neutral-200 ml-2 mt-1">
+              <p class="text-md sm:text-lg italic text-gray-600 text-justify dark:text-neutral-200 ml-2 mt-1">
                 · Clínica de Biomécanica de la PELVIS</p>
-              <p class="text-md text-gray-600 text-justify dark:text-neutral-200 ml-2">
+              <p class="text-md sm:text-md text-gray-600 text-justify dark:text-neutral-200 ml-2">
                 Consistió en diversos ejercicios para mejorar y profundizar el asiento de amazonas y jinetes desde la conciencia de su propio cuerpo.</p>
-              <p class="text-lg italic text-gray-600 text-justify dark:text-neutral-200 ml-2 mt-1">
+              <p class="text-md sm:text-lg italic text-gray-600 text-justify dark:text-neutral-200 ml-2 mt-1">
                 · Importancia del posicionamiento del paciente durante la monta gemela</p>
-              <p class="text-md text-gray-600 text-justify dark:text-neutral-200 ml-2">
+              <p class="text-md sm:text-md text-gray-600 text-justify dark:text-neutral-200 ml-2">
                 Cuidados y recomendaciones, dictado durante la última jornada de actualización profesional en TACAs.</p>
             </div>
 
             <div id="tabs-with-card-3" class="w-full h-full bg-white shadow-xl shadow-gray-200 rounded-xl dark:bg-transparent dark:shadow-gray-200/20 p-4 hidden" role="tabpanel" aria-labelledby="tabs-with-card-item-3">
-              <h2 class="text-2xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200 pb-5">
+              <h2 class="text-xl text-gray-800 font-bold sm:text-3xl dark:text-neutral-200 pb-5">
                 Desarrollo de tecnología adaptada
               </h2>
-              <p class="text-xl text-gray-600 text-justify mr-2 dark:text-neutral-200">
+              <p class="text-md sm:text-xl text-gray-600 text-justify mr-2 dark:text-neutral-200">
                 A lo largo de los años, hemos llevado a cabo la elaboración de distintos dispositivos y videojuegos adaptados que enriquezcan la experiencia de nuestra comunidad. 
               </p>
-              <p class="text-xl text-gray-600 text-justify mr-2 dark:text-neutral-200">
+              <p class="text-md sm:text-xl text-gray-600 text-justify mr-2 dark:text-neutral-200">
                 Algunos ejemplos son: eQUINO, Hermes, Aprendemos a Ensillar, Juego de la Memoria.</p>
-              <p class="text-lg text-gray-600 text-justify mr-2 dark:text-neutral-200 mt-3">
+              <p class="text-md sm:text-lg text-gray-600 text-justify mr-2 dark:text-neutral-200 mt-3">
                 Te contamos sobre <strong>eQUINO</strong>:</p>
-              <p class="text-lg text-gray-600 text-justify mr-2 dark:text-neutral-200 mt-1">
+              <p class="text-md sm:text-lg text-gray-600 text-justify mr-2 dark:text-neutral-200 mt-1">
                 Videojuego para la pandemia (nov 2020) este videojuego recrea en un entorno virtual, similar al real, las actividades que los alumnos realizan en una sesión de TACAS, haciendo que funcione como un complemento a la terapia y prolongando el estado de bienestar en los momentos en que los alumnos no pueden realizar la terapia de manera habitual.</p>
             </div>
           </div>
