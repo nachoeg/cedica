@@ -30,6 +30,6 @@ class CobroForm(FlaskForm):
                                   no puede ser posterior a hoy.')
 
     def validate_recibio_el_dinero(self, recibio_el_dinero):
-        if recibio_el_dinero == -1:
+        if recibio_el_dinero.data == -1:
             raise ValidationError('Se debe seleccionar al miembro de equipo\
                                   que recibió el dinero.')
