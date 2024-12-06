@@ -1,11 +1,12 @@
 <template>
 
-<div class="p-10 m-10 rounded-lg shadow-md dark:bg-neutral-800">
+<div class="bg-white p-10 m-10 rounded-lg shadow-md dark:bg-neutral-800">
 <h1 class="text-4xl text-center font-bold mb-10">Áreas de trabajo</h1> 
-<!-- Icon Blocks -->
+<!-- Iconos Blocks -->
 <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
   <div class="grid sm:grid-cols-2 lg:grid-cols-4 items-center gap-12">
-    <!-- Icon Block -->
+
+    <!-- Icono Block -->
     <div class="text-center">
       <div class="flex justify-center items-center size-12 bg-gray-50 border border-[rgba(252,180,72,255)] rounded-full mx-auto dark:bg-neutral-800 dark:border-neutral-700">
         
@@ -16,9 +17,9 @@
         <p class="mt-1 text-gray-600 dark:text-neutral-400">Se encargan de los aspéctos técnicos de los servicios</p>
       </div>
     </div>
-    <!-- End Icon Block -->
+    <!-- Fin Icon Block -->
 
-    <!-- Icon Block -->
+    <!-- Icono Block -->
     <div class="text-center">
       <div class="flex justify-center items-center size-12 bg-gray-50 border border-[rgba(252,180,72,255)] rounded-full mx-auto dark:bg-neutral-800 dark:border-neutral-700">
         <svg class="shrink-0 size-7 text-[rgba(252,180,72,255)] dark:text-neutral-400" fill="#FCB448" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M 23 4 C 20.957031 4 19.695313 5.207031 19 6.15625 L 19 5 C 3.183594 5 3 27.769531 3 28 L 7 28 C 7 28 6.984375 23.125 8.53125 18.3125 C 9.304688 15.90625 10.480469 13.527344 12.15625 11.8125 C 13.832031 10.097656 15.972656 9 19 9 L 19.625 9 L 19.90625 8.4375 C 19.90625 8.4375 20.792969 6.953125 22 6.3125 L 22 9.25 L 26.09375 17.4375 L 26.1875 17.59375 L 26.3125 17.71875 C 26.714844 18.097656 26.867188 18.457031 26.9375 18.6875 C 26.992188 18.855469 26.96875 18.851563 26.96875 18.875 C 26.941406 18.972656 26.898438 19.183594 26.71875 19.46875 C 26.5 19.816406 26.304688 20 26 20 C 25.695313 20 25.5 19.816406 25.28125 19.46875 C 25.0625 19.121094 24.96875 18.75 24.96875 18.75 L 24.75 17.90625 L 23.875 18 C 23.875 18 23.042969 18.097656 22.125 17.84375 C 21.207031 17.589844 20.339844 17.140625 19.96875 15.75 L 19.625 14.46875 L 18.5 15.125 C 17.207031 15.882813 16.457031 17.039063 16.3125 18.21875 C 16.167969 19.398438 16.515625 20.535156 16.9375 21.65625 C 17.777344 23.898438 19 26.183594 19 28 L 21 28 C 21 25.378906 19.535156 22.945313 18.78125 20.9375 C 18.40625 19.933594 18.234375 19.085938 18.3125 18.46875 C 18.359375 18.09375 18.511719 17.773438 18.78125 17.46875 C 19.542969 18.660156 20.585938 19.503906 21.59375 19.78125 C 22.523438 20.039063 22.902344 19.957031 23.34375 19.9375 C 23.433594 20.171875 23.40625 20.230469 23.59375 20.53125 C 24 21.183594 24.804688 22 26 22 C 27.195313 22 28 21.183594 28.40625 20.53125 C 28.8125 19.878906 28.96875 19.25 28.96875 19.25 L 29 19.15625 L 29 19.0625 C 29 19.0625 29.007813 18.582031 28.84375 18.0625 C 28.707031 17.625 28.347656 17.09375 27.875 16.5625 L 27.90625 16.5625 L 24 8.75 L 24 4 Z M 18.46875 7.03125 C 18.464844 7.039063 18.441406 7.054688 18.4375 7.0625 C 18.03125 7.082031 17.636719 7.101563 17.25 7.15625 C 16.9375 7.199219 16.640625 7.277344 16.34375 7.34375 C 16.640625 7.265625 16.9375 7.207031 17.25 7.15625 C 17.640625 7.089844 18.050781 7.050781 18.46875 7.03125 Z M 22 12 C 21.449219 12 21 12.449219 21 13 C 21 13.550781 21.449219 14 22 14 C 22.550781 14 23 13.550781 23 13 C 23 12.449219 22.550781 12 22 12 Z"></path></g></svg>
@@ -28,9 +29,9 @@
         <p class="mt-1 text-gray-600 dark:text-neutral-400">Llevan adelante el seguimiento de los caballos</p>
       </div>
     </div>
-    <!-- End Icon Block -->
+    <!-- Fin Icono Block -->
 
-    <!-- Icon Block -->
+    <!-- Icono Block -->
     <div class="text-center">
       <div class="flex justify-center items-center size-12 bg-gray-50 border border-[rgba(252,180,72,255)] rounded-full mx-auto dark:bg-neutral-800 dark:border-neutral-700">
         <svg class="shrink-0 size-7 text-[rgba(252,180,72,255)] dark:text-neutral-400" fill="#FCB448" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>hand-holding</title> <path d="M29.287 11.473c-0.487-0.21-1.054-0.332-1.649-0.332-0.65 0-1.265 0.145-1.817 0.405l0.026-0.011-5.121 2.301c-0.32-1.36-1.524-2.357-2.96-2.357-0.057 0-0.114 0.002-0.171 0.005l0.008-0h-3.711l-4.691-1.373c-0.104-0.032-0.225-0.051-0.349-0.051-0.001 0-0.002 0-0.003 0h-1.669v-0.258c0-0.69-0.56-1.25-1.25-1.25v0h-3.883c-0.69 0-1.25 0.56-1.25 1.25v0 12.208c0 0.69 0.56 1.25 1.25 1.25h3.883c0.69-0 1.25-0.56 1.25-1.25v-0.44c1.596 0.316 2.993 0.738 4.33 1.278l-0.159-0.057c1.209 0.433 2.603 0.684 4.056 0.684 1.676 0 3.273-0.333 4.731-0.936l-0.082 0.030c1.271-0.563 2.351-1.16 3.372-1.839l-0.083 0.052c0.334-0.207 0.668-0.412 1.004-0.611 1.654-0.98 2.979-1.836 4.168-2.697 0.597-0.426 1.119-0.847 1.614-1.296l-0.014 0.013c0.426-0.351 0.765-0.791 0.991-1.294l0.009-0.022c0.053-0.134 0.084-0.289 0.084-0.451 0-0.093-0.010-0.183-0.029-0.27l0.002 0.008c-0.176-1.169-0.885-2.143-1.868-2.678l-0.019-0.010zM4.681 20.76h-1.383v-9.708h1.383zM28.381 14.391c-0.399 0.357-0.832 0.704-1.284 1.027l-0.046 0.031c-1.125 0.813-2.387 1.63-3.975 2.569-0.352 0.209-0.697 0.424-1.045 0.639-0.833 0.558-1.793 1.092-2.795 1.547l-0.128 0.052c-1.096 0.452-2.368 0.715-3.701 0.715-1.137 0-2.229-0.191-3.247-0.542l0.070 0.021c-1.451-0.606-3.148-1.096-4.911-1.391l-0.138-0.019v-6.48h1.489l4.691 1.373c0.104 0.032 0.225 0.051 0.349 0.051 0.001 0 0.002 0 0.003 0h3.89c0.443 0 0.697 0.171 0.697 0.47s-0.254 0.47-0.697 0.47h-6.809c-0.69 0-1.25 0.56-1.25 1.25s0.56 1.25 1.25 1.25v0h7.781c0 0 0 0 0.001 0 0.185 0 0.361-0.040 0.519-0.113l-0.008 0.003 7.801-3.506c0.228-0.105 0.494-0.166 0.775-0.166 0.183 0 0.36 0.026 0.527 0.074l-0.013-0.003c0.185 0.113 0.326 0.283 0.4 0.485l0.002 0.007z"></path> </g></svg>
@@ -40,9 +41,9 @@
         <p class="mt-1 text-gray-600 dark:text-neutral-400">Quienes se acercan para ayudar en nuestra Asociación</p>
       </div>
     </div>
-    <!-- End Icon Block -->
+    <!-- Fin Icono Block -->
 
-    <!-- Icon Block -->
+    <!-- Icono Block -->
     <div class="text-center">
       <div class="flex justify-center items-center size-12 bg-gray-50 border border-[rgba(252,180,72,255)] rounded-full mx-auto dark:bg-neutral-800 dark:border-neutral-700">
         <svg class="shrink-0 size-7 text-[rgba(252,180,72,255)] dark:text-neutral-400" fill="#FCB448" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 435.531 435.531" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M349.41,238.278l50.526-158.151l-50.526-16.14V31.215H246.84L149.137,0l-9.976,31.215H86.122v166.032L35.595,355.416 l50.527,16.14v32.767h102.576l97.696,31.208l9.974-31.208h53.042V238.278z M381.083,89.851l-31.673,99.14V79.733L381.083,89.851z M158.859,18.853l38.692,12.362h-42.642L158.859,18.853z M54.448,345.692l31.674-99.151V355.81L54.448,345.692z M276.672,416.679 l-38.679-12.356h42.628L276.672,416.679z M334.41,389.323H101.122V46.215H334.41V389.323z"></path> <rect x="129.433" y="78.963" width="178.259" height="15"></rect> <rect x="129.433" y="116.478" width="178.259" height="15"></rect> <rect x="129.433" y="153.995" width="178.259" height="15"></rect> <rect x="129.433" y="229.027" width="178.259" height="15"></rect> <rect x="127.841" y="304.059" width="178.259" height="15"></rect> <rect x="127.841" y="266.543" width="178.259" height="15"></rect> <rect x="127.841" y="191.51" width="178.259" height="15"></rect> <rect x="129.433" y="341.575" width="178.259" height="15"></rect> </g> </g></svg>
@@ -52,10 +53,10 @@
         <p class="mt-1 text-gray-600 dark:text-neutral-400">Realizan trámtes de ingreso, registración y cobros</p>
       </div>
     </div>
-    <!-- End Icon Block -->
+    <!-- Fin Icono Block -->
   </div>
 </div>
-<!-- End Icon Blocks -->
+<!-- Fin Iconos Blocks -->
 </div>
 
 </template>

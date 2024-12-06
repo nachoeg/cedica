@@ -1,17 +1,17 @@
 <template>
-  <Informacion />
+  <Presentacion />
   <Tareas />
   <Areas />
 </template>
 
 <script>
-import Informacion from '../components/Informacion.vue'
+import Presentacion from '../components/Presentacion.vue'
 import Tareas from '../components/Tareas.vue'
 import Areas from '../components/Areas.vue'
 
 export default {
   components: {
-    Informacion,
+    Presentacion,
     Tareas,
     Areas,
   },
